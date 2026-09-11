@@ -210,6 +210,7 @@ export type StoreQuestionWhereInput = {
   listing?: Prisma.XOR<Prisma.ListingNullableScalarRelationFilter, Prisma.ListingWhereInput> | null
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   answer?: Prisma.XOR<Prisma.StoreAnswerNullableScalarRelationFilter, Prisma.StoreAnswerWhereInput> | null
+  reports?: Prisma.QuestionReportListRelationFilter
 }
 
 export type StoreQuestionOrderByWithRelationInput = {
@@ -225,6 +226,7 @@ export type StoreQuestionOrderByWithRelationInput = {
   listing?: Prisma.ListingOrderByWithRelationInput
   author?: Prisma.UserOrderByWithRelationInput
   answer?: Prisma.StoreAnswerOrderByWithRelationInput
+  reports?: Prisma.QuestionReportOrderByRelationAggregateInput
 }
 
 export type StoreQuestionWhereUniqueInput = Prisma.AtLeast<{
@@ -243,6 +245,7 @@ export type StoreQuestionWhereUniqueInput = Prisma.AtLeast<{
   listing?: Prisma.XOR<Prisma.ListingNullableScalarRelationFilter, Prisma.ListingWhereInput> | null
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   answer?: Prisma.XOR<Prisma.StoreAnswerNullableScalarRelationFilter, Prisma.StoreAnswerWhereInput> | null
+  reports?: Prisma.QuestionReportListRelationFilter
 }, "id">
 
 export type StoreQuestionOrderByWithAggregationInput = {
@@ -283,6 +286,7 @@ export type StoreQuestionCreateInput = {
   listing?: Prisma.ListingCreateNestedOneWithoutQuestionsInput
   author: Prisma.UserCreateNestedOneWithoutQuestionsInput
   answer?: Prisma.StoreAnswerCreateNestedOneWithoutQuestionInput
+  reports?: Prisma.QuestionReportCreateNestedManyWithoutQuestionInput
 }
 
 export type StoreQuestionUncheckedCreateInput = {
@@ -295,6 +299,7 @@ export type StoreQuestionUncheckedCreateInput = {
   reportedAt?: Date | string | null
   createdAt?: Date | string
   answer?: Prisma.StoreAnswerUncheckedCreateNestedOneWithoutQuestionInput
+  reports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutQuestionInput
 }
 
 export type StoreQuestionUpdateInput = {
@@ -307,6 +312,7 @@ export type StoreQuestionUpdateInput = {
   listing?: Prisma.ListingUpdateOneWithoutQuestionsNestedInput
   author?: Prisma.UserUpdateOneRequiredWithoutQuestionsNestedInput
   answer?: Prisma.StoreAnswerUpdateOneWithoutQuestionNestedInput
+  reports?: Prisma.QuestionReportUpdateManyWithoutQuestionNestedInput
 }
 
 export type StoreQuestionUncheckedUpdateInput = {
@@ -319,6 +325,7 @@ export type StoreQuestionUncheckedUpdateInput = {
   reportedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   answer?: Prisma.StoreAnswerUncheckedUpdateOneWithoutQuestionNestedInput
+  reports?: Prisma.QuestionReportUncheckedUpdateManyWithoutQuestionNestedInput
 }
 
 export type StoreQuestionCreateManyInput = {
@@ -525,6 +532,20 @@ export type StoreQuestionUncheckedUpdateManyWithoutListingNestedInput = {
   deleteMany?: Prisma.StoreQuestionScalarWhereInput | Prisma.StoreQuestionScalarWhereInput[]
 }
 
+export type StoreQuestionCreateNestedOneWithoutReportsInput = {
+  create?: Prisma.XOR<Prisma.StoreQuestionCreateWithoutReportsInput, Prisma.StoreQuestionUncheckedCreateWithoutReportsInput>
+  connectOrCreate?: Prisma.StoreQuestionCreateOrConnectWithoutReportsInput
+  connect?: Prisma.StoreQuestionWhereUniqueInput
+}
+
+export type StoreQuestionUpdateOneRequiredWithoutReportsNestedInput = {
+  create?: Prisma.XOR<Prisma.StoreQuestionCreateWithoutReportsInput, Prisma.StoreQuestionUncheckedCreateWithoutReportsInput>
+  connectOrCreate?: Prisma.StoreQuestionCreateOrConnectWithoutReportsInput
+  upsert?: Prisma.StoreQuestionUpsertWithoutReportsInput
+  connect?: Prisma.StoreQuestionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StoreQuestionUpdateToOneWithWhereWithoutReportsInput, Prisma.StoreQuestionUpdateWithoutReportsInput>, Prisma.StoreQuestionUncheckedUpdateWithoutReportsInput>
+}
+
 export type StoreQuestionCreateNestedOneWithoutAnswerInput = {
   create?: Prisma.XOR<Prisma.StoreQuestionCreateWithoutAnswerInput, Prisma.StoreQuestionUncheckedCreateWithoutAnswerInput>
   connectOrCreate?: Prisma.StoreQuestionCreateOrConnectWithoutAnswerInput
@@ -548,6 +569,7 @@ export type StoreQuestionCreateWithoutAuthorInput = {
   store: Prisma.StoreCreateNestedOneWithoutQuestionsInput
   listing?: Prisma.ListingCreateNestedOneWithoutQuestionsInput
   answer?: Prisma.StoreAnswerCreateNestedOneWithoutQuestionInput
+  reports?: Prisma.QuestionReportCreateNestedManyWithoutQuestionInput
 }
 
 export type StoreQuestionUncheckedCreateWithoutAuthorInput = {
@@ -559,6 +581,7 @@ export type StoreQuestionUncheckedCreateWithoutAuthorInput = {
   reportedAt?: Date | string | null
   createdAt?: Date | string
   answer?: Prisma.StoreAnswerUncheckedCreateNestedOneWithoutQuestionInput
+  reports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutQuestionInput
 }
 
 export type StoreQuestionCreateOrConnectWithoutAuthorInput = {
@@ -610,6 +633,7 @@ export type StoreQuestionCreateWithoutStoreInput = {
   listing?: Prisma.ListingCreateNestedOneWithoutQuestionsInput
   author: Prisma.UserCreateNestedOneWithoutQuestionsInput
   answer?: Prisma.StoreAnswerCreateNestedOneWithoutQuestionInput
+  reports?: Prisma.QuestionReportCreateNestedManyWithoutQuestionInput
 }
 
 export type StoreQuestionUncheckedCreateWithoutStoreInput = {
@@ -621,6 +645,7 @@ export type StoreQuestionUncheckedCreateWithoutStoreInput = {
   reportedAt?: Date | string | null
   createdAt?: Date | string
   answer?: Prisma.StoreAnswerUncheckedCreateNestedOneWithoutQuestionInput
+  reports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutQuestionInput
 }
 
 export type StoreQuestionCreateOrConnectWithoutStoreInput = {
@@ -658,6 +683,7 @@ export type StoreQuestionCreateWithoutListingInput = {
   store: Prisma.StoreCreateNestedOneWithoutQuestionsInput
   author: Prisma.UserCreateNestedOneWithoutQuestionsInput
   answer?: Prisma.StoreAnswerCreateNestedOneWithoutQuestionInput
+  reports?: Prisma.QuestionReportCreateNestedManyWithoutQuestionInput
 }
 
 export type StoreQuestionUncheckedCreateWithoutListingInput = {
@@ -669,6 +695,7 @@ export type StoreQuestionUncheckedCreateWithoutListingInput = {
   reportedAt?: Date | string | null
   createdAt?: Date | string
   answer?: Prisma.StoreAnswerUncheckedCreateNestedOneWithoutQuestionInput
+  reports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutQuestionInput
 }
 
 export type StoreQuestionCreateOrConnectWithoutListingInput = {
@@ -697,6 +724,70 @@ export type StoreQuestionUpdateManyWithWhereWithoutListingInput = {
   data: Prisma.XOR<Prisma.StoreQuestionUpdateManyMutationInput, Prisma.StoreQuestionUncheckedUpdateManyWithoutListingInput>
 }
 
+export type StoreQuestionCreateWithoutReportsInput = {
+  id?: string
+  body: string
+  pinned?: boolean
+  reportedAt?: Date | string | null
+  createdAt?: Date | string
+  store: Prisma.StoreCreateNestedOneWithoutQuestionsInput
+  listing?: Prisma.ListingCreateNestedOneWithoutQuestionsInput
+  author: Prisma.UserCreateNestedOneWithoutQuestionsInput
+  answer?: Prisma.StoreAnswerCreateNestedOneWithoutQuestionInput
+}
+
+export type StoreQuestionUncheckedCreateWithoutReportsInput = {
+  id?: string
+  storeId: string
+  listingId?: string | null
+  authorId: string
+  body: string
+  pinned?: boolean
+  reportedAt?: Date | string | null
+  createdAt?: Date | string
+  answer?: Prisma.StoreAnswerUncheckedCreateNestedOneWithoutQuestionInput
+}
+
+export type StoreQuestionCreateOrConnectWithoutReportsInput = {
+  where: Prisma.StoreQuestionWhereUniqueInput
+  create: Prisma.XOR<Prisma.StoreQuestionCreateWithoutReportsInput, Prisma.StoreQuestionUncheckedCreateWithoutReportsInput>
+}
+
+export type StoreQuestionUpsertWithoutReportsInput = {
+  update: Prisma.XOR<Prisma.StoreQuestionUpdateWithoutReportsInput, Prisma.StoreQuestionUncheckedUpdateWithoutReportsInput>
+  create: Prisma.XOR<Prisma.StoreQuestionCreateWithoutReportsInput, Prisma.StoreQuestionUncheckedCreateWithoutReportsInput>
+  where?: Prisma.StoreQuestionWhereInput
+}
+
+export type StoreQuestionUpdateToOneWithWhereWithoutReportsInput = {
+  where?: Prisma.StoreQuestionWhereInput
+  data: Prisma.XOR<Prisma.StoreQuestionUpdateWithoutReportsInput, Prisma.StoreQuestionUncheckedUpdateWithoutReportsInput>
+}
+
+export type StoreQuestionUpdateWithoutReportsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  body?: Prisma.StringFieldUpdateOperationsInput | string
+  pinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  reportedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  store?: Prisma.StoreUpdateOneRequiredWithoutQuestionsNestedInput
+  listing?: Prisma.ListingUpdateOneWithoutQuestionsNestedInput
+  author?: Prisma.UserUpdateOneRequiredWithoutQuestionsNestedInput
+  answer?: Prisma.StoreAnswerUpdateOneWithoutQuestionNestedInput
+}
+
+export type StoreQuestionUncheckedUpdateWithoutReportsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  listingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authorId?: Prisma.StringFieldUpdateOperationsInput | string
+  body?: Prisma.StringFieldUpdateOperationsInput | string
+  pinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  reportedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  answer?: Prisma.StoreAnswerUncheckedUpdateOneWithoutQuestionNestedInput
+}
+
 export type StoreQuestionCreateWithoutAnswerInput = {
   id?: string
   body: string
@@ -706,6 +797,7 @@ export type StoreQuestionCreateWithoutAnswerInput = {
   store: Prisma.StoreCreateNestedOneWithoutQuestionsInput
   listing?: Prisma.ListingCreateNestedOneWithoutQuestionsInput
   author: Prisma.UserCreateNestedOneWithoutQuestionsInput
+  reports?: Prisma.QuestionReportCreateNestedManyWithoutQuestionInput
 }
 
 export type StoreQuestionUncheckedCreateWithoutAnswerInput = {
@@ -717,6 +809,7 @@ export type StoreQuestionUncheckedCreateWithoutAnswerInput = {
   pinned?: boolean
   reportedAt?: Date | string | null
   createdAt?: Date | string
+  reports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutQuestionInput
 }
 
 export type StoreQuestionCreateOrConnectWithoutAnswerInput = {
@@ -744,6 +837,7 @@ export type StoreQuestionUpdateWithoutAnswerInput = {
   store?: Prisma.StoreUpdateOneRequiredWithoutQuestionsNestedInput
   listing?: Prisma.ListingUpdateOneWithoutQuestionsNestedInput
   author?: Prisma.UserUpdateOneRequiredWithoutQuestionsNestedInput
+  reports?: Prisma.QuestionReportUpdateManyWithoutQuestionNestedInput
 }
 
 export type StoreQuestionUncheckedUpdateWithoutAnswerInput = {
@@ -755,6 +849,7 @@ export type StoreQuestionUncheckedUpdateWithoutAnswerInput = {
   pinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reportedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reports?: Prisma.QuestionReportUncheckedUpdateManyWithoutQuestionNestedInput
 }
 
 export type StoreQuestionCreateManyAuthorInput = {
@@ -776,6 +871,7 @@ export type StoreQuestionUpdateWithoutAuthorInput = {
   store?: Prisma.StoreUpdateOneRequiredWithoutQuestionsNestedInput
   listing?: Prisma.ListingUpdateOneWithoutQuestionsNestedInput
   answer?: Prisma.StoreAnswerUpdateOneWithoutQuestionNestedInput
+  reports?: Prisma.QuestionReportUpdateManyWithoutQuestionNestedInput
 }
 
 export type StoreQuestionUncheckedUpdateWithoutAuthorInput = {
@@ -787,6 +883,7 @@ export type StoreQuestionUncheckedUpdateWithoutAuthorInput = {
   reportedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   answer?: Prisma.StoreAnswerUncheckedUpdateOneWithoutQuestionNestedInput
+  reports?: Prisma.QuestionReportUncheckedUpdateManyWithoutQuestionNestedInput
 }
 
 export type StoreQuestionUncheckedUpdateManyWithoutAuthorInput = {
@@ -818,6 +915,7 @@ export type StoreQuestionUpdateWithoutStoreInput = {
   listing?: Prisma.ListingUpdateOneWithoutQuestionsNestedInput
   author?: Prisma.UserUpdateOneRequiredWithoutQuestionsNestedInput
   answer?: Prisma.StoreAnswerUpdateOneWithoutQuestionNestedInput
+  reports?: Prisma.QuestionReportUpdateManyWithoutQuestionNestedInput
 }
 
 export type StoreQuestionUncheckedUpdateWithoutStoreInput = {
@@ -829,6 +927,7 @@ export type StoreQuestionUncheckedUpdateWithoutStoreInput = {
   reportedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   answer?: Prisma.StoreAnswerUncheckedUpdateOneWithoutQuestionNestedInput
+  reports?: Prisma.QuestionReportUncheckedUpdateManyWithoutQuestionNestedInput
 }
 
 export type StoreQuestionUncheckedUpdateManyWithoutStoreInput = {
@@ -860,6 +959,7 @@ export type StoreQuestionUpdateWithoutListingInput = {
   store?: Prisma.StoreUpdateOneRequiredWithoutQuestionsNestedInput
   author?: Prisma.UserUpdateOneRequiredWithoutQuestionsNestedInput
   answer?: Prisma.StoreAnswerUpdateOneWithoutQuestionNestedInput
+  reports?: Prisma.QuestionReportUpdateManyWithoutQuestionNestedInput
 }
 
 export type StoreQuestionUncheckedUpdateWithoutListingInput = {
@@ -871,6 +971,7 @@ export type StoreQuestionUncheckedUpdateWithoutListingInput = {
   reportedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   answer?: Prisma.StoreAnswerUncheckedUpdateOneWithoutQuestionNestedInput
+  reports?: Prisma.QuestionReportUncheckedUpdateManyWithoutQuestionNestedInput
 }
 
 export type StoreQuestionUncheckedUpdateManyWithoutListingInput = {
@@ -883,6 +984,35 @@ export type StoreQuestionUncheckedUpdateManyWithoutListingInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type StoreQuestionCountOutputType
+ */
+
+export type StoreQuestionCountOutputType = {
+  reports: number
+}
+
+export type StoreQuestionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  reports?: boolean | StoreQuestionCountOutputTypeCountReportsArgs
+}
+
+/**
+ * StoreQuestionCountOutputType without action
+ */
+export type StoreQuestionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StoreQuestionCountOutputType
+   */
+  select?: Prisma.StoreQuestionCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * StoreQuestionCountOutputType without action
+ */
+export type StoreQuestionCountOutputTypeCountReportsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.QuestionReportWhereInput
+}
 
 
 export type StoreQuestionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -898,6 +1028,8 @@ export type StoreQuestionSelect<ExtArgs extends runtime.Types.Extensions.Interna
   listing?: boolean | Prisma.StoreQuestion$listingArgs<ExtArgs>
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   answer?: boolean | Prisma.StoreQuestion$answerArgs<ExtArgs>
+  reports?: boolean | Prisma.StoreQuestion$reportsArgs<ExtArgs>
+  _count?: boolean | Prisma.StoreQuestionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["storeQuestion"]>
 
 export type StoreQuestionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -945,6 +1077,8 @@ export type StoreQuestionInclude<ExtArgs extends runtime.Types.Extensions.Intern
   listing?: boolean | Prisma.StoreQuestion$listingArgs<ExtArgs>
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   answer?: boolean | Prisma.StoreQuestion$answerArgs<ExtArgs>
+  reports?: boolean | Prisma.StoreQuestion$reportsArgs<ExtArgs>
+  _count?: boolean | Prisma.StoreQuestionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StoreQuestionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   store?: boolean | Prisma.StoreDefaultArgs<ExtArgs>
@@ -964,6 +1098,7 @@ export type $StoreQuestionPayload<ExtArgs extends runtime.Types.Extensions.Inter
     listing: Prisma.$ListingPayload<ExtArgs> | null
     author: Prisma.$UserPayload<ExtArgs>
     answer: Prisma.$StoreAnswerPayload<ExtArgs> | null
+    reports: Prisma.$QuestionReportPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1372,6 +1507,7 @@ export interface Prisma__StoreQuestionClient<T, Null = never, ExtArgs extends ru
   listing<T extends Prisma.StoreQuestion$listingArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StoreQuestion$listingArgs<ExtArgs>>): Prisma.Prisma__ListingClient<runtime.Types.Result.GetResult<Prisma.$ListingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   author<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   answer<T extends Prisma.StoreQuestion$answerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StoreQuestion$answerArgs<ExtArgs>>): Prisma.Prisma__StoreAnswerClient<runtime.Types.Result.GetResult<Prisma.$StoreAnswerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  reports<T extends Prisma.StoreQuestion$reportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StoreQuestion$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QuestionReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1845,6 +1981,30 @@ export type StoreQuestion$answerArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   include?: Prisma.StoreAnswerInclude<ExtArgs> | null
   where?: Prisma.StoreAnswerWhereInput
+}
+
+/**
+ * StoreQuestion.reports
+ */
+export type StoreQuestion$reportsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the QuestionReport
+   */
+  select?: Prisma.QuestionReportSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the QuestionReport
+   */
+  omit?: Prisma.QuestionReportOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.QuestionReportInclude<ExtArgs> | null
+  where?: Prisma.QuestionReportWhereInput
+  orderBy?: Prisma.QuestionReportOrderByWithRelationInput | Prisma.QuestionReportOrderByWithRelationInput[]
+  cursor?: Prisma.QuestionReportWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.QuestionReportScalarFieldEnum | Prisma.QuestionReportScalarFieldEnum[]
 }
 
 /**

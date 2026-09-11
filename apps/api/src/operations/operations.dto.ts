@@ -34,6 +34,12 @@ export class CancellationDecisionDto {
 export class ReturnRequestDto {
   @IsString() @MinLength(3) @MaxLength(500) reason!: string;
 }
+export class QuestionReportDto {
+  @IsString() @MinLength(3) @MaxLength(500) reason!: string;
+}
+export class OpenDisputeDto {
+  @IsString() @MinLength(3) @MaxLength(1000) reason!: string;
+}
 export class MessageDto {
   @IsString() @MinLength(1) @MaxLength(4000) body!: string;
 }

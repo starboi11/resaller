@@ -48,6 +48,72 @@ export class MediaController {
       await file.toBuffer(),
     );
   }
+  @Post('messages/:messageId/attachment')
+  @UseGuards(SessionGuard)
+  async uploadMessageAttachment(
+    @Req() request: FastifyRequest & { user: AuthenticatedUser },
+    @Param('messageId') messageId: string,
+  ) {
+    const file = await request.file();
+    if (!file)
+      throw new UnsupportedMediaTypeException('Attachment file is required');
+    return this.media.uploadMessageAttachment(
+      request.user,
+      messageId,
+      await file.toBuffer(),
+      file.filename,
+    );
+  }
+  @Get('private/attachments/:id')
+  @UseGuards(SessionGuard)
+  async messageAttachment(
+    @Req() request: FastifyRequest & { user: AuthenticatedUser },
+    @Param('id') id: string,
+    @Res() reply: FastifyReply,
+  ) {
+    const file = await this.media.messageAttachment(request.user, id);
+    return reply
+      .header('cache-control', 'private, no-store')
+      .header(
+        'content-disposition',
+        `attachment; filename*=UTF-8''${encodeURIComponent(file.fileName)}`,
+      )
+      .type(file.mimeType)
+      .send(file.bytes);
+  }
+  @Post('disputes/:disputeId/evidence')
+  @UseGuards(SessionGuard)
+  async uploadDisputeEvidence(
+    @Req() request: FastifyRequest & { user: AuthenticatedUser },
+    @Param('disputeId') disputeId: string,
+  ) {
+    const file = await request.file();
+    if (!file)
+      throw new UnsupportedMediaTypeException('Evidence file is required');
+    return this.media.uploadDisputeEvidence(
+      request.user,
+      disputeId,
+      await file.toBuffer(),
+      file.filename,
+    );
+  }
+  @Get('private/dispute-evidence/:id')
+  @UseGuards(SessionGuard)
+  async disputeEvidence(
+    @Req() request: FastifyRequest & { user: AuthenticatedUser },
+    @Param('id') id: string,
+    @Res() reply: FastifyReply,
+  ) {
+    const file = await this.media.disputeEvidence(request.user, id);
+    return reply
+      .header('cache-control', 'private, no-store')
+      .header(
+        'content-disposition',
+        `attachment; filename*=UTF-8''${encodeURIComponent(file.fileName)}`,
+      )
+      .type(file.mimeType)
+      .send(file.bytes);
+  }
   @Get('private/verifications/:id/document')
   @UseGuards(SessionGuard, RolesGuard)
   @RequireRoles('VERIFICATION_ADMIN')

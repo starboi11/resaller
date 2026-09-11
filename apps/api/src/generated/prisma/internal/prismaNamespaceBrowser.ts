@@ -82,6 +82,7 @@ export const ModelName = {
   Message: 'Message',
   Attachment: 'Attachment',
   StoreQuestion: 'StoreQuestion',
+  QuestionReport: 'QuestionReport',
   StoreAnswer: 'StoreAnswer',
   Review: 'Review',
   ImportedTestimonial: 'ImportedTestimonial',
@@ -93,6 +94,8 @@ export const ModelName = {
   Promotion: 'Promotion',
   Dispute: 'Dispute',
   DisputeEvent: 'DisputeEvent',
+  DisputeEvidence: 'DisputeEvidence',
+  DisputeDecision: 'DisputeDecision',
   Notification: 'Notification',
   NotificationPreference: 'NotificationPreference',
   LegalVersion: 'LegalVersion',
@@ -502,6 +505,8 @@ export const AttachmentScalarFieldEnum = {
   storageKey: 'storageKey',
   mimeType: 'mimeType',
   sizeBytes: 'sizeBytes',
+  fileName: 'fileName',
+  uploaderId: 'uploaderId',
   createdAt: 'createdAt'
 } as const
 
@@ -520,6 +525,20 @@ export const StoreQuestionScalarFieldEnum = {
 } as const
 
 export type StoreQuestionScalarFieldEnum = (typeof StoreQuestionScalarFieldEnum)[keyof typeof StoreQuestionScalarFieldEnum]
+
+
+export const QuestionReportScalarFieldEnum = {
+  id: 'id',
+  questionId: 'questionId',
+  reporterId: 'reporterId',
+  reason: 'reason',
+  status: 'status',
+  resolution: 'resolution',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type QuestionReportScalarFieldEnum = (typeof QuestionReportScalarFieldEnum)[keyof typeof QuestionReportScalarFieldEnum]
 
 
 export const StoreAnswerScalarFieldEnum = {
@@ -657,6 +676,32 @@ export const DisputeEventScalarFieldEnum = {
 } as const
 
 export type DisputeEventScalarFieldEnum = (typeof DisputeEventScalarFieldEnum)[keyof typeof DisputeEventScalarFieldEnum]
+
+
+export const DisputeEvidenceScalarFieldEnum = {
+  id: 'id',
+  disputeId: 'disputeId',
+  uploadedById: 'uploadedById',
+  storageKey: 'storageKey',
+  fileName: 'fileName',
+  mimeType: 'mimeType',
+  sizeBytes: 'sizeBytes',
+  createdAt: 'createdAt'
+} as const
+
+export type DisputeEvidenceScalarFieldEnum = (typeof DisputeEvidenceScalarFieldEnum)[keyof typeof DisputeEvidenceScalarFieldEnum]
+
+
+export const DisputeDecisionScalarFieldEnum = {
+  id: 'id',
+  disputeId: 'disputeId',
+  actorId: 'actorId',
+  outcome: 'outcome',
+  reason: 'reason',
+  createdAt: 'createdAt'
+} as const
+
+export type DisputeDecisionScalarFieldEnum = (typeof DisputeDecisionScalarFieldEnum)[keyof typeof DisputeDecisionScalarFieldEnum]
 
 
 export const NotificationScalarFieldEnum = {

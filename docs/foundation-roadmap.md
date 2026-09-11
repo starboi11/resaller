@@ -44,10 +44,10 @@ The backend foundation is completed before final UI implementation. A block is c
 ### F5 Communication, trust and operations
 
 - [x] Order messages, public Q&A, reviews and in-app notifications
-- [ ] Authorized attachments and Q&A reports
+- [x] Authorized private order attachments and Q&A report moderation
 - [ ] Durable Redis-backed notification/background queue
 - [ ] Trust metrics calculation and reviewed risk signals
-- [ ] Dispute evidence and decision workflow
+- [x] Dispute opening, private evidence and immutable admin decision workflow
 - [ ] Admin users/reviews/security/disputes APIs
 
 ### F6 Operational readiness

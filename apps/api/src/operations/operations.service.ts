@@ -767,6 +767,101 @@ export class OperationsService {
     });
   }
 
+  async reportQuestion(userId: string, questionId: string, reason: string) {
+    const question = await this.prisma.storeQuestion.findUnique({
+      where: { id: questionId },
+    });
+    if (!question) throw new NotFoundException('Question not found');
+    if (question.authorId === userId)
+      throw new ConflictException('You cannot report your own question');
+    return this.prisma.$transaction(async (tx) => {
+      const report = await tx.questionReport.upsert({
+        where: { questionId_reporterId: { questionId, reporterId: userId } },
+        create: { questionId, reporterId: userId, reason },
+        update: { reason, status: 'OPEN', resolution: null, reviewedAt: null },
+        select: { id: true, status: true, createdAt: true },
+      });
+      await tx.storeQuestion.update({
+        where: { id: questionId },
+        data: { reportedAt: new Date() },
+      });
+      return report;
+    });
+  }
+
+  async openDispute(user: AuthenticatedUser, publicId: string, reason: string) {
+    return this.prisma.$transaction(
+      async (tx) => {
+        const order = await tx.order.findUnique({
+          where: { publicId },
+          include: {
+            store: { include: { sellerProfile: true, members: true } },
+            dispute: true,
+          },
+        });
+        if (!order) throw new NotFoundException('Order not found');
+        const seller =
+          order.store.sellerProfile.userId === user.id ||
+          order.store.members.some((member) => member.userId === user.id);
+        if (!seller && order.buyerId !== user.id)
+          throw new ForbiddenException('Order access denied');
+        if (order.dispute)
+          return { id: order.dispute.id, status: order.dispute.status };
+        if (
+          ![
+            'ACCEPTED',
+            'PREPARING',
+            'READY',
+            'SHIPPED',
+            'DELIVERED',
+            'COMPLETED',
+            'RETURN_REQUESTED',
+          ].includes(order.status)
+        )
+          throw new ConflictException(
+            'A dispute cannot be opened in the current status',
+          );
+        const dispute = await tx.dispute.create({
+          data: {
+            orderId: order.id,
+            reason,
+            events: {
+              create: {
+                actorId: user.id,
+                type: 'OPENED',
+                payload: { reason, orderStatus: order.status },
+              },
+            },
+          },
+        });
+        await tx.order.update({
+          where: { id: order.id },
+          data: {
+            status: 'DISPUTED',
+            history: {
+              create: {
+                fromStatus: order.status,
+                toStatus: 'DISPUTED',
+                actorId: user.id,
+                reason,
+              },
+            },
+          },
+        });
+        await tx.notification.create({
+          data: {
+            userId: seller ? order.buyerId : order.store.sellerProfile.userId,
+            severity: 'ACTION_REQUIRED',
+            type: 'DISPUTE_OPENED',
+            payload: { orderPublicId: order.publicId, disputeId: dispute.id },
+          },
+        });
+        return { id: dispute.id, status: dispute.status };
+      },
+      { isolationLevel: 'Serializable' },
+    );
+  }
+
   async review(userId: string, orderPublicId: string, input: ReviewDto) {
     const order = await this.prisma.order.findUnique({
       where: { publicId: orderPublicId },

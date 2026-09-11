@@ -173,6 +173,11 @@ export type Attachment = Prisma.AttachmentModel
  */
 export type StoreQuestion = Prisma.StoreQuestionModel
 /**
+ * Model QuestionReport
+ * 
+ */
+export type QuestionReport = Prisma.QuestionReportModel
+/**
  * Model StoreAnswer
  * 
  */
@@ -227,6 +232,16 @@ export type Dispute = Prisma.DisputeModel
  * 
  */
 export type DisputeEvent = Prisma.DisputeEventModel
+/**
+ * Model DisputeEvidence
+ * 
+ */
+export type DisputeEvidence = Prisma.DisputeEvidenceModel
+/**
+ * Model DisputeDecision
+ * 
+ */
+export type DisputeDecision = Prisma.DisputeDecisionModel
 /**
  * Model Notification
  * 

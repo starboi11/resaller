@@ -428,6 +428,7 @@ export const ModelName = {
   Message: 'Message',
   Attachment: 'Attachment',
   StoreQuestion: 'StoreQuestion',
+  QuestionReport: 'QuestionReport',
   StoreAnswer: 'StoreAnswer',
   Review: 'Review',
   ImportedTestimonial: 'ImportedTestimonial',
@@ -439,6 +440,8 @@ export const ModelName = {
   Promotion: 'Promotion',
   Dispute: 'Dispute',
   DisputeEvent: 'DisputeEvent',
+  DisputeEvidence: 'DisputeEvidence',
+  DisputeDecision: 'DisputeDecision',
   Notification: 'Notification',
   NotificationPreference: 'NotificationPreference',
   LegalVersion: 'LegalVersion',
@@ -461,7 +464,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "passwordResetToken" | "twoFactorChallenge" | "sellerProfile" | "sellerVerification" | "store" | "storeSetting" | "storeMember" | "storePolicy" | "category" | "categoryAttribute" | "listing" | "listingVariant" | "inventory" | "listingMedia" | "checkout" | "cart" | "cartItem" | "favorite" | "storeFollower" | "order" | "orderChange" | "orderItem" | "orderStatusHistory" | "stockReservation" | "conversation" | "conversationMember" | "message" | "attachment" | "storeQuestion" | "storeAnswer" | "review" | "importedTestimonial" | "sellerMetric" | "trustEvent" | "riskEvent" | "coupon" | "couponRedemption" | "promotion" | "dispute" | "disputeEvent" | "notification" | "notificationPreference" | "legalVersion" | "legalAcceptance" | "policySnapshot" | "auditLog" | "securityEvent"
+    modelProps: "user" | "session" | "passwordResetToken" | "twoFactorChallenge" | "sellerProfile" | "sellerVerification" | "store" | "storeSetting" | "storeMember" | "storePolicy" | "category" | "categoryAttribute" | "listing" | "listingVariant" | "inventory" | "listingMedia" | "checkout" | "cart" | "cartItem" | "favorite" | "storeFollower" | "order" | "orderChange" | "orderItem" | "orderStatusHistory" | "stockReservation" | "conversation" | "conversationMember" | "message" | "attachment" | "storeQuestion" | "questionReport" | "storeAnswer" | "review" | "importedTestimonial" | "sellerMetric" | "trustEvent" | "riskEvent" | "coupon" | "couponRedemption" | "promotion" | "dispute" | "disputeEvent" | "disputeEvidence" | "disputeDecision" | "notification" | "notificationPreference" | "legalVersion" | "legalAcceptance" | "policySnapshot" | "auditLog" | "securityEvent"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2759,6 +2762,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    QuestionReport: {
+      payload: Prisma.$QuestionReportPayload<ExtArgs>
+      fields: Prisma.QuestionReportFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.QuestionReportFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionReportPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.QuestionReportFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionReportPayload>
+        }
+        findFirst: {
+          args: Prisma.QuestionReportFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionReportPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.QuestionReportFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionReportPayload>
+        }
+        findMany: {
+          args: Prisma.QuestionReportFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionReportPayload>[]
+        }
+        create: {
+          args: Prisma.QuestionReportCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionReportPayload>
+        }
+        createMany: {
+          args: Prisma.QuestionReportCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.QuestionReportCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionReportPayload>[]
+        }
+        delete: {
+          args: Prisma.QuestionReportDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionReportPayload>
+        }
+        update: {
+          args: Prisma.QuestionReportUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionReportPayload>
+        }
+        deleteMany: {
+          args: Prisma.QuestionReportDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.QuestionReportUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.QuestionReportUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionReportPayload>[]
+        }
+        upsert: {
+          args: Prisma.QuestionReportUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionReportPayload>
+        }
+        aggregate: {
+          args: Prisma.QuestionReportAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQuestionReport>
+        }
+        groupBy: {
+          args: Prisma.QuestionReportGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QuestionReportGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.QuestionReportCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QuestionReportCountAggregateOutputType> | number
+        }
+      }
+    }
     StoreAnswer: {
       payload: Prisma.$StoreAnswerPayload<ExtArgs>
       fields: Prisma.StoreAnswerFieldRefs
@@ -3570,6 +3647,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.DisputeEventCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.DisputeEventCountAggregateOutputType> | number
+        }
+      }
+    }
+    DisputeEvidence: {
+      payload: Prisma.$DisputeEvidencePayload<ExtArgs>
+      fields: Prisma.DisputeEvidenceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DisputeEvidenceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DisputeEvidencePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DisputeEvidenceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DisputeEvidencePayload>
+        }
+        findFirst: {
+          args: Prisma.DisputeEvidenceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DisputeEvidencePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DisputeEvidenceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DisputeEvidencePayload>
+        }
+        findMany: {
+          args: Prisma.DisputeEvidenceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DisputeEvidencePayload>[]
+        }
+        create: {
+          args: Prisma.DisputeEvidenceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DisputeEvidencePayload>
+        }
+        createMany: {
+          args: Prisma.DisputeEvidenceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DisputeEvidenceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DisputeEvidencePayload>[]
+        }
+        delete: {
+          args: Prisma.DisputeEvidenceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DisputeEvidencePayload>
+        }
+        update: {
+          args: Prisma.DisputeEvidenceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DisputeEvidencePayload>
+        }
+        deleteMany: {
+          args: Prisma.DisputeEvidenceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DisputeEvidenceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DisputeEvidenceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DisputeEvidencePayload>[]
+        }
+        upsert: {
+          args: Prisma.DisputeEvidenceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DisputeEvidencePayload>
+        }
+        aggregate: {
+          args: Prisma.DisputeEvidenceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDisputeEvidence>
+        }
+        groupBy: {
+          args: Prisma.DisputeEvidenceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DisputeEvidenceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DisputeEvidenceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DisputeEvidenceCountAggregateOutputType> | number
+        }
+      }
+    }
+    DisputeDecision: {
+      payload: Prisma.$DisputeDecisionPayload<ExtArgs>
+      fields: Prisma.DisputeDecisionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DisputeDecisionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DisputeDecisionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DisputeDecisionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DisputeDecisionPayload>
+        }
+        findFirst: {
+          args: Prisma.DisputeDecisionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DisputeDecisionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DisputeDecisionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DisputeDecisionPayload>
+        }
+        findMany: {
+          args: Prisma.DisputeDecisionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DisputeDecisionPayload>[]
+        }
+        create: {
+          args: Prisma.DisputeDecisionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DisputeDecisionPayload>
+        }
+        createMany: {
+          args: Prisma.DisputeDecisionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DisputeDecisionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DisputeDecisionPayload>[]
+        }
+        delete: {
+          args: Prisma.DisputeDecisionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DisputeDecisionPayload>
+        }
+        update: {
+          args: Prisma.DisputeDecisionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DisputeDecisionPayload>
+        }
+        deleteMany: {
+          args: Prisma.DisputeDecisionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DisputeDecisionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DisputeDecisionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DisputeDecisionPayload>[]
+        }
+        upsert: {
+          args: Prisma.DisputeDecisionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DisputeDecisionPayload>
+        }
+        aggregate: {
+          args: Prisma.DisputeDecisionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDisputeDecision>
+        }
+        groupBy: {
+          args: Prisma.DisputeDecisionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DisputeDecisionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DisputeDecisionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DisputeDecisionCountAggregateOutputType> | number
         }
       }
     }
@@ -4514,6 +4739,8 @@ export const AttachmentScalarFieldEnum = {
   storageKey: 'storageKey',
   mimeType: 'mimeType',
   sizeBytes: 'sizeBytes',
+  fileName: 'fileName',
+  uploaderId: 'uploaderId',
   createdAt: 'createdAt'
 } as const
 
@@ -4532,6 +4759,20 @@ export const StoreQuestionScalarFieldEnum = {
 } as const
 
 export type StoreQuestionScalarFieldEnum = (typeof StoreQuestionScalarFieldEnum)[keyof typeof StoreQuestionScalarFieldEnum]
+
+
+export const QuestionReportScalarFieldEnum = {
+  id: 'id',
+  questionId: 'questionId',
+  reporterId: 'reporterId',
+  reason: 'reason',
+  status: 'status',
+  resolution: 'resolution',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type QuestionReportScalarFieldEnum = (typeof QuestionReportScalarFieldEnum)[keyof typeof QuestionReportScalarFieldEnum]
 
 
 export const StoreAnswerScalarFieldEnum = {
@@ -4669,6 +4910,32 @@ export const DisputeEventScalarFieldEnum = {
 } as const
 
 export type DisputeEventScalarFieldEnum = (typeof DisputeEventScalarFieldEnum)[keyof typeof DisputeEventScalarFieldEnum]
+
+
+export const DisputeEvidenceScalarFieldEnum = {
+  id: 'id',
+  disputeId: 'disputeId',
+  uploadedById: 'uploadedById',
+  storageKey: 'storageKey',
+  fileName: 'fileName',
+  mimeType: 'mimeType',
+  sizeBytes: 'sizeBytes',
+  createdAt: 'createdAt'
+} as const
+
+export type DisputeEvidenceScalarFieldEnum = (typeof DisputeEvidenceScalarFieldEnum)[keyof typeof DisputeEvidenceScalarFieldEnum]
+
+
+export const DisputeDecisionScalarFieldEnum = {
+  id: 'id',
+  disputeId: 'disputeId',
+  actorId: 'actorId',
+  outcome: 'outcome',
+  reason: 'reason',
+  createdAt: 'createdAt'
+} as const
+
+export type DisputeDecisionScalarFieldEnum = (typeof DisputeDecisionScalarFieldEnum)[keyof typeof DisputeDecisionScalarFieldEnum]
 
 
 export const NotificationScalarFieldEnum = {
@@ -5209,6 +5476,7 @@ export type GlobalOmitConfig = {
   message?: Prisma.MessageOmit
   attachment?: Prisma.AttachmentOmit
   storeQuestion?: Prisma.StoreQuestionOmit
+  questionReport?: Prisma.QuestionReportOmit
   storeAnswer?: Prisma.StoreAnswerOmit
   review?: Prisma.ReviewOmit
   importedTestimonial?: Prisma.ImportedTestimonialOmit
@@ -5220,6 +5488,8 @@ export type GlobalOmitConfig = {
   promotion?: Prisma.PromotionOmit
   dispute?: Prisma.DisputeOmit
   disputeEvent?: Prisma.DisputeEventOmit
+  disputeEvidence?: Prisma.DisputeEvidenceOmit
+  disputeDecision?: Prisma.DisputeDecisionOmit
   notification?: Prisma.NotificationOmit
   notificationPreference?: Prisma.NotificationPreferenceOmit
   legalVersion?: Prisma.LegalVersionOmit

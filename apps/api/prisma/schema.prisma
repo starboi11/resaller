@@ -118,6 +118,10 @@ model User {
   securityEvents SecurityEvent[]
   passwordResetTokens PasswordResetToken[]
   twoFactorChallenges TwoFactorChallenge[]
+  questionReports QuestionReport[]
+  uploadedDisputeEvidence DisputeEvidence[]
+  disputeDecisions DisputeDecision[]
+  uploadedAttachments Attachment[]
 }
 
 model Session {
@@ -507,8 +511,11 @@ model Attachment {
   storageKey String @unique
   mimeType String
   sizeBytes Int
+  fileName String @default("attachment")
+  uploaderId String? @db.Uuid
   createdAt DateTime @default(now()) @db.Timestamptz
   message Message @relation(fields: [messageId], references: [id], onDelete: Restrict)
+  uploader User? @relation(fields: [uploaderId], references: [id], onDelete: SetNull)
 }
 
 model StoreQuestion {
@@ -524,7 +531,23 @@ model StoreQuestion {
   listing Listing? @relation(fields: [listingId], references: [id], onDelete: SetNull)
   author User @relation(fields: [authorId], references: [id], onDelete: Restrict)
   answer StoreAnswer?
+  reports QuestionReport[]
   @@index([storeId, createdAt])
+}
+
+model QuestionReport {
+  id String @id @default(uuid()) @db.Uuid
+  questionId String @db.Uuid
+  reporterId String @db.Uuid
+  reason String
+  status String @default("OPEN")
+  resolution String?
+  reviewedAt DateTime? @db.Timestamptz
+  createdAt DateTime @default(now()) @db.Timestamptz
+  question StoreQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  reporter User @relation(fields: [reporterId], references: [id], onDelete: Restrict)
+  @@unique([questionId, reporterId])
+  @@index([status, createdAt])
 }
 
 model StoreAnswer {
@@ -639,6 +662,8 @@ model Dispute {
   createdAt DateTime @default(now()) @db.Timestamptz
   order Order @relation(fields: [orderId], references: [id], onDelete: Restrict)
   events DisputeEvent[]
+  evidence DisputeEvidence[]
+  decision DisputeDecision?
 }
 
 model DisputeEvent {
@@ -649,6 +674,31 @@ model DisputeEvent {
   payload Json
   createdAt DateTime @default(now()) @db.Timestamptz
   dispute Dispute @relation(fields: [disputeId], references: [id], onDelete: Restrict)
+}
+
+model DisputeEvidence {
+  id String @id @default(uuid()) @db.Uuid
+  disputeId String @db.Uuid
+  uploadedById String? @db.Uuid
+  storageKey String @unique
+  fileName String
+  mimeType String
+  sizeBytes Int
+  createdAt DateTime @default(now()) @db.Timestamptz
+  dispute Dispute @relation(fields: [disputeId], references: [id], onDelete: Restrict)
+  uploadedBy User? @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  @@index([disputeId, createdAt])
+}
+
+model DisputeDecision {
+  id String @id @default(uuid()) @db.Uuid
+  disputeId String @unique @db.Uuid
+  actorId String? @db.Uuid
+  outcome String
+  reason String
+  createdAt DateTime @default(now()) @db.Timestamptz
+  dispute Dispute @relation(fields: [disputeId], references: [id], onDelete: Restrict)
+  actor User? @relation(fields: [actorId], references: [id], onDelete: SetNull)
 }
 
 model Notification {

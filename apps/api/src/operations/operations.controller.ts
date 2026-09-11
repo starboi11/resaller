@@ -19,7 +19,9 @@ import {
   CancellationRequestDto,
   CheckoutDto,
   MessageDto,
+  OpenDisputeDto,
   QuestionDto,
+  QuestionReportDto,
   ReturnRequestDto,
   ReviewDto,
   TransitionOrderDto,
@@ -120,6 +122,20 @@ export class OperationsController {
     @Body() input: AnswerDto,
   ) {
     return this.operations.answer(req.user, id, input.body);
+  }
+  @Post('questions/:id/report') reportQuestion(
+    @Req() req: FastifyRequest & { user: AuthenticatedUser },
+    @Param('id') id: string,
+    @Body() input: QuestionReportDto,
+  ) {
+    return this.operations.reportQuestion(req.user.id, id, input.reason);
+  }
+  @Post('orders/:publicId/dispute') dispute(
+    @Req() req: FastifyRequest & { user: AuthenticatedUser },
+    @Param('publicId') id: string,
+    @Body() input: OpenDisputeDto,
+  ) {
+    return this.operations.openDispute(req.user, id, input.reason);
   }
   @Post('orders/:publicId/review') review(
     @Req() req: FastifyRequest & { user: AuthenticatedUser },

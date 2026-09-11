@@ -235,6 +235,10 @@ export type UserWhereInput = {
   securityEvents?: Prisma.SecurityEventListRelationFilter
   passwordResetTokens?: Prisma.PasswordResetTokenListRelationFilter
   twoFactorChallenges?: Prisma.TwoFactorChallengeListRelationFilter
+  questionReports?: Prisma.QuestionReportListRelationFilter
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceListRelationFilter
+  disputeDecisions?: Prisma.DisputeDecisionListRelationFilter
+  uploadedAttachments?: Prisma.AttachmentListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -265,6 +269,10 @@ export type UserOrderByWithRelationInput = {
   securityEvents?: Prisma.SecurityEventOrderByRelationAggregateInput
   passwordResetTokens?: Prisma.PasswordResetTokenOrderByRelationAggregateInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeOrderByRelationAggregateInput
+  questionReports?: Prisma.QuestionReportOrderByRelationAggregateInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceOrderByRelationAggregateInput
+  disputeDecisions?: Prisma.DisputeDecisionOrderByRelationAggregateInput
+  uploadedAttachments?: Prisma.AttachmentOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -298,6 +306,10 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   securityEvents?: Prisma.SecurityEventListRelationFilter
   passwordResetTokens?: Prisma.PasswordResetTokenListRelationFilter
   twoFactorChallenges?: Prisma.TwoFactorChallengeListRelationFilter
+  questionReports?: Prisma.QuestionReportListRelationFilter
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceListRelationFilter
+  disputeDecisions?: Prisma.DisputeDecisionListRelationFilter
+  uploadedAttachments?: Prisma.AttachmentListRelationFilter
 }, "id" | "publicId" | "username">
 
 export type UserOrderByWithAggregationInput = {
@@ -360,6 +372,10 @@ export type UserCreateInput = {
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -390,6 +406,10 @@ export type UserUncheckedCreateInput = {
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
 }
 
 export type UserUpdateInput = {
@@ -420,6 +440,10 @@ export type UserUpdateInput = {
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -450,6 +474,10 @@ export type UserUncheckedUpdateInput = {
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -711,6 +739,22 @@ export type UserUpdateOneRequiredWithoutOrdersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOrdersInput, Prisma.UserUpdateWithoutOrdersInput>, Prisma.UserUncheckedUpdateWithoutOrdersInput>
 }
 
+export type UserCreateNestedOneWithoutUploadedAttachmentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUploadedAttachmentsInput, Prisma.UserUncheckedCreateWithoutUploadedAttachmentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUploadedAttachmentsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutUploadedAttachmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUploadedAttachmentsInput, Prisma.UserUncheckedCreateWithoutUploadedAttachmentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUploadedAttachmentsInput
+  upsert?: Prisma.UserUpsertWithoutUploadedAttachmentsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUploadedAttachmentsInput, Prisma.UserUpdateWithoutUploadedAttachmentsInput>, Prisma.UserUncheckedUpdateWithoutUploadedAttachmentsInput>
+}
+
 export type UserCreateNestedOneWithoutQuestionsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutQuestionsInput, Prisma.UserUncheckedCreateWithoutQuestionsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutQuestionsInput
@@ -725,6 +769,20 @@ export type UserUpdateOneRequiredWithoutQuestionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutQuestionsInput, Prisma.UserUpdateWithoutQuestionsInput>, Prisma.UserUncheckedUpdateWithoutQuestionsInput>
 }
 
+export type UserCreateNestedOneWithoutQuestionReportsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutQuestionReportsInput, Prisma.UserUncheckedCreateWithoutQuestionReportsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutQuestionReportsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutQuestionReportsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutQuestionReportsInput, Prisma.UserUncheckedCreateWithoutQuestionReportsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutQuestionReportsInput
+  upsert?: Prisma.UserUpsertWithoutQuestionReportsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutQuestionReportsInput, Prisma.UserUpdateWithoutQuestionReportsInput>, Prisma.UserUncheckedUpdateWithoutQuestionReportsInput>
+}
+
 export type UserCreateNestedOneWithoutCouponRedemptionsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutCouponRedemptionsInput, Prisma.UserUncheckedCreateWithoutCouponRedemptionsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutCouponRedemptionsInput
@@ -737,6 +795,38 @@ export type UserUpdateOneRequiredWithoutCouponRedemptionsNestedInput = {
   upsert?: Prisma.UserUpsertWithoutCouponRedemptionsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCouponRedemptionsInput, Prisma.UserUpdateWithoutCouponRedemptionsInput>, Prisma.UserUncheckedUpdateWithoutCouponRedemptionsInput>
+}
+
+export type UserCreateNestedOneWithoutUploadedDisputeEvidenceInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUploadedDisputeEvidenceInput, Prisma.UserUncheckedCreateWithoutUploadedDisputeEvidenceInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUploadedDisputeEvidenceInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutUploadedDisputeEvidenceNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUploadedDisputeEvidenceInput, Prisma.UserUncheckedCreateWithoutUploadedDisputeEvidenceInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUploadedDisputeEvidenceInput
+  upsert?: Prisma.UserUpsertWithoutUploadedDisputeEvidenceInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUploadedDisputeEvidenceInput, Prisma.UserUpdateWithoutUploadedDisputeEvidenceInput>, Prisma.UserUncheckedUpdateWithoutUploadedDisputeEvidenceInput>
+}
+
+export type UserCreateNestedOneWithoutDisputeDecisionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDisputeDecisionsInput, Prisma.UserUncheckedCreateWithoutDisputeDecisionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDisputeDecisionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutDisputeDecisionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDisputeDecisionsInput, Prisma.UserUncheckedCreateWithoutDisputeDecisionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDisputeDecisionsInput
+  upsert?: Prisma.UserUpsertWithoutDisputeDecisionsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDisputeDecisionsInput, Prisma.UserUpdateWithoutDisputeDecisionsInput>, Prisma.UserUncheckedUpdateWithoutDisputeDecisionsInput>
 }
 
 export type UserCreateNestedOneWithoutNotificationsInput = {
@@ -840,6 +930,10 @@ export type UserCreateWithoutSessionsInput = {
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -869,6 +963,10 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -914,6 +1012,10 @@ export type UserUpdateWithoutSessionsInput = {
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -943,6 +1045,10 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserCreateWithoutPasswordResetTokensInput = {
@@ -972,6 +1078,10 @@ export type UserCreateWithoutPasswordResetTokensInput = {
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
 }
 
 export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
@@ -1001,6 +1111,10 @@ export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
 }
 
 export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -1046,6 +1160,10 @@ export type UserUpdateWithoutPasswordResetTokensInput = {
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
@@ -1075,6 +1193,10 @@ export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserCreateWithoutTwoFactorChallengesInput = {
@@ -1104,6 +1226,10 @@ export type UserCreateWithoutTwoFactorChallengesInput = {
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
 }
 
 export type UserUncheckedCreateWithoutTwoFactorChallengesInput = {
@@ -1133,6 +1259,10 @@ export type UserUncheckedCreateWithoutTwoFactorChallengesInput = {
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
 }
 
 export type UserCreateOrConnectWithoutTwoFactorChallengesInput = {
@@ -1178,6 +1308,10 @@ export type UserUpdateWithoutTwoFactorChallengesInput = {
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTwoFactorChallengesInput = {
@@ -1207,6 +1341,10 @@ export type UserUncheckedUpdateWithoutTwoFactorChallengesInput = {
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserCreateWithoutSellerProfileInput = {
@@ -1236,6 +1374,10 @@ export type UserCreateWithoutSellerProfileInput = {
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
 }
 
 export type UserUncheckedCreateWithoutSellerProfileInput = {
@@ -1265,6 +1407,10 @@ export type UserUncheckedCreateWithoutSellerProfileInput = {
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
 }
 
 export type UserCreateOrConnectWithoutSellerProfileInput = {
@@ -1310,6 +1456,10 @@ export type UserUpdateWithoutSellerProfileInput = {
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSellerProfileInput = {
@@ -1339,6 +1489,10 @@ export type UserUncheckedUpdateWithoutSellerProfileInput = {
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserCreateWithoutStoreMembershipsInput = {
@@ -1368,6 +1522,10 @@ export type UserCreateWithoutStoreMembershipsInput = {
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
 }
 
 export type UserUncheckedCreateWithoutStoreMembershipsInput = {
@@ -1397,6 +1555,10 @@ export type UserUncheckedCreateWithoutStoreMembershipsInput = {
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
 }
 
 export type UserCreateOrConnectWithoutStoreMembershipsInput = {
@@ -1442,6 +1604,10 @@ export type UserUpdateWithoutStoreMembershipsInput = {
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStoreMembershipsInput = {
@@ -1471,6 +1637,10 @@ export type UserUncheckedUpdateWithoutStoreMembershipsInput = {
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserCreateWithoutCheckoutsInput = {
@@ -1500,6 +1670,10 @@ export type UserCreateWithoutCheckoutsInput = {
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
 }
 
 export type UserUncheckedCreateWithoutCheckoutsInput = {
@@ -1529,6 +1703,10 @@ export type UserUncheckedCreateWithoutCheckoutsInput = {
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
 }
 
 export type UserCreateOrConnectWithoutCheckoutsInput = {
@@ -1574,6 +1752,10 @@ export type UserUpdateWithoutCheckoutsInput = {
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCheckoutsInput = {
@@ -1603,6 +1785,10 @@ export type UserUncheckedUpdateWithoutCheckoutsInput = {
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserCreateWithoutCartsInput = {
@@ -1632,6 +1818,10 @@ export type UserCreateWithoutCartsInput = {
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
 }
 
 export type UserUncheckedCreateWithoutCartsInput = {
@@ -1661,6 +1851,10 @@ export type UserUncheckedCreateWithoutCartsInput = {
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
 }
 
 export type UserCreateOrConnectWithoutCartsInput = {
@@ -1706,6 +1900,10 @@ export type UserUpdateWithoutCartsInput = {
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCartsInput = {
@@ -1735,6 +1933,10 @@ export type UserUncheckedUpdateWithoutCartsInput = {
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserCreateWithoutFavoritesInput = {
@@ -1764,6 +1966,10 @@ export type UserCreateWithoutFavoritesInput = {
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
 }
 
 export type UserUncheckedCreateWithoutFavoritesInput = {
@@ -1793,6 +1999,10 @@ export type UserUncheckedCreateWithoutFavoritesInput = {
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
 }
 
 export type UserCreateOrConnectWithoutFavoritesInput = {
@@ -1838,6 +2048,10 @@ export type UserUpdateWithoutFavoritesInput = {
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFavoritesInput = {
@@ -1867,6 +2081,10 @@ export type UserUncheckedUpdateWithoutFavoritesInput = {
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserCreateWithoutFollowedStoresInput = {
@@ -1896,6 +2114,10 @@ export type UserCreateWithoutFollowedStoresInput = {
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
 }
 
 export type UserUncheckedCreateWithoutFollowedStoresInput = {
@@ -1925,6 +2147,10 @@ export type UserUncheckedCreateWithoutFollowedStoresInput = {
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
 }
 
 export type UserCreateOrConnectWithoutFollowedStoresInput = {
@@ -1970,6 +2196,10 @@ export type UserUpdateWithoutFollowedStoresInput = {
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFollowedStoresInput = {
@@ -1999,6 +2229,10 @@ export type UserUncheckedUpdateWithoutFollowedStoresInput = {
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserCreateWithoutOrdersInput = {
@@ -2028,6 +2262,10 @@ export type UserCreateWithoutOrdersInput = {
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
 }
 
 export type UserUncheckedCreateWithoutOrdersInput = {
@@ -2057,6 +2295,10 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
 }
 
 export type UserCreateOrConnectWithoutOrdersInput = {
@@ -2102,6 +2344,10 @@ export type UserUpdateWithoutOrdersInput = {
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -2131,6 +2377,158 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
+}
+
+export type UserCreateWithoutUploadedAttachmentsInput = {
+  id?: string
+  publicId?: string
+  username: string
+  passwordHash: string
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutUserInput
+  storeMemberships?: Prisma.StoreMemberCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartCreateNestedManyWithoutBuyerInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
+  followedStores?: Prisma.StoreFollowerCreateNestedManyWithoutUserInput
+  questions?: Prisma.StoreQuestionCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+}
+
+export type UserUncheckedCreateWithoutUploadedAttachmentsInput = {
+  id?: string
+  publicId?: string
+  username: string
+  passwordHash: string
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutUserInput
+  storeMemberships?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutBuyerInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
+  followedStores?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutUserInput
+  questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+}
+
+export type UserCreateOrConnectWithoutUploadedAttachmentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutUploadedAttachmentsInput, Prisma.UserUncheckedCreateWithoutUploadedAttachmentsInput>
+}
+
+export type UserUpsertWithoutUploadedAttachmentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutUploadedAttachmentsInput, Prisma.UserUncheckedUpdateWithoutUploadedAttachmentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutUploadedAttachmentsInput, Prisma.UserUncheckedCreateWithoutUploadedAttachmentsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutUploadedAttachmentsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutUploadedAttachmentsInput, Prisma.UserUncheckedUpdateWithoutUploadedAttachmentsInput>
+}
+
+export type UserUpdateWithoutUploadedAttachmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  sellerProfile?: Prisma.SellerProfileUpdateOneWithoutUserNestedInput
+  storeMemberships?: Prisma.StoreMemberUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUpdateManyWithoutBuyerNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
+  followedStores?: Prisma.StoreFollowerUpdateManyWithoutUserNestedInput
+  questions?: Prisma.StoreQuestionUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+}
+
+export type UserUncheckedUpdateWithoutUploadedAttachmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutUserNestedInput
+  storeMemberships?: Prisma.StoreMemberUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutBuyerNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
+  followedStores?: Prisma.StoreFollowerUncheckedUpdateManyWithoutUserNestedInput
+  questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
 }
 
 export type UserCreateWithoutQuestionsInput = {
@@ -2160,6 +2558,10 @@ export type UserCreateWithoutQuestionsInput = {
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
 }
 
 export type UserUncheckedCreateWithoutQuestionsInput = {
@@ -2189,6 +2591,10 @@ export type UserUncheckedCreateWithoutQuestionsInput = {
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
 }
 
 export type UserCreateOrConnectWithoutQuestionsInput = {
@@ -2234,6 +2640,10 @@ export type UserUpdateWithoutQuestionsInput = {
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutQuestionsInput = {
@@ -2263,6 +2673,158 @@ export type UserUncheckedUpdateWithoutQuestionsInput = {
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
+}
+
+export type UserCreateWithoutQuestionReportsInput = {
+  id?: string
+  publicId?: string
+  username: string
+  passwordHash: string
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutUserInput
+  storeMemberships?: Prisma.StoreMemberCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartCreateNestedManyWithoutBuyerInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
+  followedStores?: Prisma.StoreFollowerCreateNestedManyWithoutUserInput
+  questions?: Prisma.StoreQuestionCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
+}
+
+export type UserUncheckedCreateWithoutQuestionReportsInput = {
+  id?: string
+  publicId?: string
+  username: string
+  passwordHash: string
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutUserInput
+  storeMemberships?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutBuyerInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
+  followedStores?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutUserInput
+  questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
+}
+
+export type UserCreateOrConnectWithoutQuestionReportsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutQuestionReportsInput, Prisma.UserUncheckedCreateWithoutQuestionReportsInput>
+}
+
+export type UserUpsertWithoutQuestionReportsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutQuestionReportsInput, Prisma.UserUncheckedUpdateWithoutQuestionReportsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutQuestionReportsInput, Prisma.UserUncheckedCreateWithoutQuestionReportsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutQuestionReportsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutQuestionReportsInput, Prisma.UserUncheckedUpdateWithoutQuestionReportsInput>
+}
+
+export type UserUpdateWithoutQuestionReportsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  sellerProfile?: Prisma.SellerProfileUpdateOneWithoutUserNestedInput
+  storeMemberships?: Prisma.StoreMemberUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUpdateManyWithoutBuyerNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
+  followedStores?: Prisma.StoreFollowerUpdateManyWithoutUserNestedInput
+  questions?: Prisma.StoreQuestionUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
+}
+
+export type UserUncheckedUpdateWithoutQuestionReportsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutUserNestedInput
+  storeMemberships?: Prisma.StoreMemberUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutBuyerNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
+  followedStores?: Prisma.StoreFollowerUncheckedUpdateManyWithoutUserNestedInput
+  questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserCreateWithoutCouponRedemptionsInput = {
@@ -2292,6 +2854,10 @@ export type UserCreateWithoutCouponRedemptionsInput = {
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
 }
 
 export type UserUncheckedCreateWithoutCouponRedemptionsInput = {
@@ -2321,6 +2887,10 @@ export type UserUncheckedCreateWithoutCouponRedemptionsInput = {
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
 }
 
 export type UserCreateOrConnectWithoutCouponRedemptionsInput = {
@@ -2366,6 +2936,10 @@ export type UserUpdateWithoutCouponRedemptionsInput = {
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCouponRedemptionsInput = {
@@ -2395,6 +2969,306 @@ export type UserUncheckedUpdateWithoutCouponRedemptionsInput = {
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
+}
+
+export type UserCreateWithoutUploadedDisputeEvidenceInput = {
+  id?: string
+  publicId?: string
+  username: string
+  passwordHash: string
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutUserInput
+  storeMemberships?: Prisma.StoreMemberCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartCreateNestedManyWithoutBuyerInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
+  followedStores?: Prisma.StoreFollowerCreateNestedManyWithoutUserInput
+  questions?: Prisma.StoreQuestionCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
+}
+
+export type UserUncheckedCreateWithoutUploadedDisputeEvidenceInput = {
+  id?: string
+  publicId?: string
+  username: string
+  passwordHash: string
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutUserInput
+  storeMemberships?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutBuyerInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
+  followedStores?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutUserInput
+  questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
+}
+
+export type UserCreateOrConnectWithoutUploadedDisputeEvidenceInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutUploadedDisputeEvidenceInput, Prisma.UserUncheckedCreateWithoutUploadedDisputeEvidenceInput>
+}
+
+export type UserUpsertWithoutUploadedDisputeEvidenceInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutUploadedDisputeEvidenceInput, Prisma.UserUncheckedUpdateWithoutUploadedDisputeEvidenceInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutUploadedDisputeEvidenceInput, Prisma.UserUncheckedCreateWithoutUploadedDisputeEvidenceInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutUploadedDisputeEvidenceInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutUploadedDisputeEvidenceInput, Prisma.UserUncheckedUpdateWithoutUploadedDisputeEvidenceInput>
+}
+
+export type UserUpdateWithoutUploadedDisputeEvidenceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  sellerProfile?: Prisma.SellerProfileUpdateOneWithoutUserNestedInput
+  storeMemberships?: Prisma.StoreMemberUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUpdateManyWithoutBuyerNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
+  followedStores?: Prisma.StoreFollowerUpdateManyWithoutUserNestedInput
+  questions?: Prisma.StoreQuestionUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
+}
+
+export type UserUncheckedUpdateWithoutUploadedDisputeEvidenceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutUserNestedInput
+  storeMemberships?: Prisma.StoreMemberUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutBuyerNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
+  followedStores?: Prisma.StoreFollowerUncheckedUpdateManyWithoutUserNestedInput
+  questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
+}
+
+export type UserCreateWithoutDisputeDecisionsInput = {
+  id?: string
+  publicId?: string
+  username: string
+  passwordHash: string
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutUserInput
+  storeMemberships?: Prisma.StoreMemberCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartCreateNestedManyWithoutBuyerInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
+  followedStores?: Prisma.StoreFollowerCreateNestedManyWithoutUserInput
+  questions?: Prisma.StoreQuestionCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
+}
+
+export type UserUncheckedCreateWithoutDisputeDecisionsInput = {
+  id?: string
+  publicId?: string
+  username: string
+  passwordHash: string
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutUserInput
+  storeMemberships?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutBuyerInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
+  followedStores?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutUserInput
+  questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
+}
+
+export type UserCreateOrConnectWithoutDisputeDecisionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutDisputeDecisionsInput, Prisma.UserUncheckedCreateWithoutDisputeDecisionsInput>
+}
+
+export type UserUpsertWithoutDisputeDecisionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutDisputeDecisionsInput, Prisma.UserUncheckedUpdateWithoutDisputeDecisionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutDisputeDecisionsInput, Prisma.UserUncheckedCreateWithoutDisputeDecisionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutDisputeDecisionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutDisputeDecisionsInput, Prisma.UserUncheckedUpdateWithoutDisputeDecisionsInput>
+}
+
+export type UserUpdateWithoutDisputeDecisionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  sellerProfile?: Prisma.SellerProfileUpdateOneWithoutUserNestedInput
+  storeMemberships?: Prisma.StoreMemberUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUpdateManyWithoutBuyerNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
+  followedStores?: Prisma.StoreFollowerUpdateManyWithoutUserNestedInput
+  questions?: Prisma.StoreQuestionUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
+}
+
+export type UserUncheckedUpdateWithoutDisputeDecisionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutUserNestedInput
+  storeMemberships?: Prisma.StoreMemberUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutBuyerNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
+  followedStores?: Prisma.StoreFollowerUncheckedUpdateManyWithoutUserNestedInput
+  questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -2424,6 +3298,10 @@ export type UserCreateWithoutNotificationsInput = {
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -2453,6 +3331,10 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -2498,6 +3380,10 @@ export type UserUpdateWithoutNotificationsInput = {
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -2527,6 +3413,10 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserCreateWithoutNotificationPreferencesInput = {
@@ -2556,6 +3446,10 @@ export type UserCreateWithoutNotificationPreferencesInput = {
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
 }
 
 export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
@@ -2585,6 +3479,10 @@ export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
 }
 
 export type UserCreateOrConnectWithoutNotificationPreferencesInput = {
@@ -2630,6 +3528,10 @@ export type UserUpdateWithoutNotificationPreferencesInput = {
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
@@ -2659,6 +3561,10 @@ export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserCreateWithoutLegalAcceptancesInput = {
@@ -2688,6 +3594,10 @@ export type UserCreateWithoutLegalAcceptancesInput = {
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
 }
 
 export type UserUncheckedCreateWithoutLegalAcceptancesInput = {
@@ -2717,6 +3627,10 @@ export type UserUncheckedCreateWithoutLegalAcceptancesInput = {
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
 }
 
 export type UserCreateOrConnectWithoutLegalAcceptancesInput = {
@@ -2762,6 +3676,10 @@ export type UserUpdateWithoutLegalAcceptancesInput = {
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLegalAcceptancesInput = {
@@ -2791,6 +3709,10 @@ export type UserUncheckedUpdateWithoutLegalAcceptancesInput = {
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
@@ -2820,6 +3742,10 @@ export type UserCreateWithoutAuditLogsInput = {
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -2849,6 +3775,10 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -2894,6 +3824,10 @@ export type UserUpdateWithoutAuditLogsInput = {
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -2923,6 +3857,10 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserCreateWithoutSecurityEventsInput = {
@@ -2952,6 +3890,10 @@ export type UserCreateWithoutSecurityEventsInput = {
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
 }
 
 export type UserUncheckedCreateWithoutSecurityEventsInput = {
@@ -2981,6 +3923,10 @@ export type UserUncheckedCreateWithoutSecurityEventsInput = {
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
 }
 
 export type UserCreateOrConnectWithoutSecurityEventsInput = {
@@ -3026,6 +3972,10 @@ export type UserUpdateWithoutSecurityEventsInput = {
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSecurityEventsInput = {
@@ -3055,6 +4005,10 @@ export type UserUncheckedUpdateWithoutSecurityEventsInput = {
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
 }
 
 
@@ -3079,6 +4033,10 @@ export type UserCountOutputType = {
   securityEvents: number
   passwordResetTokens: number
   twoFactorChallenges: number
+  questionReports: number
+  uploadedDisputeEvidence: number
+  disputeDecisions: number
+  uploadedAttachments: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3098,6 +4056,10 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   securityEvents?: boolean | UserCountOutputTypeCountSecurityEventsArgs
   passwordResetTokens?: boolean | UserCountOutputTypeCountPasswordResetTokensArgs
   twoFactorChallenges?: boolean | UserCountOutputTypeCountTwoFactorChallengesArgs
+  questionReports?: boolean | UserCountOutputTypeCountQuestionReportsArgs
+  uploadedDisputeEvidence?: boolean | UserCountOutputTypeCountUploadedDisputeEvidenceArgs
+  disputeDecisions?: boolean | UserCountOutputTypeCountDisputeDecisionsArgs
+  uploadedAttachments?: boolean | UserCountOutputTypeCountUploadedAttachmentsArgs
 }
 
 /**
@@ -3222,6 +4184,34 @@ export type UserCountOutputTypeCountTwoFactorChallengesArgs<ExtArgs extends runt
   where?: Prisma.TwoFactorChallengeWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountQuestionReportsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.QuestionReportWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountUploadedDisputeEvidenceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DisputeEvidenceWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountDisputeDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DisputeDecisionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountUploadedAttachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AttachmentWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3251,6 +4241,10 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   securityEvents?: boolean | Prisma.User$securityEventsArgs<ExtArgs>
   passwordResetTokens?: boolean | Prisma.User$passwordResetTokensArgs<ExtArgs>
   twoFactorChallenges?: boolean | Prisma.User$twoFactorChallengesArgs<ExtArgs>
+  questionReports?: boolean | Prisma.User$questionReportsArgs<ExtArgs>
+  uploadedDisputeEvidence?: boolean | Prisma.User$uploadedDisputeEvidenceArgs<ExtArgs>
+  disputeDecisions?: boolean | Prisma.User$disputeDecisionsArgs<ExtArgs>
+  uploadedAttachments?: boolean | Prisma.User$uploadedAttachmentsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -3312,6 +4306,10 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   securityEvents?: boolean | Prisma.User$securityEventsArgs<ExtArgs>
   passwordResetTokens?: boolean | Prisma.User$passwordResetTokensArgs<ExtArgs>
   twoFactorChallenges?: boolean | Prisma.User$twoFactorChallengesArgs<ExtArgs>
+  questionReports?: boolean | Prisma.User$questionReportsArgs<ExtArgs>
+  uploadedDisputeEvidence?: boolean | Prisma.User$uploadedDisputeEvidenceArgs<ExtArgs>
+  disputeDecisions?: boolean | Prisma.User$disputeDecisionsArgs<ExtArgs>
+  uploadedAttachments?: boolean | Prisma.User$uploadedAttachmentsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -3337,6 +4335,10 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     securityEvents: Prisma.$SecurityEventPayload<ExtArgs>[]
     passwordResetTokens: Prisma.$PasswordResetTokenPayload<ExtArgs>[]
     twoFactorChallenges: Prisma.$TwoFactorChallengePayload<ExtArgs>[]
+    questionReports: Prisma.$QuestionReportPayload<ExtArgs>[]
+    uploadedDisputeEvidence: Prisma.$DisputeEvidencePayload<ExtArgs>[]
+    disputeDecisions: Prisma.$DisputeDecisionPayload<ExtArgs>[]
+    uploadedAttachments: Prisma.$AttachmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3760,6 +4762,10 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   securityEvents<T extends Prisma.User$securityEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$securityEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SecurityEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   passwordResetTokens<T extends Prisma.User$passwordResetTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$passwordResetTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PasswordResetTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   twoFactorChallenges<T extends Prisma.User$twoFactorChallengesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$twoFactorChallengesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TwoFactorChallengePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  questionReports<T extends Prisma.User$questionReportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$questionReportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QuestionReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  uploadedDisputeEvidence<T extends Prisma.User$uploadedDisputeEvidenceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$uploadedDisputeEvidenceArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DisputeEvidencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  disputeDecisions<T extends Prisma.User$disputeDecisionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$disputeDecisionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DisputeDecisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  uploadedAttachments<T extends Prisma.User$uploadedAttachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$uploadedAttachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4592,6 +5598,102 @@ export type User$twoFactorChallengesArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.TwoFactorChallengeScalarFieldEnum | Prisma.TwoFactorChallengeScalarFieldEnum[]
+}
+
+/**
+ * User.questionReports
+ */
+export type User$questionReportsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the QuestionReport
+   */
+  select?: Prisma.QuestionReportSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the QuestionReport
+   */
+  omit?: Prisma.QuestionReportOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.QuestionReportInclude<ExtArgs> | null
+  where?: Prisma.QuestionReportWhereInput
+  orderBy?: Prisma.QuestionReportOrderByWithRelationInput | Prisma.QuestionReportOrderByWithRelationInput[]
+  cursor?: Prisma.QuestionReportWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.QuestionReportScalarFieldEnum | Prisma.QuestionReportScalarFieldEnum[]
+}
+
+/**
+ * User.uploadedDisputeEvidence
+ */
+export type User$uploadedDisputeEvidenceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DisputeEvidence
+   */
+  select?: Prisma.DisputeEvidenceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DisputeEvidence
+   */
+  omit?: Prisma.DisputeEvidenceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DisputeEvidenceInclude<ExtArgs> | null
+  where?: Prisma.DisputeEvidenceWhereInput
+  orderBy?: Prisma.DisputeEvidenceOrderByWithRelationInput | Prisma.DisputeEvidenceOrderByWithRelationInput[]
+  cursor?: Prisma.DisputeEvidenceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DisputeEvidenceScalarFieldEnum | Prisma.DisputeEvidenceScalarFieldEnum[]
+}
+
+/**
+ * User.disputeDecisions
+ */
+export type User$disputeDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DisputeDecision
+   */
+  select?: Prisma.DisputeDecisionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DisputeDecision
+   */
+  omit?: Prisma.DisputeDecisionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DisputeDecisionInclude<ExtArgs> | null
+  where?: Prisma.DisputeDecisionWhereInput
+  orderBy?: Prisma.DisputeDecisionOrderByWithRelationInput | Prisma.DisputeDecisionOrderByWithRelationInput[]
+  cursor?: Prisma.DisputeDecisionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DisputeDecisionScalarFieldEnum | Prisma.DisputeDecisionScalarFieldEnum[]
+}
+
+/**
+ * User.uploadedAttachments
+ */
+export type User$uploadedAttachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Attachment
+   */
+  select?: Prisma.AttachmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Attachment
+   */
+  omit?: Prisma.AttachmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AttachmentInclude<ExtArgs> | null
+  where?: Prisma.AttachmentWhereInput
+  orderBy?: Prisma.AttachmentOrderByWithRelationInput | Prisma.AttachmentOrderByWithRelationInput[]
+  cursor?: Prisma.AttachmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AttachmentScalarFieldEnum | Prisma.AttachmentScalarFieldEnum[]
 }
 
 /**
