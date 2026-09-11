@@ -599,14 +599,6 @@ export type CouponUncheckedUpdateManyWithoutStoreNestedInput = {
   deleteMany?: Prisma.CouponScalarWhereInput | Prisma.CouponScalarWhereInput[]
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type CouponCreateNestedOneWithoutRedemptionsInput = {
   create?: Prisma.XOR<Prisma.CouponCreateWithoutRedemptionsInput, Prisma.CouponUncheckedCreateWithoutRedemptionsInput>
   connectOrCreate?: Prisma.CouponCreateOrConnectWithoutRedemptionsInput

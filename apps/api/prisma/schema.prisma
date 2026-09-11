@@ -312,11 +312,14 @@ model Inventory {
 }
 
 model ListingMedia {
-  id String @id @default(uuid()) @db.Uuid
-  listingId String @db.Uuid
-  storageKey String @unique
-  mimeType String
-  position Int
+    id String @id @default(uuid()) @db.Uuid
+    listingId String @db.Uuid
+    storageKey String @unique
+    thumbnailStorageKey String? @unique
+    mimeType String
+    width Int?
+    height Int?
+    position Int
   listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
   @@unique([listingId, position])
 }

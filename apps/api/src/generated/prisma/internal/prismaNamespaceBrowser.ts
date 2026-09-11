@@ -316,7 +316,10 @@ export const ListingMediaScalarFieldEnum = {
   id: 'id',
   listingId: 'listingId',
   storageKey: 'storageKey',
+  thumbnailStorageKey: 'thumbnailStorageKey',
   mimeType: 'mimeType',
+  width: 'width',
+  height: 'height',
   position: 'position'
 } as const
 

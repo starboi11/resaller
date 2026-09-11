@@ -1,17 +1,52 @@
 import { z } from 'zod';
 
-export const apiEnvironmentSchema = z.object({
-  NODE_ENV: z.enum(['development', 'test', 'staging', 'production']).default('development'),
-  API_PORT: z.coerce.number().int().positive().default(4000),
-  API_HOST: z.string().default('0.0.0.0'),
-  DATABASE_URL: z.string().min(1),
-  REDIS_URL: z.string().url(),
-  SESSION_SECRET: z.string().min(32),
-  LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
-  CORS_ORIGINS: z.string().transform((value) => value.split(',').map((item) => item.trim())),
-  MEDIA_ROOT: z.string().min(1).default('./data/media'),
-  PRIVATE_MEDIA_ROOT: z.string().min(1).default('./data/private-media'),
-});
+export const apiEnvironmentSchema = z
+  .object({
+    NODE_ENV: z
+      .enum(['development', 'test', 'staging', 'production'])
+      .default('development'),
+    API_PORT: z.coerce.number().int().positive().default(4000),
+    API_HOST: z.string().default('0.0.0.0'),
+    DATABASE_URL: z.string().min(1),
+    REDIS_URL: z.string().url(),
+    SESSION_SECRET: z.string().min(32),
+    LOG_LEVEL: z
+      .enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace'])
+      .default('info'),
+    CORS_ORIGINS: z
+      .string()
+      .transform((value) => value.split(',').map((item) => item.trim())),
+    MEDIA_ROOT: z.string().min(1).default('./data/media'),
+    PRIVATE_MEDIA_ROOT: z.string().min(1).default('./data/private-media'),
+    MEDIA_STORAGE_DRIVER: z.enum(['local', 's3']).default('local'),
+    S3_ENDPOINT: z.string().url().optional(),
+    S3_REGION: z.string().min(1).default('auto'),
+    S3_BUCKET: z.string().min(1).optional(),
+    S3_ACCESS_KEY_ID: z.string().min(1).optional(),
+    S3_SECRET_ACCESS_KEY: z.string().min(1).optional(),
+    S3_FORCE_PATH_STYLE: z
+      .enum(['true', 'false'])
+      .default('true')
+      .transform((value) => value === 'true'),
+  })
+  .superRefine((value, context) => {
+    if (value.MEDIA_STORAGE_DRIVER !== 's3') return;
+    for (const field of [
+      'S3_ENDPOINT',
+      'S3_BUCKET',
+      'S3_ACCESS_KEY_ID',
+      'S3_SECRET_ACCESS_KEY',
+    ] as const) {
+      if (!value[field])
+        context.addIssue({
+          code: 'custom',
+          path: [field],
+          message: `${field} is required for S3 media storage`,
+        });
+    }
+  });
 
 export type ApiEnvironment = z.infer<typeof apiEnvironmentSchema>;
-export const parseApiEnvironment = (environment: Record<string, string | undefined>): ApiEnvironment => apiEnvironmentSchema.parse(environment);
+export const parseApiEnvironment = (
+  environment: Record<string, string | undefined>,
+): ApiEnvironment => apiEnvironmentSchema.parse(environment);
