@@ -21,7 +21,7 @@ The backend foundation is completed before final UI implementation. A block is c
 - [x] Explicit session-token rotation with atomic old-token revocation
 - [x] Password recovery with hashed, expiring, single-use tokens
 - [x] Mandatory encrypted TOTP enrollment and login for privileged admin roles
-- [ ] Automated secret scanning
+- [x] Automated tracked-file secret scanning in local checks and CI
 
 ### F3 Seller, catalog and media domain
 

@@ -1,5 +1,7 @@
 # Resaller A–D master roadmap
 
+Execution gates and the meaning of each status are authoritative in `layered-execution-plan.md`.
+
 This roadmap is the single delivery order. Earlier approvals remain locked unless a major business, legal, cost, or security issue requires a change.
 
 ## A — Product and business
@@ -67,7 +69,7 @@ Goal: implement the approved experience consistently across mobile, tablet, and 
 
 Cross-cutting requirements: Light/Dark/System themes, reduced motion, accessible focus/labels, reusable components, image optimization, lazy loading, and performance budgets.
 
-The approved C specification is complete; its full implementation starts only after foundation stages F1–F6 pass.
+The approved C specification is `LOCKED`. Its current implementation is only `BASELINE`; it must not be called complete until the reference screens and acceptance evidence pass.
 
 ## D — Real development
 

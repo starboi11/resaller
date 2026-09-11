@@ -22,6 +22,7 @@ jobs:
       - run: pnpm --filter @resaller/api db:validate
         env:
           DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+      - run: pnpm security:secrets
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm test
