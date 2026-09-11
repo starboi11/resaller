@@ -4,5 +4,9 @@ import { OperationsController } from './operations.controller.js';
 import { OperationsService } from './operations.service.js';
 import { OrderTimeoutService } from './order-timeout.service.js';
 
-@Module({ imports: [AuthModule], controllers: [OperationsController], providers: [OperationsService, OrderTimeoutService] })
+@Module({
+  imports: [AuthModule],
+  controllers: [OperationsController],
+  providers: [OperationsService, OrderTimeoutService],
+})
 export class OperationsModule {}

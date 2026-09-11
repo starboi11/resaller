@@ -401,6 +401,8 @@ model Order {
   storeId String @db.Uuid
   status OrderStatus @default(WAITING_SELLER)
   totalMinor BigInt
+  subtotalMinor BigInt
+  discountMinor BigInt @default(0)
   currency String @default("UZS")
   snapshot Json
   sellerAcceptBy DateTime @db.Timestamptz
@@ -417,6 +419,7 @@ model Order {
   review Review?
   dispute Dispute?
   policySnapshots PolicySnapshot[]
+  couponRedemptions CouponRedemption[]
   @@index([storeId, status, sellerAcceptBy])
   @@index([buyerId, createdAt])
 }
@@ -613,6 +616,7 @@ model CouponRedemption {
   redeemedAt DateTime @default(now()) @db.Timestamptz
   coupon Coupon @relation(fields: [couponId], references: [id], onDelete: Restrict)
   user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+  order Order @relation(fields: [orderId], references: [id], onDelete: Restrict)
   @@unique([couponId, orderId])
   @@index([couponId, userId])
 }

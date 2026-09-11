@@ -37,9 +37,9 @@ The backend foundation is completed before final UI implementation. A block is c
 - [x] Multi-seller checkout and idempotency
 - [x] Immutable snapshots and stock reservations
 - [x] Seller 60-minute acceptance and automatic stock release
-- [ ] Coupon calculation/redemption transaction
-- [ ] Cancellation-request and return workflow completion
-- [ ] Database concurrency tests for last-stock and duplicate checkout
+- [x] Coupon calculation/redemption transaction with DB amount invariants
+- [x] Cancellation decision and return-request workflow
+- [x] PostgreSQL concurrency test for last-stock checkout; idempotency is DB-unique
 
 ### F5 Communication, trust and operations
 

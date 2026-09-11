@@ -184,6 +184,7 @@ export type CouponRedemptionWhereInput = {
   redeemedAt?: Prisma.DateTimeFilter<"CouponRedemption"> | Date | string
   coupon?: Prisma.XOR<Prisma.CouponScalarRelationFilter, Prisma.CouponWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
 }
 
 export type CouponRedemptionOrderByWithRelationInput = {
@@ -194,6 +195,7 @@ export type CouponRedemptionOrderByWithRelationInput = {
   redeemedAt?: Prisma.SortOrder
   coupon?: Prisma.CouponOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
+  order?: Prisma.OrderOrderByWithRelationInput
 }
 
 export type CouponRedemptionWhereUniqueInput = Prisma.AtLeast<{
@@ -208,6 +210,7 @@ export type CouponRedemptionWhereUniqueInput = Prisma.AtLeast<{
   redeemedAt?: Prisma.DateTimeFilter<"CouponRedemption"> | Date | string
   coupon?: Prisma.XOR<Prisma.CouponScalarRelationFilter, Prisma.CouponWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
 }, "id" | "couponId_orderId">
 
 export type CouponRedemptionOrderByWithAggregationInput = {
@@ -234,10 +237,10 @@ export type CouponRedemptionScalarWhereWithAggregatesInput = {
 
 export type CouponRedemptionCreateInput = {
   id?: string
-  orderId: string
   redeemedAt?: Date | string
   coupon: Prisma.CouponCreateNestedOneWithoutRedemptionsInput
   user: Prisma.UserCreateNestedOneWithoutCouponRedemptionsInput
+  order: Prisma.OrderCreateNestedOneWithoutCouponRedemptionsInput
 }
 
 export type CouponRedemptionUncheckedCreateInput = {
@@ -250,10 +253,10 @@ export type CouponRedemptionUncheckedCreateInput = {
 
 export type CouponRedemptionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  orderId?: Prisma.StringFieldUpdateOperationsInput | string
   redeemedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   coupon?: Prisma.CouponUpdateOneRequiredWithoutRedemptionsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCouponRedemptionsNestedInput
+  order?: Prisma.OrderUpdateOneRequiredWithoutCouponRedemptionsNestedInput
 }
 
 export type CouponRedemptionUncheckedUpdateInput = {
@@ -274,7 +277,6 @@ export type CouponRedemptionCreateManyInput = {
 
 export type CouponRedemptionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  orderId?: Prisma.StringFieldUpdateOperationsInput | string
   redeemedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -367,6 +369,48 @@ export type CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.CouponRedemptionScalarWhereInput | Prisma.CouponRedemptionScalarWhereInput[]
 }
 
+export type CouponRedemptionCreateNestedManyWithoutOrderInput = {
+  create?: Prisma.XOR<Prisma.CouponRedemptionCreateWithoutOrderInput, Prisma.CouponRedemptionUncheckedCreateWithoutOrderInput> | Prisma.CouponRedemptionCreateWithoutOrderInput[] | Prisma.CouponRedemptionUncheckedCreateWithoutOrderInput[]
+  connectOrCreate?: Prisma.CouponRedemptionCreateOrConnectWithoutOrderInput | Prisma.CouponRedemptionCreateOrConnectWithoutOrderInput[]
+  createMany?: Prisma.CouponRedemptionCreateManyOrderInputEnvelope
+  connect?: Prisma.CouponRedemptionWhereUniqueInput | Prisma.CouponRedemptionWhereUniqueInput[]
+}
+
+export type CouponRedemptionUncheckedCreateNestedManyWithoutOrderInput = {
+  create?: Prisma.XOR<Prisma.CouponRedemptionCreateWithoutOrderInput, Prisma.CouponRedemptionUncheckedCreateWithoutOrderInput> | Prisma.CouponRedemptionCreateWithoutOrderInput[] | Prisma.CouponRedemptionUncheckedCreateWithoutOrderInput[]
+  connectOrCreate?: Prisma.CouponRedemptionCreateOrConnectWithoutOrderInput | Prisma.CouponRedemptionCreateOrConnectWithoutOrderInput[]
+  createMany?: Prisma.CouponRedemptionCreateManyOrderInputEnvelope
+  connect?: Prisma.CouponRedemptionWhereUniqueInput | Prisma.CouponRedemptionWhereUniqueInput[]
+}
+
+export type CouponRedemptionUpdateManyWithoutOrderNestedInput = {
+  create?: Prisma.XOR<Prisma.CouponRedemptionCreateWithoutOrderInput, Prisma.CouponRedemptionUncheckedCreateWithoutOrderInput> | Prisma.CouponRedemptionCreateWithoutOrderInput[] | Prisma.CouponRedemptionUncheckedCreateWithoutOrderInput[]
+  connectOrCreate?: Prisma.CouponRedemptionCreateOrConnectWithoutOrderInput | Prisma.CouponRedemptionCreateOrConnectWithoutOrderInput[]
+  upsert?: Prisma.CouponRedemptionUpsertWithWhereUniqueWithoutOrderInput | Prisma.CouponRedemptionUpsertWithWhereUniqueWithoutOrderInput[]
+  createMany?: Prisma.CouponRedemptionCreateManyOrderInputEnvelope
+  set?: Prisma.CouponRedemptionWhereUniqueInput | Prisma.CouponRedemptionWhereUniqueInput[]
+  disconnect?: Prisma.CouponRedemptionWhereUniqueInput | Prisma.CouponRedemptionWhereUniqueInput[]
+  delete?: Prisma.CouponRedemptionWhereUniqueInput | Prisma.CouponRedemptionWhereUniqueInput[]
+  connect?: Prisma.CouponRedemptionWhereUniqueInput | Prisma.CouponRedemptionWhereUniqueInput[]
+  update?: Prisma.CouponRedemptionUpdateWithWhereUniqueWithoutOrderInput | Prisma.CouponRedemptionUpdateWithWhereUniqueWithoutOrderInput[]
+  updateMany?: Prisma.CouponRedemptionUpdateManyWithWhereWithoutOrderInput | Prisma.CouponRedemptionUpdateManyWithWhereWithoutOrderInput[]
+  deleteMany?: Prisma.CouponRedemptionScalarWhereInput | Prisma.CouponRedemptionScalarWhereInput[]
+}
+
+export type CouponRedemptionUncheckedUpdateManyWithoutOrderNestedInput = {
+  create?: Prisma.XOR<Prisma.CouponRedemptionCreateWithoutOrderInput, Prisma.CouponRedemptionUncheckedCreateWithoutOrderInput> | Prisma.CouponRedemptionCreateWithoutOrderInput[] | Prisma.CouponRedemptionUncheckedCreateWithoutOrderInput[]
+  connectOrCreate?: Prisma.CouponRedemptionCreateOrConnectWithoutOrderInput | Prisma.CouponRedemptionCreateOrConnectWithoutOrderInput[]
+  upsert?: Prisma.CouponRedemptionUpsertWithWhereUniqueWithoutOrderInput | Prisma.CouponRedemptionUpsertWithWhereUniqueWithoutOrderInput[]
+  createMany?: Prisma.CouponRedemptionCreateManyOrderInputEnvelope
+  set?: Prisma.CouponRedemptionWhereUniqueInput | Prisma.CouponRedemptionWhereUniqueInput[]
+  disconnect?: Prisma.CouponRedemptionWhereUniqueInput | Prisma.CouponRedemptionWhereUniqueInput[]
+  delete?: Prisma.CouponRedemptionWhereUniqueInput | Prisma.CouponRedemptionWhereUniqueInput[]
+  connect?: Prisma.CouponRedemptionWhereUniqueInput | Prisma.CouponRedemptionWhereUniqueInput[]
+  update?: Prisma.CouponRedemptionUpdateWithWhereUniqueWithoutOrderInput | Prisma.CouponRedemptionUpdateWithWhereUniqueWithoutOrderInput[]
+  updateMany?: Prisma.CouponRedemptionUpdateManyWithWhereWithoutOrderInput | Prisma.CouponRedemptionUpdateManyWithWhereWithoutOrderInput[]
+  deleteMany?: Prisma.CouponRedemptionScalarWhereInput | Prisma.CouponRedemptionScalarWhereInput[]
+}
+
 export type CouponRedemptionCreateNestedManyWithoutCouponInput = {
   create?: Prisma.XOR<Prisma.CouponRedemptionCreateWithoutCouponInput, Prisma.CouponRedemptionUncheckedCreateWithoutCouponInput> | Prisma.CouponRedemptionCreateWithoutCouponInput[] | Prisma.CouponRedemptionUncheckedCreateWithoutCouponInput[]
   connectOrCreate?: Prisma.CouponRedemptionCreateOrConnectWithoutCouponInput | Prisma.CouponRedemptionCreateOrConnectWithoutCouponInput[]
@@ -411,9 +455,9 @@ export type CouponRedemptionUncheckedUpdateManyWithoutCouponNestedInput = {
 
 export type CouponRedemptionCreateWithoutUserInput = {
   id?: string
-  orderId: string
   redeemedAt?: Date | string
   coupon: Prisma.CouponCreateNestedOneWithoutRedemptionsInput
+  order: Prisma.OrderCreateNestedOneWithoutCouponRedemptionsInput
 }
 
 export type CouponRedemptionUncheckedCreateWithoutUserInput = {
@@ -460,11 +504,51 @@ export type CouponRedemptionScalarWhereInput = {
   redeemedAt?: Prisma.DateTimeFilter<"CouponRedemption"> | Date | string
 }
 
+export type CouponRedemptionCreateWithoutOrderInput = {
+  id?: string
+  redeemedAt?: Date | string
+  coupon: Prisma.CouponCreateNestedOneWithoutRedemptionsInput
+  user: Prisma.UserCreateNestedOneWithoutCouponRedemptionsInput
+}
+
+export type CouponRedemptionUncheckedCreateWithoutOrderInput = {
+  id?: string
+  couponId: string
+  userId: string
+  redeemedAt?: Date | string
+}
+
+export type CouponRedemptionCreateOrConnectWithoutOrderInput = {
+  where: Prisma.CouponRedemptionWhereUniqueInput
+  create: Prisma.XOR<Prisma.CouponRedemptionCreateWithoutOrderInput, Prisma.CouponRedemptionUncheckedCreateWithoutOrderInput>
+}
+
+export type CouponRedemptionCreateManyOrderInputEnvelope = {
+  data: Prisma.CouponRedemptionCreateManyOrderInput | Prisma.CouponRedemptionCreateManyOrderInput[]
+  skipDuplicates?: boolean
+}
+
+export type CouponRedemptionUpsertWithWhereUniqueWithoutOrderInput = {
+  where: Prisma.CouponRedemptionWhereUniqueInput
+  update: Prisma.XOR<Prisma.CouponRedemptionUpdateWithoutOrderInput, Prisma.CouponRedemptionUncheckedUpdateWithoutOrderInput>
+  create: Prisma.XOR<Prisma.CouponRedemptionCreateWithoutOrderInput, Prisma.CouponRedemptionUncheckedCreateWithoutOrderInput>
+}
+
+export type CouponRedemptionUpdateWithWhereUniqueWithoutOrderInput = {
+  where: Prisma.CouponRedemptionWhereUniqueInput
+  data: Prisma.XOR<Prisma.CouponRedemptionUpdateWithoutOrderInput, Prisma.CouponRedemptionUncheckedUpdateWithoutOrderInput>
+}
+
+export type CouponRedemptionUpdateManyWithWhereWithoutOrderInput = {
+  where: Prisma.CouponRedemptionScalarWhereInput
+  data: Prisma.XOR<Prisma.CouponRedemptionUpdateManyMutationInput, Prisma.CouponRedemptionUncheckedUpdateManyWithoutOrderInput>
+}
+
 export type CouponRedemptionCreateWithoutCouponInput = {
   id?: string
-  orderId: string
   redeemedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCouponRedemptionsInput
+  order: Prisma.OrderCreateNestedOneWithoutCouponRedemptionsInput
 }
 
 export type CouponRedemptionUncheckedCreateWithoutCouponInput = {
@@ -509,9 +593,9 @@ export type CouponRedemptionCreateManyUserInput = {
 
 export type CouponRedemptionUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  orderId?: Prisma.StringFieldUpdateOperationsInput | string
   redeemedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   coupon?: Prisma.CouponUpdateOneRequiredWithoutRedemptionsNestedInput
+  order?: Prisma.OrderUpdateOneRequiredWithoutCouponRedemptionsNestedInput
 }
 
 export type CouponRedemptionUncheckedUpdateWithoutUserInput = {
@@ -528,6 +612,34 @@ export type CouponRedemptionUncheckedUpdateManyWithoutUserInput = {
   redeemedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type CouponRedemptionCreateManyOrderInput = {
+  id?: string
+  couponId: string
+  userId: string
+  redeemedAt?: Date | string
+}
+
+export type CouponRedemptionUpdateWithoutOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  redeemedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  coupon?: Prisma.CouponUpdateOneRequiredWithoutRedemptionsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutCouponRedemptionsNestedInput
+}
+
+export type CouponRedemptionUncheckedUpdateWithoutOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  couponId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  redeemedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type CouponRedemptionUncheckedUpdateManyWithoutOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  couponId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  redeemedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type CouponRedemptionCreateManyCouponInput = {
   id?: string
   userId: string
@@ -537,9 +649,9 @@ export type CouponRedemptionCreateManyCouponInput = {
 
 export type CouponRedemptionUpdateWithoutCouponInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  orderId?: Prisma.StringFieldUpdateOperationsInput | string
   redeemedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCouponRedemptionsNestedInput
+  order?: Prisma.OrderUpdateOneRequiredWithoutCouponRedemptionsNestedInput
 }
 
 export type CouponRedemptionUncheckedUpdateWithoutCouponInput = {
@@ -566,6 +678,7 @@ export type CouponRedemptionSelect<ExtArgs extends runtime.Types.Extensions.Inte
   redeemedAt?: boolean
   coupon?: boolean | Prisma.CouponDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["couponRedemption"]>
 
 export type CouponRedemptionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -576,6 +689,7 @@ export type CouponRedemptionSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   redeemedAt?: boolean
   coupon?: boolean | Prisma.CouponDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["couponRedemption"]>
 
 export type CouponRedemptionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -586,6 +700,7 @@ export type CouponRedemptionSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   redeemedAt?: boolean
   coupon?: boolean | Prisma.CouponDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["couponRedemption"]>
 
 export type CouponRedemptionSelectScalar = {
@@ -600,14 +715,17 @@ export type CouponRedemptionOmit<ExtArgs extends runtime.Types.Extensions.Intern
 export type CouponRedemptionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   coupon?: boolean | Prisma.CouponDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }
 export type CouponRedemptionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   coupon?: boolean | Prisma.CouponDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }
 export type CouponRedemptionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   coupon?: boolean | Prisma.CouponDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }
 
 export type $CouponRedemptionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -615,6 +733,7 @@ export type $CouponRedemptionPayload<ExtArgs extends runtime.Types.Extensions.In
   objects: {
     coupon: Prisma.$CouponPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
+    order: Prisma.$OrderPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1018,6 +1137,7 @@ export interface Prisma__CouponRedemptionClient<T, Null = never, ExtArgs extends
   readonly [Symbol.toStringTag]: "PrismaPromise"
   coupon<T extends Prisma.CouponDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CouponDefaultArgs<ExtArgs>>): Prisma.Prisma__CouponClient<runtime.Types.Result.GetResult<Prisma.$CouponPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  order<T extends Prisma.OrderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderDefaultArgs<ExtArgs>>): Prisma.Prisma__OrderClient<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

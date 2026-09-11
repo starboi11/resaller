@@ -4415,6 +4415,8 @@ export const OrderScalarFieldEnum = {
   storeId: 'storeId',
   status: 'status',
   totalMinor: 'totalMinor',
+  subtotalMinor: 'subtotalMinor',
+  discountMinor: 'discountMinor',
   currency: 'currency',
   snapshot: 'snapshot',
   sellerAcceptBy: 'sellerAcceptBy',

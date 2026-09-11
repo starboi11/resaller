@@ -28,10 +28,14 @@ export type AggregateOrder = {
 
 export type OrderAvgAggregateOutputType = {
   totalMinor: number | null
+  subtotalMinor: number | null
+  discountMinor: number | null
 }
 
 export type OrderSumAggregateOutputType = {
   totalMinor: bigint | null
+  subtotalMinor: bigint | null
+  discountMinor: bigint | null
 }
 
 export type OrderMinAggregateOutputType = {
@@ -43,6 +47,8 @@ export type OrderMinAggregateOutputType = {
   storeId: string | null
   status: $Enums.OrderStatus | null
   totalMinor: bigint | null
+  subtotalMinor: bigint | null
+  discountMinor: bigint | null
   currency: string | null
   sellerAcceptBy: Date | null
   createdAt: Date | null
@@ -58,6 +64,8 @@ export type OrderMaxAggregateOutputType = {
   storeId: string | null
   status: $Enums.OrderStatus | null
   totalMinor: bigint | null
+  subtotalMinor: bigint | null
+  discountMinor: bigint | null
   currency: string | null
   sellerAcceptBy: Date | null
   createdAt: Date | null
@@ -73,6 +81,8 @@ export type OrderCountAggregateOutputType = {
   storeId: number
   status: number
   totalMinor: number
+  subtotalMinor: number
+  discountMinor: number
   currency: number
   snapshot: number
   sellerAcceptBy: number
@@ -84,10 +94,14 @@ export type OrderCountAggregateOutputType = {
 
 export type OrderAvgAggregateInputType = {
   totalMinor?: true
+  subtotalMinor?: true
+  discountMinor?: true
 }
 
 export type OrderSumAggregateInputType = {
   totalMinor?: true
+  subtotalMinor?: true
+  discountMinor?: true
 }
 
 export type OrderMinAggregateInputType = {
@@ -99,6 +113,8 @@ export type OrderMinAggregateInputType = {
   storeId?: true
   status?: true
   totalMinor?: true
+  subtotalMinor?: true
+  discountMinor?: true
   currency?: true
   sellerAcceptBy?: true
   createdAt?: true
@@ -114,6 +130,8 @@ export type OrderMaxAggregateInputType = {
   storeId?: true
   status?: true
   totalMinor?: true
+  subtotalMinor?: true
+  discountMinor?: true
   currency?: true
   sellerAcceptBy?: true
   createdAt?: true
@@ -129,6 +147,8 @@ export type OrderCountAggregateInputType = {
   storeId?: true
   status?: true
   totalMinor?: true
+  subtotalMinor?: true
+  discountMinor?: true
   currency?: true
   snapshot?: true
   sellerAcceptBy?: true
@@ -232,6 +252,8 @@ export type OrderGroupByOutputType = {
   storeId: string
   status: $Enums.OrderStatus
   totalMinor: bigint
+  subtotalMinor: bigint
+  discountMinor: bigint
   currency: string
   snapshot: runtime.JsonValue
   sellerAcceptBy: Date
@@ -271,6 +293,8 @@ export type OrderWhereInput = {
   storeId?: Prisma.UuidFilter<"Order"> | string
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFilter<"Order"> | bigint | number
+  subtotalMinor?: Prisma.BigIntFilter<"Order"> | bigint | number
+  discountMinor?: Prisma.BigIntFilter<"Order"> | bigint | number
   currency?: Prisma.StringFilter<"Order"> | string
   snapshot?: Prisma.JsonFilter<"Order">
   sellerAcceptBy?: Prisma.DateTimeFilter<"Order"> | Date | string
@@ -287,6 +311,7 @@ export type OrderWhereInput = {
   review?: Prisma.XOR<Prisma.ReviewNullableScalarRelationFilter, Prisma.ReviewWhereInput> | null
   dispute?: Prisma.XOR<Prisma.DisputeNullableScalarRelationFilter, Prisma.DisputeWhereInput> | null
   policySnapshots?: Prisma.PolicySnapshotListRelationFilter
+  couponRedemptions?: Prisma.CouponRedemptionListRelationFilter
 }
 
 export type OrderOrderByWithRelationInput = {
@@ -298,6 +323,8 @@ export type OrderOrderByWithRelationInput = {
   storeId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalMinor?: Prisma.SortOrder
+  subtotalMinor?: Prisma.SortOrder
+  discountMinor?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   snapshot?: Prisma.SortOrder
   sellerAcceptBy?: Prisma.SortOrder
@@ -314,6 +341,7 @@ export type OrderOrderByWithRelationInput = {
   review?: Prisma.ReviewOrderByWithRelationInput
   dispute?: Prisma.DisputeOrderByWithRelationInput
   policySnapshots?: Prisma.PolicySnapshotOrderByRelationAggregateInput
+  couponRedemptions?: Prisma.CouponRedemptionOrderByRelationAggregateInput
 }
 
 export type OrderWhereUniqueInput = Prisma.AtLeast<{
@@ -328,6 +356,8 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   storeId?: Prisma.UuidFilter<"Order"> | string
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFilter<"Order"> | bigint | number
+  subtotalMinor?: Prisma.BigIntFilter<"Order"> | bigint | number
+  discountMinor?: Prisma.BigIntFilter<"Order"> | bigint | number
   currency?: Prisma.StringFilter<"Order"> | string
   snapshot?: Prisma.JsonFilter<"Order">
   sellerAcceptBy?: Prisma.DateTimeFilter<"Order"> | Date | string
@@ -344,6 +374,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   review?: Prisma.XOR<Prisma.ReviewNullableScalarRelationFilter, Prisma.ReviewWhereInput> | null
   dispute?: Prisma.XOR<Prisma.DisputeNullableScalarRelationFilter, Prisma.DisputeWhereInput> | null
   policySnapshots?: Prisma.PolicySnapshotListRelationFilter
+  couponRedemptions?: Prisma.CouponRedemptionListRelationFilter
 }, "id" | "publicId" | "displayId">
 
 export type OrderOrderByWithAggregationInput = {
@@ -355,6 +386,8 @@ export type OrderOrderByWithAggregationInput = {
   storeId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalMinor?: Prisma.SortOrder
+  subtotalMinor?: Prisma.SortOrder
+  discountMinor?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   snapshot?: Prisma.SortOrder
   sellerAcceptBy?: Prisma.SortOrder
@@ -379,6 +412,8 @@ export type OrderScalarWhereWithAggregatesInput = {
   storeId?: Prisma.UuidWithAggregatesFilter<"Order"> | string
   status?: Prisma.EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntWithAggregatesFilter<"Order"> | bigint | number
+  subtotalMinor?: Prisma.BigIntWithAggregatesFilter<"Order"> | bigint | number
+  discountMinor?: Prisma.BigIntWithAggregatesFilter<"Order"> | bigint | number
   currency?: Prisma.StringWithAggregatesFilter<"Order"> | string
   snapshot?: Prisma.JsonWithAggregatesFilter<"Order">
   sellerAcceptBy?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
@@ -392,6 +427,8 @@ export type OrderCreateInput = {
   displayId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -408,6 +445,7 @@ export type OrderCreateInput = {
   review?: Prisma.ReviewCreateNestedOneWithoutOrderInput
   dispute?: Prisma.DisputeCreateNestedOneWithoutOrderInput
   policySnapshots?: Prisma.PolicySnapshotCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateInput = {
@@ -419,6 +457,8 @@ export type OrderUncheckedCreateInput = {
   storeId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -432,6 +472,7 @@ export type OrderUncheckedCreateInput = {
   review?: Prisma.ReviewUncheckedCreateNestedOneWithoutOrderInput
   dispute?: Prisma.DisputeUncheckedCreateNestedOneWithoutOrderInput
   policySnapshots?: Prisma.PolicySnapshotUncheckedCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUpdateInput = {
@@ -440,6 +481,8 @@ export type OrderUpdateInput = {
   displayId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -456,6 +499,7 @@ export type OrderUpdateInput = {
   review?: Prisma.ReviewUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUpdateOneWithoutOrderNestedInput
   policySnapshots?: Prisma.PolicySnapshotUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateInput = {
@@ -467,6 +511,8 @@ export type OrderUncheckedUpdateInput = {
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -480,6 +526,7 @@ export type OrderUncheckedUpdateInput = {
   review?: Prisma.ReviewUncheckedUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUncheckedUpdateOneWithoutOrderNestedInput
   policySnapshots?: Prisma.PolicySnapshotUncheckedUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateManyInput = {
@@ -491,6 +538,8 @@ export type OrderCreateManyInput = {
   storeId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -504,6 +553,8 @@ export type OrderUpdateManyMutationInput = {
   displayId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -520,6 +571,8 @@ export type OrderUncheckedUpdateManyInput = {
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -546,6 +599,8 @@ export type OrderCountOrderByAggregateInput = {
   storeId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalMinor?: Prisma.SortOrder
+  subtotalMinor?: Prisma.SortOrder
+  discountMinor?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   snapshot?: Prisma.SortOrder
   sellerAcceptBy?: Prisma.SortOrder
@@ -555,6 +610,8 @@ export type OrderCountOrderByAggregateInput = {
 
 export type OrderAvgOrderByAggregateInput = {
   totalMinor?: Prisma.SortOrder
+  subtotalMinor?: Prisma.SortOrder
+  discountMinor?: Prisma.SortOrder
 }
 
 export type OrderMaxOrderByAggregateInput = {
@@ -566,6 +623,8 @@ export type OrderMaxOrderByAggregateInput = {
   storeId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalMinor?: Prisma.SortOrder
+  subtotalMinor?: Prisma.SortOrder
+  discountMinor?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   sellerAcceptBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -581,6 +640,8 @@ export type OrderMinOrderByAggregateInput = {
   storeId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalMinor?: Prisma.SortOrder
+  subtotalMinor?: Prisma.SortOrder
+  discountMinor?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   sellerAcceptBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -589,6 +650,8 @@ export type OrderMinOrderByAggregateInput = {
 
 export type OrderSumOrderByAggregateInput = {
   totalMinor?: Prisma.SortOrder
+  subtotalMinor?: Prisma.SortOrder
+  discountMinor?: Prisma.SortOrder
 }
 
 export type OrderScalarRelationFilter = {
@@ -817,6 +880,20 @@ export type OrderUpdateOneRequiredWithoutReviewNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutReviewInput, Prisma.OrderUpdateWithoutReviewInput>, Prisma.OrderUncheckedUpdateWithoutReviewInput>
 }
 
+export type OrderCreateNestedOneWithoutCouponRedemptionsInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutCouponRedemptionsInput, Prisma.OrderUncheckedCreateWithoutCouponRedemptionsInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutCouponRedemptionsInput
+  connect?: Prisma.OrderWhereUniqueInput
+}
+
+export type OrderUpdateOneRequiredWithoutCouponRedemptionsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutCouponRedemptionsInput, Prisma.OrderUncheckedCreateWithoutCouponRedemptionsInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutCouponRedemptionsInput
+  upsert?: Prisma.OrderUpsertWithoutCouponRedemptionsInput
+  connect?: Prisma.OrderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutCouponRedemptionsInput, Prisma.OrderUpdateWithoutCouponRedemptionsInput>, Prisma.OrderUncheckedUpdateWithoutCouponRedemptionsInput>
+}
+
 export type OrderCreateNestedOneWithoutDisputeInput = {
   create?: Prisma.XOR<Prisma.OrderCreateWithoutDisputeInput, Prisma.OrderUncheckedCreateWithoutDisputeInput>
   connectOrCreate?: Prisma.OrderCreateOrConnectWithoutDisputeInput
@@ -851,6 +928,8 @@ export type OrderCreateWithoutBuyerInput = {
   displayId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -866,6 +945,7 @@ export type OrderCreateWithoutBuyerInput = {
   review?: Prisma.ReviewCreateNestedOneWithoutOrderInput
   dispute?: Prisma.DisputeCreateNestedOneWithoutOrderInput
   policySnapshots?: Prisma.PolicySnapshotCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutBuyerInput = {
@@ -876,6 +956,8 @@ export type OrderUncheckedCreateWithoutBuyerInput = {
   storeId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -889,6 +971,7 @@ export type OrderUncheckedCreateWithoutBuyerInput = {
   review?: Prisma.ReviewUncheckedCreateNestedOneWithoutOrderInput
   dispute?: Prisma.DisputeUncheckedCreateNestedOneWithoutOrderInput
   policySnapshots?: Prisma.PolicySnapshotUncheckedCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutBuyerInput = {
@@ -929,6 +1012,8 @@ export type OrderScalarWhereInput = {
   storeId?: Prisma.UuidFilter<"Order"> | string
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFilter<"Order"> | bigint | number
+  subtotalMinor?: Prisma.BigIntFilter<"Order"> | bigint | number
+  discountMinor?: Prisma.BigIntFilter<"Order"> | bigint | number
   currency?: Prisma.StringFilter<"Order"> | string
   snapshot?: Prisma.JsonFilter<"Order">
   sellerAcceptBy?: Prisma.DateTimeFilter<"Order"> | Date | string
@@ -942,6 +1027,8 @@ export type OrderCreateWithoutStoreInput = {
   displayId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -957,6 +1044,7 @@ export type OrderCreateWithoutStoreInput = {
   review?: Prisma.ReviewCreateNestedOneWithoutOrderInput
   dispute?: Prisma.DisputeCreateNestedOneWithoutOrderInput
   policySnapshots?: Prisma.PolicySnapshotCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutStoreInput = {
@@ -967,6 +1055,8 @@ export type OrderUncheckedCreateWithoutStoreInput = {
   buyerId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -980,6 +1070,7 @@ export type OrderUncheckedCreateWithoutStoreInput = {
   review?: Prisma.ReviewUncheckedCreateNestedOneWithoutOrderInput
   dispute?: Prisma.DisputeUncheckedCreateNestedOneWithoutOrderInput
   policySnapshots?: Prisma.PolicySnapshotUncheckedCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutStoreInput = {
@@ -1014,6 +1105,8 @@ export type OrderCreateWithoutCheckoutInput = {
   displayId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -1029,6 +1122,7 @@ export type OrderCreateWithoutCheckoutInput = {
   review?: Prisma.ReviewCreateNestedOneWithoutOrderInput
   dispute?: Prisma.DisputeCreateNestedOneWithoutOrderInput
   policySnapshots?: Prisma.PolicySnapshotCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutCheckoutInput = {
@@ -1039,6 +1133,8 @@ export type OrderUncheckedCreateWithoutCheckoutInput = {
   storeId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -1052,6 +1148,7 @@ export type OrderUncheckedCreateWithoutCheckoutInput = {
   review?: Prisma.ReviewUncheckedCreateNestedOneWithoutOrderInput
   dispute?: Prisma.DisputeUncheckedCreateNestedOneWithoutOrderInput
   policySnapshots?: Prisma.PolicySnapshotUncheckedCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutCheckoutInput = {
@@ -1086,6 +1183,8 @@ export type OrderCreateWithoutChangesInput = {
   displayId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -1101,6 +1200,7 @@ export type OrderCreateWithoutChangesInput = {
   review?: Prisma.ReviewCreateNestedOneWithoutOrderInput
   dispute?: Prisma.DisputeCreateNestedOneWithoutOrderInput
   policySnapshots?: Prisma.PolicySnapshotCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutChangesInput = {
@@ -1112,6 +1212,8 @@ export type OrderUncheckedCreateWithoutChangesInput = {
   storeId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -1124,6 +1226,7 @@ export type OrderUncheckedCreateWithoutChangesInput = {
   review?: Prisma.ReviewUncheckedCreateNestedOneWithoutOrderInput
   dispute?: Prisma.DisputeUncheckedCreateNestedOneWithoutOrderInput
   policySnapshots?: Prisma.PolicySnapshotUncheckedCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutChangesInput = {
@@ -1148,6 +1251,8 @@ export type OrderUpdateWithoutChangesInput = {
   displayId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1163,6 +1268,7 @@ export type OrderUpdateWithoutChangesInput = {
   review?: Prisma.ReviewUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUpdateOneWithoutOrderNestedInput
   policySnapshots?: Prisma.PolicySnapshotUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutChangesInput = {
@@ -1174,6 +1280,8 @@ export type OrderUncheckedUpdateWithoutChangesInput = {
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1186,6 +1294,7 @@ export type OrderUncheckedUpdateWithoutChangesInput = {
   review?: Prisma.ReviewUncheckedUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUncheckedUpdateOneWithoutOrderNestedInput
   policySnapshots?: Prisma.PolicySnapshotUncheckedUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutItemsInput = {
@@ -1194,6 +1303,8 @@ export type OrderCreateWithoutItemsInput = {
   displayId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -1209,6 +1320,7 @@ export type OrderCreateWithoutItemsInput = {
   review?: Prisma.ReviewCreateNestedOneWithoutOrderInput
   dispute?: Prisma.DisputeCreateNestedOneWithoutOrderInput
   policySnapshots?: Prisma.PolicySnapshotCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutItemsInput = {
@@ -1220,6 +1332,8 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   storeId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -1232,6 +1346,7 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   review?: Prisma.ReviewUncheckedCreateNestedOneWithoutOrderInput
   dispute?: Prisma.DisputeUncheckedCreateNestedOneWithoutOrderInput
   policySnapshots?: Prisma.PolicySnapshotUncheckedCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutItemsInput = {
@@ -1256,6 +1371,8 @@ export type OrderUpdateWithoutItemsInput = {
   displayId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1271,6 +1388,7 @@ export type OrderUpdateWithoutItemsInput = {
   review?: Prisma.ReviewUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUpdateOneWithoutOrderNestedInput
   policySnapshots?: Prisma.PolicySnapshotUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutItemsInput = {
@@ -1282,6 +1400,8 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1294,6 +1414,7 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
   review?: Prisma.ReviewUncheckedUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUncheckedUpdateOneWithoutOrderNestedInput
   policySnapshots?: Prisma.PolicySnapshotUncheckedUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutHistoryInput = {
@@ -1302,6 +1423,8 @@ export type OrderCreateWithoutHistoryInput = {
   displayId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -1317,6 +1440,7 @@ export type OrderCreateWithoutHistoryInput = {
   review?: Prisma.ReviewCreateNestedOneWithoutOrderInput
   dispute?: Prisma.DisputeCreateNestedOneWithoutOrderInput
   policySnapshots?: Prisma.PolicySnapshotCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutHistoryInput = {
@@ -1328,6 +1452,8 @@ export type OrderUncheckedCreateWithoutHistoryInput = {
   storeId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -1340,6 +1466,7 @@ export type OrderUncheckedCreateWithoutHistoryInput = {
   review?: Prisma.ReviewUncheckedCreateNestedOneWithoutOrderInput
   dispute?: Prisma.DisputeUncheckedCreateNestedOneWithoutOrderInput
   policySnapshots?: Prisma.PolicySnapshotUncheckedCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutHistoryInput = {
@@ -1364,6 +1491,8 @@ export type OrderUpdateWithoutHistoryInput = {
   displayId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1379,6 +1508,7 @@ export type OrderUpdateWithoutHistoryInput = {
   review?: Prisma.ReviewUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUpdateOneWithoutOrderNestedInput
   policySnapshots?: Prisma.PolicySnapshotUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutHistoryInput = {
@@ -1390,6 +1520,8 @@ export type OrderUncheckedUpdateWithoutHistoryInput = {
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1402,6 +1534,7 @@ export type OrderUncheckedUpdateWithoutHistoryInput = {
   review?: Prisma.ReviewUncheckedUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUncheckedUpdateOneWithoutOrderNestedInput
   policySnapshots?: Prisma.PolicySnapshotUncheckedUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutReservationsInput = {
@@ -1410,6 +1543,8 @@ export type OrderCreateWithoutReservationsInput = {
   displayId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -1425,6 +1560,7 @@ export type OrderCreateWithoutReservationsInput = {
   review?: Prisma.ReviewCreateNestedOneWithoutOrderInput
   dispute?: Prisma.DisputeCreateNestedOneWithoutOrderInput
   policySnapshots?: Prisma.PolicySnapshotCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutReservationsInput = {
@@ -1436,6 +1572,8 @@ export type OrderUncheckedCreateWithoutReservationsInput = {
   storeId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -1448,6 +1586,7 @@ export type OrderUncheckedCreateWithoutReservationsInput = {
   review?: Prisma.ReviewUncheckedCreateNestedOneWithoutOrderInput
   dispute?: Prisma.DisputeUncheckedCreateNestedOneWithoutOrderInput
   policySnapshots?: Prisma.PolicySnapshotUncheckedCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutReservationsInput = {
@@ -1472,6 +1611,8 @@ export type OrderUpdateWithoutReservationsInput = {
   displayId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1487,6 +1628,7 @@ export type OrderUpdateWithoutReservationsInput = {
   review?: Prisma.ReviewUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUpdateOneWithoutOrderNestedInput
   policySnapshots?: Prisma.PolicySnapshotUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutReservationsInput = {
@@ -1498,6 +1640,8 @@ export type OrderUncheckedUpdateWithoutReservationsInput = {
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1510,6 +1654,7 @@ export type OrderUncheckedUpdateWithoutReservationsInput = {
   review?: Prisma.ReviewUncheckedUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUncheckedUpdateOneWithoutOrderNestedInput
   policySnapshots?: Prisma.PolicySnapshotUncheckedUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutConversationInput = {
@@ -1518,6 +1663,8 @@ export type OrderCreateWithoutConversationInput = {
   displayId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -1533,6 +1680,7 @@ export type OrderCreateWithoutConversationInput = {
   review?: Prisma.ReviewCreateNestedOneWithoutOrderInput
   dispute?: Prisma.DisputeCreateNestedOneWithoutOrderInput
   policySnapshots?: Prisma.PolicySnapshotCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutConversationInput = {
@@ -1544,6 +1692,8 @@ export type OrderUncheckedCreateWithoutConversationInput = {
   storeId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -1556,6 +1706,7 @@ export type OrderUncheckedCreateWithoutConversationInput = {
   review?: Prisma.ReviewUncheckedCreateNestedOneWithoutOrderInput
   dispute?: Prisma.DisputeUncheckedCreateNestedOneWithoutOrderInput
   policySnapshots?: Prisma.PolicySnapshotUncheckedCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutConversationInput = {
@@ -1580,6 +1731,8 @@ export type OrderUpdateWithoutConversationInput = {
   displayId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1595,6 +1748,7 @@ export type OrderUpdateWithoutConversationInput = {
   review?: Prisma.ReviewUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUpdateOneWithoutOrderNestedInput
   policySnapshots?: Prisma.PolicySnapshotUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutConversationInput = {
@@ -1606,6 +1760,8 @@ export type OrderUncheckedUpdateWithoutConversationInput = {
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1618,6 +1774,7 @@ export type OrderUncheckedUpdateWithoutConversationInput = {
   review?: Prisma.ReviewUncheckedUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUncheckedUpdateOneWithoutOrderNestedInput
   policySnapshots?: Prisma.PolicySnapshotUncheckedUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutReviewInput = {
@@ -1626,6 +1783,8 @@ export type OrderCreateWithoutReviewInput = {
   displayId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -1641,6 +1800,7 @@ export type OrderCreateWithoutReviewInput = {
   conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
   dispute?: Prisma.DisputeCreateNestedOneWithoutOrderInput
   policySnapshots?: Prisma.PolicySnapshotCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutReviewInput = {
@@ -1652,6 +1812,8 @@ export type OrderUncheckedCreateWithoutReviewInput = {
   storeId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -1664,6 +1826,7 @@ export type OrderUncheckedCreateWithoutReviewInput = {
   conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
   dispute?: Prisma.DisputeUncheckedCreateNestedOneWithoutOrderInput
   policySnapshots?: Prisma.PolicySnapshotUncheckedCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutReviewInput = {
@@ -1688,6 +1851,8 @@ export type OrderUpdateWithoutReviewInput = {
   displayId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1703,6 +1868,7 @@ export type OrderUpdateWithoutReviewInput = {
   conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUpdateOneWithoutOrderNestedInput
   policySnapshots?: Prisma.PolicySnapshotUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutReviewInput = {
@@ -1714,6 +1880,8 @@ export type OrderUncheckedUpdateWithoutReviewInput = {
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1726,6 +1894,127 @@ export type OrderUncheckedUpdateWithoutReviewInput = {
   conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUncheckedUpdateOneWithoutOrderNestedInput
   policySnapshots?: Prisma.PolicySnapshotUncheckedUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderCreateWithoutCouponRedemptionsInput = {
+  id?: string
+  publicId?: string
+  displayId: string
+  status?: $Enums.OrderStatus
+  totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
+  currency?: string
+  snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  sellerAcceptBy: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  checkout: Prisma.CheckoutCreateNestedOneWithoutOrdersInput
+  buyer: Prisma.UserCreateNestedOneWithoutOrdersInput
+  store: Prisma.StoreCreateNestedOneWithoutOrdersInput
+  items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
+  history?: Prisma.OrderStatusHistoryCreateNestedManyWithoutOrderInput
+  reservations?: Prisma.StockReservationCreateNestedManyWithoutOrderInput
+  changes?: Prisma.OrderChangeCreateNestedManyWithoutOrderInput
+  conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
+  review?: Prisma.ReviewCreateNestedOneWithoutOrderInput
+  dispute?: Prisma.DisputeCreateNestedOneWithoutOrderInput
+  policySnapshots?: Prisma.PolicySnapshotCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutCouponRedemptionsInput = {
+  id?: string
+  publicId?: string
+  displayId: string
+  checkoutId: string
+  buyerId: string
+  storeId: string
+  status?: $Enums.OrderStatus
+  totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
+  currency?: string
+  snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  sellerAcceptBy: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
+  history?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
+  reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutOrderInput
+  changes?: Prisma.OrderChangeUncheckedCreateNestedManyWithoutOrderInput
+  conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
+  review?: Prisma.ReviewUncheckedCreateNestedOneWithoutOrderInput
+  dispute?: Prisma.DisputeUncheckedCreateNestedOneWithoutOrderInput
+  policySnapshots?: Prisma.PolicySnapshotUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutCouponRedemptionsInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutCouponRedemptionsInput, Prisma.OrderUncheckedCreateWithoutCouponRedemptionsInput>
+}
+
+export type OrderUpsertWithoutCouponRedemptionsInput = {
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutCouponRedemptionsInput, Prisma.OrderUncheckedUpdateWithoutCouponRedemptionsInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutCouponRedemptionsInput, Prisma.OrderUncheckedCreateWithoutCouponRedemptionsInput>
+  where?: Prisma.OrderWhereInput
+}
+
+export type OrderUpdateToOneWithWhereWithoutCouponRedemptionsInput = {
+  where?: Prisma.OrderWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutCouponRedemptionsInput, Prisma.OrderUncheckedUpdateWithoutCouponRedemptionsInput>
+}
+
+export type OrderUpdateWithoutCouponRedemptionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  displayId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  checkout?: Prisma.CheckoutUpdateOneRequiredWithoutOrdersNestedInput
+  buyer?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
+  store?: Prisma.StoreUpdateOneRequiredWithoutOrdersNestedInput
+  items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
+  history?: Prisma.OrderStatusHistoryUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.StockReservationUpdateManyWithoutOrderNestedInput
+  changes?: Prisma.OrderChangeUpdateManyWithoutOrderNestedInput
+  conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutOrderNestedInput
+  dispute?: Prisma.DisputeUpdateOneWithoutOrderNestedInput
+  policySnapshots?: Prisma.PolicySnapshotUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutCouponRedemptionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  displayId?: Prisma.StringFieldUpdateOperationsInput | string
+  checkoutId?: Prisma.StringFieldUpdateOperationsInput | string
+  buyerId?: Prisma.StringFieldUpdateOperationsInput | string
+  storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+  history?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutOrderNestedInput
+  changes?: Prisma.OrderChangeUncheckedUpdateManyWithoutOrderNestedInput
+  conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
+  review?: Prisma.ReviewUncheckedUpdateOneWithoutOrderNestedInput
+  dispute?: Prisma.DisputeUncheckedUpdateOneWithoutOrderNestedInput
+  policySnapshots?: Prisma.PolicySnapshotUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutDisputeInput = {
@@ -1734,6 +2023,8 @@ export type OrderCreateWithoutDisputeInput = {
   displayId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -1749,6 +2040,7 @@ export type OrderCreateWithoutDisputeInput = {
   conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
   review?: Prisma.ReviewCreateNestedOneWithoutOrderInput
   policySnapshots?: Prisma.PolicySnapshotCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutDisputeInput = {
@@ -1760,6 +2052,8 @@ export type OrderUncheckedCreateWithoutDisputeInput = {
   storeId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -1772,6 +2066,7 @@ export type OrderUncheckedCreateWithoutDisputeInput = {
   conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
   review?: Prisma.ReviewUncheckedCreateNestedOneWithoutOrderInput
   policySnapshots?: Prisma.PolicySnapshotUncheckedCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutDisputeInput = {
@@ -1796,6 +2091,8 @@ export type OrderUpdateWithoutDisputeInput = {
   displayId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1811,6 +2108,7 @@ export type OrderUpdateWithoutDisputeInput = {
   conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
   review?: Prisma.ReviewUpdateOneWithoutOrderNestedInput
   policySnapshots?: Prisma.PolicySnapshotUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutDisputeInput = {
@@ -1822,6 +2120,8 @@ export type OrderUncheckedUpdateWithoutDisputeInput = {
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1834,6 +2134,7 @@ export type OrderUncheckedUpdateWithoutDisputeInput = {
   conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
   review?: Prisma.ReviewUncheckedUpdateOneWithoutOrderNestedInput
   policySnapshots?: Prisma.PolicySnapshotUncheckedUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutPolicySnapshotsInput = {
@@ -1842,6 +2143,8 @@ export type OrderCreateWithoutPolicySnapshotsInput = {
   displayId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -1857,6 +2160,7 @@ export type OrderCreateWithoutPolicySnapshotsInput = {
   conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
   review?: Prisma.ReviewCreateNestedOneWithoutOrderInput
   dispute?: Prisma.DisputeCreateNestedOneWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutPolicySnapshotsInput = {
@@ -1868,6 +2172,8 @@ export type OrderUncheckedCreateWithoutPolicySnapshotsInput = {
   storeId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -1880,6 +2186,7 @@ export type OrderUncheckedCreateWithoutPolicySnapshotsInput = {
   conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
   review?: Prisma.ReviewUncheckedCreateNestedOneWithoutOrderInput
   dispute?: Prisma.DisputeUncheckedCreateNestedOneWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutPolicySnapshotsInput = {
@@ -1904,6 +2211,8 @@ export type OrderUpdateWithoutPolicySnapshotsInput = {
   displayId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1919,6 +2228,7 @@ export type OrderUpdateWithoutPolicySnapshotsInput = {
   conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
   review?: Prisma.ReviewUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUpdateOneWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutPolicySnapshotsInput = {
@@ -1930,6 +2240,8 @@ export type OrderUncheckedUpdateWithoutPolicySnapshotsInput = {
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1942,6 +2254,7 @@ export type OrderUncheckedUpdateWithoutPolicySnapshotsInput = {
   conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
   review?: Prisma.ReviewUncheckedUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUncheckedUpdateOneWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateManyBuyerInput = {
@@ -1952,6 +2265,8 @@ export type OrderCreateManyBuyerInput = {
   storeId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -1965,6 +2280,8 @@ export type OrderUpdateWithoutBuyerInput = {
   displayId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1980,6 +2297,7 @@ export type OrderUpdateWithoutBuyerInput = {
   review?: Prisma.ReviewUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUpdateOneWithoutOrderNestedInput
   policySnapshots?: Prisma.PolicySnapshotUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutBuyerInput = {
@@ -1990,6 +2308,8 @@ export type OrderUncheckedUpdateWithoutBuyerInput = {
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2003,6 +2323,7 @@ export type OrderUncheckedUpdateWithoutBuyerInput = {
   review?: Prisma.ReviewUncheckedUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUncheckedUpdateOneWithoutOrderNestedInput
   policySnapshots?: Prisma.PolicySnapshotUncheckedUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutBuyerInput = {
@@ -2013,6 +2334,8 @@ export type OrderUncheckedUpdateManyWithoutBuyerInput = {
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2028,6 +2351,8 @@ export type OrderCreateManyStoreInput = {
   buyerId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -2041,6 +2366,8 @@ export type OrderUpdateWithoutStoreInput = {
   displayId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2056,6 +2383,7 @@ export type OrderUpdateWithoutStoreInput = {
   review?: Prisma.ReviewUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUpdateOneWithoutOrderNestedInput
   policySnapshots?: Prisma.PolicySnapshotUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutStoreInput = {
@@ -2066,6 +2394,8 @@ export type OrderUncheckedUpdateWithoutStoreInput = {
   buyerId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2079,6 +2409,7 @@ export type OrderUncheckedUpdateWithoutStoreInput = {
   review?: Prisma.ReviewUncheckedUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUncheckedUpdateOneWithoutOrderNestedInput
   policySnapshots?: Prisma.PolicySnapshotUncheckedUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutStoreInput = {
@@ -2089,6 +2420,8 @@ export type OrderUncheckedUpdateManyWithoutStoreInput = {
   buyerId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2104,6 +2437,8 @@ export type OrderCreateManyCheckoutInput = {
   storeId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
   currency?: string
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy: Date | string
@@ -2117,6 +2452,8 @@ export type OrderUpdateWithoutCheckoutInput = {
   displayId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2132,6 +2469,7 @@ export type OrderUpdateWithoutCheckoutInput = {
   review?: Prisma.ReviewUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUpdateOneWithoutOrderNestedInput
   policySnapshots?: Prisma.PolicySnapshotUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutCheckoutInput = {
@@ -2142,6 +2480,8 @@ export type OrderUncheckedUpdateWithoutCheckoutInput = {
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2155,6 +2495,7 @@ export type OrderUncheckedUpdateWithoutCheckoutInput = {
   review?: Prisma.ReviewUncheckedUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUncheckedUpdateOneWithoutOrderNestedInput
   policySnapshots?: Prisma.PolicySnapshotUncheckedUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutCheckoutInput = {
@@ -2165,6 +2506,8 @@ export type OrderUncheckedUpdateManyWithoutCheckoutInput = {
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2183,6 +2526,7 @@ export type OrderCountOutputType = {
   reservations: number
   changes: number
   policySnapshots: number
+  couponRedemptions: number
 }
 
 export type OrderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2191,6 +2535,7 @@ export type OrderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   reservations?: boolean | OrderCountOutputTypeCountReservationsArgs
   changes?: boolean | OrderCountOutputTypeCountChangesArgs
   policySnapshots?: boolean | OrderCountOutputTypeCountPolicySnapshotsArgs
+  couponRedemptions?: boolean | OrderCountOutputTypeCountCouponRedemptionsArgs
 }
 
 /**
@@ -2238,6 +2583,13 @@ export type OrderCountOutputTypeCountPolicySnapshotsArgs<ExtArgs extends runtime
   where?: Prisma.PolicySnapshotWhereInput
 }
 
+/**
+ * OrderCountOutputType without action
+ */
+export type OrderCountOutputTypeCountCouponRedemptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CouponRedemptionWhereInput
+}
+
 
 export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2248,6 +2600,8 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   storeId?: boolean
   status?: boolean
   totalMinor?: boolean
+  subtotalMinor?: boolean
+  discountMinor?: boolean
   currency?: boolean
   snapshot?: boolean
   sellerAcceptBy?: boolean
@@ -2264,6 +2618,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   review?: boolean | Prisma.Order$reviewArgs<ExtArgs>
   dispute?: boolean | Prisma.Order$disputeArgs<ExtArgs>
   policySnapshots?: boolean | Prisma.Order$policySnapshotsArgs<ExtArgs>
+  couponRedemptions?: boolean | Prisma.Order$couponRedemptionsArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
@@ -2276,6 +2631,8 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   storeId?: boolean
   status?: boolean
   totalMinor?: boolean
+  subtotalMinor?: boolean
+  discountMinor?: boolean
   currency?: boolean
   snapshot?: boolean
   sellerAcceptBy?: boolean
@@ -2295,6 +2652,8 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   storeId?: boolean
   status?: boolean
   totalMinor?: boolean
+  subtotalMinor?: boolean
+  discountMinor?: boolean
   currency?: boolean
   snapshot?: boolean
   sellerAcceptBy?: boolean
@@ -2314,6 +2673,8 @@ export type OrderSelectScalar = {
   storeId?: boolean
   status?: boolean
   totalMinor?: boolean
+  subtotalMinor?: boolean
+  discountMinor?: boolean
   currency?: boolean
   snapshot?: boolean
   sellerAcceptBy?: boolean
@@ -2321,7 +2682,7 @@ export type OrderSelectScalar = {
   updatedAt?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "displayId" | "checkoutId" | "buyerId" | "storeId" | "status" | "totalMinor" | "currency" | "snapshot" | "sellerAcceptBy" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "displayId" | "checkoutId" | "buyerId" | "storeId" | "status" | "totalMinor" | "subtotalMinor" | "discountMinor" | "currency" | "snapshot" | "sellerAcceptBy" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   checkout?: boolean | Prisma.CheckoutDefaultArgs<ExtArgs>
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -2334,6 +2695,7 @@ export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   review?: boolean | Prisma.Order$reviewArgs<ExtArgs>
   dispute?: boolean | Prisma.Order$disputeArgs<ExtArgs>
   policySnapshots?: boolean | Prisma.Order$policySnapshotsArgs<ExtArgs>
+  couponRedemptions?: boolean | Prisma.Order$couponRedemptionsArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2361,6 +2723,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     review: Prisma.$ReviewPayload<ExtArgs> | null
     dispute: Prisma.$DisputePayload<ExtArgs> | null
     policySnapshots: Prisma.$PolicySnapshotPayload<ExtArgs>[]
+    couponRedemptions: Prisma.$CouponRedemptionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2371,6 +2734,8 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     storeId: string
     status: $Enums.OrderStatus
     totalMinor: bigint
+    subtotalMinor: bigint
+    discountMinor: bigint
     currency: string
     snapshot: runtime.JsonValue
     sellerAcceptBy: Date
@@ -2781,6 +3146,7 @@ export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Ty
   review<T extends Prisma.Order$reviewArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$reviewArgs<ExtArgs>>): Prisma.Prisma__ReviewClient<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   dispute<T extends Prisma.Order$disputeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$disputeArgs<ExtArgs>>): Prisma.Prisma__DisputeClient<runtime.Types.Result.GetResult<Prisma.$DisputePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   policySnapshots<T extends Prisma.Order$policySnapshotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$policySnapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PolicySnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  couponRedemptions<T extends Prisma.Order$couponRedemptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$couponRedemptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CouponRedemptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2818,6 +3184,8 @@ export interface OrderFieldRefs {
   readonly storeId: Prisma.FieldRef<"Order", 'String'>
   readonly status: Prisma.FieldRef<"Order", 'OrderStatus'>
   readonly totalMinor: Prisma.FieldRef<"Order", 'BigInt'>
+  readonly subtotalMinor: Prisma.FieldRef<"Order", 'BigInt'>
+  readonly discountMinor: Prisma.FieldRef<"Order", 'BigInt'>
   readonly currency: Prisma.FieldRef<"Order", 'String'>
   readonly snapshot: Prisma.FieldRef<"Order", 'Json'>
   readonly sellerAcceptBy: Prisma.FieldRef<"Order", 'DateTime'>
@@ -3398,6 +3766,30 @@ export type Order$policySnapshotsArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.PolicySnapshotScalarFieldEnum | Prisma.PolicySnapshotScalarFieldEnum[]
+}
+
+/**
+ * Order.couponRedemptions
+ */
+export type Order$couponRedemptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CouponRedemption
+   */
+  select?: Prisma.CouponRedemptionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CouponRedemption
+   */
+  omit?: Prisma.CouponRedemptionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CouponRedemptionInclude<ExtArgs> | null
+  where?: Prisma.CouponRedemptionWhereInput
+  orderBy?: Prisma.CouponRedemptionOrderByWithRelationInput | Prisma.CouponRedemptionOrderByWithRelationInput[]
+  cursor?: Prisma.CouponRedemptionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CouponRedemptionScalarFieldEnum | Prisma.CouponRedemptionScalarFieldEnum[]
 }
 
 /**
