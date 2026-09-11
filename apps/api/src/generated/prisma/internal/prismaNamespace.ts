@@ -408,6 +408,7 @@ export const ModelName = {
   StoreMember: 'StoreMember',
   StorePolicy: 'StorePolicy',
   Category: 'Category',
+  CategoryAttribute: 'CategoryAttribute',
   Listing: 'Listing',
   ListingVariant: 'ListingVariant',
   Inventory: 'Inventory',
@@ -460,7 +461,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "passwordResetToken" | "twoFactorChallenge" | "sellerProfile" | "sellerVerification" | "store" | "storeSetting" | "storeMember" | "storePolicy" | "category" | "listing" | "listingVariant" | "inventory" | "listingMedia" | "checkout" | "cart" | "cartItem" | "favorite" | "storeFollower" | "order" | "orderChange" | "orderItem" | "orderStatusHistory" | "stockReservation" | "conversation" | "conversationMember" | "message" | "attachment" | "storeQuestion" | "storeAnswer" | "review" | "importedTestimonial" | "sellerMetric" | "trustEvent" | "riskEvent" | "coupon" | "couponRedemption" | "promotion" | "dispute" | "disputeEvent" | "notification" | "notificationPreference" | "legalVersion" | "legalAcceptance" | "policySnapshot" | "auditLog" | "securityEvent"
+    modelProps: "user" | "session" | "passwordResetToken" | "twoFactorChallenge" | "sellerProfile" | "sellerVerification" | "store" | "storeSetting" | "storeMember" | "storePolicy" | "category" | "categoryAttribute" | "listing" | "listingVariant" | "inventory" | "listingMedia" | "checkout" | "cart" | "cartItem" | "favorite" | "storeFollower" | "order" | "orderChange" | "orderItem" | "orderStatusHistory" | "stockReservation" | "conversation" | "conversationMember" | "message" | "attachment" | "storeQuestion" | "storeAnswer" | "review" | "importedTestimonial" | "sellerMetric" | "trustEvent" | "riskEvent" | "coupon" | "couponRedemption" | "promotion" | "dispute" | "disputeEvent" | "notification" | "notificationPreference" | "legalVersion" | "legalAcceptance" | "policySnapshot" | "auditLog" | "securityEvent"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1275,6 +1276,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CategoryCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CategoryCountAggregateOutputType> | number
+        }
+      }
+    }
+    CategoryAttribute: {
+      payload: Prisma.$CategoryAttributePayload<ExtArgs>
+      fields: Prisma.CategoryAttributeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CategoryAttributeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryAttributePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CategoryAttributeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryAttributePayload>
+        }
+        findFirst: {
+          args: Prisma.CategoryAttributeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryAttributePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CategoryAttributeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryAttributePayload>
+        }
+        findMany: {
+          args: Prisma.CategoryAttributeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryAttributePayload>[]
+        }
+        create: {
+          args: Prisma.CategoryAttributeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryAttributePayload>
+        }
+        createMany: {
+          args: Prisma.CategoryAttributeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CategoryAttributeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryAttributePayload>[]
+        }
+        delete: {
+          args: Prisma.CategoryAttributeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryAttributePayload>
+        }
+        update: {
+          args: Prisma.CategoryAttributeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryAttributePayload>
+        }
+        deleteMany: {
+          args: Prisma.CategoryAttributeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CategoryAttributeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CategoryAttributeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryAttributePayload>[]
+        }
+        upsert: {
+          args: Prisma.CategoryAttributeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryAttributePayload>
+        }
+        aggregate: {
+          args: Prisma.CategoryAttributeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCategoryAttribute>
+        }
+        groupBy: {
+          args: Prisma.CategoryAttributeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CategoryAttributeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CategoryAttributeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CategoryAttributeCountAggregateOutputType> | number
         }
       }
     }
@@ -4206,6 +4281,21 @@ export const CategoryScalarFieldEnum = {
 export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
 
 
+export const CategoryAttributeScalarFieldEnum = {
+  id: 'id',
+  categoryId: 'categoryId',
+  key: 'key',
+  labelUz: 'labelUz',
+  labelRu: 'labelRu',
+  type: 'type',
+  required: 'required',
+  options: 'options',
+  position: 'position'
+} as const
+
+export type CategoryAttributeScalarFieldEnum = (typeof CategoryAttributeScalarFieldEnum)[keyof typeof CategoryAttributeScalarFieldEnum]
+
+
 export const ListingScalarFieldEnum = {
   id: 'id',
   publicId: 'publicId',
@@ -4220,6 +4310,7 @@ export const ListingScalarFieldEnum = {
   priceMinor: 'priceMinor',
   currency: 'currency',
   condition: 'condition',
+  attributeValues: 'attributeValues',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -5096,6 +5187,7 @@ export type GlobalOmitConfig = {
   storeMember?: Prisma.StoreMemberOmit
   storePolicy?: Prisma.StorePolicyOmit
   category?: Prisma.CategoryOmit
+  categoryAttribute?: Prisma.CategoryAttributeOmit
   listing?: Prisma.ListingOmit
   listingVariant?: Prisma.ListingVariantOmit
   inventory?: Prisma.InventoryOmit

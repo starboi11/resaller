@@ -257,6 +257,22 @@ model Category {
   parent Category? @relation("CategoryTree", fields: [parentId], references: [id])
   children Category[] @relation("CategoryTree")
   listings Listing[]
+  attributes CategoryAttribute[]
+}
+
+model CategoryAttribute {
+  id String @id @default(uuid()) @db.Uuid
+  categoryId String @db.Uuid
+  key String
+  labelUz String
+  labelRu String?
+  type String
+  required Boolean @default(false)
+  options Json?
+  position Int @default(0)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  @@unique([categoryId, key])
+  @@index([categoryId, position])
 }
 
 model Listing {
@@ -273,6 +289,7 @@ model Listing {
   priceMinor BigInt
   currency String @default("UZS")
   condition String?
+  attributeValues Json @default("{}")
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @updatedAt @db.Timestamptz
   deletedAt DateTime? @db.Timestamptz

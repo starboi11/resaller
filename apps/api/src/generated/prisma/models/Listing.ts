@@ -86,6 +86,7 @@ export type ListingCountAggregateOutputType = {
   priceMinor: number
   currency: number
   condition: number
+  attributeValues: number
   createdAt: number
   updatedAt: number
   deletedAt: number
@@ -153,6 +154,7 @@ export type ListingCountAggregateInputType = {
   priceMinor?: true
   currency?: true
   condition?: true
+  attributeValues?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -259,6 +261,7 @@ export type ListingGroupByOutputType = {
   priceMinor: bigint
   currency: string
   condition: string | null
+  attributeValues: runtime.JsonValue
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
@@ -301,6 +304,7 @@ export type ListingWhereInput = {
   priceMinor?: Prisma.BigIntFilter<"Listing"> | bigint | number
   currency?: Prisma.StringFilter<"Listing"> | string
   condition?: Prisma.StringNullableFilter<"Listing"> | string | null
+  attributeValues?: Prisma.JsonFilter<"Listing">
   createdAt?: Prisma.DateTimeFilter<"Listing"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Listing"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
@@ -327,6 +331,7 @@ export type ListingOrderByWithRelationInput = {
   priceMinor?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   condition?: Prisma.SortOrderInput | Prisma.SortOrder
+  attributeValues?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -356,6 +361,7 @@ export type ListingWhereUniqueInput = Prisma.AtLeast<{
   priceMinor?: Prisma.BigIntFilter<"Listing"> | bigint | number
   currency?: Prisma.StringFilter<"Listing"> | string
   condition?: Prisma.StringNullableFilter<"Listing"> | string | null
+  attributeValues?: Prisma.JsonFilter<"Listing">
   createdAt?: Prisma.DateTimeFilter<"Listing"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Listing"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
@@ -382,6 +388,7 @@ export type ListingOrderByWithAggregationInput = {
   priceMinor?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   condition?: Prisma.SortOrderInput | Prisma.SortOrder
+  attributeValues?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -409,6 +416,7 @@ export type ListingScalarWhereWithAggregatesInput = {
   priceMinor?: Prisma.BigIntWithAggregatesFilter<"Listing"> | bigint | number
   currency?: Prisma.StringWithAggregatesFilter<"Listing"> | string
   condition?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
+  attributeValues?: Prisma.JsonWithAggregatesFilter<"Listing">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Listing"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Listing"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Listing"> | Date | string | null
@@ -426,6 +434,7 @@ export type ListingCreateInput = {
   priceMinor: bigint | number
   currency?: string
   condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -452,6 +461,7 @@ export type ListingUncheckedCreateInput = {
   priceMinor: bigint | number
   currency?: string
   condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -474,6 +484,7 @@ export type ListingUpdateInput = {
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -500,6 +511,7 @@ export type ListingUncheckedUpdateInput = {
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -524,6 +536,7 @@ export type ListingCreateManyInput = {
   priceMinor: bigint | number
   currency?: string
   condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -541,6 +554,7 @@ export type ListingUpdateManyMutationInput = {
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -560,6 +574,7 @@ export type ListingUncheckedUpdateManyInput = {
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -589,6 +604,7 @@ export type ListingCountOrderByAggregateInput = {
   priceMinor?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   condition?: Prisma.SortOrder
+  attributeValues?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -834,6 +850,7 @@ export type ListingCreateWithoutStoreInput = {
   priceMinor: bigint | number
   currency?: string
   condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -858,6 +875,7 @@ export type ListingUncheckedCreateWithoutStoreInput = {
   priceMinor: bigint | number
   currency?: string
   condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -911,6 +929,7 @@ export type ListingScalarWhereInput = {
   priceMinor?: Prisma.BigIntFilter<"Listing"> | bigint | number
   currency?: Prisma.StringFilter<"Listing"> | string
   condition?: Prisma.StringNullableFilter<"Listing"> | string | null
+  attributeValues?: Prisma.JsonFilter<"Listing">
   createdAt?: Prisma.DateTimeFilter<"Listing"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Listing"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
@@ -928,6 +947,7 @@ export type ListingCreateWithoutCategoryInput = {
   priceMinor: bigint | number
   currency?: string
   condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -952,6 +972,7 @@ export type ListingUncheckedCreateWithoutCategoryInput = {
   priceMinor: bigint | number
   currency?: string
   condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1000,6 +1021,7 @@ export type ListingCreateWithoutVariantsInput = {
   priceMinor: bigint | number
   currency?: string
   condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1025,6 +1047,7 @@ export type ListingUncheckedCreateWithoutVariantsInput = {
   priceMinor: bigint | number
   currency?: string
   condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1062,6 +1085,7 @@ export type ListingUpdateWithoutVariantsInput = {
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1087,6 +1111,7 @@ export type ListingUncheckedUpdateWithoutVariantsInput = {
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1108,6 +1133,7 @@ export type ListingCreateWithoutMediaInput = {
   priceMinor: bigint | number
   currency?: string
   condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1133,6 +1159,7 @@ export type ListingUncheckedCreateWithoutMediaInput = {
   priceMinor: bigint | number
   currency?: string
   condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1170,6 +1197,7 @@ export type ListingUpdateWithoutMediaInput = {
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1195,6 +1223,7 @@ export type ListingUncheckedUpdateWithoutMediaInput = {
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1216,6 +1245,7 @@ export type ListingCreateWithoutCartItemsInput = {
   priceMinor: bigint | number
   currency?: string
   condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1241,6 +1271,7 @@ export type ListingUncheckedCreateWithoutCartItemsInput = {
   priceMinor: bigint | number
   currency?: string
   condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1278,6 +1309,7 @@ export type ListingUpdateWithoutCartItemsInput = {
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1303,6 +1335,7 @@ export type ListingUncheckedUpdateWithoutCartItemsInput = {
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1324,6 +1357,7 @@ export type ListingCreateWithoutFavoritesInput = {
   priceMinor: bigint | number
   currency?: string
   condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1349,6 +1383,7 @@ export type ListingUncheckedCreateWithoutFavoritesInput = {
   priceMinor: bigint | number
   currency?: string
   condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1386,6 +1421,7 @@ export type ListingUpdateWithoutFavoritesInput = {
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1411,6 +1447,7 @@ export type ListingUncheckedUpdateWithoutFavoritesInput = {
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1432,6 +1469,7 @@ export type ListingCreateWithoutQuestionsInput = {
   priceMinor: bigint | number
   currency?: string
   condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1457,6 +1495,7 @@ export type ListingUncheckedCreateWithoutQuestionsInput = {
   priceMinor: bigint | number
   currency?: string
   condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1494,6 +1533,7 @@ export type ListingUpdateWithoutQuestionsInput = {
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1519,6 +1559,7 @@ export type ListingUncheckedUpdateWithoutQuestionsInput = {
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1541,6 +1582,7 @@ export type ListingCreateManyStoreInput = {
   priceMinor: bigint | number
   currency?: string
   condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1558,6 +1600,7 @@ export type ListingUpdateWithoutStoreInput = {
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1582,6 +1625,7 @@ export type ListingUncheckedUpdateWithoutStoreInput = {
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1605,6 +1649,7 @@ export type ListingUncheckedUpdateManyWithoutStoreInput = {
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1623,6 +1668,7 @@ export type ListingCreateManyCategoryInput = {
   priceMinor: bigint | number
   currency?: string
   condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1640,6 +1686,7 @@ export type ListingUpdateWithoutCategoryInput = {
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1664,6 +1711,7 @@ export type ListingUncheckedUpdateWithoutCategoryInput = {
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1687,6 +1735,7 @@ export type ListingUncheckedUpdateManyWithoutCategoryInput = {
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1773,6 +1822,7 @@ export type ListingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   priceMinor?: boolean
   currency?: boolean
   condition?: boolean
+  attributeValues?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1800,6 +1850,7 @@ export type ListingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   priceMinor?: boolean
   currency?: boolean
   condition?: boolean
+  attributeValues?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1821,6 +1872,7 @@ export type ListingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   priceMinor?: boolean
   currency?: boolean
   condition?: boolean
+  attributeValues?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1842,12 +1894,13 @@ export type ListingSelectScalar = {
   priceMinor?: boolean
   currency?: boolean
   condition?: boolean
+  attributeValues?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
 }
 
-export type ListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "storeId" | "categoryId" | "type" | "status" | "nameUz" | "nameRu" | "descriptionUz" | "descriptionRu" | "priceMinor" | "currency" | "condition" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["listing"]>
+export type ListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "storeId" | "categoryId" | "type" | "status" | "nameUz" | "nameRu" | "descriptionUz" | "descriptionRu" | "priceMinor" | "currency" | "condition" | "attributeValues" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["listing"]>
 export type ListingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   store?: boolean | Prisma.StoreDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
@@ -1892,6 +1945,7 @@ export type $ListingPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     priceMinor: bigint
     currency: string
     condition: string | null
+    attributeValues: runtime.JsonValue
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -2338,6 +2392,7 @@ export interface ListingFieldRefs {
   readonly priceMinor: Prisma.FieldRef<"Listing", 'BigInt'>
   readonly currency: Prisma.FieldRef<"Listing", 'String'>
   readonly condition: Prisma.FieldRef<"Listing", 'String'>
+  readonly attributeValues: Prisma.FieldRef<"Listing", 'Json'>
   readonly createdAt: Prisma.FieldRef<"Listing", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Listing", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Listing", 'DateTime'>

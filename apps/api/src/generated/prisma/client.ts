@@ -97,6 +97,11 @@ export type StorePolicy = Prisma.StorePolicyModel
  */
 export type Category = Prisma.CategoryModel
 /**
+ * Model CategoryAttribute
+ * 
+ */
+export type CategoryAttribute = Prisma.CategoryAttributeModel
+/**
  * Model Listing
  * 
  */

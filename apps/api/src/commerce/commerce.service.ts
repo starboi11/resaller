@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   ForbiddenException,
   Inject,
@@ -11,11 +12,17 @@ import type {
   AddStoreMemberDto,
   CreateListingDto,
   CreateStoreDto,
+  CreateVariantDto,
   MarketplaceQueryDto,
   SellerVerificationDto,
   StoreSettingsDto,
   UpdateListingDto,
+  UpdateVariantDto,
 } from './commerce.dto.js';
+import {
+  cleanVariantOptions,
+  validateCategoryAttributes,
+} from './catalog-validation.js';
 
 @Injectable()
 export class CommerceService {
@@ -296,7 +303,12 @@ export class CommerceService {
       where: { slug: input.categorySlug ?? 'other' },
       create: { slug: input.categorySlug ?? 'other', nameUz: 'Boshqa' },
       update: {},
+      include: { attributes: { orderBy: { position: 'asc' } } },
     });
+    const attributeValues = this.validateAttributes(
+      category.attributes,
+      input.attributeValues ?? {},
+    );
     const listing = await this.prisma.listing.create({
       data: {
         storeId: store.id,
@@ -304,6 +316,7 @@ export class CommerceService {
         nameUz: input.nameUz,
         nameRu: input.nameRu ?? null,
         descriptionUz: input.descriptionUz,
+        attributeValues,
         priceMinor: BigInt(input.priceMinor),
         variants: {
           create: {
@@ -339,6 +352,7 @@ export class CommerceService {
           },
         },
         variants: { include: { inventory: true }, take: 1 },
+        category: { include: { attributes: { orderBy: { position: 'asc' } } } },
       },
     });
     if (!listing) throw new NotFoundException('Listing not found');
@@ -361,6 +375,14 @@ export class CommerceService {
             : {}),
           ...(input.priceMinor !== undefined
             ? { priceMinor: BigInt(input.priceMinor) }
+            : {}),
+          ...(input.attributeValues !== undefined
+            ? {
+                attributeValues: this.validateAttributes(
+                  listing.category.attributes,
+                  input.attributeValues,
+                ),
+              }
             : {}),
           ...(listing.status === 'REJECTED'
             ? { status: 'DRAFT' as const }
@@ -386,6 +408,133 @@ export class CommerceService {
         stock: input.stock ?? variant?.inventory?.available ?? 0,
       };
     });
+  }
+
+  categories() {
+    return this.prisma.category.findMany({
+      orderBy: [{ parentId: 'asc' }, { nameUz: 'asc' }],
+      select: {
+        slug: true,
+        nameUz: true,
+        nameRu: true,
+        parent: { select: { slug: true } },
+        attributes: {
+          orderBy: { position: 'asc' },
+          select: {
+            key: true,
+            labelUz: true,
+            labelRu: true,
+            type: true,
+            required: true,
+            options: true,
+            position: true,
+          },
+        },
+      },
+    });
+  }
+
+  async createVariant(
+    user: AuthenticatedUser,
+    publicId: string,
+    input: CreateVariantDto,
+  ) {
+    const listing = await this.editableListing(user, publicId);
+    const count = await this.prisma.listingVariant.count({
+      where: { listingId: listing.id },
+    });
+    if (count >= 100)
+      throw new ConflictException('A listing can contain at most 100 variants');
+    const variant = await this.prisma.listingVariant.create({
+      data: {
+        listingId: listing.id,
+        sku: input.sku,
+        options: this.cleanVariantOptions(input.options),
+        priceOverrideMinor:
+          input.priceOverrideMinor === undefined
+            ? null
+            : BigInt(input.priceOverrideMinor),
+        inventory: { create: { available: input.stock } },
+      },
+      include: { inventory: true },
+    });
+    return {
+      ...variant,
+      priceOverrideMinor: variant.priceOverrideMinor?.toString() ?? null,
+    };
+  }
+
+  async updateVariant(
+    user: AuthenticatedUser,
+    publicId: string,
+    variantId: string,
+    input: UpdateVariantDto,
+  ) {
+    const listing = await this.editableListing(user, publicId);
+    const variant = await this.prisma.listingVariant.findFirst({
+      where: { id: variantId, listingId: listing.id },
+      include: { inventory: true },
+    });
+    if (!variant) throw new NotFoundException('Variant not found');
+    return this.prisma.$transaction(async (tx) => {
+      const updated = await tx.listingVariant.update({
+        where: { id: variant.id },
+        data: {
+          ...(input.sku !== undefined ? { sku: input.sku } : {}),
+          ...(input.options !== undefined
+            ? { options: this.cleanVariantOptions(input.options) }
+            : {}),
+          ...(input.priceOverrideMinor !== undefined
+            ? { priceOverrideMinor: BigInt(input.priceOverrideMinor) }
+            : {}),
+        },
+      });
+      if (input.stock !== undefined)
+        await tx.inventory.update({
+          where: { variantId: variant.id },
+          data: { available: input.stock, version: { increment: 1 } },
+        });
+      const inventory =
+        input.stock === undefined
+          ? variant.inventory
+          : await tx.inventory.findUnique({ where: { variantId: variant.id } });
+      return {
+        ...updated,
+        priceOverrideMinor: updated.priceOverrideMinor?.toString() ?? null,
+        inventory,
+      };
+    });
+  }
+
+  async removeVariant(
+    user: AuthenticatedUser,
+    publicId: string,
+    variantId: string,
+  ) {
+    const listing = await this.editableListing(user, publicId);
+    const [variant, count] = await Promise.all([
+      this.prisma.listingVariant.findFirst({
+        where: { id: variantId, listingId: listing.id },
+        select: {
+          id: true,
+          _count: {
+            select: { cartItems: true, orderItems: true, reservations: true },
+          },
+        },
+      }),
+      this.prisma.listingVariant.count({ where: { listingId: listing.id } }),
+    ]);
+    if (!variant) throw new NotFoundException('Variant not found');
+    if (count <= 1)
+      throw new ConflictException('A listing must keep at least one variant');
+    if (
+      variant._count.cartItems ||
+      variant._count.orderItems ||
+      variant._count.reservations
+    )
+      throw new ConflictException('A used variant cannot be deleted');
+    await this.prisma.listingVariant.delete({ where: { id: variant.id } });
+    return { removed: true };
   }
 
   async submitListing(user: AuthenticatedUser, publicId: string) {
@@ -592,5 +741,62 @@ export class CommerceService {
         where: { userId, storeId: store.id },
       });
     return { following: false };
+  }
+
+  private async editableListing(user: AuthenticatedUser, publicId: string) {
+    const listing = await this.prisma.listing.findUnique({
+      where: { publicId },
+      include: {
+        store: {
+          include: {
+            sellerProfile: true,
+            members: { where: { userId: user.id } },
+          },
+        },
+      },
+    });
+    if (!listing) throw new NotFoundException('Listing not found');
+    if (
+      listing.store.sellerProfile.userId !== user.id &&
+      listing.store.members.length === 0
+    )
+      throw new ForbiddenException('Listing access denied');
+    if (!['DRAFT', 'REJECTED', 'PAUSED'].includes(listing.status))
+      throw new ConflictException(
+        'Listing cannot be edited in its current status',
+      );
+    return listing;
+  }
+
+  private cleanVariantOptions(
+    options: Record<string, string>,
+  ): Record<string, string> {
+    try {
+      return cleanVariantOptions(options);
+    } catch (error) {
+      throw new BadRequestException(
+        error instanceof Error ? error.message : 'Variant options are invalid',
+      );
+    }
+  }
+
+  private validateAttributes(
+    definitions: Array<{
+      key: string;
+      type: string;
+      required: boolean;
+      options: unknown;
+    }>,
+    values: Record<string, unknown>,
+  ): Record<string, string | number | boolean | string[]> {
+    try {
+      return validateCategoryAttributes(definitions, values);
+    } catch (error) {
+      throw new BadRequestException(
+        error instanceof Error
+          ? error.message
+          : 'Category attributes are invalid',
+      );
+    }
   }
 }

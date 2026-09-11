@@ -30,7 +30,7 @@ The backend foundation is completed before final UI implementation. A block is c
 - [x] Listings, variants, inventory, moderation and secure local images
 - [x] Private verification-document upload, admin-only retrieval and access audit
 - [x] Thumbnail/compression pipeline and S3-compatible storage adapter
-- [ ] Category attributes and variant management completion
+- [x] Category attributes and protected variant/inventory management APIs
 
 ### F4 Cart, checkout and order engine
 

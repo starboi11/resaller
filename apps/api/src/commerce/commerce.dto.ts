@@ -1,12 +1,33 @@
 import { Transform } from 'class-transformer';
-import { IsIn, IsInt, IsObject, IsOptional, IsString, Matches, Max, MaxLength, Min, MinLength } from 'class-validator';
+import {
+  IsIn,
+  IsInt,
+  IsObject,
+  IsOptional,
+  IsString,
+  Matches,
+  Max,
+  MaxLength,
+  Min,
+  MinLength,
+} from 'class-validator';
 
 export class CreateStoreDto {
-  @Transform(({ value }) => typeof value === 'string' ? value.trim().toLowerCase() : value)
-  @IsString() @MinLength(3) @MaxLength(30) @Matches(/^[a-z0-9_]+$/) username!: string;
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.trim().toLowerCase() : value,
+  )
+  @IsString()
+  @MinLength(3)
+  @MaxLength(30)
+  @Matches(/^[a-z0-9_]+$/)
+  username!: string;
   @IsString() @MinLength(2) @MaxLength(80) nameUz!: string;
   @IsOptional() @IsString() @MaxLength(80) nameRu?: string;
-  @IsString() @MinLength(2) @MaxLength(8) @Matches(/^[A-Z0-9]+$/) orderPrefix!: string;
+  @IsString()
+  @MinLength(2)
+  @MaxLength(8)
+  @Matches(/^[A-Z0-9]+$/)
+  orderPrefix!: string;
 }
 
 export class CreateListingDto {
@@ -17,13 +38,22 @@ export class CreateListingDto {
   @IsString() @MinLength(2) @MaxLength(40) sku!: string;
   @IsInt() @Min(0) @Max(1_000_000) stock!: number;
   @IsOptional() @IsString() @MaxLength(80) categorySlug?: string;
+  @IsOptional() @IsObject() attributeValues?: Record<string, unknown>;
 }
 
 export class MarketplaceQueryDto {
   @IsOptional() @IsString() @MaxLength(100) q?: string;
   @IsOptional() @IsString() @MaxLength(80) category?: string;
-  @IsOptional() @Transform(({ value }) => Number(value)) @IsInt() @Min(0) minPrice?: number;
-  @IsOptional() @Transform(({ value }) => Number(value)) @IsInt() @Min(0) maxPrice?: number;
+  @IsOptional()
+  @Transform(({ value }) => Number(value))
+  @IsInt()
+  @Min(0)
+  minPrice?: number;
+  @IsOptional()
+  @Transform(({ value }) => Number(value))
+  @IsInt()
+  @Min(0)
+  maxPrice?: number;
 }
 
 export class SellerVerificationDto {
@@ -41,13 +71,41 @@ export class StoreSettingsDto {
 
 export class AddStoreMemberDto {
   @IsString() @MinLength(3) @MaxLength(32) username!: string;
-  @IsIn(['STORE_MANAGER', 'ORDER_OPERATOR']) role!: 'STORE_MANAGER' | 'ORDER_OPERATOR';
+  @IsIn(['STORE_MANAGER', 'ORDER_OPERATOR']) role!:
+    'STORE_MANAGER' | 'ORDER_OPERATOR';
 }
 
 export class UpdateListingDto {
   @IsOptional() @IsString() @MinLength(2) @MaxLength(160) nameUz?: string;
-  @IsOptional() @IsString() @MinLength(10) @MaxLength(5000) descriptionUz?: string;
+  @IsOptional()
+  @IsString()
+  @MinLength(10)
+  @MaxLength(5000)
+  descriptionUz?: string;
   @IsOptional() @IsInt() @Min(0) @Max(9_000_000_000_000) priceMinor?: number;
+  @IsOptional() @IsInt() @Min(0) @Max(1_000_000) stock?: number;
+  @IsOptional() @IsObject() attributeValues?: Record<string, unknown>;
+}
+
+export class CreateVariantDto {
+  @IsString() @MinLength(2) @MaxLength(40) sku!: string;
+  @IsObject() options!: Record<string, string>;
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(9_000_000_000_000)
+  priceOverrideMinor?: number;
+  @IsInt() @Min(0) @Max(1_000_000) stock!: number;
+}
+
+export class UpdateVariantDto {
+  @IsOptional() @IsString() @MinLength(2) @MaxLength(40) sku?: string;
+  @IsOptional() @IsObject() options?: Record<string, string>;
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(9_000_000_000_000)
+  priceOverrideMinor?: number;
   @IsOptional() @IsInt() @Min(0) @Max(1_000_000) stock?: number;
 }
 
