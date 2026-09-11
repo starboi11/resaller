@@ -1,0 +1,34 @@
+import 'reflect-metadata';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
+import { parseApiEnvironment } from '@resaller/config';
+import { AppModule } from './app.module.js';
+import { HttpExceptionFilter } from './common/http-exception.filter.js';
+import cookie from '@fastify/cookie';
+import helmet from '@fastify/helmet';
+import rateLimit from '@fastify/rate-limit';
+import multipart from '@fastify/multipart';
+import { isOriginAllowed } from './common/origin-policy.js';
+
+async function bootstrap(): Promise<void> {
+  const env = parseApiEnvironment(process.env);
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ trustProxy: true, logger: { level: env.LOG_LEVEL, redact: ['req.headers.authorization', 'req.headers.cookie', 'res.headers.set-cookie'] } }));
+  app.setGlobalPrefix('api');
+  app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
+  app.enableCors({ origin: env.CORS_ORIGINS, credentials: true, methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE'] });
+  await app.register(cookie);
+  await app.register(multipart, { limits: { files: 1, fileSize: 5 * 1024 * 1024, fields: 0 } });
+  await app.register(helmet, { contentSecurityPolicy: { directives: { defaultSrc: ["'self'"], frameAncestors: ["'none'"], objectSrc: ["'none'"] } } });
+  await app.register(rateLimit, { max: 120, timeWindow: '1 minute', keyGenerator: (request) => request.ip });
+  app.getHttpAdapter().getInstance().addHook('onRequest', async (request, reply) => {
+    if (!isOriginAllowed(request.method, request.headers.origin, env.CORS_ORIGINS)) {
+      await reply.code(403).send({ code: 'ORIGIN_FORBIDDEN', message: 'Cross-site request blocked', requestId: request.id });
+    }
+  });
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }));
+  app.useGlobalFilters(new HttpExceptionFilter());
+  app.enableShutdownHooks();
+  await app.listen(env.API_PORT, env.API_HOST);
+}
+void bootstrap();

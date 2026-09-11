@@ -1,0 +1,1 @@
+{ "name": "@resaller/tooling", "version": "0.0.0", "private": true, "scripts": { "build": "echo tooling", "lint": "echo tooling", "typecheck": "echo tooling", "test": "echo tooling" } }

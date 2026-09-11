@@ -1,0 +1,10 @@
+{$DOMAIN} {
+  encode zstd gzip
+  handle /api/* { reverse_proxy api:4000 }
+  handle { reverse_proxy web:3000 }
+}
+
+admin.{$DOMAIN} {
+  encode zstd gzip
+  reverse_proxy admin:3001
+}

@@ -1,0 +1,27 @@
+packages:
+  - apps/*
+  - packages/*
+
+overrides:
+  deepmerge-ts: 8.0.0
+  mysql2: 3.22.0
+
+allowBuilds:
+  '@prisma/engines': true
+  esbuild: true
+  prisma: true
+
+minimumReleaseAgeExclude:
+  - '@types/node@22.20.2'
+  - '@types/react-dom@19.3.0'
+  - '@types/react@19.3.0'
+  - react-dom@19.3.0
+  - react@19.3.0
+  - scheduler@0.28.0
+  - zod@4.6.1
+
+onlyBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
+  - esbuild
+  - prisma

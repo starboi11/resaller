@@ -1,0 +1,709 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  BUYER
+  SELLER
+  STORE_MANAGER
+  ORDER_OPERATOR
+  MODERATOR
+  VERIFICATION_ADMIN
+  DISPUTE_ADMIN
+  SUPPORT_ADMIN
+  SECURITY_ADMIN
+  SUPER_ADMIN
+}
+
+enum StoreStatus {
+  DRAFT
+  PENDING_REVIEW
+  ACTIVE
+  RESTRICTED
+  SUSPENDED
+  CLOSED
+}
+
+enum ListingStatus {
+  DRAFT
+  PENDING_REVIEW
+  ACTIVE
+  OUT_OF_STOCK
+  PAUSED
+  ARCHIVED
+  REJECTED
+  RESTRICTED
+}
+
+enum ListingType {
+  PHYSICAL
+  DIGITAL
+  SERVICE
+}
+
+enum OrderStatus {
+  CREATED
+  WAITING_SELLER
+  ACCEPTED
+  PREPARING
+  READY
+  SHIPPED
+  DELIVERED
+  COMPLETED
+  REJECTED
+  TIMEOUT
+  CANCELLED
+  RETURN_REQUESTED
+  DISPUTED
+}
+
+enum ReservationStatus {
+  ACTIVE
+  RELEASED
+  FINALIZED
+  EXPIRED
+}
+
+enum DisputeStatus {
+  OPEN
+  EVIDENCE
+  REVIEW
+  DECIDED
+  CLOSED
+}
+
+enum NotificationSeverity {
+  ACTION_REQUIRED
+  WARNING
+  INFO
+}
+
+enum TrustBadge {
+  NEW
+  IDENTITY_VERIFIED
+  TRUSTED
+  TOP_SELLER
+}
+
+model User {
+  id String @id @default(uuid()) @db.Uuid
+  publicId String @unique @default(cuid())
+  username String @unique
+  passwordHash String
+  totpSecretEncrypted String?
+  totpEnabledAt DateTime? @db.Timestamptz
+  roles Role[] @default([BUYER])
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+  deletedAt DateTime? @db.Timestamptz
+  sessions Session[]
+  sellerProfile SellerProfile?
+  storeMemberships StoreMember[]
+  orders Order[] @relation("BuyerOrders")
+  auditLogs AuditLog[] @relation("AuditActor")
+  notifications Notification[]
+  carts Cart[]
+  favorites Favorite[]
+  followedStores StoreFollower[]
+  questions StoreQuestion[]
+  legalAcceptances LegalAcceptance[]
+  couponRedemptions CouponRedemption[]
+  checkouts Checkout[]
+  notificationPreferences NotificationPreference[]
+  securityEvents SecurityEvent[]
+  passwordResetTokens PasswordResetToken[]
+  twoFactorChallenges TwoFactorChallenge[]
+}
+
+model Session {
+  id String @id @default(uuid()) @db.Uuid
+  tokenHash String @unique
+  userId String @db.Uuid
+  expiresAt DateTime @db.Timestamptz
+  revokedAt DateTime? @db.Timestamptz
+  ipHash String?
+  userAgent String?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, expiresAt])
+}
+
+model PasswordResetToken {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  tokenHash String @unique
+  expiresAt DateTime @db.Timestamptz
+  usedAt DateTime? @db.Timestamptz
+  createdAt DateTime @default(now()) @db.Timestamptz
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, expiresAt])
+}
+
+model TwoFactorChallenge {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  tokenHash String @unique
+  purpose String
+  secretEncrypted String?
+  expiresAt DateTime @db.Timestamptz
+  usedAt DateTime? @db.Timestamptz
+  ipHash String?
+  userAgent String?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, expiresAt])
+}
+
+model SellerProfile {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @unique @db.Uuid
+  verifiedAt DateTime? @db.Timestamptz
+  trustBadge TrustBadge @default(NEW)
+  user User @relation(fields: [userId], references: [id])
+  stores Store[]
+  verification SellerVerification?
+}
+
+model SellerVerification {
+  id String @id @default(uuid()) @db.Uuid
+  sellerProfileId String @unique @db.Uuid
+  status String @default("DRAFT")
+  legalName String
+  documentType String
+  documentNumberMasked String
+  documentStorageKey String?
+  submittedAt DateTime? @db.Timestamptz
+  reviewedAt DateTime? @db.Timestamptz
+  reviewReason String?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+  sellerProfile SellerProfile @relation(fields: [sellerProfileId], references: [id], onDelete: Cascade)
+  @@index([status, submittedAt])
+}
+
+model Store {
+  id String @id @default(uuid()) @db.Uuid
+  publicId String @unique @default(cuid())
+  sellerProfileId String @db.Uuid
+  username String @unique
+  nameUz String
+  nameRu String?
+  descriptionUz String?
+  descriptionRu String?
+  orderPrefix String @unique
+  status StoreStatus @default(DRAFT)
+  vacationMode Boolean @default(false)
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+  sellerProfile SellerProfile @relation(fields: [sellerProfileId], references: [id])
+  members StoreMember[]
+  policies StorePolicy[]
+  listings Listing[]
+  orders Order[]
+  followers StoreFollower[]
+  questions StoreQuestion[]
+  importedTestimonials ImportedTestimonial[]
+  coupons Coupon[]
+  promotions Promotion[]
+  metrics SellerMetric[]
+  trustEvents TrustEvent[]
+  settings StoreSetting?
+  @@index([status, createdAt])
+}
+
+model StoreSetting {
+  id String @id @default(uuid()) @db.Uuid
+  storeId String @unique @db.Uuid
+  workingHours Json
+  deliverySettings Json
+  vacationMessageUz String?
+  vacationMessageRu String?
+  updatedAt DateTime @updatedAt @db.Timestamptz
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+}
+
+model StoreMember {
+  id String @id @default(uuid()) @db.Uuid
+  storeId String @db.Uuid
+  userId String @db.Uuid
+  role Role
+  createdAt DateTime @default(now()) @db.Timestamptz
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([storeId, userId])
+}
+
+model StorePolicy {
+  id String @id @default(uuid()) @db.Uuid
+  storeId String @db.Uuid
+  version Int
+  content Json
+  publishedAt DateTime @db.Timestamptz
+  store Store @relation(fields: [storeId], references: [id])
+  @@unique([storeId, version])
+}
+
+model Category {
+  id String @id @default(uuid()) @db.Uuid
+  slug String @unique
+  nameUz String
+  nameRu String?
+  parentId String? @db.Uuid
+  parent Category? @relation("CategoryTree", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryTree")
+  listings Listing[]
+}
+
+model Listing {
+  id String @id @default(uuid()) @db.Uuid
+  publicId String @unique @default(cuid())
+  storeId String @db.Uuid
+  categoryId String @db.Uuid
+  type ListingType @default(PHYSICAL)
+  status ListingStatus @default(DRAFT)
+  nameUz String
+  nameRu String?
+  descriptionUz String
+  descriptionRu String?
+  priceMinor BigInt
+  currency String @default("UZS")
+  condition String?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+  deletedAt DateTime? @db.Timestamptz
+  store Store @relation(fields: [storeId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
+  variants ListingVariant[]
+  media ListingMedia[]
+  cartItems CartItem[]
+  favorites Favorite[]
+  questions StoreQuestion[]
+  @@index([status, categoryId, createdAt])
+  @@index([storeId, status])
+}
+
+model ListingVariant {
+  id String @id @default(uuid()) @db.Uuid
+  listingId String @db.Uuid
+  sku String
+  options Json
+  priceOverrideMinor BigInt?
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  inventory Inventory?
+  cartItems CartItem[]
+  orderItems OrderItem[]
+  reservations StockReservation[]
+  @@unique([listingId, sku])
+}
+
+model Inventory {
+  id String @id @default(uuid()) @db.Uuid
+  variantId String @unique @db.Uuid
+  available Int @default(0)
+  reserved Int @default(0)
+  version Int @default(0)
+  variant ListingVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  @@index([available])
+}
+
+model ListingMedia {
+  id String @id @default(uuid()) @db.Uuid
+  listingId String @db.Uuid
+  storageKey String @unique
+  mimeType String
+  position Int
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  @@unique([listingId, position])
+}
+
+model Checkout {
+  id String @id @default(uuid()) @db.Uuid
+  publicId String @unique @default(cuid())
+  buyerId String @db.Uuid
+  idempotencyKey String @unique
+  createdAt DateTime @default(now()) @db.Timestamptz
+  buyer User @relation(fields: [buyerId], references: [id], onDelete: Restrict)
+  orders Order[]
+}
+
+model Cart {
+  id String @id @default(uuid()) @db.Uuid
+  buyerId String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+  buyer User @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+  items CartItem[]
+  @@unique([buyerId])
+}
+
+model CartItem {
+  id String @id @default(uuid()) @db.Uuid
+  cartId String @db.Uuid
+  listingId String @db.Uuid
+  variantId String @db.Uuid
+  quantity Int
+  createdAt DateTime @default(now()) @db.Timestamptz
+  cart Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  variant ListingVariant @relation(fields: [variantId], references: [id], onDelete: Restrict)
+  @@unique([cartId, variantId])
+}
+
+model Favorite {
+  userId String @db.Uuid
+  listingId String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  @@id([userId, listingId])
+}
+
+model StoreFollower {
+  userId String @db.Uuid
+  storeId String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  @@id([userId, storeId])
+}
+
+model Order {
+  id String @id @default(uuid()) @db.Uuid
+  publicId String @unique @default(cuid())
+  displayId String @unique
+  checkoutId String @db.Uuid
+  buyerId String @db.Uuid
+  storeId String @db.Uuid
+  status OrderStatus @default(WAITING_SELLER)
+  totalMinor BigInt
+  currency String @default("UZS")
+  snapshot Json
+  sellerAcceptBy DateTime @db.Timestamptz
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+  checkout Checkout @relation(fields: [checkoutId], references: [id])
+  buyer User @relation("BuyerOrders", fields: [buyerId], references: [id])
+  store Store @relation(fields: [storeId], references: [id])
+  items OrderItem[]
+  history OrderStatusHistory[]
+  reservations StockReservation[]
+  changes OrderChange[]
+  conversation Conversation?
+  review Review?
+  dispute Dispute?
+  policySnapshots PolicySnapshot[]
+  @@index([storeId, status, sellerAcceptBy])
+  @@index([buyerId, createdAt])
+}
+
+model OrderChange {
+  id String @id @default(uuid()) @db.Uuid
+  orderId String @db.Uuid
+  actorId String? @db.Uuid
+  kind String
+  before Json?
+  after Json?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  order Order @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  @@index([orderId, createdAt])
+}
+
+model OrderItem {
+  id String @id @default(uuid()) @db.Uuid
+  orderId String @db.Uuid
+  variantId String @db.Uuid
+  quantity Int
+  unitPriceMinor BigInt
+  snapshot Json
+  order Order @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  variant ListingVariant @relation(fields: [variantId], references: [id], onDelete: Restrict)
+}
+
+model OrderStatusHistory {
+  id String @id @default(uuid()) @db.Uuid
+  orderId String @db.Uuid
+  fromStatus OrderStatus?
+  toStatus OrderStatus
+  actorId String? @db.Uuid
+  reason String?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  order Order @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  @@index([orderId, createdAt])
+}
+
+model StockReservation {
+  id String @id @default(uuid()) @db.Uuid
+  orderId String @db.Uuid
+  variantId String @db.Uuid
+  quantity Int
+  status ReservationStatus @default(ACTIVE)
+  expiresAt DateTime @db.Timestamptz
+  order Order @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  variant ListingVariant @relation(fields: [variantId], references: [id], onDelete: Restrict)
+  @@index([status, expiresAt])
+}
+
+model Conversation {
+  id String @id @default(uuid()) @db.Uuid
+  orderId String? @unique @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz
+  order Order? @relation(fields: [orderId], references: [id])
+  messages Message[]
+  members ConversationMember[]
+}
+
+model ConversationMember {
+  conversationId String @db.Uuid
+  userId String @db.Uuid
+  joinedAt DateTime @default(now()) @db.Timestamptz
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  @@id([conversationId, userId])
+}
+
+model Message {
+  id String @id @default(uuid()) @db.Uuid
+  conversationId String @db.Uuid
+  senderId String? @db.Uuid
+  kind String @default("TEXT")
+  body String?
+  attachment Json?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Restrict)
+  attachments Attachment[]
+  @@index([conversationId, createdAt])
+}
+
+model Attachment {
+  id String @id @default(uuid()) @db.Uuid
+  messageId String @db.Uuid
+  storageKey String @unique
+  mimeType String
+  sizeBytes Int
+  createdAt DateTime @default(now()) @db.Timestamptz
+  message Message @relation(fields: [messageId], references: [id], onDelete: Restrict)
+}
+
+model StoreQuestion {
+  id String @id @default(uuid()) @db.Uuid
+  storeId String @db.Uuid
+  listingId String? @db.Uuid
+  authorId String @db.Uuid
+  body String
+  pinned Boolean @default(false)
+  reportedAt DateTime? @db.Timestamptz
+  createdAt DateTime @default(now()) @db.Timestamptz
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  listing Listing? @relation(fields: [listingId], references: [id], onDelete: SetNull)
+  author User @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  answer StoreAnswer?
+  @@index([storeId, createdAt])
+}
+
+model StoreAnswer {
+  id String @id @default(uuid()) @db.Uuid
+  questionId String @unique @db.Uuid
+  authorId String @db.Uuid
+  body String
+  createdAt DateTime @default(now()) @db.Timestamptz
+  question StoreQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+  id String @id @default(uuid()) @db.Uuid
+  orderId String @unique @db.Uuid
+  rating Int
+  body String?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  order Order @relation(fields: [orderId], references: [id], onDelete: Restrict)
+}
+
+model ImportedTestimonial {
+  id String @id @default(uuid()) @db.Uuid
+  storeId String @db.Uuid
+  sourceLabel String
+  authorLabel String
+  body String
+  createdAt DateTime @default(now()) @db.Timestamptz
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+}
+
+model SellerMetric {
+  id String @id @default(uuid()) @db.Uuid
+  storeId String @db.Uuid
+  periodStart DateTime @db.Date
+  completedOrders Int @default(0)
+  cancellations Int @default(0)
+  timeouts Int @default(0)
+  disputes Int @default(0)
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  @@unique([storeId, periodStart])
+}
+
+model TrustEvent {
+  id String @id @default(uuid()) @db.Uuid
+  storeId String @db.Uuid
+  type String
+  weight Int
+  metadata Json?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  @@index([storeId, createdAt])
+}
+
+model RiskEvent {
+  id String @id @default(uuid()) @db.Uuid
+  subjectType String
+  subjectId String
+  signal String
+  score Int
+  reviewedAt DateTime? @db.Timestamptz
+  metadata Json?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  @@index([subjectType, subjectId, createdAt])
+}
+
+model Coupon {
+  id String @id @default(uuid()) @db.Uuid
+  storeId String @db.Uuid
+  code String
+  kind String
+  valueMinor BigInt
+  minimumMinor BigInt?
+  maximumDiscountMinor BigInt?
+  usageLimit Int?
+  buyerLimit Int?
+  startsAt DateTime @db.Timestamptz
+  endsAt DateTime @db.Timestamptz
+  active Boolean @default(true)
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  redemptions CouponRedemption[]
+  @@unique([storeId, code])
+}
+
+model CouponRedemption {
+  id String @id @default(uuid()) @db.Uuid
+  couponId String @db.Uuid
+  userId String @db.Uuid
+  orderId String @db.Uuid
+  redeemedAt DateTime @default(now()) @db.Timestamptz
+  coupon Coupon @relation(fields: [couponId], references: [id], onDelete: Restrict)
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+  @@unique([couponId, orderId])
+  @@index([couponId, userId])
+}
+
+model Promotion {
+  id String @id @default(uuid()) @db.Uuid
+  storeId String @db.Uuid
+  type String
+  startsAt DateTime @db.Timestamptz
+  endsAt DateTime @db.Timestamptz
+  metadata Json
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+}
+
+model Dispute {
+  id String @id @default(uuid()) @db.Uuid
+  orderId String @unique @db.Uuid
+  status DisputeStatus @default(OPEN)
+  reason String
+  createdAt DateTime @default(now()) @db.Timestamptz
+  order Order @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  events DisputeEvent[]
+}
+
+model DisputeEvent {
+  id String @id @default(uuid()) @db.Uuid
+  disputeId String @db.Uuid
+  actorId String? @db.Uuid
+  type String
+  payload Json
+  createdAt DateTime @default(now()) @db.Timestamptz
+  dispute Dispute @relation(fields: [disputeId], references: [id], onDelete: Restrict)
+}
+
+model Notification {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  severity NotificationSeverity
+  type String
+  payload Json
+  readAt DateTime? @db.Timestamptz
+  createdAt DateTime @default(now()) @db.Timestamptz
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, readAt, createdAt])
+}
+
+model NotificationPreference {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  channel String
+  eventType String
+  enabled Boolean @default(true)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([userId, channel, eventType])
+}
+
+model LegalVersion {
+  id String @id @default(uuid()) @db.Uuid
+  documentKey String
+  version Int
+  contentHash String
+  publishedAt DateTime @db.Timestamptz
+  acceptances LegalAcceptance[]
+  @@unique([documentKey, version])
+}
+
+model LegalAcceptance {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  legalVersionId String @db.Uuid
+  acceptedAt DateTime @default(now()) @db.Timestamptz
+  ipHash String?
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+  legalVersion LegalVersion @relation(fields: [legalVersionId], references: [id], onDelete: Restrict)
+  @@unique([userId, legalVersionId])
+}
+
+model PolicySnapshot {
+  id String @id @default(uuid()) @db.Uuid
+  orderId String @db.Uuid
+  policyType String
+  version Int
+  contentHash String
+  content Json
+  createdAt DateTime @default(now()) @db.Timestamptz
+  order Order @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  @@unique([orderId, policyType])
+}
+
+model AuditLog {
+  id String @id @default(uuid()) @db.Uuid
+  actorId String? @db.Uuid
+  action String
+  targetType String
+  targetId String
+  reason String?
+  metadata Json?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  actor User? @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+  @@index([targetType, targetId, createdAt])
+  @@index([actorId, createdAt])
+}
+
+model SecurityEvent {
+  id String @id @default(uuid()) @db.Uuid
+  userId String? @db.Uuid
+  type String
+  severity String
+  ipHash String?
+  metadata Json?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  @@index([type, createdAt])
+}

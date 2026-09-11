@@ -1,0 +1,1 @@
+{ "extends": "../../packages/tooling/tsconfig/base.json", "compilerOptions": { "module": "NodeNext", "moduleResolution": "NodeNext", "experimentalDecorators": true, "emitDecoratorMetadata": true, "outDir": "dist", "rootDir": "src", "types": ["node"] }, "include": ["src/**/*.ts", "test/**/*.ts"] }
