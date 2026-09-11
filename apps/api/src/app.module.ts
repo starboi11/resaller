@@ -8,9 +8,19 @@ import { OperationsModule } from './operations/operations.module.js';
 import { AdminModule } from './admin/admin.module.js';
 import { NotificationsModule } from './notifications/notifications.module.js';
 import { MediaModule } from './media/media.module.js';
+import { TrustModule } from './trust/trust.module.js';
 
 @Module({
-  imports: [InfrastructureModule, AuthModule, CommerceModule, OperationsModule, AdminModule, NotificationsModule, MediaModule],
+  imports: [
+    InfrastructureModule,
+    AuthModule,
+    CommerceModule,
+    OperationsModule,
+    AdminModule,
+    NotificationsModule,
+    MediaModule,
+    TrustModule,
+  ],
   controllers: [HealthController, PlatformController],
 })
 export class AppModule {}
