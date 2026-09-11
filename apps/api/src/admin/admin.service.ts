@@ -10,11 +10,11 @@ export class AdminService {
     const [stores, listings, verifications, disputes, securityEvents] = await Promise.all([
       this.prisma.store.findMany({ where: { status: 'PENDING_REVIEW' }, take: 50, orderBy: { createdAt: 'asc' }, select: { publicId: true, username: true, nameUz: true, createdAt: true } }),
       this.prisma.listing.findMany({ where: { status: 'PENDING_REVIEW' }, take: 50, orderBy: { createdAt: 'asc' }, select: { publicId: true, nameUz: true, store: { select: { username: true } }, createdAt: true } }),
-      this.prisma.sellerVerification.findMany({ where: { status: 'PENDING_REVIEW' }, take: 50, orderBy: { submittedAt: 'asc' }, select: { id: true, legalName: true, documentType: true, documentNumberMasked: true, submittedAt: true, sellerProfile: { select: { user: { select: { publicId: true, username: true } } } } } }),
+      this.prisma.sellerVerification.findMany({ where: { status: 'PENDING_REVIEW', documentStorageKey: { not: null } }, take: 50, orderBy: { submittedAt: 'asc' }, select: { id: true, legalName: true, documentType: true, documentNumberMasked: true, documentStorageKey: true, submittedAt: true, sellerProfile: { select: { user: { select: { publicId: true, username: true } } } } } }),
       this.prisma.dispute.count({ where: { status: { notIn: ['DECIDED', 'CLOSED'] } } }),
       this.prisma.securityEvent.count({ where: { createdAt: { gte: new Date(Date.now() - 86_400_000) } } }),
     ]);
-    return { stores, listings, verifications, openDisputes: disputes, securityEvents24h: securityEvents };
+    return { stores, listings, verifications: verifications.map(({ documentStorageKey, ...verification }) => ({ ...verification, documentAvailable: Boolean(documentStorageKey) })), openDisputes: disputes, securityEvents24h: securityEvents };
   }
   async moderateStore(actor: AuthenticatedUser, publicId: string, input: ModerateStoreDto) {
     return this.prisma.$transaction(async (tx) => {

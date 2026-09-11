@@ -10,7 +10,7 @@ The backend foundation is completed before final UI implementation. A block is c
 - [x] PostgreSQL/Prisma migrations
 - [x] Foreign keys for checkout, variants, reservations, legal records, preferences and security events
 - [x] Database checks for money, stock, quantity, review rating and coupon schedules
-- [ ] Versioned baseline commit and clean-worktree verification
+- [x] Versioned baseline commit and recovery branch
 - [ ] Migration rollback/restore rehearsal against disposable data
 
 ### F2 Identity and platform security
@@ -28,7 +28,7 @@ The backend foundation is completed before final UI implementation. A block is c
 - [x] Seller application and masked verification review
 - [x] Store, team roles, settings, hours, delivery and vacation data
 - [x] Listings, variants, inventory, moderation and secure local images
-- [ ] Private verification-document upload
+- [x] Private verification-document upload, admin-only retrieval and access audit
 - [ ] Thumbnail/compression worker and S3-compatible storage adapter
 - [ ] Category attributes and variant management completion
 

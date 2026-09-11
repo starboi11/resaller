@@ -18,9 +18,11 @@ export class CommerceService {
   async submitVerification(userId: string, input: SellerVerificationDto) {
     const profile = await this.prisma.sellerProfile.findUnique({ where: { userId } });
     if (!profile) throw new ForbiddenException('Seller application is required');
+    const existing = await this.prisma.sellerVerification.findUnique({ where: { sellerProfileId: profile.id }, select: { documentStorageKey: true } });
     const compact = input.documentNumber.replace(/\s+/g, '');
     const masked = `${'*'.repeat(Math.max(0, compact.length - 4))}${compact.slice(-4)}`;
-    return this.prisma.sellerVerification.upsert({ where: { sellerProfileId: profile.id }, create: { sellerProfileId: profile.id, legalName: input.legalName, documentType: input.documentType, documentNumberMasked: masked, status: 'PENDING_REVIEW', submittedAt: new Date() }, update: { legalName: input.legalName, documentType: input.documentType, documentNumberMasked: masked, status: 'PENDING_REVIEW', submittedAt: new Date(), reviewedAt: null, reviewReason: null }, select: { id: true, status: true, documentType: true, documentNumberMasked: true, submittedAt: true } });
+    const ready = Boolean(existing?.documentStorageKey);
+    return this.prisma.sellerVerification.upsert({ where: { sellerProfileId: profile.id }, create: { sellerProfileId: profile.id, legalName: input.legalName, documentType: input.documentType, documentNumberMasked: masked, status: 'DOCUMENT_REQUIRED' }, update: { legalName: input.legalName, documentType: input.documentType, documentNumberMasked: masked, status: ready ? 'PENDING_REVIEW' : 'DOCUMENT_REQUIRED', submittedAt: ready ? new Date() : null, reviewedAt: null, reviewReason: null }, select: { id: true, status: true, documentType: true, documentNumberMasked: true, submittedAt: true } });
   }
 
   async createStore(user: AuthenticatedUser, input: CreateStoreDto) {

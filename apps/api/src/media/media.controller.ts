@@ -1,6 +1,8 @@
 import { Controller, Get, Inject, Param, Post, Req, Res, UnsupportedMediaTypeException, UseGuards } from '@nestjs/common';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { type AuthenticatedUser, SessionGuard } from '../auth/session.guard.js';
+import { RequireRoles } from '../auth/roles.js';
+import { RolesGuard } from '../auth/roles.guard.js';
 import { MediaService } from './media.service.js';
 
 @Controller('media')
@@ -12,6 +14,20 @@ export class MediaController {
     const file = await request.file();
     if (!file) throw new UnsupportedMediaTypeException('Image file is required');
     return this.media.uploadListingImage(request.user.id, publicId, await file.toBuffer());
+  }
+  @Post('verification/document')
+  @UseGuards(SessionGuard)
+  async uploadVerification(@Req() request: FastifyRequest & { user: AuthenticatedUser }) {
+    const file = await request.file();
+    if (!file) throw new UnsupportedMediaTypeException('Verification document is required');
+    return this.media.uploadVerificationDocument(request.user.id, await file.toBuffer());
+  }
+  @Get('private/verifications/:id/document')
+  @UseGuards(SessionGuard, RolesGuard)
+  @RequireRoles('VERIFICATION_ADMIN')
+  async verificationDocument(@Req() request: FastifyRequest & { user: AuthenticatedUser }, @Param('id') id: string, @Res() reply: FastifyReply) {
+    const document = await this.media.verificationDocument(request.user.id, id);
+    return reply.header('cache-control', 'private, no-store').header('content-disposition', 'inline').type(document.mimeType).send(document.bytes);
   }
   @Get(':storageKey')
   async image(@Param('storageKey') storageKey: string, @Res() reply: FastifyReply) {

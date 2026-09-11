@@ -11,3 +11,5 @@ coverage/
 !.env.example
 uploads/*
 !uploads/.gitkeep
+apps/api/data/media/*
+apps/api/data/private-media/*

@@ -30,10 +30,13 @@ services:
       CORS_ORIGINS: "https://${DOMAIN},https://admin.${DOMAIN}"
       LOG_LEVEL: info
       MEDIA_ROOT: /app/data/media
+      PRIVATE_MEDIA_ROOT: /app/data/private-media
     depends_on:
       postgres: { condition: service_healthy }
       redis: { condition: service_healthy }
-    volumes: ["media_prod:/app/data/media"]
+    volumes:
+      - media_prod:/app/data/media
+      - private_media_prod:/app/data/private-media
   postgres:
     image: postgres:17-alpine
     restart: unless-stopped
@@ -54,3 +57,4 @@ volumes:
   redis_prod:
   caddy_data:
   media_prod:
+  private_media_prod:
