@@ -5,11 +5,11 @@
 body {
   margin: 0;
   font-family: Inter, ui-sans-serif, system-ui;
-  background: #0d0f15;
+  background: #07100f;
   color: #f4f5f8;
 }
 :focus-visible {
-  outline: 3px solid rgb(167 139 250 / 0.7);
+  outline: 3px solid rgb(0 200 151 / 0.7);
   outline-offset: 3px;
 }
 .skip-link {
@@ -30,8 +30,8 @@ body {
   border: 0;
   border-radius: 0.65rem;
   padding: 0.7rem 1rem;
-  background: #6d4aff;
-  color: white;
+  background: #00c897;
+  color: #02110d;
   font-weight: 700;
 }
 .rs-button:disabled,
@@ -41,7 +41,7 @@ button:disabled {
 }
 .eyebrow {
   margin: 0;
-  color: #a78bfa;
+  color: #31e2b7;
   font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.16em;
@@ -56,14 +56,14 @@ button:disabled {
   outline: none;
 }
 .field:focus {
-  border-color: #8b5cf6;
-  box-shadow: 0 0 0 3px rgb(139 92 246 / 0.18);
+  border-color: #00c897;
+  box-shadow: 0 0 0 3px rgb(0 200 151 / 0.18);
 }
 .metric,
 .panel {
   border: 1px solid rgb(255 255 255 / 0.1);
   border-radius: 1rem;
-  background: rgb(255 255 255 / 0.045);
+  background: rgb(8 37 31 / 0.72);
 }
 .metric {
   display: grid;
@@ -102,10 +102,10 @@ button:disabled {
 }
 .actions button {
   min-height: 44px;
-  border: 1px solid rgb(167 139 250 / 0.5);
+  border: 1px solid rgb(0 200 151 / 0.5);
   border-radius: 0.55rem;
-  background: rgb(109 74 255 / 0.14);
-  color: #ddd6fe;
+  background: rgb(0 200 151 / 0.14);
+  color: #9fffe7;
   padding: 0.5rem 0.65rem;
   font-weight: 700;
 }

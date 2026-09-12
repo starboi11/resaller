@@ -110,7 +110,7 @@ export default function AdminOperations() {
           <button
             key={key}
             onClick={() => setActive(key)}
-            className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold ${active === key ? 'bg-violet-500 text-white' : 'border border-white/10 bg-white/5'}`}
+            className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold ${active === key ? 'bg-emerald-500 text-slate-950' : 'border border-white/10 bg-white/5'}`}
           >
             {label} ({data[key]?.length ?? 0})
           </button>

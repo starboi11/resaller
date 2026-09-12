@@ -211,7 +211,7 @@ export default function OrderDetail({
             <h2 className="text-lg font-black">Holat tarixi</h2>
             <ol className="mt-4 grid gap-4">
               {order.history.map((item) => (
-                <li className="border-l-2 border-violet-400 pl-4" key={item.id}>
+                <li className="border-l-2 border-emerald-400 pl-4" key={item.id}>
                   <b>{item.toStatus}</b>
                   <p className="muted text-xs">
                     {new Date(item.createdAt).toLocaleString('uz-UZ')}

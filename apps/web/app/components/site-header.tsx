@@ -3,13 +3,14 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ThemeToggle } from './theme-toggle';
+import { BrandLogo } from './brand-logo';
 
 const links = [
-  { href: '/marketplace', label: 'Bozor', icon: '⌕' },
+  { href: '/', label: 'Bosh sahifa', icon: '⌂' },
+  { href: '/marketplace', label: 'Qidiruv', icon: '⌕' },
   { href: '/cart', label: 'Savat', icon: '🛒' },
   { href: '/orders', label: 'Buyurtmalar', icon: '▣' },
-  { href: '/seller', label: 'Sotuvchi', icon: '◇' },
-  { href: '/login', label: 'Hisob', icon: '○' },
+  { href: '/login', label: 'Profil', icon: '○' },
 ];
 
 export function SiteHeader() {
@@ -20,14 +21,15 @@ export function SiteHeader() {
     <>
       <header className="site-header">
         <div className="shell header-inner">
-          <Link href="/" className="brand" aria-label="Resaller bosh sahifa">
-            <span className="brand-mark" aria-hidden="true">
-              R
-            </span>
-            <span>Resaller</span>
-          </Link>
+          <BrandLogo />
+          <Link className="header-category" href="/categories">Kategoriyalar⌄</Link>
+          <form className="header-search" action="/marketplace">
+            <span aria-hidden="true">⌕</span>
+            <input name="q" aria-label="Mahsulot qidirish" placeholder="Mahsulot, do‘kon yoki xizmat qidiring..." />
+            <kbd>Ctrl K</kbd>
+          </form>
           <nav className="desktop-nav" aria-label="Asosiy navigatsiya">
-            {links.slice(0, 4).map((link) => (
+            {[{ href: '/favorites', label: 'Sevimlilar' }, { href: '/orders', label: 'Buyurtmalar' }, { href: '/cart', label: 'Savat' }].map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -42,6 +44,7 @@ export function SiteHeader() {
             <Link href="/login" className="account-link">
               Kirish
             </Link>
+            <Link href="/seller/manage" className="sell-link">Sotishni boshlash</Link>
           </div>
         </div>
       </header>

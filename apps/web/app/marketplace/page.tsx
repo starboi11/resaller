@@ -142,7 +142,7 @@ export default async function Marketplace({
                     className="aspect-[4/3] w-full object-cover"
                   />
                 ) : (
-                  <div className="aspect-[4/3] bg-gradient-to-br from-violet-200 via-fuchsia-100 to-amber-100 dark:from-violet-950 dark:via-fuchsia-950 dark:to-amber-950" />
+                  <div className="aspect-[4/3] bg-gradient-to-br from-emerald-100 via-teal-50 to-slate-100 dark:from-emerald-950 dark:via-teal-950 dark:to-slate-950" />
                 )}
                 <span className="absolute left-3 top-3 rounded-full bg-black/70 px-2.5 py-1 text-[10px] font-black text-white backdrop-blur">
                   {product.store.sellerProfile.trustBadge.replaceAll('_', ' ')}

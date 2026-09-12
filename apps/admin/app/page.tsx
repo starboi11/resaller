@@ -294,7 +294,7 @@ export default function AdminHome() {
                     </p>
                     {item.documentAvailable && (
                       <a
-                        className="mt-2 inline-block text-sm font-bold text-violet-300 underline"
+                        className="mt-2 inline-block text-sm font-bold text-emerald-300 underline"
                         href={`${API}/media/private/verifications/${item.id}/document`}
                         target="_blank"
                         rel="noreferrer"

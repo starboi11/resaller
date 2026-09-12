@@ -73,7 +73,7 @@ export default async function ProductPage({
             />
           ) : (
             <div
-              className="surface aspect-square bg-gradient-to-br from-violet-200 via-fuchsia-100 to-amber-100 dark:from-violet-950 dark:via-fuchsia-950 dark:to-amber-950"
+              className="surface aspect-square bg-gradient-to-br from-emerald-100 via-teal-50 to-slate-100 dark:from-emerald-950 dark:via-teal-950 dark:to-slate-950"
               role="img"
               aria-label="Mahsulot rasmi mavjud emas"
             />
