@@ -18,9 +18,10 @@ export default function Home() {
     <main className="market-home">
       <section className="shell market-hero">
         <div className="market-hero__copy">
-          <h1>Sotib ol. <span>Sot. O‘s.</span></h1>
-          <h2>O‘zbekistondagi yangi avlod marketplace.</h2>
-          <p>Haqiqiy mahsulotlar. Ishonchli do‘konlar. Yangi imkoniyatlar.</p>
+          <p className="market-hero__kicker">Oddiy marketplace’dan ko‘proq.</p>
+          <h1>Xarid qilish va sotishning <span>yaxshiroq yo‘li.</span></h1>
+          <h2>Odamlar, mahsulotlar va yangi imkoniyatlar uchun ishonchli platforma.</h2>
+          <p>Katta imkoniyatlar kichik qadamlardan boshlanadi.</p>
           <div className="market-hero__actions">
             <Link className="rs-button" href="/marketplace">Mahsulotlarni ko‘rish <b>→</b></Link>
             <Link className="rs-button rs-button--ghost" href="/seller/manage">Sotishni boshlash</Link>

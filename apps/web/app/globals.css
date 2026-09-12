@@ -327,6 +327,7 @@ a {
 .market-hero::before { inset: 0; background: linear-gradient(120deg, transparent 52%, rgb(0 232 177 / .15)), repeating-linear-gradient(145deg, transparent 0 80px, rgb(0 200 151 / .035) 81px 82px); }
 .market-hero::after { width: 55rem; height: 1px; right: -8rem; top: 56%; background: #00e9b1; box-shadow: 0 0 32px 8px rgb(0 232 177 / .35); transform: rotate(-9deg); }
 .market-hero__copy { position: relative; z-index: 2; width: min(54rem, 66%); padding: 4.5rem 3.2rem 2.5rem; }
+.market-hero .market-hero__kicker { margin-bottom: .85rem; color: #62f2ce; font-size: .72rem; font-weight: 850; letter-spacing: .15em; text-transform: uppercase; }
 .market-hero h1 { margin: 0; font-size: clamp(2.5rem, 5vw, 5rem); line-height: .95; letter-spacing: -.065em; }
 .market-hero h1 span { color: #19e6b4; }
 .market-hero h2 { margin: 1rem 0 .4rem; font-size: clamp(1.15rem, 2vw, 1.8rem); }
@@ -378,15 +379,16 @@ a {
 .trust-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; border-block: 1px solid var(--line); padding-block: 1.4rem; }.trust-strip span { text-align: center; font-size: .78rem; }
 .market-footer { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 2rem; padding-block: 2.4rem 7rem; }.market-footer>div { display: grid; align-content: start; gap: .55rem; }.market-footer strong { font-size: 1.25rem; }.market-footer b { font-size: .78rem; }.market-footer a,.market-footer p { margin: 0; color: var(--muted); font-size: .72rem; }
 
-@media (min-width: 900px) {
+@media (min-width: 1100px) {
   .header-category,.header-search,.sell-link { display: flex; }
   .desktop-nav { display: flex; }
   .header-actions { margin-left: auto; }
 }
-@media (max-width: 900px) {
+@media (max-width: 1099px) {
   .site-header { background: #06100f; color: #fff; }
   .market-hero { min-height: 15.5rem; margin-top: .75rem; }
   .market-hero__copy { width: 100%; padding: 1.7rem 1.3rem; }
+  .market-hero .market-hero__kicker { display: block; font-size: .58rem; }
   .market-hero h1 { max-width: 17rem; font-size: 2rem; }
   .market-hero h2 { max-width: 16rem; font-size: .85rem; }
   .market-hero p,.market-hero__stats { display: none; }
