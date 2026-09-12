@@ -31,6 +31,9 @@ export type UserMinAggregateOutputType = {
   passwordHash: string | null
   totpSecretEncrypted: string | null
   totpEnabledAt: Date | null
+  accountStatus: string | null
+  accountStatusReason: string | null
+  accountStatusChangedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -43,6 +46,9 @@ export type UserMaxAggregateOutputType = {
   passwordHash: string | null
   totpSecretEncrypted: string | null
   totpEnabledAt: Date | null
+  accountStatus: string | null
+  accountStatusReason: string | null
+  accountStatusChangedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -56,6 +62,9 @@ export type UserCountAggregateOutputType = {
   totpSecretEncrypted: number
   totpEnabledAt: number
   roles: number
+  accountStatus: number
+  accountStatusReason: number
+  accountStatusChangedAt: number
   createdAt: number
   updatedAt: number
   deletedAt: number
@@ -70,6 +79,9 @@ export type UserMinAggregateInputType = {
   passwordHash?: true
   totpSecretEncrypted?: true
   totpEnabledAt?: true
+  accountStatus?: true
+  accountStatusReason?: true
+  accountStatusChangedAt?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -82,6 +94,9 @@ export type UserMaxAggregateInputType = {
   passwordHash?: true
   totpSecretEncrypted?: true
   totpEnabledAt?: true
+  accountStatus?: true
+  accountStatusReason?: true
+  accountStatusChangedAt?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -95,6 +110,9 @@ export type UserCountAggregateInputType = {
   totpSecretEncrypted?: true
   totpEnabledAt?: true
   roles?: true
+  accountStatus?: true
+  accountStatusReason?: true
+  accountStatusChangedAt?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -181,6 +199,9 @@ export type UserGroupByOutputType = {
   totpSecretEncrypted: string | null
   totpEnabledAt: Date | null
   roles: $Enums.Role[]
+  accountStatus: string
+  accountStatusReason: string | null
+  accountStatusChangedAt: Date | null
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
@@ -215,6 +236,9 @@ export type UserWhereInput = {
   totpSecretEncrypted?: Prisma.StringNullableFilter<"User"> | string | null
   totpEnabledAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   roles?: Prisma.EnumRoleNullableListFilter<"User">
+  accountStatus?: Prisma.StringFilter<"User"> | string
+  accountStatusReason?: Prisma.StringNullableFilter<"User"> | string | null
+  accountStatusChangedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -233,6 +257,8 @@ export type UserWhereInput = {
   checkouts?: Prisma.CheckoutListRelationFilter
   notificationPreferences?: Prisma.NotificationPreferenceListRelationFilter
   securityEvents?: Prisma.SecurityEventListRelationFilter
+  reviewedSecurityEvents?: Prisma.SecurityEventListRelationFilter
+  moderatedReviews?: Prisma.ReviewListRelationFilter
   passwordResetTokens?: Prisma.PasswordResetTokenListRelationFilter
   twoFactorChallenges?: Prisma.TwoFactorChallengeListRelationFilter
   questionReports?: Prisma.QuestionReportListRelationFilter
@@ -249,6 +275,9 @@ export type UserOrderByWithRelationInput = {
   totpSecretEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
   totpEnabledAt?: Prisma.SortOrderInput | Prisma.SortOrder
   roles?: Prisma.SortOrder
+  accountStatus?: Prisma.SortOrder
+  accountStatusReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  accountStatusChangedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -267,6 +296,8 @@ export type UserOrderByWithRelationInput = {
   checkouts?: Prisma.CheckoutOrderByRelationAggregateInput
   notificationPreferences?: Prisma.NotificationPreferenceOrderByRelationAggregateInput
   securityEvents?: Prisma.SecurityEventOrderByRelationAggregateInput
+  reviewedSecurityEvents?: Prisma.SecurityEventOrderByRelationAggregateInput
+  moderatedReviews?: Prisma.ReviewOrderByRelationAggregateInput
   passwordResetTokens?: Prisma.PasswordResetTokenOrderByRelationAggregateInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeOrderByRelationAggregateInput
   questionReports?: Prisma.QuestionReportOrderByRelationAggregateInput
@@ -286,6 +317,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   totpSecretEncrypted?: Prisma.StringNullableFilter<"User"> | string | null
   totpEnabledAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   roles?: Prisma.EnumRoleNullableListFilter<"User">
+  accountStatus?: Prisma.StringFilter<"User"> | string
+  accountStatusReason?: Prisma.StringNullableFilter<"User"> | string | null
+  accountStatusChangedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -304,6 +338,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   checkouts?: Prisma.CheckoutListRelationFilter
   notificationPreferences?: Prisma.NotificationPreferenceListRelationFilter
   securityEvents?: Prisma.SecurityEventListRelationFilter
+  reviewedSecurityEvents?: Prisma.SecurityEventListRelationFilter
+  moderatedReviews?: Prisma.ReviewListRelationFilter
   passwordResetTokens?: Prisma.PasswordResetTokenListRelationFilter
   twoFactorChallenges?: Prisma.TwoFactorChallengeListRelationFilter
   questionReports?: Prisma.QuestionReportListRelationFilter
@@ -320,6 +356,9 @@ export type UserOrderByWithAggregationInput = {
   totpSecretEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
   totpEnabledAt?: Prisma.SortOrderInput | Prisma.SortOrder
   roles?: Prisma.SortOrder
+  accountStatus?: Prisma.SortOrder
+  accountStatusReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  accountStatusChangedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -339,6 +378,9 @@ export type UserScalarWhereWithAggregatesInput = {
   totpSecretEncrypted?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   totpEnabledAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   roles?: Prisma.EnumRoleNullableListFilter<"User">
+  accountStatus?: Prisma.StringWithAggregatesFilter<"User"> | string
+  accountStatusReason?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  accountStatusChangedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
@@ -352,6 +394,9 @@ export type UserCreateInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -370,6 +415,8 @@ export type UserCreateInput = {
   checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
@@ -386,6 +433,9 @@ export type UserUncheckedCreateInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -404,6 +454,8 @@ export type UserUncheckedCreateInput = {
   checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
@@ -420,6 +472,9 @@ export type UserUpdateInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -438,6 +493,8 @@ export type UserUpdateInput = {
   checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
@@ -454,6 +511,9 @@ export type UserUncheckedUpdateInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -472,6 +532,8 @@ export type UserUncheckedUpdateInput = {
   checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -488,6 +550,9 @@ export type UserCreateManyInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -501,6 +566,9 @@ export type UserUpdateManyMutationInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -514,6 +582,9 @@ export type UserUncheckedUpdateManyInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -535,6 +606,9 @@ export type UserCountOrderByAggregateInput = {
   totpSecretEncrypted?: Prisma.SortOrder
   totpEnabledAt?: Prisma.SortOrder
   roles?: Prisma.SortOrder
+  accountStatus?: Prisma.SortOrder
+  accountStatusReason?: Prisma.SortOrder
+  accountStatusChangedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -547,6 +621,9 @@ export type UserMaxOrderByAggregateInput = {
   passwordHash?: Prisma.SortOrder
   totpSecretEncrypted?: Prisma.SortOrder
   totpEnabledAt?: Prisma.SortOrder
+  accountStatus?: Prisma.SortOrder
+  accountStatusReason?: Prisma.SortOrder
+  accountStatusChangedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -559,6 +636,9 @@ export type UserMinOrderByAggregateInput = {
   passwordHash?: Prisma.SortOrder
   totpSecretEncrypted?: Prisma.SortOrder
   totpEnabledAt?: Prisma.SortOrder
+  accountStatus?: Prisma.SortOrder
+  accountStatusReason?: Prisma.SortOrder
+  accountStatusChangedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -783,6 +863,22 @@ export type UserUpdateOneRequiredWithoutQuestionReportsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutQuestionReportsInput, Prisma.UserUpdateWithoutQuestionReportsInput>, Prisma.UserUncheckedUpdateWithoutQuestionReportsInput>
 }
 
+export type UserCreateNestedOneWithoutModeratedReviewsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutModeratedReviewsInput, Prisma.UserUncheckedCreateWithoutModeratedReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutModeratedReviewsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutModeratedReviewsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutModeratedReviewsInput, Prisma.UserUncheckedCreateWithoutModeratedReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutModeratedReviewsInput
+  upsert?: Prisma.UserUpsertWithoutModeratedReviewsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutModeratedReviewsInput, Prisma.UserUpdateWithoutModeratedReviewsInput>, Prisma.UserUncheckedUpdateWithoutModeratedReviewsInput>
+}
+
 export type UserCreateNestedOneWithoutCouponRedemptionsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutCouponRedemptionsInput, Prisma.UserUncheckedCreateWithoutCouponRedemptionsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutCouponRedemptionsInput
@@ -893,6 +989,12 @@ export type UserCreateNestedOneWithoutSecurityEventsInput = {
   connect?: Prisma.UserWhereUniqueInput
 }
 
+export type UserCreateNestedOneWithoutReviewedSecurityEventsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewedSecurityEventsInput, Prisma.UserUncheckedCreateWithoutReviewedSecurityEventsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewedSecurityEventsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
 export type UserUpdateOneWithoutSecurityEventsNestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutSecurityEventsInput, Prisma.UserUncheckedCreateWithoutSecurityEventsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutSecurityEventsInput
@@ -903,6 +1005,16 @@ export type UserUpdateOneWithoutSecurityEventsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSecurityEventsInput, Prisma.UserUpdateWithoutSecurityEventsInput>, Prisma.UserUncheckedUpdateWithoutSecurityEventsInput>
 }
 
+export type UserUpdateOneWithoutReviewedSecurityEventsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewedSecurityEventsInput, Prisma.UserUncheckedCreateWithoutReviewedSecurityEventsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewedSecurityEventsInput
+  upsert?: Prisma.UserUpsertWithoutReviewedSecurityEventsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReviewedSecurityEventsInput, Prisma.UserUpdateWithoutReviewedSecurityEventsInput>, Prisma.UserUncheckedUpdateWithoutReviewedSecurityEventsInput>
+}
+
 export type UserCreateWithoutSessionsInput = {
   id?: string
   publicId?: string
@@ -911,6 +1023,9 @@ export type UserCreateWithoutSessionsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -928,6 +1043,8 @@ export type UserCreateWithoutSessionsInput = {
   checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
@@ -944,6 +1061,9 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -961,6 +1081,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
@@ -993,6 +1115,9 @@ export type UserUpdateWithoutSessionsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1010,6 +1135,8 @@ export type UserUpdateWithoutSessionsInput = {
   checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
@@ -1026,6 +1153,9 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1043,6 +1173,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -1059,6 +1191,9 @@ export type UserCreateWithoutPasswordResetTokensInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1077,6 +1212,8 @@ export type UserCreateWithoutPasswordResetTokensInput = {
   checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
@@ -1092,6 +1229,9 @@ export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1110,6 +1250,8 @@ export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
   checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
@@ -1141,6 +1283,9 @@ export type UserUpdateWithoutPasswordResetTokensInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1159,6 +1304,8 @@ export type UserUpdateWithoutPasswordResetTokensInput = {
   checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
@@ -1174,6 +1321,9 @@ export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1192,6 +1342,8 @@ export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
   checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -1207,6 +1359,9 @@ export type UserCreateWithoutTwoFactorChallengesInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1225,6 +1380,8 @@ export type UserCreateWithoutTwoFactorChallengesInput = {
   checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
@@ -1240,6 +1397,9 @@ export type UserUncheckedCreateWithoutTwoFactorChallengesInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1258,6 +1418,8 @@ export type UserUncheckedCreateWithoutTwoFactorChallengesInput = {
   checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
@@ -1289,6 +1451,9 @@ export type UserUpdateWithoutTwoFactorChallengesInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1307,6 +1472,8 @@ export type UserUpdateWithoutTwoFactorChallengesInput = {
   checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
@@ -1322,6 +1489,9 @@ export type UserUncheckedUpdateWithoutTwoFactorChallengesInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1340,6 +1510,8 @@ export type UserUncheckedUpdateWithoutTwoFactorChallengesInput = {
   checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -1355,6 +1527,9 @@ export type UserCreateWithoutSellerProfileInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1372,6 +1547,8 @@ export type UserCreateWithoutSellerProfileInput = {
   checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
@@ -1388,6 +1565,9 @@ export type UserUncheckedCreateWithoutSellerProfileInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1405,6 +1585,8 @@ export type UserUncheckedCreateWithoutSellerProfileInput = {
   checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
@@ -1437,6 +1619,9 @@ export type UserUpdateWithoutSellerProfileInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1454,6 +1639,8 @@ export type UserUpdateWithoutSellerProfileInput = {
   checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
@@ -1470,6 +1657,9 @@ export type UserUncheckedUpdateWithoutSellerProfileInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1487,6 +1677,8 @@ export type UserUncheckedUpdateWithoutSellerProfileInput = {
   checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -1503,6 +1695,9 @@ export type UserCreateWithoutStoreMembershipsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1520,6 +1715,8 @@ export type UserCreateWithoutStoreMembershipsInput = {
   checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
@@ -1536,6 +1733,9 @@ export type UserUncheckedCreateWithoutStoreMembershipsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1553,6 +1753,8 @@ export type UserUncheckedCreateWithoutStoreMembershipsInput = {
   checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
@@ -1585,6 +1787,9 @@ export type UserUpdateWithoutStoreMembershipsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1602,6 +1807,8 @@ export type UserUpdateWithoutStoreMembershipsInput = {
   checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
@@ -1618,6 +1825,9 @@ export type UserUncheckedUpdateWithoutStoreMembershipsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1635,6 +1845,8 @@ export type UserUncheckedUpdateWithoutStoreMembershipsInput = {
   checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -1651,6 +1863,9 @@ export type UserCreateWithoutCheckoutsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1668,6 +1883,8 @@ export type UserCreateWithoutCheckoutsInput = {
   couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
@@ -1684,6 +1901,9 @@ export type UserUncheckedCreateWithoutCheckoutsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1701,6 +1921,8 @@ export type UserUncheckedCreateWithoutCheckoutsInput = {
   couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
@@ -1733,6 +1955,9 @@ export type UserUpdateWithoutCheckoutsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1750,6 +1975,8 @@ export type UserUpdateWithoutCheckoutsInput = {
   couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
@@ -1766,6 +1993,9 @@ export type UserUncheckedUpdateWithoutCheckoutsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1783,6 +2013,8 @@ export type UserUncheckedUpdateWithoutCheckoutsInput = {
   couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -1799,6 +2031,9 @@ export type UserCreateWithoutCartsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1816,6 +2051,8 @@ export type UserCreateWithoutCartsInput = {
   checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
@@ -1832,6 +2069,9 @@ export type UserUncheckedCreateWithoutCartsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1849,6 +2089,8 @@ export type UserUncheckedCreateWithoutCartsInput = {
   checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
@@ -1881,6 +2123,9 @@ export type UserUpdateWithoutCartsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1898,6 +2143,8 @@ export type UserUpdateWithoutCartsInput = {
   checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
@@ -1914,6 +2161,9 @@ export type UserUncheckedUpdateWithoutCartsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1931,6 +2181,8 @@ export type UserUncheckedUpdateWithoutCartsInput = {
   checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -1947,6 +2199,9 @@ export type UserCreateWithoutFavoritesInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1964,6 +2219,8 @@ export type UserCreateWithoutFavoritesInput = {
   checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
@@ -1980,6 +2237,9 @@ export type UserUncheckedCreateWithoutFavoritesInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1997,6 +2257,8 @@ export type UserUncheckedCreateWithoutFavoritesInput = {
   checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
@@ -2029,6 +2291,9 @@ export type UserUpdateWithoutFavoritesInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2046,6 +2311,8 @@ export type UserUpdateWithoutFavoritesInput = {
   checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
@@ -2062,6 +2329,9 @@ export type UserUncheckedUpdateWithoutFavoritesInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2079,6 +2349,8 @@ export type UserUncheckedUpdateWithoutFavoritesInput = {
   checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -2095,6 +2367,9 @@ export type UserCreateWithoutFollowedStoresInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2112,6 +2387,8 @@ export type UserCreateWithoutFollowedStoresInput = {
   checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
@@ -2128,6 +2405,9 @@ export type UserUncheckedCreateWithoutFollowedStoresInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2145,6 +2425,8 @@ export type UserUncheckedCreateWithoutFollowedStoresInput = {
   checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
@@ -2177,6 +2459,9 @@ export type UserUpdateWithoutFollowedStoresInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2194,6 +2479,8 @@ export type UserUpdateWithoutFollowedStoresInput = {
   checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
@@ -2210,6 +2497,9 @@ export type UserUncheckedUpdateWithoutFollowedStoresInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2227,6 +2517,8 @@ export type UserUncheckedUpdateWithoutFollowedStoresInput = {
   checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -2243,6 +2535,9 @@ export type UserCreateWithoutOrdersInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2260,6 +2555,8 @@ export type UserCreateWithoutOrdersInput = {
   checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
@@ -2276,6 +2573,9 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2293,6 +2593,8 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
@@ -2325,6 +2627,9 @@ export type UserUpdateWithoutOrdersInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2342,6 +2647,8 @@ export type UserUpdateWithoutOrdersInput = {
   checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
@@ -2358,6 +2665,9 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2375,6 +2685,8 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -2391,6 +2703,9 @@ export type UserCreateWithoutUploadedAttachmentsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2409,6 +2724,8 @@ export type UserCreateWithoutUploadedAttachmentsInput = {
   checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
@@ -2424,6 +2741,9 @@ export type UserUncheckedCreateWithoutUploadedAttachmentsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2442,6 +2762,8 @@ export type UserUncheckedCreateWithoutUploadedAttachmentsInput = {
   checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
@@ -2473,6 +2795,9 @@ export type UserUpdateWithoutUploadedAttachmentsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2491,6 +2816,8 @@ export type UserUpdateWithoutUploadedAttachmentsInput = {
   checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
@@ -2506,6 +2833,9 @@ export type UserUncheckedUpdateWithoutUploadedAttachmentsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2524,6 +2854,8 @@ export type UserUncheckedUpdateWithoutUploadedAttachmentsInput = {
   checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -2539,6 +2871,9 @@ export type UserCreateWithoutQuestionsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2556,6 +2891,8 @@ export type UserCreateWithoutQuestionsInput = {
   checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
@@ -2572,6 +2909,9 @@ export type UserUncheckedCreateWithoutQuestionsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2589,6 +2929,8 @@ export type UserUncheckedCreateWithoutQuestionsInput = {
   checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
@@ -2621,6 +2963,9 @@ export type UserUpdateWithoutQuestionsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2638,6 +2983,8 @@ export type UserUpdateWithoutQuestionsInput = {
   checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
@@ -2654,6 +3001,9 @@ export type UserUncheckedUpdateWithoutQuestionsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2671,6 +3021,8 @@ export type UserUncheckedUpdateWithoutQuestionsInput = {
   checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -2687,6 +3039,9 @@ export type UserCreateWithoutQuestionReportsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2705,6 +3060,8 @@ export type UserCreateWithoutQuestionReportsInput = {
   checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
@@ -2720,6 +3077,9 @@ export type UserUncheckedCreateWithoutQuestionReportsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2738,6 +3098,8 @@ export type UserUncheckedCreateWithoutQuestionReportsInput = {
   checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
@@ -2769,6 +3131,9 @@ export type UserUpdateWithoutQuestionReportsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2787,6 +3152,8 @@ export type UserUpdateWithoutQuestionReportsInput = {
   checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
@@ -2802,6 +3169,9 @@ export type UserUncheckedUpdateWithoutQuestionReportsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2820,8 +3190,178 @@ export type UserUncheckedUpdateWithoutQuestionReportsInput = {
   checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
+}
+
+export type UserCreateWithoutModeratedReviewsInput = {
+  id?: string
+  publicId?: string
+  username: string
+  passwordHash: string
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutUserInput
+  storeMemberships?: Prisma.StoreMemberCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartCreateNestedManyWithoutBuyerInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
+  followedStores?: Prisma.StoreFollowerCreateNestedManyWithoutUserInput
+  questions?: Prisma.StoreQuestionCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
+}
+
+export type UserUncheckedCreateWithoutModeratedReviewsInput = {
+  id?: string
+  publicId?: string
+  username: string
+  passwordHash: string
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutUserInput
+  storeMemberships?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutBuyerInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
+  followedStores?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutUserInput
+  questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
+}
+
+export type UserCreateOrConnectWithoutModeratedReviewsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutModeratedReviewsInput, Prisma.UserUncheckedCreateWithoutModeratedReviewsInput>
+}
+
+export type UserUpsertWithoutModeratedReviewsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutModeratedReviewsInput, Prisma.UserUncheckedUpdateWithoutModeratedReviewsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutModeratedReviewsInput, Prisma.UserUncheckedCreateWithoutModeratedReviewsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutModeratedReviewsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutModeratedReviewsInput, Prisma.UserUncheckedUpdateWithoutModeratedReviewsInput>
+}
+
+export type UserUpdateWithoutModeratedReviewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  sellerProfile?: Prisma.SellerProfileUpdateOneWithoutUserNestedInput
+  storeMemberships?: Prisma.StoreMemberUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUpdateManyWithoutBuyerNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
+  followedStores?: Prisma.StoreFollowerUpdateManyWithoutUserNestedInput
+  questions?: Prisma.StoreQuestionUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
+}
+
+export type UserUncheckedUpdateWithoutModeratedReviewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutUserNestedInput
+  storeMemberships?: Prisma.StoreMemberUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutBuyerNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
+  followedStores?: Prisma.StoreFollowerUncheckedUpdateManyWithoutUserNestedInput
+  questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
@@ -2835,6 +3375,9 @@ export type UserCreateWithoutCouponRedemptionsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2852,6 +3395,8 @@ export type UserCreateWithoutCouponRedemptionsInput = {
   checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
@@ -2868,6 +3413,9 @@ export type UserUncheckedCreateWithoutCouponRedemptionsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2885,6 +3433,8 @@ export type UserUncheckedCreateWithoutCouponRedemptionsInput = {
   checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
@@ -2917,6 +3467,9 @@ export type UserUpdateWithoutCouponRedemptionsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2934,6 +3487,8 @@ export type UserUpdateWithoutCouponRedemptionsInput = {
   checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
@@ -2950,6 +3505,9 @@ export type UserUncheckedUpdateWithoutCouponRedemptionsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2967,6 +3525,8 @@ export type UserUncheckedUpdateWithoutCouponRedemptionsInput = {
   checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -2983,6 +3543,9 @@ export type UserCreateWithoutUploadedDisputeEvidenceInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -3001,6 +3564,8 @@ export type UserCreateWithoutUploadedDisputeEvidenceInput = {
   checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
@@ -3016,6 +3581,9 @@ export type UserUncheckedCreateWithoutUploadedDisputeEvidenceInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -3034,6 +3602,8 @@ export type UserUncheckedCreateWithoutUploadedDisputeEvidenceInput = {
   checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
@@ -3065,6 +3635,9 @@ export type UserUpdateWithoutUploadedDisputeEvidenceInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3083,6 +3656,8 @@ export type UserUpdateWithoutUploadedDisputeEvidenceInput = {
   checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
@@ -3098,6 +3673,9 @@ export type UserUncheckedUpdateWithoutUploadedDisputeEvidenceInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3116,6 +3694,8 @@ export type UserUncheckedUpdateWithoutUploadedDisputeEvidenceInput = {
   checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -3131,6 +3711,9 @@ export type UserCreateWithoutDisputeDecisionsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -3149,6 +3732,8 @@ export type UserCreateWithoutDisputeDecisionsInput = {
   checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
@@ -3164,6 +3749,9 @@ export type UserUncheckedCreateWithoutDisputeDecisionsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -3182,6 +3770,8 @@ export type UserUncheckedCreateWithoutDisputeDecisionsInput = {
   checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
@@ -3213,6 +3803,9 @@ export type UserUpdateWithoutDisputeDecisionsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3231,6 +3824,8 @@ export type UserUpdateWithoutDisputeDecisionsInput = {
   checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
@@ -3246,6 +3841,9 @@ export type UserUncheckedUpdateWithoutDisputeDecisionsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3264,6 +3862,8 @@ export type UserUncheckedUpdateWithoutDisputeDecisionsInput = {
   checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -3279,6 +3879,9 @@ export type UserCreateWithoutNotificationsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -3296,6 +3899,8 @@ export type UserCreateWithoutNotificationsInput = {
   checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
@@ -3312,6 +3917,9 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -3329,6 +3937,8 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
@@ -3361,6 +3971,9 @@ export type UserUpdateWithoutNotificationsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3378,6 +3991,8 @@ export type UserUpdateWithoutNotificationsInput = {
   checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
@@ -3394,6 +4009,9 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3411,6 +4029,8 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -3427,6 +4047,9 @@ export type UserCreateWithoutNotificationPreferencesInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -3444,6 +4067,8 @@ export type UserCreateWithoutNotificationPreferencesInput = {
   couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
   checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
@@ -3460,6 +4085,9 @@ export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -3477,6 +4105,8 @@ export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
   couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
   checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
@@ -3509,6 +4139,9 @@ export type UserUpdateWithoutNotificationPreferencesInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3526,6 +4159,8 @@ export type UserUpdateWithoutNotificationPreferencesInput = {
   couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
   checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
@@ -3542,6 +4177,9 @@ export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3559,6 +4197,8 @@ export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
   couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
   checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -3575,6 +4215,9 @@ export type UserCreateWithoutLegalAcceptancesInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -3592,6 +4235,8 @@ export type UserCreateWithoutLegalAcceptancesInput = {
   checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
@@ -3608,6 +4253,9 @@ export type UserUncheckedCreateWithoutLegalAcceptancesInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -3625,6 +4273,8 @@ export type UserUncheckedCreateWithoutLegalAcceptancesInput = {
   checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
@@ -3657,6 +4307,9 @@ export type UserUpdateWithoutLegalAcceptancesInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3674,6 +4327,8 @@ export type UserUpdateWithoutLegalAcceptancesInput = {
   checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
@@ -3690,6 +4345,9 @@ export type UserUncheckedUpdateWithoutLegalAcceptancesInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3707,6 +4365,8 @@ export type UserUncheckedUpdateWithoutLegalAcceptancesInput = {
   checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -3723,6 +4383,9 @@ export type UserCreateWithoutAuditLogsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -3740,6 +4403,8 @@ export type UserCreateWithoutAuditLogsInput = {
   checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
@@ -3756,6 +4421,9 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -3773,6 +4441,8 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
@@ -3805,6 +4475,9 @@ export type UserUpdateWithoutAuditLogsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3822,6 +4495,8 @@ export type UserUpdateWithoutAuditLogsInput = {
   checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
@@ -3838,6 +4513,9 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3855,6 +4533,8 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -3871,6 +4551,9 @@ export type UserCreateWithoutSecurityEventsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -3888,6 +4571,8 @@ export type UserCreateWithoutSecurityEventsInput = {
   couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
   checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
@@ -3904,6 +4589,9 @@ export type UserUncheckedCreateWithoutSecurityEventsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -3921,6 +4609,8 @@ export type UserUncheckedCreateWithoutSecurityEventsInput = {
   couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
   checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
   questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
@@ -3932,6 +4622,87 @@ export type UserUncheckedCreateWithoutSecurityEventsInput = {
 export type UserCreateOrConnectWithoutSecurityEventsInput = {
   where: Prisma.UserWhereUniqueInput
   create: Prisma.XOR<Prisma.UserCreateWithoutSecurityEventsInput, Prisma.UserUncheckedCreateWithoutSecurityEventsInput>
+}
+
+export type UserCreateWithoutReviewedSecurityEventsInput = {
+  id?: string
+  publicId?: string
+  username: string
+  passwordHash: string
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutUserInput
+  storeMemberships?: Prisma.StoreMemberCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartCreateNestedManyWithoutBuyerInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
+  followedStores?: Prisma.StoreFollowerCreateNestedManyWithoutUserInput
+  questions?: Prisma.StoreQuestionCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
+}
+
+export type UserUncheckedCreateWithoutReviewedSecurityEventsInput = {
+  id?: string
+  publicId?: string
+  username: string
+  passwordHash: string
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutUserInput
+  storeMemberships?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutBuyerInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
+  followedStores?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutUserInput
+  questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
+}
+
+export type UserCreateOrConnectWithoutReviewedSecurityEventsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewedSecurityEventsInput, Prisma.UserUncheckedCreateWithoutReviewedSecurityEventsInput>
 }
 
 export type UserUpsertWithoutSecurityEventsInput = {
@@ -3953,6 +4724,9 @@ export type UserUpdateWithoutSecurityEventsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3970,6 +4744,8 @@ export type UserUpdateWithoutSecurityEventsInput = {
   couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
   checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
@@ -3986,6 +4762,9 @@ export type UserUncheckedUpdateWithoutSecurityEventsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4003,6 +4782,95 @@ export type UserUncheckedUpdateWithoutSecurityEventsInput = {
   couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
   checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
+}
+
+export type UserUpsertWithoutReviewedSecurityEventsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReviewedSecurityEventsInput, Prisma.UserUncheckedUpdateWithoutReviewedSecurityEventsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewedSecurityEventsInput, Prisma.UserUncheckedCreateWithoutReviewedSecurityEventsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReviewedSecurityEventsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReviewedSecurityEventsInput, Prisma.UserUncheckedUpdateWithoutReviewedSecurityEventsInput>
+}
+
+export type UserUpdateWithoutReviewedSecurityEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  sellerProfile?: Prisma.SellerProfileUpdateOneWithoutUserNestedInput
+  storeMemberships?: Prisma.StoreMemberUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUpdateManyWithoutBuyerNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
+  followedStores?: Prisma.StoreFollowerUpdateManyWithoutUserNestedInput
+  questions?: Prisma.StoreQuestionUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReviewedSecurityEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutUserNestedInput
+  storeMemberships?: Prisma.StoreMemberUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutBuyerNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
+  followedStores?: Prisma.StoreFollowerUncheckedUpdateManyWithoutUserNestedInput
+  questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
   questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -4031,6 +4899,8 @@ export type UserCountOutputType = {
   checkouts: number
   notificationPreferences: number
   securityEvents: number
+  reviewedSecurityEvents: number
+  moderatedReviews: number
   passwordResetTokens: number
   twoFactorChallenges: number
   questionReports: number
@@ -4054,6 +4924,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   checkouts?: boolean | UserCountOutputTypeCountCheckoutsArgs
   notificationPreferences?: boolean | UserCountOutputTypeCountNotificationPreferencesArgs
   securityEvents?: boolean | UserCountOutputTypeCountSecurityEventsArgs
+  reviewedSecurityEvents?: boolean | UserCountOutputTypeCountReviewedSecurityEventsArgs
+  moderatedReviews?: boolean | UserCountOutputTypeCountModeratedReviewsArgs
   passwordResetTokens?: boolean | UserCountOutputTypeCountPasswordResetTokensArgs
   twoFactorChallenges?: boolean | UserCountOutputTypeCountTwoFactorChallengesArgs
   questionReports?: boolean | UserCountOutputTypeCountQuestionReportsArgs
@@ -4173,6 +5045,20 @@ export type UserCountOutputTypeCountSecurityEventsArgs<ExtArgs extends runtime.T
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountReviewedSecurityEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SecurityEventWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountModeratedReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReviewWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountPasswordResetTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PasswordResetTokenWhereInput
 }
@@ -4221,6 +5107,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   totpSecretEncrypted?: boolean
   totpEnabledAt?: boolean
   roles?: boolean
+  accountStatus?: boolean
+  accountStatusReason?: boolean
+  accountStatusChangedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -4239,6 +5128,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   checkouts?: boolean | Prisma.User$checkoutsArgs<ExtArgs>
   notificationPreferences?: boolean | Prisma.User$notificationPreferencesArgs<ExtArgs>
   securityEvents?: boolean | Prisma.User$securityEventsArgs<ExtArgs>
+  reviewedSecurityEvents?: boolean | Prisma.User$reviewedSecurityEventsArgs<ExtArgs>
+  moderatedReviews?: boolean | Prisma.User$moderatedReviewsArgs<ExtArgs>
   passwordResetTokens?: boolean | Prisma.User$passwordResetTokensArgs<ExtArgs>
   twoFactorChallenges?: boolean | Prisma.User$twoFactorChallengesArgs<ExtArgs>
   questionReports?: boolean | Prisma.User$questionReportsArgs<ExtArgs>
@@ -4256,6 +5147,9 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   totpSecretEncrypted?: boolean
   totpEnabledAt?: boolean
   roles?: boolean
+  accountStatus?: boolean
+  accountStatusReason?: boolean
+  accountStatusChangedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -4269,6 +5163,9 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   totpSecretEncrypted?: boolean
   totpEnabledAt?: boolean
   roles?: boolean
+  accountStatus?: boolean
+  accountStatusReason?: boolean
+  accountStatusChangedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -4282,12 +5179,15 @@ export type UserSelectScalar = {
   totpSecretEncrypted?: boolean
   totpEnabledAt?: boolean
   roles?: boolean
+  accountStatus?: boolean
+  accountStatusReason?: boolean
+  accountStatusChangedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "username" | "passwordHash" | "totpSecretEncrypted" | "totpEnabledAt" | "roles" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "username" | "passwordHash" | "totpSecretEncrypted" | "totpEnabledAt" | "roles" | "accountStatus" | "accountStatusReason" | "accountStatusChangedAt" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   sellerProfile?: boolean | Prisma.User$sellerProfileArgs<ExtArgs>
@@ -4304,6 +5204,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   checkouts?: boolean | Prisma.User$checkoutsArgs<ExtArgs>
   notificationPreferences?: boolean | Prisma.User$notificationPreferencesArgs<ExtArgs>
   securityEvents?: boolean | Prisma.User$securityEventsArgs<ExtArgs>
+  reviewedSecurityEvents?: boolean | Prisma.User$reviewedSecurityEventsArgs<ExtArgs>
+  moderatedReviews?: boolean | Prisma.User$moderatedReviewsArgs<ExtArgs>
   passwordResetTokens?: boolean | Prisma.User$passwordResetTokensArgs<ExtArgs>
   twoFactorChallenges?: boolean | Prisma.User$twoFactorChallengesArgs<ExtArgs>
   questionReports?: boolean | Prisma.User$questionReportsArgs<ExtArgs>
@@ -4333,6 +5235,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     checkouts: Prisma.$CheckoutPayload<ExtArgs>[]
     notificationPreferences: Prisma.$NotificationPreferencePayload<ExtArgs>[]
     securityEvents: Prisma.$SecurityEventPayload<ExtArgs>[]
+    reviewedSecurityEvents: Prisma.$SecurityEventPayload<ExtArgs>[]
+    moderatedReviews: Prisma.$ReviewPayload<ExtArgs>[]
     passwordResetTokens: Prisma.$PasswordResetTokenPayload<ExtArgs>[]
     twoFactorChallenges: Prisma.$TwoFactorChallengePayload<ExtArgs>[]
     questionReports: Prisma.$QuestionReportPayload<ExtArgs>[]
@@ -4348,6 +5252,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     totpSecretEncrypted: string | null
     totpEnabledAt: Date | null
     roles: $Enums.Role[]
+    accountStatus: string
+    accountStatusReason: string | null
+    accountStatusChangedAt: Date | null
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -4760,6 +5667,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   checkouts<T extends Prisma.User$checkoutsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$checkoutsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CheckoutPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notificationPreferences<T extends Prisma.User$notificationPreferencesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationPreferencesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPreferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   securityEvents<T extends Prisma.User$securityEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$securityEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SecurityEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reviewedSecurityEvents<T extends Prisma.User$reviewedSecurityEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewedSecurityEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SecurityEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  moderatedReviews<T extends Prisma.User$moderatedReviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$moderatedReviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   passwordResetTokens<T extends Prisma.User$passwordResetTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$passwordResetTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PasswordResetTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   twoFactorChallenges<T extends Prisma.User$twoFactorChallengesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$twoFactorChallengesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TwoFactorChallengePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   questionReports<T extends Prisma.User$questionReportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$questionReportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QuestionReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -4802,6 +5711,9 @@ export interface UserFieldRefs {
   readonly totpSecretEncrypted: Prisma.FieldRef<"User", 'String'>
   readonly totpEnabledAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly roles: Prisma.FieldRef<"User", 'Role[]'>
+  readonly accountStatus: Prisma.FieldRef<"User", 'String'>
+  readonly accountStatusReason: Prisma.FieldRef<"User", 'String'>
+  readonly accountStatusChangedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"User", 'DateTime'>
@@ -5550,6 +6462,54 @@ export type User$securityEventsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.SecurityEventScalarFieldEnum | Prisma.SecurityEventScalarFieldEnum[]
+}
+
+/**
+ * User.reviewedSecurityEvents
+ */
+export type User$reviewedSecurityEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SecurityEvent
+   */
+  select?: Prisma.SecurityEventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SecurityEvent
+   */
+  omit?: Prisma.SecurityEventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SecurityEventInclude<ExtArgs> | null
+  where?: Prisma.SecurityEventWhereInput
+  orderBy?: Prisma.SecurityEventOrderByWithRelationInput | Prisma.SecurityEventOrderByWithRelationInput[]
+  cursor?: Prisma.SecurityEventWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SecurityEventScalarFieldEnum | Prisma.SecurityEventScalarFieldEnum[]
+}
+
+/**
+ * User.moderatedReviews
+ */
+export type User$moderatedReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Review
+   */
+  select?: Prisma.ReviewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Review
+   */
+  omit?: Prisma.ReviewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReviewInclude<ExtArgs> | null
+  where?: Prisma.ReviewWhereInput
+  orderBy?: Prisma.ReviewOrderByWithRelationInput | Prisma.ReviewOrderByWithRelationInput[]
+  cursor?: Prisma.ReviewWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReviewScalarFieldEnum | Prisma.ReviewScalarFieldEnum[]
 }
 
 /**

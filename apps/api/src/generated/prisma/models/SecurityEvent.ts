@@ -30,6 +30,9 @@ export type SecurityEventMinAggregateOutputType = {
   type: string | null
   severity: string | null
   ipHash: string | null
+  reviewedAt: Date | null
+  reviewedById: string | null
+  resolution: string | null
   createdAt: Date | null
 }
 
@@ -39,6 +42,9 @@ export type SecurityEventMaxAggregateOutputType = {
   type: string | null
   severity: string | null
   ipHash: string | null
+  reviewedAt: Date | null
+  reviewedById: string | null
+  resolution: string | null
   createdAt: Date | null
 }
 
@@ -49,6 +55,9 @@ export type SecurityEventCountAggregateOutputType = {
   severity: number
   ipHash: number
   metadata: number
+  reviewedAt: number
+  reviewedById: number
+  resolution: number
   createdAt: number
   _all: number
 }
@@ -60,6 +69,9 @@ export type SecurityEventMinAggregateInputType = {
   type?: true
   severity?: true
   ipHash?: true
+  reviewedAt?: true
+  reviewedById?: true
+  resolution?: true
   createdAt?: true
 }
 
@@ -69,6 +81,9 @@ export type SecurityEventMaxAggregateInputType = {
   type?: true
   severity?: true
   ipHash?: true
+  reviewedAt?: true
+  reviewedById?: true
+  resolution?: true
   createdAt?: true
 }
 
@@ -79,6 +94,9 @@ export type SecurityEventCountAggregateInputType = {
   severity?: true
   ipHash?: true
   metadata?: true
+  reviewedAt?: true
+  reviewedById?: true
+  resolution?: true
   createdAt?: true
   _all?: true
 }
@@ -162,6 +180,9 @@ export type SecurityEventGroupByOutputType = {
   severity: string
   ipHash: string | null
   metadata: runtime.JsonValue | null
+  reviewedAt: Date | null
+  reviewedById: string | null
+  resolution: string | null
   createdAt: Date
   _count: SecurityEventCountAggregateOutputType | null
   _min: SecurityEventMinAggregateOutputType | null
@@ -193,8 +214,12 @@ export type SecurityEventWhereInput = {
   severity?: Prisma.StringFilter<"SecurityEvent"> | string
   ipHash?: Prisma.StringNullableFilter<"SecurityEvent"> | string | null
   metadata?: Prisma.JsonNullableFilter<"SecurityEvent">
+  reviewedAt?: Prisma.DateTimeNullableFilter<"SecurityEvent"> | Date | string | null
+  reviewedById?: Prisma.UuidNullableFilter<"SecurityEvent"> | string | null
+  resolution?: Prisma.StringNullableFilter<"SecurityEvent"> | string | null
   createdAt?: Prisma.DateTimeFilter<"SecurityEvent"> | Date | string
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  reviewedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
 export type SecurityEventOrderByWithRelationInput = {
@@ -204,8 +229,12 @@ export type SecurityEventOrderByWithRelationInput = {
   severity?: Prisma.SortOrder
   ipHash?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  resolution?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  reviewedBy?: Prisma.UserOrderByWithRelationInput
 }
 
 export type SecurityEventWhereUniqueInput = Prisma.AtLeast<{
@@ -218,8 +247,12 @@ export type SecurityEventWhereUniqueInput = Prisma.AtLeast<{
   severity?: Prisma.StringFilter<"SecurityEvent"> | string
   ipHash?: Prisma.StringNullableFilter<"SecurityEvent"> | string | null
   metadata?: Prisma.JsonNullableFilter<"SecurityEvent">
+  reviewedAt?: Prisma.DateTimeNullableFilter<"SecurityEvent"> | Date | string | null
+  reviewedById?: Prisma.UuidNullableFilter<"SecurityEvent"> | string | null
+  resolution?: Prisma.StringNullableFilter<"SecurityEvent"> | string | null
   createdAt?: Prisma.DateTimeFilter<"SecurityEvent"> | Date | string
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  reviewedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id">
 
 export type SecurityEventOrderByWithAggregationInput = {
@@ -229,6 +262,9 @@ export type SecurityEventOrderByWithAggregationInput = {
   severity?: Prisma.SortOrder
   ipHash?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  resolution?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.SecurityEventCountOrderByAggregateInput
   _max?: Prisma.SecurityEventMaxOrderByAggregateInput
@@ -245,6 +281,9 @@ export type SecurityEventScalarWhereWithAggregatesInput = {
   severity?: Prisma.StringWithAggregatesFilter<"SecurityEvent"> | string
   ipHash?: Prisma.StringNullableWithAggregatesFilter<"SecurityEvent"> | string | null
   metadata?: Prisma.JsonNullableWithAggregatesFilter<"SecurityEvent">
+  reviewedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SecurityEvent"> | Date | string | null
+  reviewedById?: Prisma.UuidNullableWithAggregatesFilter<"SecurityEvent"> | string | null
+  resolution?: Prisma.StringNullableWithAggregatesFilter<"SecurityEvent"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SecurityEvent"> | Date | string
 }
 
@@ -254,8 +293,11 @@ export type SecurityEventCreateInput = {
   severity: string
   ipHash?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  reviewedAt?: Date | string | null
+  resolution?: string | null
   createdAt?: Date | string
   user?: Prisma.UserCreateNestedOneWithoutSecurityEventsInput
+  reviewedBy?: Prisma.UserCreateNestedOneWithoutReviewedSecurityEventsInput
 }
 
 export type SecurityEventUncheckedCreateInput = {
@@ -265,6 +307,9 @@ export type SecurityEventUncheckedCreateInput = {
   severity: string
   ipHash?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  reviewedAt?: Date | string | null
+  reviewedById?: string | null
+  resolution?: string | null
   createdAt?: Date | string
 }
 
@@ -274,8 +319,11 @@ export type SecurityEventUpdateInput = {
   severity?: Prisma.StringFieldUpdateOperationsInput | string
   ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneWithoutSecurityEventsNestedInput
+  reviewedBy?: Prisma.UserUpdateOneWithoutReviewedSecurityEventsNestedInput
 }
 
 export type SecurityEventUncheckedUpdateInput = {
@@ -285,6 +333,9 @@ export type SecurityEventUncheckedUpdateInput = {
   severity?: Prisma.StringFieldUpdateOperationsInput | string
   ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -295,6 +346,9 @@ export type SecurityEventCreateManyInput = {
   severity: string
   ipHash?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  reviewedAt?: Date | string | null
+  reviewedById?: string | null
+  resolution?: string | null
   createdAt?: Date | string
 }
 
@@ -304,6 +358,8 @@ export type SecurityEventUpdateManyMutationInput = {
   severity?: Prisma.StringFieldUpdateOperationsInput | string
   ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -314,6 +370,9 @@ export type SecurityEventUncheckedUpdateManyInput = {
   severity?: Prisma.StringFieldUpdateOperationsInput | string
   ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -334,6 +393,9 @@ export type SecurityEventCountOrderByAggregateInput = {
   severity?: Prisma.SortOrder
   ipHash?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrder
+  reviewedById?: Prisma.SortOrder
+  resolution?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -343,6 +405,9 @@ export type SecurityEventMaxOrderByAggregateInput = {
   type?: Prisma.SortOrder
   severity?: Prisma.SortOrder
   ipHash?: Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrder
+  reviewedById?: Prisma.SortOrder
+  resolution?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -352,6 +417,9 @@ export type SecurityEventMinOrderByAggregateInput = {
   type?: Prisma.SortOrder
   severity?: Prisma.SortOrder
   ipHash?: Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrder
+  reviewedById?: Prisma.SortOrder
+  resolution?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -362,10 +430,24 @@ export type SecurityEventCreateNestedManyWithoutUserInput = {
   connect?: Prisma.SecurityEventWhereUniqueInput | Prisma.SecurityEventWhereUniqueInput[]
 }
 
+export type SecurityEventCreateNestedManyWithoutReviewedByInput = {
+  create?: Prisma.XOR<Prisma.SecurityEventCreateWithoutReviewedByInput, Prisma.SecurityEventUncheckedCreateWithoutReviewedByInput> | Prisma.SecurityEventCreateWithoutReviewedByInput[] | Prisma.SecurityEventUncheckedCreateWithoutReviewedByInput[]
+  connectOrCreate?: Prisma.SecurityEventCreateOrConnectWithoutReviewedByInput | Prisma.SecurityEventCreateOrConnectWithoutReviewedByInput[]
+  createMany?: Prisma.SecurityEventCreateManyReviewedByInputEnvelope
+  connect?: Prisma.SecurityEventWhereUniqueInput | Prisma.SecurityEventWhereUniqueInput[]
+}
+
 export type SecurityEventUncheckedCreateNestedManyWithoutUserInput = {
   create?: Prisma.XOR<Prisma.SecurityEventCreateWithoutUserInput, Prisma.SecurityEventUncheckedCreateWithoutUserInput> | Prisma.SecurityEventCreateWithoutUserInput[] | Prisma.SecurityEventUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.SecurityEventCreateOrConnectWithoutUserInput | Prisma.SecurityEventCreateOrConnectWithoutUserInput[]
   createMany?: Prisma.SecurityEventCreateManyUserInputEnvelope
+  connect?: Prisma.SecurityEventWhereUniqueInput | Prisma.SecurityEventWhereUniqueInput[]
+}
+
+export type SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput = {
+  create?: Prisma.XOR<Prisma.SecurityEventCreateWithoutReviewedByInput, Prisma.SecurityEventUncheckedCreateWithoutReviewedByInput> | Prisma.SecurityEventCreateWithoutReviewedByInput[] | Prisma.SecurityEventUncheckedCreateWithoutReviewedByInput[]
+  connectOrCreate?: Prisma.SecurityEventCreateOrConnectWithoutReviewedByInput | Prisma.SecurityEventCreateOrConnectWithoutReviewedByInput[]
+  createMany?: Prisma.SecurityEventCreateManyReviewedByInputEnvelope
   connect?: Prisma.SecurityEventWhereUniqueInput | Prisma.SecurityEventWhereUniqueInput[]
 }
 
@@ -383,6 +465,20 @@ export type SecurityEventUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.SecurityEventScalarWhereInput | Prisma.SecurityEventScalarWhereInput[]
 }
 
+export type SecurityEventUpdateManyWithoutReviewedByNestedInput = {
+  create?: Prisma.XOR<Prisma.SecurityEventCreateWithoutReviewedByInput, Prisma.SecurityEventUncheckedCreateWithoutReviewedByInput> | Prisma.SecurityEventCreateWithoutReviewedByInput[] | Prisma.SecurityEventUncheckedCreateWithoutReviewedByInput[]
+  connectOrCreate?: Prisma.SecurityEventCreateOrConnectWithoutReviewedByInput | Prisma.SecurityEventCreateOrConnectWithoutReviewedByInput[]
+  upsert?: Prisma.SecurityEventUpsertWithWhereUniqueWithoutReviewedByInput | Prisma.SecurityEventUpsertWithWhereUniqueWithoutReviewedByInput[]
+  createMany?: Prisma.SecurityEventCreateManyReviewedByInputEnvelope
+  set?: Prisma.SecurityEventWhereUniqueInput | Prisma.SecurityEventWhereUniqueInput[]
+  disconnect?: Prisma.SecurityEventWhereUniqueInput | Prisma.SecurityEventWhereUniqueInput[]
+  delete?: Prisma.SecurityEventWhereUniqueInput | Prisma.SecurityEventWhereUniqueInput[]
+  connect?: Prisma.SecurityEventWhereUniqueInput | Prisma.SecurityEventWhereUniqueInput[]
+  update?: Prisma.SecurityEventUpdateWithWhereUniqueWithoutReviewedByInput | Prisma.SecurityEventUpdateWithWhereUniqueWithoutReviewedByInput[]
+  updateMany?: Prisma.SecurityEventUpdateManyWithWhereWithoutReviewedByInput | Prisma.SecurityEventUpdateManyWithWhereWithoutReviewedByInput[]
+  deleteMany?: Prisma.SecurityEventScalarWhereInput | Prisma.SecurityEventScalarWhereInput[]
+}
+
 export type SecurityEventUncheckedUpdateManyWithoutUserNestedInput = {
   create?: Prisma.XOR<Prisma.SecurityEventCreateWithoutUserInput, Prisma.SecurityEventUncheckedCreateWithoutUserInput> | Prisma.SecurityEventCreateWithoutUserInput[] | Prisma.SecurityEventUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.SecurityEventCreateOrConnectWithoutUserInput | Prisma.SecurityEventCreateOrConnectWithoutUserInput[]
@@ -397,13 +493,30 @@ export type SecurityEventUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.SecurityEventScalarWhereInput | Prisma.SecurityEventScalarWhereInput[]
 }
 
+export type SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput = {
+  create?: Prisma.XOR<Prisma.SecurityEventCreateWithoutReviewedByInput, Prisma.SecurityEventUncheckedCreateWithoutReviewedByInput> | Prisma.SecurityEventCreateWithoutReviewedByInput[] | Prisma.SecurityEventUncheckedCreateWithoutReviewedByInput[]
+  connectOrCreate?: Prisma.SecurityEventCreateOrConnectWithoutReviewedByInput | Prisma.SecurityEventCreateOrConnectWithoutReviewedByInput[]
+  upsert?: Prisma.SecurityEventUpsertWithWhereUniqueWithoutReviewedByInput | Prisma.SecurityEventUpsertWithWhereUniqueWithoutReviewedByInput[]
+  createMany?: Prisma.SecurityEventCreateManyReviewedByInputEnvelope
+  set?: Prisma.SecurityEventWhereUniqueInput | Prisma.SecurityEventWhereUniqueInput[]
+  disconnect?: Prisma.SecurityEventWhereUniqueInput | Prisma.SecurityEventWhereUniqueInput[]
+  delete?: Prisma.SecurityEventWhereUniqueInput | Prisma.SecurityEventWhereUniqueInput[]
+  connect?: Prisma.SecurityEventWhereUniqueInput | Prisma.SecurityEventWhereUniqueInput[]
+  update?: Prisma.SecurityEventUpdateWithWhereUniqueWithoutReviewedByInput | Prisma.SecurityEventUpdateWithWhereUniqueWithoutReviewedByInput[]
+  updateMany?: Prisma.SecurityEventUpdateManyWithWhereWithoutReviewedByInput | Prisma.SecurityEventUpdateManyWithWhereWithoutReviewedByInput[]
+  deleteMany?: Prisma.SecurityEventScalarWhereInput | Prisma.SecurityEventScalarWhereInput[]
+}
+
 export type SecurityEventCreateWithoutUserInput = {
   id?: string
   type: string
   severity: string
   ipHash?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  reviewedAt?: Date | string | null
+  resolution?: string | null
   createdAt?: Date | string
+  reviewedBy?: Prisma.UserCreateNestedOneWithoutReviewedSecurityEventsInput
 }
 
 export type SecurityEventUncheckedCreateWithoutUserInput = {
@@ -412,6 +525,9 @@ export type SecurityEventUncheckedCreateWithoutUserInput = {
   severity: string
   ipHash?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  reviewedAt?: Date | string | null
+  reviewedById?: string | null
+  resolution?: string | null
   createdAt?: Date | string
 }
 
@@ -422,6 +538,40 @@ export type SecurityEventCreateOrConnectWithoutUserInput = {
 
 export type SecurityEventCreateManyUserInputEnvelope = {
   data: Prisma.SecurityEventCreateManyUserInput | Prisma.SecurityEventCreateManyUserInput[]
+  skipDuplicates?: boolean
+}
+
+export type SecurityEventCreateWithoutReviewedByInput = {
+  id?: string
+  type: string
+  severity: string
+  ipHash?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  reviewedAt?: Date | string | null
+  resolution?: string | null
+  createdAt?: Date | string
+  user?: Prisma.UserCreateNestedOneWithoutSecurityEventsInput
+}
+
+export type SecurityEventUncheckedCreateWithoutReviewedByInput = {
+  id?: string
+  userId?: string | null
+  type: string
+  severity: string
+  ipHash?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  reviewedAt?: Date | string | null
+  resolution?: string | null
+  createdAt?: Date | string
+}
+
+export type SecurityEventCreateOrConnectWithoutReviewedByInput = {
+  where: Prisma.SecurityEventWhereUniqueInput
+  create: Prisma.XOR<Prisma.SecurityEventCreateWithoutReviewedByInput, Prisma.SecurityEventUncheckedCreateWithoutReviewedByInput>
+}
+
+export type SecurityEventCreateManyReviewedByInputEnvelope = {
+  data: Prisma.SecurityEventCreateManyReviewedByInput | Prisma.SecurityEventCreateManyReviewedByInput[]
   skipDuplicates?: boolean
 }
 
@@ -451,7 +601,26 @@ export type SecurityEventScalarWhereInput = {
   severity?: Prisma.StringFilter<"SecurityEvent"> | string
   ipHash?: Prisma.StringNullableFilter<"SecurityEvent"> | string | null
   metadata?: Prisma.JsonNullableFilter<"SecurityEvent">
+  reviewedAt?: Prisma.DateTimeNullableFilter<"SecurityEvent"> | Date | string | null
+  reviewedById?: Prisma.UuidNullableFilter<"SecurityEvent"> | string | null
+  resolution?: Prisma.StringNullableFilter<"SecurityEvent"> | string | null
   createdAt?: Prisma.DateTimeFilter<"SecurityEvent"> | Date | string
+}
+
+export type SecurityEventUpsertWithWhereUniqueWithoutReviewedByInput = {
+  where: Prisma.SecurityEventWhereUniqueInput
+  update: Prisma.XOR<Prisma.SecurityEventUpdateWithoutReviewedByInput, Prisma.SecurityEventUncheckedUpdateWithoutReviewedByInput>
+  create: Prisma.XOR<Prisma.SecurityEventCreateWithoutReviewedByInput, Prisma.SecurityEventUncheckedCreateWithoutReviewedByInput>
+}
+
+export type SecurityEventUpdateWithWhereUniqueWithoutReviewedByInput = {
+  where: Prisma.SecurityEventWhereUniqueInput
+  data: Prisma.XOR<Prisma.SecurityEventUpdateWithoutReviewedByInput, Prisma.SecurityEventUncheckedUpdateWithoutReviewedByInput>
+}
+
+export type SecurityEventUpdateManyWithWhereWithoutReviewedByInput = {
+  where: Prisma.SecurityEventScalarWhereInput
+  data: Prisma.XOR<Prisma.SecurityEventUpdateManyMutationInput, Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByInput>
 }
 
 export type SecurityEventCreateManyUserInput = {
@@ -460,6 +629,21 @@ export type SecurityEventCreateManyUserInput = {
   severity: string
   ipHash?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  reviewedAt?: Date | string | null
+  reviewedById?: string | null
+  resolution?: string | null
+  createdAt?: Date | string
+}
+
+export type SecurityEventCreateManyReviewedByInput = {
+  id?: string
+  userId?: string | null
+  type: string
+  severity: string
+  ipHash?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  reviewedAt?: Date | string | null
+  resolution?: string | null
   createdAt?: Date | string
 }
 
@@ -469,7 +653,10 @@ export type SecurityEventUpdateWithoutUserInput = {
   severity?: Prisma.StringFieldUpdateOperationsInput | string
   ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reviewedBy?: Prisma.UserUpdateOneWithoutReviewedSecurityEventsNestedInput
 }
 
 export type SecurityEventUncheckedUpdateWithoutUserInput = {
@@ -478,6 +665,9 @@ export type SecurityEventUncheckedUpdateWithoutUserInput = {
   severity?: Prisma.StringFieldUpdateOperationsInput | string
   ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -487,6 +677,45 @@ export type SecurityEventUncheckedUpdateManyWithoutUserInput = {
   severity?: Prisma.StringFieldUpdateOperationsInput | string
   ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type SecurityEventUpdateWithoutReviewedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  severity?: Prisma.StringFieldUpdateOperationsInput | string
+  ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneWithoutSecurityEventsNestedInput
+}
+
+export type SecurityEventUncheckedUpdateWithoutReviewedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  severity?: Prisma.StringFieldUpdateOperationsInput | string
+  ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type SecurityEventUncheckedUpdateManyWithoutReviewedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  severity?: Prisma.StringFieldUpdateOperationsInput | string
+  ipHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -499,8 +728,12 @@ export type SecurityEventSelect<ExtArgs extends runtime.Types.Extensions.Interna
   severity?: boolean
   ipHash?: boolean
   metadata?: boolean
+  reviewedAt?: boolean
+  reviewedById?: boolean
+  resolution?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.SecurityEvent$userArgs<ExtArgs>
+  reviewedBy?: boolean | Prisma.SecurityEvent$reviewedByArgs<ExtArgs>
 }, ExtArgs["result"]["securityEvent"]>
 
 export type SecurityEventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -510,8 +743,12 @@ export type SecurityEventSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   severity?: boolean
   ipHash?: boolean
   metadata?: boolean
+  reviewedAt?: boolean
+  reviewedById?: boolean
+  resolution?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.SecurityEvent$userArgs<ExtArgs>
+  reviewedBy?: boolean | Prisma.SecurityEvent$reviewedByArgs<ExtArgs>
 }, ExtArgs["result"]["securityEvent"]>
 
 export type SecurityEventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -521,8 +758,12 @@ export type SecurityEventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   severity?: boolean
   ipHash?: boolean
   metadata?: boolean
+  reviewedAt?: boolean
+  reviewedById?: boolean
+  resolution?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.SecurityEvent$userArgs<ExtArgs>
+  reviewedBy?: boolean | Prisma.SecurityEvent$reviewedByArgs<ExtArgs>
 }, ExtArgs["result"]["securityEvent"]>
 
 export type SecurityEventSelectScalar = {
@@ -532,24 +773,31 @@ export type SecurityEventSelectScalar = {
   severity?: boolean
   ipHash?: boolean
   metadata?: boolean
+  reviewedAt?: boolean
+  reviewedById?: boolean
+  resolution?: boolean
   createdAt?: boolean
 }
 
-export type SecurityEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "type" | "severity" | "ipHash" | "metadata" | "createdAt", ExtArgs["result"]["securityEvent"]>
+export type SecurityEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "type" | "severity" | "ipHash" | "metadata" | "reviewedAt" | "reviewedById" | "resolution" | "createdAt", ExtArgs["result"]["securityEvent"]>
 export type SecurityEventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.SecurityEvent$userArgs<ExtArgs>
+  reviewedBy?: boolean | Prisma.SecurityEvent$reviewedByArgs<ExtArgs>
 }
 export type SecurityEventIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.SecurityEvent$userArgs<ExtArgs>
+  reviewedBy?: boolean | Prisma.SecurityEvent$reviewedByArgs<ExtArgs>
 }
 export type SecurityEventIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.SecurityEvent$userArgs<ExtArgs>
+  reviewedBy?: boolean | Prisma.SecurityEvent$reviewedByArgs<ExtArgs>
 }
 
 export type $SecurityEventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SecurityEvent"
   objects: {
     user: Prisma.$UserPayload<ExtArgs> | null
+    reviewedBy: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -558,6 +806,9 @@ export type $SecurityEventPayload<ExtArgs extends runtime.Types.Extensions.Inter
     severity: string
     ipHash: string | null
     metadata: runtime.JsonValue | null
+    reviewedAt: Date | null
+    reviewedById: string | null
+    resolution: string | null
     createdAt: Date
   }, ExtArgs["result"]["securityEvent"]>
   composites: {}
@@ -954,6 +1205,7 @@ readonly fields: SecurityEventFieldRefs;
 export interface Prisma__SecurityEventClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.SecurityEvent$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SecurityEvent$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  reviewedBy<T extends Prisma.SecurityEvent$reviewedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SecurityEvent$reviewedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -989,6 +1241,9 @@ export interface SecurityEventFieldRefs {
   readonly severity: Prisma.FieldRef<"SecurityEvent", 'String'>
   readonly ipHash: Prisma.FieldRef<"SecurityEvent", 'String'>
   readonly metadata: Prisma.FieldRef<"SecurityEvent", 'Json'>
+  readonly reviewedAt: Prisma.FieldRef<"SecurityEvent", 'DateTime'>
+  readonly reviewedById: Prisma.FieldRef<"SecurityEvent", 'String'>
+  readonly resolution: Prisma.FieldRef<"SecurityEvent", 'String'>
   readonly createdAt: Prisma.FieldRef<"SecurityEvent", 'DateTime'>
 }
     
@@ -1394,6 +1649,25 @@ export type SecurityEventDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
  * SecurityEvent.user
  */
 export type SecurityEvent$userArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+}
+
+/**
+ * SecurityEvent.reviewedBy
+ */
+export type SecurityEvent$reviewedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the User
    */

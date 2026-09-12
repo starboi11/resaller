@@ -10,8 +10,12 @@ import type {
   DecideDisputeDto,
   ModerateListingDto,
   ModerateQuestionReportDto,
+  ModerateReviewDto,
   ModerateStoreDto,
+  ModerateUserDto,
   ModerateVerificationDto,
+  ResolveSecurityEventDto,
+  UpdateUserRolesDto,
 } from './admin.dto.js';
 
 @Injectable()
@@ -322,6 +326,202 @@ export class AdminService {
         },
       });
       return decision;
+    });
+  }
+
+  users() {
+    return this.prisma.user.findMany({
+      take: 100,
+      orderBy: { createdAt: 'desc' },
+      select: {
+        publicId: true,
+        username: true,
+        roles: true,
+        accountStatus: true,
+        accountStatusReason: true,
+        accountStatusChangedAt: true,
+        createdAt: true,
+        _count: {
+          select: { sessions: true, orders: true, securityEvents: true },
+        },
+      },
+    });
+  }
+
+  async moderateUser(
+    actor: AuthenticatedUser,
+    publicId: string,
+    input: ModerateUserDto,
+  ) {
+    if (actor.publicId === publicId && input.status !== 'ACTIVE')
+      throw new ConflictException(
+        'You cannot suspend or close your own account',
+      );
+    return this.prisma.$transaction(async (tx) => {
+      const user = await tx.user.findUnique({ where: { publicId } });
+      if (!user) throw new NotFoundException('User not found');
+      const updated = await tx.user.update({
+        where: { id: user.id },
+        data: {
+          accountStatus: input.status,
+          accountStatusReason: input.reason,
+          accountStatusChangedAt: new Date(),
+        },
+        select: { publicId: true, username: true, accountStatus: true },
+      });
+      if (input.status !== 'ACTIVE')
+        await tx.session.updateMany({
+          where: { userId: user.id, revokedAt: null },
+          data: { revokedAt: new Date() },
+        });
+      await tx.auditLog.create({
+        data: {
+          actorId: actor.id,
+          action: 'USER_STATUS_CHANGED',
+          targetType: 'User',
+          targetId: user.id,
+          reason: input.reason,
+          metadata: { from: user.accountStatus, to: input.status },
+        },
+      });
+      return updated;
+    });
+  }
+
+  async updateUserRoles(
+    actor: AuthenticatedUser,
+    publicId: string,
+    input: UpdateUserRolesDto,
+  ) {
+    return this.prisma.$transaction(async (tx) => {
+      const user = await tx.user.findUnique({ where: { publicId } });
+      if (!user) throw new NotFoundException('User not found');
+      if (
+        user.roles.includes('SUPER_ADMIN') &&
+        !input.roles.includes('SUPER_ADMIN')
+      ) {
+        const count = await tx.user.count({
+          where: { roles: { has: 'SUPER_ADMIN' }, accountStatus: 'ACTIVE' },
+        });
+        if (count <= 1)
+          throw new ConflictException(
+            'The last active super admin cannot be removed',
+          );
+      }
+      const updated = await tx.user.update({
+        where: { id: user.id },
+        data: { roles: input.roles },
+        select: { publicId: true, username: true, roles: true },
+      });
+      await tx.session.updateMany({
+        where: { userId: user.id, revokedAt: null },
+        data: { revokedAt: new Date() },
+      });
+      await tx.auditLog.create({
+        data: {
+          actorId: actor.id,
+          action: 'USER_ROLES_CHANGED',
+          targetType: 'User',
+          targetId: user.id,
+          reason: input.reason,
+          metadata: { from: user.roles, to: input.roles },
+        },
+      });
+      return updated;
+    });
+  }
+
+  reviews() {
+    return this.prisma.review.findMany({
+      take: 100,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        order: {
+          select: {
+            publicId: true,
+            displayId: true,
+            buyer: { select: { publicId: true, username: true } },
+            store: { select: { publicId: true, username: true, nameUz: true } },
+          },
+        },
+        moderatedBy: { select: { publicId: true, username: true } },
+      },
+    });
+  }
+
+  async moderateReview(
+    actor: AuthenticatedUser,
+    id: string,
+    input: ModerateReviewDto,
+  ) {
+    return this.prisma.$transaction(async (tx) => {
+      const review = await tx.review.findUnique({ where: { id } });
+      if (!review) throw new NotFoundException('Review not found');
+      const updated = await tx.review.update({
+        where: { id },
+        data: {
+          status: input.status,
+          moderationReason: input.reason,
+          moderatedAt: new Date(),
+          moderatedById: actor.id,
+        },
+        select: { id: true, status: true, moderatedAt: true },
+      });
+      await tx.auditLog.create({
+        data: {
+          actorId: actor.id,
+          action: 'REVIEW_MODERATED',
+          targetType: 'Review',
+          targetId: id,
+          reason: input.reason,
+          metadata: { from: review.status, to: input.status },
+        },
+      });
+      return updated;
+    });
+  }
+
+  securityEvents() {
+    return this.prisma.securityEvent.findMany({
+      take: 200,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        user: { select: { publicId: true, username: true } },
+        reviewedBy: { select: { publicId: true, username: true } },
+      },
+    });
+  }
+
+  async resolveSecurityEvent(
+    actor: AuthenticatedUser,
+    id: string,
+    input: ResolveSecurityEventDto,
+  ) {
+    return this.prisma.$transaction(async (tx) => {
+      const event = await tx.securityEvent.findUnique({ where: { id } });
+      if (!event) throw new NotFoundException('Security event not found');
+      if (event.reviewedAt)
+        throw new ConflictException('Security event was already resolved');
+      const updated = await tx.securityEvent.update({
+        where: { id },
+        data: {
+          reviewedAt: new Date(),
+          reviewedById: actor.id,
+          resolution: input.resolution,
+        },
+        select: { id: true, reviewedAt: true, resolution: true },
+      });
+      await tx.auditLog.create({
+        data: {
+          actorId: actor.id,
+          action: 'SECURITY_EVENT_RESOLVED',
+          targetType: 'SecurityEvent',
+          targetId: id,
+          reason: input.resolution,
+          metadata: { severity: event.severity, type: event.type },
+        },
+      });
+      return updated;
     });
   }
 }

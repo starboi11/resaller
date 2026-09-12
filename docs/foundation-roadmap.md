@@ -48,7 +48,7 @@ The backend foundation is completed before final UI implementation. A block is c
 - [ ] Durable Redis-backed notification/background queue
 - [x] Scheduled trust metrics, earned badges and review-only risk signals
 - [x] Dispute opening, private evidence and immutable admin decision workflow
-- [ ] Admin users/reviews/security/disputes APIs
+- [x] Admin users/reviews/security/disputes APIs with role separation and audit
 
 ### F6 Operational readiness
 

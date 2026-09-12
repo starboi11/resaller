@@ -98,6 +98,9 @@ model User {
   totpSecretEncrypted String?
   totpEnabledAt DateTime? @db.Timestamptz
   roles Role[] @default([BUYER])
+  accountStatus String @default("ACTIVE")
+  accountStatusReason String?
+  accountStatusChangedAt DateTime? @db.Timestamptz
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @updatedAt @db.Timestamptz
   deletedAt DateTime? @db.Timestamptz
@@ -115,7 +118,9 @@ model User {
   couponRedemptions CouponRedemption[]
   checkouts Checkout[]
   notificationPreferences NotificationPreference[]
-  securityEvents SecurityEvent[]
+  securityEvents SecurityEvent[] @relation("SecuritySubject")
+  reviewedSecurityEvents SecurityEvent[] @relation("SecurityReviewer")
+  moderatedReviews Review[] @relation("ReviewModerator")
   passwordResetTokens PasswordResetToken[]
   twoFactorChallenges TwoFactorChallenge[]
   questionReports QuestionReport[]
@@ -564,8 +569,14 @@ model Review {
   orderId String @unique @db.Uuid
   rating Int
   body String?
+  status String @default("VISIBLE")
+  moderationReason String?
+  moderatedAt DateTime? @db.Timestamptz
+  moderatedById String? @db.Uuid
   createdAt DateTime @default(now()) @db.Timestamptz
   order Order @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  moderatedBy User? @relation("ReviewModerator", fields: [moderatedById], references: [id], onDelete: SetNull)
+  @@index([status, createdAt])
 }
 
 model ImportedTestimonial {
@@ -777,7 +788,12 @@ model SecurityEvent {
   severity String
   ipHash String?
   metadata Json?
+  reviewedAt DateTime? @db.Timestamptz
+  reviewedById String? @db.Uuid
+  resolution String?
   createdAt DateTime @default(now()) @db.Timestamptz
-  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user User? @relation("SecuritySubject", fields: [userId], references: [id], onDelete: SetNull)
+  reviewedBy User? @relation("SecurityReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
   @@index([type, createdAt])
+  @@index([reviewedAt, severity, createdAt])
 }

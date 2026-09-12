@@ -4363,6 +4363,9 @@ export const UserScalarFieldEnum = {
   totpSecretEncrypted: 'totpSecretEncrypted',
   totpEnabledAt: 'totpEnabledAt',
   roles: 'roles',
+  accountStatus: 'accountStatus',
+  accountStatusReason: 'accountStatusReason',
+  accountStatusChangedAt: 'accountStatusChangedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -4791,6 +4794,10 @@ export const ReviewScalarFieldEnum = {
   orderId: 'orderId',
   rating: 'rating',
   body: 'body',
+  status: 'status',
+  moderationReason: 'moderationReason',
+  moderatedAt: 'moderatedAt',
+  moderatedById: 'moderatedById',
   createdAt: 'createdAt'
 } as const
 
@@ -5018,6 +5025,9 @@ export const SecurityEventScalarFieldEnum = {
   severity: 'severity',
   ipHash: 'ipHash',
   metadata: 'metadata',
+  reviewedAt: 'reviewedAt',
+  reviewedById: 'reviewedById',
+  resolution: 'resolution',
   createdAt: 'createdAt'
 } as const
 

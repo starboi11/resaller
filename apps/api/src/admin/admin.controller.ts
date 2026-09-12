@@ -17,8 +17,12 @@ import {
   DecideDisputeDto,
   ModerateListingDto,
   ModerateQuestionReportDto,
+  ModerateReviewDto,
   ModerateStoreDto,
+  ModerateUserDto,
   ModerateVerificationDto,
+  ResolveSecurityEventDto,
+  UpdateUserRolesDto,
 } from './admin.dto.js';
 
 @Controller('admin')
@@ -76,5 +80,44 @@ export class AdminController {
     @Body() input: DecideDisputeDto,
   ) {
     return this.admin.decideDispute(req.user, id, input);
+  }
+  @Get('users') @RequireRoles('SUPPORT_ADMIN', 'SECURITY_ADMIN') users() {
+    return this.admin.users();
+  }
+  @Patch('users/:publicId/status') @RequireRoles('SECURITY_ADMIN') moderateUser(
+    @Req() req: FastifyRequest & { user: AuthenticatedUser },
+    @Param('publicId') id: string,
+    @Body() input: ModerateUserDto,
+  ) {
+    return this.admin.moderateUser(req.user, id, input);
+  }
+  @Patch('users/:publicId/roles') @RequireRoles('SUPER_ADMIN') updateUserRoles(
+    @Req() req: FastifyRequest & { user: AuthenticatedUser },
+    @Param('publicId') id: string,
+    @Body() input: UpdateUserRolesDto,
+  ) {
+    return this.admin.updateUserRoles(req.user, id, input);
+  }
+  @Get('reviews') @RequireRoles('MODERATOR') reviews() {
+    return this.admin.reviews();
+  }
+  @Patch('reviews/:id') @RequireRoles('MODERATOR') moderateReview(
+    @Req() req: FastifyRequest & { user: AuthenticatedUser },
+    @Param('id') id: string,
+    @Body() input: ModerateReviewDto,
+  ) {
+    return this.admin.moderateReview(req.user, id, input);
+  }
+  @Get('security-events') @RequireRoles('SECURITY_ADMIN') securityEvents() {
+    return this.admin.securityEvents();
+  }
+  @Patch('security-events/:id/resolve')
+  @RequireRoles('SECURITY_ADMIN')
+  resolveSecurityEvent(
+    @Req() req: FastifyRequest & { user: AuthenticatedUser },
+    @Param('id') id: string,
+    @Body() input: ResolveSecurityEventDto,
+  ) {
+    return this.admin.resolveSecurityEvent(req.user, id, input);
   }
 }
