@@ -1,0 +1,5 @@
+FROM postgres:17-alpine
+RUN apk add --no-cache openssl
+COPY infrastructure/backup.sh /usr/local/bin/resaller-backup
+COPY infrastructure/restore-drill.sh /usr/local/bin/resaller-restore-drill
+RUN chmod 0555 /usr/local/bin/resaller-backup /usr/local/bin/resaller-restore-drill

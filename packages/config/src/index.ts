@@ -36,6 +36,7 @@ export const apiEnvironmentSchema = z
     TELEGRAM_BOT_TOKEN: optionalSecret,
     PUSH_WEBHOOK_URL: optionalUrl,
     PUSH_WEBHOOK_TOKEN: optionalSecret,
+    METRICS_TOKEN: optionalSecret,
   })
   .superRefine((value, context) => {
     if (value.MEDIA_STORAGE_DRIVER !== 's3') return;

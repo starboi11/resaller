@@ -58,6 +58,7 @@ services:
       TELEGRAM_BOT_TOKEN: '${TELEGRAM_BOT_TOKEN:-}'
       PUSH_WEBHOOK_URL: '${PUSH_WEBHOOK_URL:-}'
       PUSH_WEBHOOK_TOKEN: '${PUSH_WEBHOOK_TOKEN:-}'
+      METRICS_TOKEN: '${METRICS_TOKEN}'
     depends_on:
       postgres: { condition: service_healthy }
       redis: { condition: service_healthy }
@@ -91,9 +92,23 @@ services:
         timeout: 3s,
         retries: 10,
       }
+  backup:
+    build: { context: ., dockerfile: infrastructure/Dockerfile.backup }
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: 'postgresql://resaller:${POSTGRES_PASSWORD}@postgres:5432/resaller'
+      BACKUP_ENCRYPTION_KEY: '${BACKUP_ENCRYPTION_KEY}'
+      BACKUP_DIR: /backups
+      BACKUP_RETENTION_DAYS: '${BACKUP_RETENTION_DAYS:-14}'
+    command: ['sh', '-c', 'while true; do resaller-backup; sleep 86400; done']
+    depends_on:
+      postgres: { condition: service_healthy }
+    volumes:
+      - encrypted_backups:/backups
 volumes:
   postgres_prod:
   redis_prod:
   caddy_data:
   media_prod:
   private_media_prod:
+  encrypted_backups:

@@ -9,6 +9,7 @@ import { AdminModule } from './admin/admin.module.js';
 import { NotificationsModule } from './notifications/notifications.module.js';
 import { MediaModule } from './media/media.module.js';
 import { TrustModule } from './trust/trust.module.js';
+import { MetricsController } from './health/metrics.controller.js';
 
 @Module({
   imports: [
@@ -21,6 +22,6 @@ import { TrustModule } from './trust/trust.module.js';
     MediaModule,
     TrustModule,
   ],
-  controllers: [HealthController, PlatformController],
+  controllers: [HealthController, MetricsController, PlatformController],
 })
 export class AppModule {}

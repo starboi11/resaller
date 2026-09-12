@@ -11,7 +11,7 @@ The backend foundation is completed before final UI implementation. A block is c
 - [x] Foreign keys for checkout, variants, reservations, legal records, preferences and security events
 - [x] Database checks for money, stock, quantity, review rating and coupon schedules
 - [x] Versioned baseline commit and recovery branch
-- [ ] Migration rollback/restore rehearsal against disposable data
+- [x] Encrypted backup/restore rehearsal against a disposable database (13 migrations verified)
 
 ### F2 Identity and platform security
 
@@ -54,8 +54,8 @@ The backend foundation is completed before final UI implementation. A block is c
 
 - [x] Health/readiness, structured logs and production containers
 - [x] HTTPS routing and private production DB/Redis network
-- [ ] Metrics, monitoring and alert rules
-- [ ] Automated encrypted backups and restore drill
+- [x] Protected Prometheus metrics and baseline alert rules
+- [x] Automated encrypted backups and tested disposable restore drill
 - [ ] Browser E2E, accessibility, performance and staging penetration tests
 
 ## Stage UI — Frontend after foundation
