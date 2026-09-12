@@ -45,7 +45,7 @@ The backend foundation is completed before final UI implementation. A block is c
 
 - [x] Order messages, public Q&A, reviews and in-app notifications
 - [x] Authorized private order attachments and Q&A report moderation
-- [ ] Durable Redis-backed notification/background queue
+- [x] Durable Redis-backed notification queue with leasing, recovery and retry backoff
 - [x] Scheduled trust metrics, earned badges and review-only risk signals
 - [x] Dispute opening, private evidence and immutable admin decision workflow
 - [x] Admin users/reviews/security/disputes APIs with role separation and audit

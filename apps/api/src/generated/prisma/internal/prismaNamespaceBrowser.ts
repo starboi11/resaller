@@ -97,6 +97,8 @@ export const ModelName = {
   DisputeEvidence: 'DisputeEvidence',
   DisputeDecision: 'DisputeDecision',
   Notification: 'Notification',
+  NotificationEndpoint: 'NotificationEndpoint',
+  NotificationDelivery: 'NotificationDelivery',
   NotificationPreference: 'NotificationPreference',
   LegalVersion: 'LegalVersion',
   LegalAcceptance: 'LegalAcceptance',
@@ -722,6 +724,34 @@ export const NotificationScalarFieldEnum = {
 } as const
 
 export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const NotificationEndpointScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  channel: 'channel',
+  valueHash: 'valueHash',
+  valueEncrypted: 'valueEncrypted',
+  active: 'active',
+  createdAt: 'createdAt'
+} as const
+
+export type NotificationEndpointScalarFieldEnum = (typeof NotificationEndpointScalarFieldEnum)[keyof typeof NotificationEndpointScalarFieldEnum]
+
+
+export const NotificationDeliveryScalarFieldEnum = {
+  id: 'id',
+  notificationId: 'notificationId',
+  endpointId: 'endpointId',
+  status: 'status',
+  attempts: 'attempts',
+  lastError: 'lastError',
+  deliveredAt: 'deliveredAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NotificationDeliveryScalarFieldEnum = (typeof NotificationDeliveryScalarFieldEnum)[keyof typeof NotificationDeliveryScalarFieldEnum]
 
 
 export const NotificationPreferenceScalarFieldEnum = {

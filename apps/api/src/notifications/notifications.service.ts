@@ -1,11 +1,12 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../infrastructure/prisma.service.js';
+import { EndpointCryptoService } from './endpoint-crypto.service.js';
 
 const CRITICAL_EVENTS = new Set(['ORDER_ACTION_REQUIRED', 'SECURITY_ALERT', 'ACCOUNT_RESTRICTED']);
 
 @Injectable()
 export class NotificationsService {
-  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
+  constructor(@Inject(PrismaService) private readonly prisma: PrismaService, @Inject(EndpointCryptoService) private readonly crypto: EndpointCryptoService) {}
 
   list(userId: string) {
     return this.prisma.notification.findMany({ where: { userId }, take: 100, orderBy: { createdAt: 'desc' } });
@@ -33,5 +34,30 @@ export class NotificationsService {
   preference(userId: string, channel: string, eventType: string, enabled: boolean) {
     if (!enabled && CRITICAL_EVENTS.has(eventType)) throw new BadRequestException('Critical notifications cannot be disabled');
     return this.prisma.notificationPreference.upsert({ where: { userId_channel_eventType: { userId, channel, eventType } }, create: { userId, channel, eventType, enabled }, update: { enabled } });
+  }
+
+  async endpoints(userId: string) {
+    const endpoints = await this.prisma.notificationEndpoint.findMany({ where: { userId, active: true }, orderBy: { createdAt: 'desc' } });
+    return endpoints.map(({ valueEncrypted: _secret, valueHash: _hash, ...endpoint }) => ({ ...endpoint, value: '••••••' }));
+  }
+
+  async addEndpoint(userId: string, channel: 'PUSH' | 'TELEGRAM' | 'EMAIL', rawValue: string) {
+    const value = rawValue.trim();
+    if (channel === 'EMAIL' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) throw new BadRequestException('Invalid email endpoint');
+    if (channel === 'TELEGRAM' && !/^-?\d{5,20}$/.test(value)) throw new BadRequestException('Invalid Telegram chat ID');
+    if (channel === 'PUSH' && value.length < 20) throw new BadRequestException('Invalid push endpoint');
+    const valueHash = this.crypto.hash(value);
+    return this.prisma.notificationEndpoint.upsert({
+      where: { userId_channel_valueHash: { userId, channel, valueHash } },
+      create: { userId, channel, valueHash, valueEncrypted: this.crypto.encrypt(value) },
+      update: { active: true, valueEncrypted: this.crypto.encrypt(value) },
+      select: { id: true, channel: true, active: true, createdAt: true },
+    });
+  }
+
+  async removeEndpoint(userId: string, id: string) {
+    const result = await this.prisma.notificationEndpoint.updateMany({ where: { id, userId, active: true }, data: { active: false } });
+    if (!result.count) throw new NotFoundException('Notification endpoint not found');
+    return { removed: true };
   }
 }

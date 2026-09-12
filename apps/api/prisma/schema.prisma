@@ -127,6 +127,7 @@ model User {
   uploadedDisputeEvidence DisputeEvidence[]
   disputeDecisions DisputeDecision[]
   uploadedAttachments Attachment[]
+  notificationEndpoints NotificationEndpoint[]
 }
 
 model Session {
@@ -721,7 +722,38 @@ model Notification {
   readAt DateTime? @db.Timestamptz
   createdAt DateTime @default(now()) @db.Timestamptz
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deliveries NotificationDelivery[]
   @@index([userId, readAt, createdAt])
+}
+
+model NotificationEndpoint {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  channel String
+  valueHash String
+  valueEncrypted String
+  active Boolean @default(true)
+  createdAt DateTime @default(now()) @db.Timestamptz
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deliveries NotificationDelivery[]
+  @@unique([userId, channel, valueHash])
+  @@index([userId, channel, active])
+}
+
+model NotificationDelivery {
+  id String @id @default(uuid()) @db.Uuid
+  notificationId String @db.Uuid
+  endpointId String @db.Uuid
+  status String @default("QUEUED")
+  attempts Int @default(0)
+  lastError String?
+  deliveredAt DateTime? @db.Timestamptz
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+  notification Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  endpoint NotificationEndpoint @relation(fields: [endpointId], references: [id], onDelete: Cascade)
+  @@unique([notificationId, endpointId])
+  @@index([status, updatedAt])
 }
 
 model NotificationPreference {

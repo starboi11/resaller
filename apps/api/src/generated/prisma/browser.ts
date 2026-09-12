@@ -248,6 +248,16 @@ export type DisputeDecision = Prisma.DisputeDecisionModel
  */
 export type Notification = Prisma.NotificationModel
 /**
+ * Model NotificationEndpoint
+ * 
+ */
+export type NotificationEndpoint = Prisma.NotificationEndpointModel
+/**
+ * Model NotificationDelivery
+ * 
+ */
+export type NotificationDelivery = Prisma.NotificationDeliveryModel
+/**
  * Model NotificationPreference
  * 
  */

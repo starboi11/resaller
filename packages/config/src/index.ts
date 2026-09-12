@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+const optionalUrl = z.preprocess((value) => value === '' ? undefined : value, z.string().url().optional());
+const optionalSecret = z.preprocess((value) => value === '' ? undefined : value, z.string().min(1).optional());
+
 export const apiEnvironmentSchema = z
   .object({
     NODE_ENV: z
@@ -28,6 +31,11 @@ export const apiEnvironmentSchema = z
       .enum(['true', 'false'])
       .default('true')
       .transform((value) => value === 'true'),
+    EMAIL_WEBHOOK_URL: optionalUrl,
+    EMAIL_WEBHOOK_TOKEN: optionalSecret,
+    TELEGRAM_BOT_TOKEN: optionalSecret,
+    PUSH_WEBHOOK_URL: optionalUrl,
+    PUSH_WEBHOOK_TOKEN: optionalSecret,
   })
   .superRefine((value, context) => {
     if (value.MEDIA_STORAGE_DRIVER !== 's3') return;
