@@ -29,7 +29,7 @@ export default function Orders() {
       .catch(() => setFailed(true));
   }, []);
   return (
-    <main className="shell max-w-3xl py-10">
+    <main className="shell max-w-3xl py-10 buyer-workspace orders-workspace">
       <p className="eyebrow">Xaridlar tarixi</p>
       <h1 className="mt-2 text-3xl font-black">Buyurtmalar</h1>
       <p className="muted mt-2 text-sm">
@@ -82,12 +82,12 @@ export default function Orders() {
           />
         </div>
       )}
-      <section className="mt-7 grid gap-4">
+      <section className="order-list mt-7 grid gap-4">
         {orders?.map((order) => (
           <Link
             href={`/orders/${order.publicId}`}
             key={order.publicId}
-            className="surface block p-5 transition-transform hover:-translate-y-0.5 sm:p-6"
+            className="surface order-card block p-5 transition-transform hover:-translate-y-0.5 sm:p-6"
           >
             <div className="flex flex-wrap justify-between gap-3">
               <div>

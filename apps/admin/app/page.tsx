@@ -169,7 +169,7 @@ export default function AdminHome() {
   }
 
   return (
-    <main className="mx-auto max-w-6xl p-5 sm:p-8">
+    <main className="admin-shell mx-auto max-w-6xl p-5 sm:p-8">
       <header className="flex flex-col gap-5 border-b border-white/10 pb-7 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="eyebrow">Resaller Control Center</p>

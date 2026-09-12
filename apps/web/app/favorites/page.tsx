@@ -40,7 +40,7 @@ export default function Favorites() {
       </main>
     );
   return (
-    <main className="shell py-10">
+    <main className="shell py-10 buyer-workspace collection-workspace">
       <p className="eyebrow">Shaxsiy ro‘yxat</p>
       <h1 className="mt-2 text-3xl font-black">Sevimlilar</h1>
       {items?.length === 0 && (
@@ -56,7 +56,7 @@ export default function Favorites() {
           />
         </div>
       )}
-      <section className="mt-7 grid grid-cols-2 gap-4 lg:grid-cols-3">
+      <section className="collection-grid mt-7 grid grid-cols-2 gap-4 lg:grid-cols-3">
         {items?.map((item) => (
           <Link
             className="surface p-5"

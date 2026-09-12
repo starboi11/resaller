@@ -76,7 +76,7 @@ export default function SellerDashboard() {
     ['Javobsiz savollar', dashboard?.unansweredQuestions ?? '—'],
   ];
   return (
-    <main className="shell py-10">
+    <main className="shell py-10 seller-workspace">
       <p className="eyebrow">Seller workspace</p>
       <h1 className="mt-2 text-3xl font-black">Action Center</h1>
       <p className="muted mt-2 text-sm">
@@ -85,7 +85,7 @@ export default function SellerDashboard() {
       <Link className="rs-button mt-5" href="/seller/manage">
         Do‘kon va katalogni boshqarish
       </Link>
-      <section className="mt-8 grid gap-4 sm:grid-cols-3">
+      <section className="seller-metrics mt-8 grid gap-4 sm:grid-cols-3">
         {cards.map(([label, value], index) => (
           <article key={label} className="surface p-5">
             <span
@@ -96,7 +96,7 @@ export default function SellerDashboard() {
           </article>
         ))}
       </section>
-      <section className="surface mt-8 p-5 sm:p-6">
+      <section className="surface seller-queue mt-8 p-5 sm:p-6">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold">60 daqiqalik navbat</h2>

@@ -9,6 +9,13 @@ type Store = {
   descriptionUz?: string | null;
   vacationMode: boolean;
   sellerProfile: { trustBadge: string; verifiedAt?: string | null };
+  importedTestimonials?: {
+    id: string;
+    sourceLabel: string;
+    authorLabel: string;
+    body: string;
+    createdAt: string;
+  }[];
   listings: {
     publicId: string;
     nameUz: string;
@@ -88,6 +95,10 @@ export default async function StorePage({
             </Link>
           ))}
         </div>
+        <section className="store-testimonials mt-12">
+          <div><p className="eyebrow">Tashqi platformalardan</p><h2 className="mt-2 text-2xl font-black">Import qilingan fikrlar</h2><p className="muted mt-2 text-sm">Bu fikrlar Resaller buyurtmasi orqali tasdiqlanmagan va manbasi alohida ko‘rsatiladi.</p></div>
+          {(store.importedTestimonials?.length ?? 0) > 0 ? <div className="mt-5 grid gap-4 md:grid-cols-3">{store.importedTestimonials?.map((item) => <article className="surface p-5" key={item.id}><span className="testimonial-source">IMPORT · {item.sourceLabel}</span><p className="mt-4 leading-relaxed">“{item.body}”</p><b className="mt-4 block text-sm">{item.authorLabel}</b></article>)}</div> : <div className="surface mt-5 p-5"><p className="muted text-sm">Hozircha import qilingan fikr yo‘q. Resaller ichidagi tasdiqlangan sharhlar doimo alohida ko‘rsatiladi.</p></div>}
+        </section>
       </section>
     </main>
   );

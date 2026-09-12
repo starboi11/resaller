@@ -358,6 +358,17 @@ export class CommerceService {
         status: true,
         vacationMode: true,
         sellerProfile: { select: { trustBadge: true, verifiedAt: true } },
+        importedTestimonials: {
+          take: 12,
+          orderBy: { createdAt: 'desc' },
+          select: {
+            id: true,
+            sourceLabel: true,
+            authorLabel: true,
+            body: true,
+            createdAt: true,
+          },
+        },
         listings: {
           where: { status: 'ACTIVE' },
           take: 60,

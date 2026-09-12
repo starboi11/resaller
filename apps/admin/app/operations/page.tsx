@@ -86,7 +86,7 @@ export default function AdminOperations() {
   }
   const rows = data[active] ?? [];
   return (
-    <main className="mx-auto max-w-7xl p-5 sm:p-8">
+    <main className="admin-shell mx-auto max-w-7xl p-5 sm:p-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="eyebrow">Control Center</p>

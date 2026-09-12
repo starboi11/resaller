@@ -98,13 +98,13 @@ export default function Account() {
       </main>
     );
   return (
-    <main className="shell py-10">
+    <main className="shell py-10 buyer-workspace account-workspace">
       <p className="eyebrow">Shaxsiy kabinet</p>
       <h1 className="mt-2 text-3xl font-black">Hisob va xavfsizlik</h1>
       <p className="muted mt-2" aria-live="polite">
         {message || 'Sessiyalar va xabar kanallarini shu yerdan boshqaring.'}
       </p>
-      <div className="mt-8 grid gap-6 lg:grid-cols-2">
+      <div className="account-grid mt-8 grid gap-6 lg:grid-cols-2">
         <section className="surface p-5">
           <h2 className="text-xl font-black">Faol qurilmalar</h2>
           <div className="mt-4 grid gap-3">

@@ -157,7 +157,7 @@ export default function OrderDetail({
       </main>
     );
   return (
-    <main className="shell py-10">
+    <main className="shell py-10 buyer-workspace order-detail-workspace">
       <Link className="muted text-sm" href="/orders">
         ← Buyurtmalar
       </Link>
@@ -181,7 +181,7 @@ export default function OrderDetail({
       )}
       <div className="mt-8 grid gap-6 lg:grid-cols-[.8fr_1.2fr]">
         <div className="grid content-start gap-6">
-          <section className="surface p-5">
+          <section className="surface order-summary p-5">
             <h2 className="text-lg font-black">Mahsulotlar</h2>
             <div className="mt-4 grid gap-3">
               {order.items.map((item) => (
@@ -207,7 +207,7 @@ export default function OrderDetail({
               </strong>
             </div>
           </section>
-          <section className="surface p-5">
+          <section className="surface order-timeline p-5">
             <h2 className="text-lg font-black">Holat tarixi</h2>
             <ol className="mt-4 grid gap-4">
               {order.history.map((item) => (
@@ -243,7 +243,7 @@ export default function OrderDetail({
             </button>
           </div>
         </div>
-        <section className="surface flex min-h-[32rem] flex-col p-5">
+        <section className="surface private-chat flex min-h-[32rem] flex-col p-5">
           <h2 className="text-lg font-black">Xususiy chat</h2>
           <p className="muted text-sm">
             Faqat buyurtma ishtirokchilari ko‘radi.

@@ -8,6 +8,14 @@ body {
   background: #07100f;
   color: #f4f5f8;
 }
+.admin-shell { min-height: 100vh; }
+.admin-shell > header,.admin-shell > div:first-child { position: relative; }
+.admin-shell > header::before,.admin-shell > div:first-child::before { content: 'R'; display: grid; width: 3rem; aspect-ratio: 1; place-items: center; margin-bottom: 1rem; border: 1px solid rgb(0 200 151 / .45); border-radius: .8rem; background: linear-gradient(145deg,#00c897,#075f46); color: #02110d; font-size: 1.4rem; font-weight: 1000; transform: skew(-8deg); }
+.admin-shell h1 { letter-spacing: -.05em; }
+.admin-shell .metric { position: relative; overflow: hidden; }
+.admin-shell .metric::after { content: ''; position: absolute; width: 4rem; aspect-ratio: 1; right: -2rem; bottom: -2rem; border-radius: 50%; background: rgb(0 200 151 / .11); }
+.admin-shell .panel,.admin-shell article { backdrop-filter: blur(12px); }
+.admin-shell nav button { min-height: 44px; }
 :focus-visible {
   outline: 3px solid rgb(0 200 151 / 0.7);
   outline-offset: 3px;

@@ -128,7 +128,7 @@ export default function CartPage() {
       </main>
     );
   return (
-    <main className="shell py-10">
+    <main className="shell py-10 buyer-workspace cart-workspace">
       <p className="eyebrow">Xaridni yakunlash</p>
       <h1 className="mt-2 text-3xl font-black">Savat va yetkazib berish</h1>
       {message && (
@@ -152,11 +152,11 @@ export default function CartPage() {
           />
         </div>
       )}
-      <div className="mt-8 grid gap-6 lg:grid-cols-[1.2fr_.8fr]">
-        <section className="grid gap-3">
+      <div className="buyer-layout mt-8 grid gap-6 lg:grid-cols-[1.2fr_.8fr]">
+        <section className="cart-items grid gap-3">
           {cart?.items.map((item) => (
             <article
-              className="surface flex items-center justify-between gap-4 p-5"
+              className="surface cart-line flex items-center justify-between gap-4 p-5"
               key={item.id}
             >
               <div>
@@ -201,7 +201,7 @@ export default function CartPage() {
           ))}
         </section>
         {Boolean(cart?.items.length) && (
-          <form className="surface h-fit p-5" onSubmit={checkout}>
+          <form className="surface checkout-card h-fit p-5" onSubmit={checkout}>
             <h2 className="text-xl font-black">Yetkazib berish</h2>
             <p className="muted mt-2 text-sm">
               To‘lovni sotuvchi bilan platformadan tashqarida kelishasiz.

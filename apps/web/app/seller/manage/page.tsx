@@ -218,7 +218,7 @@ export default function SellerManage() {
       </main>
     );
   return (
-    <main className="shell py-10">
+    <main className="shell py-10 seller-workspace seller-manage-workspace">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="eyebrow">Seller workspace</p>
