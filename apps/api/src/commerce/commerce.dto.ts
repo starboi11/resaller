@@ -5,6 +5,7 @@ import {
   IsObject,
   IsOptional,
   IsString,
+  IsDateString,
   Matches,
   Max,
   MaxLength,
@@ -111,4 +112,28 @@ export class UpdateVariantDto {
 
 export class VacationModeDto {
   @IsIn([true, false]) enabled!: boolean;
+}
+
+export class CreateCouponDto {
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.trim().toUpperCase() : value,
+  )
+  @IsString()
+  @Matches(/^[A-Z0-9_-]{3,24}$/)
+  code!: string;
+  @IsIn(['FIXED', 'PERCENT']) kind!: 'FIXED' | 'PERCENT';
+  @IsInt() @Min(1) @Max(9_000_000_000_000) valueMinor!: number;
+  @IsOptional() @IsInt() @Min(0) minimumMinor?: number;
+  @IsOptional() @IsInt() @Min(1) maximumDiscountMinor?: number;
+  @IsOptional() @IsInt() @Min(1) usageLimit?: number;
+  @IsOptional() @IsInt() @Min(1) buyerLimit?: number;
+  @IsDateString() startsAt!: string;
+  @IsDateString() endsAt!: string;
+}
+
+export class CreatePromotionDto {
+  @IsString() @MinLength(2) @MaxLength(40) type!: string;
+  @IsDateString() startsAt!: string;
+  @IsDateString() endsAt!: string;
+  @IsObject() metadata!: Record<string, unknown>;
 }

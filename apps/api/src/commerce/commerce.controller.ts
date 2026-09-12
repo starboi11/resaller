@@ -19,6 +19,8 @@ import {
   CreateListingDto,
   CreateStoreDto,
   CreateVariantDto,
+  CreateCouponDto,
+  CreatePromotionDto,
   MarketplaceQueryDto,
   SellerVerificationDto,
   StoreSettingsDto,
@@ -59,7 +61,9 @@ export class CommerceController {
 
   @Get('seller/stores')
   @UseGuards(SessionGuard)
-  sellerStores(@Req() request: FastifyRequest & { user: AuthenticatedUser }) { return this.commerce.sellerStores(request.user.id); }
+  sellerStores(@Req() request: FastifyRequest & { user: AuthenticatedUser }) {
+    return this.commerce.sellerStores(request.user.id);
+  }
 
   @Get('stores/:username')
   store(@Param('username') username: string) {
@@ -226,5 +230,53 @@ export class CommerceController {
     @Param('publicId') publicId: string,
   ) {
     return this.commerce.unfollow(request.user.id, publicId);
+  }
+
+  @Get('stores/:publicId/marketing')
+  @UseGuards(SessionGuard)
+  marketing(
+    @Req() request: FastifyRequest & { user: AuthenticatedUser },
+    @Param('publicId') publicId: string,
+  ) {
+    return this.commerce.marketing(request.user, publicId);
+  }
+
+  @Post('stores/:publicId/coupons')
+  @UseGuards(SessionGuard)
+  coupon(
+    @Req() request: FastifyRequest & { user: AuthenticatedUser },
+    @Param('publicId') publicId: string,
+    @Body() input: CreateCouponDto,
+  ) {
+    return this.commerce.createCoupon(request.user, publicId, input);
+  }
+
+  @Patch('stores/:publicId/coupons/:id/toggle')
+  @UseGuards(SessionGuard)
+  couponToggle(
+    @Req() request: FastifyRequest & { user: AuthenticatedUser },
+    @Param('publicId') publicId: string,
+    @Param('id') id: string,
+  ) {
+    return this.commerce.toggleCoupon(request.user, publicId, id);
+  }
+
+  @Post('stores/:publicId/promotions')
+  @UseGuards(SessionGuard)
+  promotion(
+    @Req() request: FastifyRequest & { user: AuthenticatedUser },
+    @Param('publicId') publicId: string,
+    @Body() input: CreatePromotionDto,
+  ) {
+    return this.commerce.createPromotion(request.user, publicId, input);
+  }
+
+  @Get('stores/:publicId/analytics')
+  @UseGuards(SessionGuard)
+  analytics(
+    @Req() request: FastifyRequest & { user: AuthenticatedUser },
+    @Param('publicId') publicId: string,
+  ) {
+    return this.commerce.analytics(request.user, publicId);
   }
 }

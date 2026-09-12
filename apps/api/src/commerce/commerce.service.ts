@@ -13,6 +13,8 @@ import type {
   CreateListingDto,
   CreateStoreDto,
   CreateVariantDto,
+  CreateCouponDto,
+  CreatePromotionDto,
   MarketplaceQueryDto,
   SellerVerificationDto,
   StoreSettingsDto,
@@ -27,6 +29,17 @@ import {
 @Injectable()
 export class CommerceService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
+
+  private async managedStore(userId: string, publicId: string) {
+    const store = await this.prisma.store.findUnique({
+      where: { publicId },
+      include: { sellerProfile: true, members: { where: { userId } } },
+    });
+    if (!store) throw new NotFoundException('Store not found');
+    if (store.sellerProfile.userId !== userId && store.members.length === 0)
+      throw new ForbiddenException('Store access denied');
+    return store;
+  }
 
   async applySeller(user: AuthenticatedUser) {
     return this.prisma.$transaction(async (tx) => {
@@ -127,11 +140,55 @@ export class CommerceService {
 
   async sellerStores(userId: string) {
     const stores = await this.prisma.store.findMany({
-      where: { OR: [{ sellerProfile: { userId } }, { members: { some: { userId } } }] },
+      where: {
+        OR: [{ sellerProfile: { userId } }, { members: { some: { userId } } }],
+      },
       orderBy: { createdAt: 'desc' },
-      select: { publicId: true, username: true, nameUz: true, status: true, vacationMode: true, settings: true, members: { select: { role: true, user: { select: { username: true } } } }, listings: { orderBy: { createdAt: 'desc' }, select: { publicId: true, nameUz: true, status: true, priceMinor: true, currency: true, variants: { select: { id: true, sku: true, options: true, priceOverrideMinor: true, inventory: true } }, media: { select: { id: true, storageKey: true, thumbnailStorageKey: true } } } } },
+      select: {
+        publicId: true,
+        username: true,
+        nameUz: true,
+        status: true,
+        vacationMode: true,
+        settings: true,
+        members: {
+          select: { role: true, user: { select: { username: true } } },
+        },
+        listings: {
+          orderBy: { createdAt: 'desc' },
+          select: {
+            publicId: true,
+            nameUz: true,
+            status: true,
+            priceMinor: true,
+            currency: true,
+            variants: {
+              select: {
+                id: true,
+                sku: true,
+                options: true,
+                priceOverrideMinor: true,
+                inventory: true,
+              },
+            },
+            media: {
+              select: { id: true, storageKey: true, thumbnailStorageKey: true },
+            },
+          },
+        },
+      },
     });
-    return stores.map((store) => ({ ...store, listings: store.listings.map((listing) => ({ ...listing, priceMinor: listing.priceMinor.toString(), variants: listing.variants.map((variant) => ({ ...variant, priceOverrideMinor: variant.priceOverrideMinor?.toString() ?? null })) })) }));
+    return stores.map((store) => ({
+      ...store,
+      listings: store.listings.map((listing) => ({
+        ...listing,
+        priceMinor: listing.priceMinor.toString(),
+        variants: listing.variants.map((variant) => ({
+          ...variant,
+          priceOverrideMinor: variant.priceOverrideMinor?.toString() ?? null,
+        })),
+      })),
+    }));
   }
 
   async updateStoreSettings(
@@ -290,11 +347,35 @@ export class CommerceService {
         status: true,
         vacationMode: true,
         sellerProfile: { select: { trustBadge: true, verifiedAt: true } },
-        listings: { where: { status: 'ACTIVE' }, take: 60, orderBy: { createdAt: 'desc' }, select: { publicId: true, nameUz: true, priceMinor: true, currency: true, media: { take: 1, orderBy: { position: 'asc' }, select: { storageKey: true, thumbnailStorageKey: true } }, variants: { select: { inventory: { select: { available: true } } } } } },
+        listings: {
+          where: { status: 'ACTIVE' },
+          take: 60,
+          orderBy: { createdAt: 'desc' },
+          select: {
+            publicId: true,
+            nameUz: true,
+            priceMinor: true,
+            currency: true,
+            media: {
+              take: 1,
+              orderBy: { position: 'asc' },
+              select: { storageKey: true, thumbnailStorageKey: true },
+            },
+            variants: {
+              select: { inventory: { select: { available: true } } },
+            },
+          },
+        },
       },
     });
     if (!store) throw new NotFoundException('Store not found');
-    return { ...store, listings: store.listings.map((listing) => ({ ...listing, priceMinor: listing.priceMinor.toString() })) };
+    return {
+      ...store,
+      listings: store.listings.map((listing) => ({
+        ...listing,
+        priceMinor: listing.priceMinor.toString(),
+      })),
+    };
   }
 
   async createListing(
@@ -751,6 +832,197 @@ export class CommerceService {
         where: { userId, storeId: store.id },
       });
     return { following: false };
+  }
+
+  async marketing(user: AuthenticatedUser, publicId: string) {
+    const store = await this.managedStore(user.id, publicId);
+    const [coupons, promotions] = await Promise.all([
+      this.prisma.coupon.findMany({
+        where: { storeId: store.id },
+        orderBy: { startsAt: 'desc' },
+        include: { _count: { select: { redemptions: true } } },
+      }),
+      this.prisma.promotion.findMany({
+        where: { storeId: store.id },
+        orderBy: { startsAt: 'desc' },
+      }),
+    ]);
+    return {
+      coupons: coupons.map((coupon) => ({
+        ...coupon,
+        valueMinor: coupon.valueMinor.toString(),
+        minimumMinor: coupon.minimumMinor?.toString() ?? null,
+        maximumDiscountMinor: coupon.maximumDiscountMinor?.toString() ?? null,
+      })),
+      promotions,
+    };
+  }
+
+  async createCoupon(
+    user: AuthenticatedUser,
+    publicId: string,
+    input: CreateCouponDto,
+  ) {
+    const store = await this.managedStore(user.id, publicId);
+    const startsAt = new Date(input.startsAt);
+    const endsAt = new Date(input.endsAt);
+    if (endsAt <= startsAt)
+      throw new BadRequestException('Coupon end must be after start');
+    if (input.kind === 'PERCENT' && input.valueMinor > 10_000)
+      throw new BadRequestException(
+        'Percent coupon cannot exceed 10000 basis points',
+      );
+    const coupon = await this.prisma.coupon.create({
+      data: {
+        storeId: store.id,
+        code: input.code,
+        kind: input.kind,
+        valueMinor: BigInt(input.valueMinor),
+        minimumMinor:
+          input.minimumMinor === undefined ? null : BigInt(input.minimumMinor),
+        maximumDiscountMinor:
+          input.maximumDiscountMinor === undefined
+            ? null
+            : BigInt(input.maximumDiscountMinor),
+        usageLimit: input.usageLimit ?? null,
+        buyerLimit: input.buyerLimit ?? null,
+        startsAt,
+        endsAt,
+      },
+    });
+    await this.prisma.auditLog.create({
+      data: {
+        actorId: user.id,
+        action: 'COUPON_CREATED',
+        targetType: 'Coupon',
+        targetId: coupon.id,
+      },
+    });
+    return {
+      ...coupon,
+      valueMinor: coupon.valueMinor.toString(),
+      minimumMinor: coupon.minimumMinor?.toString() ?? null,
+      maximumDiscountMinor: coupon.maximumDiscountMinor?.toString() ?? null,
+    };
+  }
+
+  async toggleCoupon(user: AuthenticatedUser, publicId: string, id: string) {
+    const store = await this.managedStore(user.id, publicId);
+    const coupon = await this.prisma.coupon.findFirst({
+      where: { id, storeId: store.id },
+    });
+    if (!coupon) throw new NotFoundException('Coupon not found');
+    const updated = await this.prisma.coupon.update({
+      where: { id },
+      data: { active: !coupon.active },
+      select: { id: true, active: true },
+    });
+    await this.prisma.auditLog.create({
+      data: {
+        actorId: user.id,
+        action: 'COUPON_TOGGLED',
+        targetType: 'Coupon',
+        targetId: id,
+        metadata: { active: updated.active },
+      },
+    });
+    return updated;
+  }
+
+  async createPromotion(
+    user: AuthenticatedUser,
+    publicId: string,
+    input: CreatePromotionDto,
+  ) {
+    const store = await this.managedStore(user.id, publicId);
+    const startsAt = new Date(input.startsAt);
+    const endsAt = new Date(input.endsAt);
+    if (endsAt <= startsAt)
+      throw new BadRequestException('Promotion end must be after start');
+    const promotion = await this.prisma.promotion.create({
+      data: {
+        storeId: store.id,
+        type: input.type.trim().toUpperCase(),
+        startsAt,
+        endsAt,
+        metadata: input.metadata as object,
+      },
+    });
+    await this.prisma.auditLog.create({
+      data: {
+        actorId: user.id,
+        action: 'PROMOTION_CREATED',
+        targetType: 'Promotion',
+        targetId: promotion.id,
+      },
+    });
+    return promotion;
+  }
+
+  async analytics(user: AuthenticatedUser, publicId: string) {
+    const store = await this.managedStore(user.id, publicId);
+    const since = new Date(Date.now() - 30 * 24 * 60 * 60_000);
+    const [
+      orders,
+      completed,
+      revenue,
+      reviews,
+      followers,
+      questions,
+      lowStock,
+    ] = await Promise.all([
+      this.prisma.order.count({
+        where: { storeId: store.id, createdAt: { gte: since } },
+      }),
+      this.prisma.order.count({
+        where: {
+          storeId: store.id,
+          status: 'COMPLETED',
+          createdAt: { gte: since },
+        },
+      }),
+      this.prisma.order.aggregate({
+        where: {
+          storeId: store.id,
+          status: 'COMPLETED',
+          createdAt: { gte: since },
+        },
+        _sum: { totalMinor: true },
+      }),
+      this.prisma.review.aggregate({
+        where: {
+          order: { storeId: store.id },
+          status: 'VISIBLE',
+          createdAt: { gte: since },
+        },
+        _avg: { rating: true },
+        _count: true,
+      }),
+      this.prisma.storeFollower.count({ where: { storeId: store.id } }),
+      this.prisma.storeQuestion.count({
+        where: { storeId: store.id, createdAt: { gte: since } },
+      }),
+      this.prisma.inventory.count({
+        where: {
+          available: { lte: 3 },
+          variant: { listing: { storeId: store.id } },
+        },
+      }),
+    ]);
+    return {
+      periodDays: 30,
+      orders,
+      completed,
+      conversionPercent: orders
+        ? Math.round((completed / orders) * 1000) / 10
+        : 0,
+      revenueMinor: (revenue._sum.totalMinor ?? 0n).toString(),
+      reviewAverage: reviews._avg.rating ?? null,
+      reviewCount: reviews._count,
+      followers,
+      questions,
+      lowStock,
+    };
   }
 
   private async editableListing(user: AuthenticatedUser, publicId: string) {

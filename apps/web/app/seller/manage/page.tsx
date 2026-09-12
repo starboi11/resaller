@@ -292,6 +292,12 @@ export default function SellerManage() {
             >
               {store.vacationMode ? 'Ta’tildan qaytish' : 'Ta’til rejimi'}
             </button>
+            <Link
+              className="rs-button"
+              href={`/seller/marketing/${store.publicId}`}
+            >
+              Marketing va analytics
+            </Link>
           </div>
           <div className="mt-6 grid gap-6 lg:grid-cols-2">
             <form
