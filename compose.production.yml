@@ -59,9 +59,12 @@ services:
       PUSH_WEBHOOK_URL: '${PUSH_WEBHOOK_URL:-}'
       PUSH_WEBHOOK_TOKEN: '${PUSH_WEBHOOK_TOKEN:-}'
       METRICS_TOKEN: '${METRICS_TOKEN}'
+      CLAMAV_HOST: clamav
+      CLAMAV_PORT: 3310
     depends_on:
       postgres: { condition: service_healthy }
       redis: { condition: service_healthy }
+      clamav: { condition: service_started }
     volumes:
       - media_prod:/app/data/media
       - private_media_prod:/app/data/private-media
@@ -92,6 +95,10 @@ services:
         timeout: 3s,
         retries: 10,
       }
+  clamav:
+    image: clamav/clamav:1.4
+    restart: unless-stopped
+    volumes: ['clamav_data:/var/lib/clamav']
   backup:
     build: { context: ., dockerfile: infrastructure/Dockerfile.backup }
     restart: unless-stopped
@@ -112,3 +119,4 @@ volumes:
   media_prod:
   private_media_prod:
   encrypted_backups:
+  clamav_data:

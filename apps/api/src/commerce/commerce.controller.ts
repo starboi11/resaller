@@ -21,6 +21,7 @@ import {
   CreateVariantDto,
   CreateCouponDto,
   CreatePromotionDto,
+  CreateTestimonialDto,
   MarketplaceQueryDto,
   SellerVerificationDto,
   StoreSettingsDto,
@@ -239,6 +240,26 @@ export class CommerceController {
     @Param('publicId') publicId: string,
   ) {
     return this.commerce.marketing(request.user, publicId);
+  }
+
+  @Post('stores/:publicId/testimonials')
+  @UseGuards(SessionGuard)
+  testimonial(
+    @Req() request: FastifyRequest & { user: AuthenticatedUser },
+    @Param('publicId') publicId: string,
+    @Body() input: CreateTestimonialDto,
+  ) {
+    return this.commerce.createTestimonial(request.user, publicId, input);
+  }
+
+  @Delete('stores/:publicId/testimonials/:id')
+  @UseGuards(SessionGuard)
+  removeTestimonial(
+    @Req() request: FastifyRequest & { user: AuthenticatedUser },
+    @Param('publicId') publicId: string,
+    @Param('id') id: string,
+  ) {
+    return this.commerce.removeTestimonial(request.user, publicId, id);
   }
 
   @Post('stores/:publicId/coupons')

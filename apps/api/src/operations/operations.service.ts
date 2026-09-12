@@ -166,6 +166,8 @@ export class OperationsService {
         history: { orderBy: { createdAt: 'asc' } },
         dispute: { include: { events: true, decision: true } },
         review: true,
+        changes: { orderBy: { createdAt: 'asc' } },
+        policySnapshots: { orderBy: { createdAt: 'asc' } },
       },
     });
     if (!order) throw new NotFoundException('Order not found');
@@ -179,6 +181,8 @@ export class OperationsService {
     if (!canView) throw new ForbiddenException('Order access denied');
     return {
       ...order,
+      viewerId: user.id,
+      viewerRole: order.buyerId === user.id ? 'BUYER' : 'SELLER',
       totalMinor: order.totalMinor.toString(),
       subtotalMinor: order.subtotalMinor.toString(),
       discountMinor: order.discountMinor.toString(),

@@ -15,6 +15,7 @@ import type {
   CreateVariantDto,
   CreateCouponDto,
   CreatePromotionDto,
+  CreateTestimonialDto,
   MarketplaceQueryDto,
   SellerVerificationDto,
   StoreSettingsDto,
@@ -164,6 +165,10 @@ export class CommerceService {
             answer: { select: { id: true, body: true } },
             listing: { select: { nameUz: true } },
           },
+        },
+        importedTestimonials: {
+          orderBy: { createdAt: 'desc' },
+          select: { id: true, sourceLabel: true, authorLabel: true, body: true, createdAt: true },
         },
         listings: {
           orderBy: { createdAt: 'desc' },
@@ -358,6 +363,25 @@ export class CommerceService {
         status: true,
         vacationMode: true,
         sellerProfile: { select: { trustBadge: true, verifiedAt: true } },
+        settings: { select: { deliverySettings: true, workingHours: true, vacationMessageUz: true } },
+        policies: {
+          take: 1,
+          orderBy: { version: 'desc' },
+          select: { version: true, content: true, publishedAt: true },
+        },
+        questions: {
+          where: { reportedAt: null },
+          take: 20,
+          orderBy: [{ pinned: 'desc' }, { createdAt: 'desc' }],
+          select: {
+            id: true,
+            body: true,
+            pinned: true,
+            createdAt: true,
+            author: { select: { username: true } },
+            answer: { select: { body: true, createdAt: true } },
+          },
+        },
         importedTestimonials: {
           take: 12,
           orderBy: { createdAt: 'desc' },
@@ -694,7 +718,13 @@ export class CommerceService {
       where: {
         status: 'ACTIVE',
         deletedAt: null,
-        store: { status: 'ACTIVE', vacationMode: false },
+        store: {
+          status: 'ACTIVE',
+          vacationMode: false,
+          ...(query.trust
+            ? { sellerProfile: { trustBadge: query.trust } }
+            : {}),
+        },
         ...(query.q
           ? {
               OR: [
@@ -704,7 +734,16 @@ export class CommerceService {
               ],
             }
           : {}),
-        ...(query.category ? { category: { slug: query.category } } : {}),
+        ...(query.category
+          ? {
+              category: {
+                OR: [
+                  { slug: query.category },
+                  { nameUz: { equals: query.category, mode: 'insensitive' } },
+                ],
+              },
+            }
+          : {}),
         ...(query.minPrice !== undefined || query.maxPrice !== undefined
           ? {
               priceMinor: {
@@ -718,7 +757,12 @@ export class CommerceService {
             }
           : {}),
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy:
+        query.sort === 'price-asc'
+          ? { priceMinor: 'asc' }
+          : query.sort === 'price-desc'
+            ? { priceMinor: 'desc' }
+            : { createdAt: 'desc' },
       take: 24,
       select: {
         publicId: true,
@@ -760,7 +804,7 @@ export class CommerceService {
     const listing = await this.prisma.listing.findFirst({
       where: {
         publicId,
-        status: 'ACTIVE',
+        status: { in: ['ACTIVE', 'OUT_OF_STOCK', 'RESTRICTED'] },
         deletedAt: null,
         store: { status: 'ACTIVE' },
       },
@@ -771,6 +815,13 @@ export class CommerceService {
             publicId: true,
             username: true,
             nameUz: true,
+            vacationMode: true,
+            settings: { select: { deliverySettings: true, workingHours: true, vacationMessageUz: true } },
+            policies: {
+              take: 1,
+              orderBy: { version: 'desc' },
+              select: { version: true, content: true, publishedAt: true },
+            },
             sellerProfile: { select: { trustBadge: true, verifiedAt: true } },
           },
         },
@@ -779,9 +830,47 @@ export class CommerceService {
       },
     });
     if (!listing) throw new NotFoundException('Listing not found');
+    const [questions, reviews] = await Promise.all([
+      this.prisma.storeQuestion.findMany({
+        where: { listingId: listing.id, reportedAt: null },
+        take: 20,
+        orderBy: [{ pinned: 'desc' }, { createdAt: 'desc' }],
+        select: {
+          id: true,
+          body: true,
+          pinned: true,
+          createdAt: true,
+          author: { select: { username: true } },
+          answer: { select: { body: true, createdAt: true } },
+        },
+      }),
+      this.prisma.review.findMany({
+        where: {
+          status: 'VISIBLE',
+          order: { items: { some: { variant: { listingId: listing.id } } } },
+        },
+        take: 20,
+        orderBy: { createdAt: 'desc' },
+        select: { id: true, rating: true, body: true, createdAt: true },
+      }),
+    ]);
     return {
       ...listing,
+      purchasable: listing.status === 'ACTIVE' && !listing.store.vacationMode,
       priceMinor: listing.priceMinor.toString(),
+      questions,
+      reviews,
+      rating: reviews.length
+        ? {
+            count: reviews.length,
+            average:
+              Math.round(
+                (reviews.reduce((sum, review) => sum + review.rating, 0) /
+                  reviews.length) *
+                  10,
+              ) / 10,
+          }
+        : { count: 0, average: null },
       variants: listing.variants.map((variant) => ({
         ...variant,
         priceOverrideMinor: variant.priceOverrideMinor?.toString() ?? null,
@@ -878,6 +967,21 @@ export class CommerceService {
       })),
       promotions,
     };
+  }
+
+  async createTestimonial(user: AuthenticatedUser, publicId: string, input: CreateTestimonialDto) {
+    const store = await this.managedStore(user.id, publicId);
+    const created = await this.prisma.importedTestimonial.create({ data: { storeId: store.id, sourceLabel: input.sourceLabel.trim(), authorLabel: input.authorLabel.trim(), body: input.body.trim() } });
+    await this.prisma.auditLog.create({ data: { actorId: user.id, action: 'IMPORTED_TESTIMONIAL_CREATED', targetType: 'ImportedTestimonial', targetId: created.id, metadata: { storeId: store.id, sourceLabel: created.sourceLabel } } });
+    return created;
+  }
+
+  async removeTestimonial(user: AuthenticatedUser, publicId: string, id: string) {
+    const store = await this.managedStore(user.id, publicId);
+    const removed = await this.prisma.importedTestimonial.deleteMany({ where: { id, storeId: store.id } });
+    if (!removed.count) throw new NotFoundException('Imported testimonial not found');
+    await this.prisma.auditLog.create({ data: { actorId: user.id, action: 'IMPORTED_TESTIMONIAL_REMOVED', targetType: 'ImportedTestimonial', targetId: id, metadata: { storeId: store.id } } });
+    return { removed: true };
   }
 
   async createCoupon(

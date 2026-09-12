@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useCallback, useEffect, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { StatePanel } from '@resaller/ui';
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
 type Dashboard = {
@@ -20,6 +20,9 @@ export default function SellerDashboard() {
   const [dashboard, setDashboard] = useState<Dashboard | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [unauthorized, setUnauthorized] = useState(false);
+  const [now, setNow] = useState(Date.now());
+  const [rejectOrder, setRejectOrder] = useState<Order | null>(null);
+  useEffect(() => { const timer = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(timer); }, []);
   const load = useCallback(async () => {
     const [summary, orderList] = await Promise.all([
       fetch(`${API}/seller/dashboard`, {
@@ -41,12 +44,7 @@ export default function SellerDashboard() {
   useEffect(() => {
     void load();
   }, [load]);
-  async function transition(order: Order, to: 'ACCEPTED' | 'REJECTED') {
-    const reason =
-      to === 'REJECTED'
-        ? window.prompt('Rad etish sababini yozing:')
-        : undefined;
-    if (to === 'REJECTED' && (!reason || reason.length < 3)) return;
+  async function transition(order: Order, to: 'ACCEPTED' | 'REJECTED', reason?: string) {
     const response = await fetch(`${API}/orders/${order.publicId}/transition`, {
       method: 'POST',
       credentials: 'include',
@@ -54,6 +52,14 @@ export default function SellerDashboard() {
       body: JSON.stringify({ to, reason }),
     });
     if (response.ok) await load();
+  }
+  async function reject(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!rejectOrder) return;
+    const reason = String(new FormData(event.currentTarget).get('reason') ?? '').trim();
+    if (reason.length < 3) return;
+    await transition(rejectOrder, 'REJECTED', reason);
+    setRejectOrder(null);
   }
   if (unauthorized)
     return (
@@ -122,9 +128,9 @@ export default function SellerDashboard() {
                 <div>
                   <p className="font-bold">{order.displayId}</p>
                   <p className="muted text-sm">
-                    Muddat:{' '}
-                    {new Date(order.sellerAcceptBy).toLocaleString('uz-UZ')}
+                    Qolgan vaqt: {Math.max(0, Math.floor((new Date(order.sellerAcceptBy).getTime() - now) / 60000))}:{String(Math.max(0, Math.floor(((new Date(order.sellerAcceptBy).getTime() - now) % 60000) / 1000))).padStart(2,'0')}
                   </p>
+                  <Link className="mt-2 block text-sm font-black text-[var(--brand-strong)]" href={`/orders/${order.publicId}`}>Order Workspace va chat →</Link>
                 </div>
                 <div className="flex gap-2">
                   <button
@@ -134,7 +140,7 @@ export default function SellerDashboard() {
                     Qabul qilish
                   </button>
                   <button
-                    onClick={() => void transition(order, 'REJECTED')}
+                    onClick={() => setRejectOrder(order)}
                     className="min-h-11 rounded-full border border-[var(--line)] px-4 font-bold"
                   >
                     Rad etish
@@ -153,6 +159,7 @@ export default function SellerDashboard() {
           )}
         </div>
       </section>
+      {rejectOrder && <div className="dialog-backdrop" role="presentation"><form className="surface app-dialog" role="dialog" aria-modal="true" aria-label="Buyurtmani rad etish" onSubmit={reject}><h2 className="text-xl font-black">{rejectOrder.displayId} ni rad etish</h2><p className="muted text-sm">Sabab xaridorga ko‘rinadi va audit tarixida saqlanadi.</p><textarea className="field min-h-28" name="reason" minLength={3} required autoFocus /><div className="flex gap-2"><button className="rs-button">Rad etishni tasdiqlash</button><button type="button" onClick={() => setRejectOrder(null)}>Bekor</button></div></form></div>}
     </main>
   );
 }

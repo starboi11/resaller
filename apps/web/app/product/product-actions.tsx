@@ -15,6 +15,9 @@ export function ProductActions({
   storePublicId: string;
 }) {
   const [saved, setSaved] = useState(false);
+  const [asking, setAsking] = useState(false);
+  const [question, setQuestion] = useState('');
+  const [notice, setNotice] = useState('');
   useEffect(() => {
     try {
       const old = JSON.parse(
@@ -40,8 +43,7 @@ export function ProductActions({
     else if (response.status === 401) window.location.href = '/login';
   }
   async function ask() {
-    const body = window.prompt('Sotuvchiga savolingiz');
-    if (!body || body.trim().length < 3) return;
+    if (question.trim().length < 3) return setNotice('Savol kamida 3 ta belgidan iborat bo‘lsin.');
     const response = await fetch(`${API}/questions`, {
       method: 'POST',
       credentials: 'include',
@@ -49,11 +51,12 @@ export function ProductActions({
       body: JSON.stringify({
         storePublicId,
         listingPublicId: product.publicId,
-        body: body.trim(),
+        body: question.trim(),
       }),
     });
     if (response.status === 401) window.location.href = '/login';
-    else if (response.ok) window.alert('Savol yuborildi.');
+    else if (response.ok) { setQuestion(''); setAsking(false); setNotice('Savol sotuvchiga yuborildi.'); }
+    else setNotice('Savol yuborilmadi. Qayta urinib ko‘ring.');
   }
   return (
     <div className="flex flex-wrap gap-2">
@@ -66,10 +69,13 @@ export function ProductActions({
       </button>
       <button
         className="min-h-11 rounded-full border border-[var(--line)] px-4 text-sm font-black"
-        onClick={() => void ask()}
+        onClick={() => setAsking((value) => !value)}
+        aria-expanded={asking}
       >
         Savol berish
       </button>
+      {asking && <form className="question-composer w-full" onSubmit={(event) => { event.preventDefault(); void ask(); }}><label htmlFor="product-question" className="font-black">Sotuvchiga savol</label><textarea id="product-question" value={question} onChange={(event) => setQuestion(event.target.value)} rows={3} maxLength={1000} placeholder="Mahsulot haqida nimani bilmoqchisiz?" /><div className="flex justify-end"><button className="rs-button" type="submit">Yuborish</button></div></form>}
+      {notice && <p className="w-full text-sm font-bold" role="status">{notice}</p>}
     </div>
   );
 }

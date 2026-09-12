@@ -1,7 +1,8 @@
 import { StatePanel } from '@resaller/ui';
 import { notFound } from 'next/navigation';
-import { AddToCart } from '../add-to-cart';
 import { ProductActions } from '../product-actions';
+import { ProductGallery } from '../product-gallery';
+import { PurchasePanel } from '../purchase-panel';
 import { demoListings } from '../../lib/demo-catalog';
 
 export const dynamic = 'force-dynamic';
@@ -12,21 +13,36 @@ type Product = {
   descriptionUz: string;
   priceMinor: string;
   currency: string;
+  status?: string;
+  purchasable?: boolean;
   category: { nameUz: string };
   store: {
     publicId: string;
     nameUz: string;
     username: string;
     sellerProfile: { trustBadge: string; verifiedAt: string | null };
+    vacationMode?: boolean;
+    settings?: { deliverySettings: unknown; workingHours: unknown; vacationMessageUz?: string | null } | null;
+    policies?: { version: number; content: unknown; publishedAt: string }[];
   };
   variants: {
     id: string;
     sku: string;
     options: Record<string, string>;
+    priceOverrideMinor?: string | null;
     inventory: { available: number } | null;
   }[];
-  media: { storageKey: string }[];
+  media: { storageKey: string; thumbnailStorageKey?: string | null }[];
+  questions?: { id: string; body: string; pinned: boolean; author: { username: string }; answer?: { body: string } | null }[];
+  reviews?: { id: string; rating: number; body?: string | null; createdAt: string }[];
+  rating?: { count: number; average: number | null };
 };
+
+function readable(value: unknown, fallback: string) {
+  if (!value || typeof value !== 'object') return fallback;
+  const values = Object.values(value as Record<string, unknown>).filter((item) => typeof item === 'string' || typeof item === 'number');
+  return values.length ? values.join(' · ') : fallback;
+}
 
 export default async function ProductPage({
   params,
@@ -38,7 +54,7 @@ export default async function ProductPage({
     `${api}/marketplace/listings/${encodeURIComponent(id)}`,
     { cache: 'no-store' },
   ).catch(() => null);
-  const fallback = demoListings.find((item) => item.publicId === id);
+  const fallback = process.env.NODE_ENV === 'development' ? demoListings.find((item) => item.publicId === id) : undefined;
   if (response?.status === 404 && !fallback) notFound();
   if (!response?.ok && !fallback)
     return (
@@ -51,35 +67,18 @@ export default async function ProductPage({
       </main>
     );
   const product = response?.ok ? (await response.json()) as Product : fallback as Product;
-  const stock = product.variants.reduce(
-    (sum, variant) => sum + (variant.inventory?.available ?? 0),
-    0,
-  );
-  const firstAvailable =
-    product.variants.find(
-      (variant) => (variant.inventory?.available ?? 0) > 0,
-    ) ?? product.variants[0];
+  const restricted = product.purchasable === false || product.status === 'RESTRICTED' || product.store.vacationMode === true;
   return (
     <main className="product-detail shell py-8 sm:py-12">
       <nav className="muted mb-6 text-sm" aria-label="Breadcrumb">
         <a href="/marketplace">Marketplace</a> <span aria-hidden="true">/</span>{' '}
         {product.category.nameUz}
       </nav>
+      {product.status === 'RESTRICTED' && <div className="mb-6 rounded-xl bg-red-100 p-4 font-bold text-red-900" role="status">Bu mahsulot moderatsiya cheklovi sabab hozir sotilmaydi.</div>}
+      {product.status === 'OUT_OF_STOCK' && <div className="mb-6 rounded-xl bg-amber-100 p-4 font-bold text-amber-900" role="status">Mahsulot hozir omborda mavjud emas.</div>}
       <div className="product-detail__layout grid gap-8 lg:grid-cols-[1.05fr_.95fr]">
         <section className="product-gallery" aria-label="Mahsulot rasmlari">
-          {product.media[0] ? (
-            <img
-              src={`${api}/media/${product.media[0].storageKey}`}
-              alt={product.nameUz}
-              className="surface aspect-square w-full object-cover"
-            />
-          ) : (
-            <div
-              className={`surface product-gallery__fallback product-art product-art--${id === 'demo-2' ? 'shoe' : id === 'demo-3' ? 'laptop' : id === 'demo-4' ? 'watch' : id === 'demo-5' ? 'headphones' : 'phone'}`}
-              role="img"
-              aria-label="Mahsulot rasmi mavjud emas"
-            ><span /></div>
-          )}
+          <ProductGallery name={product.nameUz} media={product.media} />
         </section>
         <section className="product-info lg:py-3">
           <div className="flex flex-wrap gap-2">
@@ -95,32 +94,10 @@ export default async function ProductPage({
           <h1 className="mt-4 text-3xl font-black tracking-tight sm:text-5xl">
             {product.nameUz}
           </h1>
-          <p className="mt-4 text-2xl font-black">
-            {new Intl.NumberFormat('uz-UZ').format(Number(product.priceMinor))}{' '}
-            so‘m
-          </p>
-          <p
-            className={`mt-2 text-sm font-bold ${stock ? 'text-[var(--success)]' : 'text-[var(--danger)]'}`}
-          >
-            {stock ? `Omborda ${stock} dona` : 'Mahsulot tugagan'}
-          </p>
+          {product.rating?.average ? <p className="mt-3 text-sm font-bold">★ {product.rating.average} · {product.rating.count} ta tasdiqlangan sharh</p> : <p className="muted mt-3 text-sm">Hozircha tasdiqlangan sharh yo‘q</p>}
           <div className="my-7 h-px bg-[var(--line)]" />
           <p className="muted leading-7">{product.descriptionUz}</p>
-          {product.variants.length > 1 && (
-            <div className="mt-6">
-              <p className="text-sm font-black">Variantlar</p>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {product.variants.map((variant) => (
-                  <span
-                    key={variant.id}
-                    className="rounded-xl border border-[var(--line)] bg-[var(--surface)] px-3 py-2 text-sm"
-                  >
-                    {Object.values(variant.options).join(' / ') || variant.sku}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
+          <div className="mt-6"><PurchasePanel listingPublicId={product.publicId} basePriceMinor={product.priceMinor} currency={product.currency} variants={product.variants} restricted={restricted} /></div>
           <a href={`/store/${product.store.username}`} className="surface seller-summary mt-7 p-5">
             <div className="flex items-center justify-between gap-4">
               <div>
@@ -133,12 +110,7 @@ export default async function ProductPage({
             </div>
           </a>
           <div className="product-buybar mt-7">
-            <AddToCart
-              listingPublicId={product.publicId}
-              variantId={firstAvailable?.id ?? ''}
-              disabled={!firstAvailable || stock === 0}
-            />
-            <div className="mt-3">
+            <div>
               <ProductActions
                 storePublicId={product.store.publicId}
                 product={{
@@ -152,18 +124,20 @@ export default async function ProductPage({
           </div>
           <div className="mt-7 grid gap-3 text-sm sm:grid-cols-2">
             <div className="rounded-2xl bg-[var(--surface-2)] p-4">
-              <b>60 daqiqalik tasdiq</b>
-              <p className="muted mt-1">
-                Sotuvchi buyurtmaga vaqtida javob beradi.
-              </p>
+              <b>Yetkazib berish va ETA</b>
+              <p className="muted mt-1">{readable(product.store.settings?.deliverySettings, 'Yetkazish usuli va muddati checkout vaqtida manzilga qarab ko‘rsatiladi.')}</p>
             </div>
             <div className="rounded-2xl bg-[var(--surface-2)] p-4">
-              <b>Shaffof tarix</b>
-              <p className="muted mt-1">Muhim holatlar buyurtmada saqlanadi.</p>
+              <b>Qaytarish va do‘kon qoidalari</b>
+              <p className="muted mt-1">{readable(product.store.policies?.[0]?.content, 'Qaytarish shartlari buyurtma paytida o‘zgarmas nusxa sifatida saqlanadi.')}</p>
             </div>
           </div>
         </section>
       </div>
+      <section className="product-community mt-12 grid gap-6 lg:grid-cols-2">
+        <div className="surface p-6"><h2 className="text-xl font-black">Savol-javob</h2>{product.questions?.length ? <div className="mt-4 grid gap-4">{product.questions.map((item) => <article key={item.id}><p className="font-bold">{item.pinned ? '📌 ' : ''}{item.body}</p><small className="muted">@{item.author.username}</small>{item.answer ? <p className="mt-2 rounded-xl bg-[var(--surface-2)] p-3"><b>Sotuvchi:</b> {item.answer.body}</p> : <p className="muted mt-2 text-sm">Hali javob berilmagan</p>}</article>)}</div> : <p className="muted mt-3">Hozircha ochiq savol yo‘q.</p>}</div>
+        <div className="surface p-6"><h2 className="text-xl font-black">Tasdiqlangan sharhlar</h2>{product.reviews?.length ? <div className="mt-4 grid gap-4">{product.reviews.map((item) => <article key={item.id}><p aria-label={`${item.rating} yulduz`}>{'★'.repeat(item.rating)}{'☆'.repeat(5-item.rating)}</p><p className="mt-1">{item.body || 'Baho qoldirilgan.'}</p></article>)}</div> : <p className="muted mt-3">Bu mahsulot uchun hali tasdiqlangan sharh yo‘q.</p>}</div>
+      </section>
     </main>
   );
 }

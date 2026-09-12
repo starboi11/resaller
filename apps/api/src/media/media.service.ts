@@ -15,6 +15,7 @@ import { detectSafeImage } from './media-signature.js';
 import { detectVerificationDocument } from './verification-document.js';
 import { processListingImage } from './image-processor.js';
 import { MediaStorageService } from './media-storage.service.js';
+import { MalwareScannerService } from './malware-scanner.service.js';
 
 @Injectable()
 export class MediaService {
@@ -24,6 +25,7 @@ export class MediaService {
   constructor(
     @Inject(PrismaService) private readonly prisma: PrismaService,
     @Inject(MediaStorageService) private readonly storage: MediaStorageService,
+    @Inject(MalwareScannerService) private readonly scanner: MalwareScannerService,
   ) {}
 
   async uploadListingImage(
@@ -31,6 +33,7 @@ export class MediaService {
     listingPublicId: string,
     bytes: Buffer,
   ) {
+    await this.scanner.assertClean(bytes);
     const listing = await this.prisma.listing.findUnique({
       where: { publicId: listingPublicId },
       include: {
@@ -136,6 +139,7 @@ export class MediaService {
   }
 
   async uploadVerificationDocument(userId: string, bytes: Buffer) {
+    await this.scanner.assertClean(bytes);
     const verification = await this.prisma.sellerVerification.findFirst({
       where: { sellerProfile: { userId } },
     });
@@ -225,6 +229,7 @@ export class MediaService {
     bytes: Buffer,
     fileName: string,
   ) {
+    await this.scanner.assertClean(bytes);
     const message = await this.prisma.message.findUnique({
       where: { id: messageId },
       include: {
@@ -335,6 +340,7 @@ export class MediaService {
     bytes: Buffer,
     fileName: string,
   ) {
+    await this.scanner.assertClean(bytes);
     const dispute = await this.prisma.dispute.findUnique({
       where: { id: disputeId },
       include: {

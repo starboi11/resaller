@@ -59,6 +59,19 @@ export class AdminController {
   @Get('audit') @RequireRoles('SUPER_ADMIN', 'SECURITY_ADMIN') audit() {
     return this.admin.audit();
   }
+  @Get('orders') @RequireRoles('SUPER_ADMIN', 'SUPPORT_ADMIN', 'DISPUTE_ADMIN') orders() {
+    return this.admin.orders();
+  }
+  @Get('risk-events') @RequireRoles('SUPER_ADMIN', 'SECURITY_ADMIN') riskEvents() {
+    return this.admin.riskEvents();
+  }
+  @Patch('risk-events/:id/review') @RequireRoles('SUPER_ADMIN', 'SECURITY_ADMIN') reviewRisk(
+    @Req() req: FastifyRequest & { user: AuthenticatedUser },
+    @Param('id') id: string,
+    @Body() input: ResolveSecurityEventDto,
+  ) {
+    return this.admin.reviewRisk(req.user, id, input.resolution);
+  }
   @Get('question-reports') @RequireRoles('MODERATOR') questionReports() {
     return this.admin.questionReports();
   }

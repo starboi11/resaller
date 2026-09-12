@@ -55,6 +55,12 @@ export class MarketplaceQueryDto {
   @IsInt()
   @Min(0)
   maxPrice?: number;
+  @IsOptional()
+  @IsIn(['IDENTITY_VERIFIED', 'TRUSTED', 'TOP_SELLER'])
+  trust?: 'IDENTITY_VERIFIED' | 'TRUSTED' | 'TOP_SELLER';
+  @IsOptional()
+  @IsIn(['relevance', 'new', 'price-asc', 'price-desc'])
+  sort?: 'relevance' | 'new' | 'price-asc' | 'price-desc';
 }
 
 export class SellerVerificationDto {
@@ -136,4 +142,10 @@ export class CreatePromotionDto {
   @IsDateString() startsAt!: string;
   @IsDateString() endsAt!: string;
   @IsObject() metadata!: Record<string, unknown>;
+}
+
+export class CreateTestimonialDto {
+  @IsString() @MinLength(2) @MaxLength(80) sourceLabel!: string;
+  @IsString() @MinLength(2) @MaxLength(80) authorLabel!: string;
+  @IsString() @MinLength(3) @MaxLength(1000) body!: string;
 }

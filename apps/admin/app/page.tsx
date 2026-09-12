@@ -37,12 +37,14 @@ type TwoFactor = {
   secret?: string;
   provisioningUri?: string;
 };
+type Decision = { kind: 'stores' | 'listings' | 'verifications'; id: string; status: string; title: string };
 
 export default function AdminHome() {
   const [queue, setQueue] = useState<Queue | null>(null);
   const [message, setMessage] = useState('Tekshirilmoqda…');
   const [busy, setBusy] = useState(false);
   const [twoFactor, setTwoFactor] = useState<TwoFactor | null>(null);
+  const [decision, setDecision] = useState<Decision | null>(null);
   const load = useCallback(async () => {
     const response = await fetch(`${API}/admin/queue`, {
       credentials: 'include',
@@ -128,11 +130,8 @@ export default function AdminHome() {
     kind: 'stores' | 'listings',
     publicId: string,
     status: string,
+    reason: string,
   ) {
-    const reason = window.prompt(
-      'Audit uchun sababni yozing (kamida 3 belgi):',
-    );
-    if (!reason || reason.trim().length < 3) return;
     setBusy(true);
     const response = await fetch(`${API}/admin/${kind}/${publicId}/status`, {
       method: 'PATCH',
@@ -149,9 +148,7 @@ export default function AdminHome() {
     setBusy(false);
   }
 
-  async function verify(id: string, status: 'APPROVED' | 'REJECTED') {
-    const reason = window.prompt('Verification qarori sababini yozing:');
-    if (!reason || reason.trim().length < 3) return;
+  async function verify(id: string, status: 'APPROVED' | 'REJECTED', reason: string) {
     setBusy(true);
     const response = await fetch(`${API}/admin/verifications/${id}/status`, {
       method: 'PATCH',
@@ -166,6 +163,15 @@ export default function AdminHome() {
     );
     if (response.ok) await load();
     setBusy(false);
+  }
+  async function submitDecision(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!decision) return;
+    const reason = String(new FormData(event.currentTarget).get('reason') ?? '').trim();
+    if (reason.length < 3) return;
+    if (decision.kind === 'verifications') await verify(decision.id, decision.status as 'APPROVED' | 'REJECTED', reason);
+    else await moderate(decision.kind, decision.id, decision.status, reason);
+    setDecision(null);
   }
 
   return (
@@ -306,14 +312,14 @@ export default function AdminHome() {
                   <div className="actions">
                     <button
                       disabled={busy}
-                      onClick={() => void verify(item.id, 'APPROVED')}
+                      onClick={() => setDecision({ kind: 'verifications', id: item.id, status: 'APPROVED', title: `${item.legalName} verification tasdig‘i` })}
                     >
                       Tasdiqlash
                     </button>
                     <button
                       className="danger"
                       disabled={busy}
-                      onClick={() => void verify(item.id, 'REJECTED')}
+                      onClick={() => setDecision({ kind: 'verifications', id: item.id, status: 'REJECTED', title: `${item.legalName} verification rad etilishi` })}
                     >
                       Rad etish
                     </button>
@@ -335,7 +341,7 @@ export default function AdminHome() {
                     <button
                       disabled={busy}
                       onClick={() =>
-                        void moderate('stores', store.publicId, 'ACTIVE')
+                        setDecision({ kind: 'stores', id: store.publicId, status: 'ACTIVE', title: `${store.nameUz} do‘konini tasdiqlash` })
                       }
                     >
                       Tasdiqlash
@@ -344,7 +350,7 @@ export default function AdminHome() {
                       className="danger"
                       disabled={busy}
                       onClick={() =>
-                        void moderate('stores', store.publicId, 'RESTRICTED')
+                        setDecision({ kind: 'stores', id: store.publicId, status: 'RESTRICTED', title: `${store.nameUz} do‘konini cheklash` })
                       }
                     >
                       Cheklash
@@ -367,7 +373,7 @@ export default function AdminHome() {
                     <button
                       disabled={busy}
                       onClick={() =>
-                        void moderate('listings', listing.publicId, 'ACTIVE')
+                        setDecision({ kind: 'listings', id: listing.publicId, status: 'ACTIVE', title: `${listing.nameUz} mahsulotini tasdiqlash` })
                       }
                     >
                       Tasdiqlash
@@ -376,7 +382,7 @@ export default function AdminHome() {
                       className="danger"
                       disabled={busy}
                       onClick={() =>
-                        void moderate('listings', listing.publicId, 'REJECTED')
+                        setDecision({ kind: 'listings', id: listing.publicId, status: 'REJECTED', title: `${listing.nameUz} mahsulotini rad etish` })
                       }
                     >
                       Rad etish
@@ -388,6 +394,7 @@ export default function AdminHome() {
           </section>
         </>
       )}
+      {decision && <div className="admin-dialog-backdrop" role="presentation"><form className="admin-dialog" role="dialog" aria-modal="true" aria-label="Moderatsiya qarori" onSubmit={submitDecision}><h2 className="text-xl font-black">{decision.title}</h2><p className="mt-2 text-sm text-slate-300">Sabab operator va audit tarixida saqlanadi.</p><textarea className="mt-4 w-full rounded-xl border border-white/10 bg-slate-950 p-3" name="reason" minLength={3} required rows={4} autoFocus /><div className="mt-4 flex gap-2"><button className="rs-button" disabled={busy}>Qarorni tasdiqlash</button><button type="button" onClick={() => setDecision(null)}>Bekor</button></div></form></div>}
     </main>
   );
 }

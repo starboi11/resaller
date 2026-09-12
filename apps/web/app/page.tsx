@@ -26,11 +26,10 @@ export default function Home() {
             <Link className="rs-button" href="/marketplace">Mahsulotlarni ko‘rish <b>→</b></Link>
             <Link className="rs-button rs-button--ghost" href="/seller/manage">Sotishni boshlash</Link>
           </div>
-          <div className="market-hero__stats">
-            <span><b>100K+</b> Faol foydalanuvchilar</span>
-            <span><b>5K+</b> Ishonchli do‘konlar</span>
-            <span><b>250K+</b> Mahsulotlar</span>
-            <span><b>99%</b> Xaridorlar qoniqishi</span>
+          <div className="market-hero__stats" aria-label="Platforma tamoyillari">
+            <span><b>0%</b> Marketplace komissiyasi</span>
+            <span><b>60 daqiqa</b> Seller tasdiqlashi</span>
+            <span><b>Shaffof</b> Buyurtma tarixi</span>
           </div>
         </div>
         <div className="hero-emblem" aria-hidden="true"><span>R</span></div>
@@ -64,9 +63,9 @@ export default function Home() {
         <div className="trusted-stores">{[['R','STARBOY','4.9 (1.2K)','Trusted'],['UZ','UZ_Sneakers','4.8 (642)','Top Seller'],['TS','TechStore','4.9 (2.1K)','Trusted'],['GU','GadgetUz','4.7 (690)','Verified']].map(([mark,name,rating,badge]) => <Link href={`/store/${name}`} key={name}><i>{mark}</i><span><b>{name}</b><small>★ {rating}</small><em>✓ {badge}</em></span></Link>)}</div>
       </section>
 
-      <section className="shell home-banners"><div><h2>Resaller ilovasini yuklab oling</h2><p>Har doim, har yerda, siz bilan.</p><span> App Store</span><span>▶ Google Play</span></div><div><h2>Yangi sellerlarga imkoniyat</h2><p>Biz bilan sotishni boshlang va o‘z mijozlaringizni toping.</p><Link href="/seller/manage">Sotishni boshlash →</Link></div></section>
+      <section className="shell home-banners"><div><h2>Har qanday qurilmada qulay</h2><p>Resaller mobil-first web tajribasi telefon, planshet va desktopda ishlaydi.</p><Link href="/marketplace">Marketplace’ni ochish →</Link></div><div><h2>Yangi sellerlarga imkoniyat</h2><p>0% marketplace komissiyasi bilan o‘z mijozlaringizni toping.</p><Link href="/seller/manage">Sotishni boshlash →</Link></div></section>
       <section className="shell trust-strip"><span>▱ <b>Tez yetkazib berish</b></span><span>♜ <b>Ishonchli do‘konlar</b></span><span>♢ <b>Xavfsiz savdo</b></span><span>◉ <b>24/7 qo‘llab-quvvatlash</b></span></section>
-      <footer className="market-footer shell"><div><strong>RESALLER</strong><p>Sotib ol · Sot · O‘s</p></div><div><b>Kompaniya</b><a>Biz haqimizda</a><a>Karyera</a><a>Blog</a></div><div><b>Yordam</b><a>Savollar</a><a>Qoidalar</a><a>Maxfiylik siyosati</a></div><div><b>Sotuvchi uchun</b><Link href="/seller/manage">Sotishni boshlash</Link><a>Qo‘llanmalar</a></div></footer>
+      <footer className="market-footer shell"><div><strong>RESALLER</strong><p>Sotib ol · Sot · O‘s</p></div><div><b>Marketplace</b><Link href="/marketplace">Mahsulotlar</Link><Link href="/categories">Kategoriyalar</Link><Link href="/favorites">Sevimlilar</Link></div><div><b>Hisob</b><Link href="/orders">Buyurtmalar</Link><Link href="/account">Xavfsizlik</Link><Link href="/recovery">Hisobni tiklash</Link></div><div><b>Sotuvchi uchun</b><Link href="/seller/manage">Sotishni boshlash</Link><Link href="/seller">Action Center</Link><small>Legal hujjatlar launchdan oldin e’lon qilinadi.</small></div></footer>
     </main>
   );
 }

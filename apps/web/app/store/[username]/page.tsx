@@ -1,6 +1,7 @@
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { demoStores } from '../../lib/demo-catalog';
+import { StoreActions } from '../store-actions';
+import { StoreCatalog } from '../store-catalog';
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
 type Store = {
   publicId: string;
@@ -9,6 +10,7 @@ type Store = {
   descriptionUz?: string | null;
   vacationMode: boolean;
   sellerProfile: { trustBadge: string; verifiedAt?: string | null };
+  questions?: { id: string; body: string; answer?: { body: string } | null; listing?: { nameUz: string } | null }[];
   importedTestimonials?: {
     id: string;
     sourceLabel: string;
@@ -36,7 +38,7 @@ export default async function StorePage({
     `${API}/stores/${encodeURIComponent(username)}`,
     { cache: 'no-store' },
   ).catch(() => null);
-  const fallback = demoStores[username as keyof typeof demoStores];
+  const fallback = process.env.NODE_ENV === 'development' ? demoStores[username as keyof typeof demoStores] : undefined;
   if (response?.status === 404 && !fallback) notFound();
   if (!response?.ok && !fallback) throw new Error('Store unavailable');
   const store = response?.ok ? (await response.json()) as Store : fallback as Store;
@@ -56,9 +58,9 @@ export default async function StorePage({
               </p>
               </div>
             </div>
-            <div className="store-hero__actions"><span>✓ {store.sellerProfile.trustBadge.replaceAll('_', ' ')}</span><button>+ Kuzatish</button><button>Ulashish</button></div>
+            <StoreActions publicId={store.publicId} trustBadge={store.sellerProfile.trustBadge} />
           </div>
-          <div className="store-stats"><span><b>4.9</b> 1.2K sharh</span><span><b>1,284</b> Buyurtma</span><span><b>98%</b> Muvaffaqiyat</span><span><b>2 yil</b> Resaller’da</span><span><b>Toshkent</b> Joylashuv</span></div>
+          <div className="store-stats"><span><b>{store.listings.length}</b> faol mahsulot</span><span><b>{store.listings.reduce((sum, item) => sum + item.variants.reduce((total, variant) => total + (variant.inventory?.available ?? 0), 0), 0)}</b> dona mavjud</span><span><b>{store.importedTestimonials?.length ?? 0}</b> manbasi ko‘rsatilgan fikr</span><span><b>{store.sellerProfile.verifiedAt ? 'Ha' : 'Yo‘q'}</b> shaxs tasdig‘i</span></div>
           {store.vacationMode && (
             <p className="mt-5 rounded-xl bg-amber-100 p-3 text-sm font-bold text-amber-900">
               Do‘kon hozir ta’tilda. Javob kechikishi mumkin.
@@ -67,38 +69,7 @@ export default async function StorePage({
         </div>
       </section>
       <section className="shell py-10">
-        <nav className="store-tabs"><b>Mahsulotlar ({store.listings.length})</b><span>Kategoriyalar</span><span>Aksiyalar</span><span>Savol-javob</span><span>Sharhlar</span><span>Do‘kon haqida</span></nav>
-        <div className="store-products-head"><h2 className="text-2xl font-black">Mahsulotlar</h2><input aria-label="Do‘kondan qidirish" placeholder="Do‘kondan mahsulot qidiring..." /></div>
-        <div className="store-products mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
-          {store.listings.map((item) => (
-            <Link
-              className="surface overflow-hidden"
-              href={`/product/${item.publicId}`}
-              key={item.publicId}
-            >
-              {item.media[0] ? (
-                <img
-                  className="aspect-[4/3] w-full object-cover"
-                  src={`${API}/media/${item.media[0].thumbnailStorageKey ?? item.media[0].storageKey}`}
-                  alt={item.nameUz}
-                />
-              ) : (
-                <div className="aspect-[4/3] product-art product-art--phone"><span /></div>
-              )}
-              <div className="p-4">
-                <h3 className="font-black">{item.nameUz}</h3>
-                <p className="mt-2 text-sm font-bold">
-                  {Number(item.priceMinor).toLocaleString('uz-UZ')}{' '}
-                  {item.currency}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
-        <section className="store-testimonials mt-12">
-          <div><p className="eyebrow">Tashqi platformalardan</p><h2 className="mt-2 text-2xl font-black">Import qilingan fikrlar</h2><p className="muted mt-2 text-sm">Bu fikrlar Resaller buyurtmasi orqali tasdiqlanmagan va manbasi alohida ko‘rsatiladi.</p></div>
-          {(store.importedTestimonials?.length ?? 0) > 0 ? <div className="mt-5 grid gap-4 md:grid-cols-3">{store.importedTestimonials?.map((item) => <article className="surface p-5" key={item.id}><span className="testimonial-source">IMPORT · {item.sourceLabel}</span><p className="mt-4 leading-relaxed">“{item.body}”</p><b className="mt-4 block text-sm">{item.authorLabel}</b></article>)}</div> : <div className="surface mt-5 p-5"><p className="muted text-sm">Hozircha import qilingan fikr yo‘q. Resaller ichidagi tasdiqlangan sharhlar doimo alohida ko‘rsatiladi.</p></div>}
-        </section>
+        <StoreCatalog listings={store.listings} questions={store.questions} testimonials={store.importedTestimonials} description={store.descriptionUz} />
       </section>
     </main>
   );

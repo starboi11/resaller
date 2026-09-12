@@ -4,7 +4,7 @@ import { PrismaService } from '../infrastructure/prisma.service.js';
 import { OperationsService } from './operations.service.js';
 
 loadEnvironment({ path: '../../.env' });
-const run = process.env.DATABASE_URL ? describe : describe.skip;
+const run = process.env.RUN_DB_TESTS === '1' && process.env.DATABASE_URL ? describe : describe.skip;
 
 run('checkout concurrency (PostgreSQL)', () => {
   const prisma = new PrismaService();

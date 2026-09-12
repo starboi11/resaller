@@ -137,3 +137,6 @@ button:disabled {
     transition-duration: 0.01ms !important;
   }
 }
+
+.admin-dialog-backdrop { position:fixed; inset:0; z-index:50; display:grid; place-items:center; padding:1rem; background:rgb(2 6 23 / .78); backdrop-filter:blur(8px); }
+.admin-dialog { width:min(42rem,100%); max-height:85vh; overflow:auto; border:1px solid rgb(255 255 255 / .12); border-radius:1.2rem; background:#0f172a; padding:1.4rem; box-shadow:0 30px 100px rgb(0 0 0 / .5); }

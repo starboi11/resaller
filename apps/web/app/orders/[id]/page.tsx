@@ -10,6 +10,13 @@ type Order = {
   totalMinor: string;
   currency: string;
   createdAt: string;
+  sellerAcceptBy: string;
+  viewerId: string;
+  viewerRole: 'BUYER' | 'SELLER';
+  snapshot?: Record<string, unknown>;
+  changes?: { id: string; kind: string; before?: unknown; after?: unknown; createdAt: string }[];
+  policySnapshots?: { id: string; policyType: string; version: number; content: unknown }[];
+  review?: { id: string; rating: number } | null;
   store: { nameUz: string; username: string };
   items: {
     id: string;
@@ -26,6 +33,7 @@ type Order = {
 };
 type Message = {
   id: string;
+  senderId: string;
   body?: string;
   createdAt: string;
   attachments?: { id: string; fileName: string }[];
@@ -39,6 +47,11 @@ export default function OrderDetail({
   const [order, setOrder] = useState<Order | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [error, setError] = useState('');
+  const [connection, setConnection] = useState<'connecting'|'live'|'offline'>('connecting');
+  const [uploadState, setUploadState] = useState('');
+  const [actionMode, setActionMode] = useState<string | null>(null);
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => { const timer = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(timer); }, []);
   useEffect(() => {
     void params.then((value) => setId(value.id));
   }, [params]);
@@ -69,6 +82,8 @@ export default function OrderDetail({
     const stream = new EventSource(`${API}/orders/${id}/messages/stream`, {
       withCredentials: true,
     });
+    stream.onopen = () => setConnection('live');
+    stream.onerror = () => setConnection('offline');
     stream.addEventListener('messages', (event) => {
       try {
         setMessages(JSON.parse((event as MessageEvent).data) as Message[]);
@@ -98,34 +113,47 @@ export default function OrderDetail({
       const created = (await response.json()) as { id: string };
       const file = data.get('file');
       if (file instanceof File && file.size > 0) {
+        setUploadState('Fayl yuklanmoqda…');
         const upload = new FormData();
         upload.set('file', file);
-        await fetch(`${API}/media/messages/${created.id}/attachment`, {
-          method: 'POST',
-          credentials: 'include',
-          body: upload,
+        const uploaded = await new Promise<boolean>((resolve) => {
+          const request = new XMLHttpRequest();
+          request.open('POST', `${API}/media/messages/${created.id}/attachment`);
+          request.withCredentials = true;
+          request.upload.onprogress = (progress) => { if (progress.lengthComputable) setUploadState(`Fayl yuklanmoqda: ${Math.round((progress.loaded / progress.total) * 100)}%`); };
+          request.onload = () => resolve(request.status >= 200 && request.status < 300);
+          request.onerror = () => resolve(false);
+          request.send(upload);
         });
+        if (!uploaded) { setUploadState('Fayl yuklanmadi — faylni qayta tanlab urinib ko‘ring.'); return; }
+        setUploadState('Fayl yuklandi ✓');
       }
       form.reset();
       await load();
     }
   }
-  async function action(path: string) {
-    const reason = window.prompt('Sababni batafsil yozing');
+  async function action(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!actionMode) return;
+    const reason = String(new FormData(event.currentTarget).get('reason') ?? '').trim();
     if (!reason || reason.trim().length < 3) return;
+    const directCancel = actionMode === 'cancel' && order?.status === 'WAITING_SELLER';
+    const path = directCancel ? 'transition' : actionMode === 'cancel' ? 'cancellation-request' : actionMode === 'return' ? 'return-request' : 'dispute';
     const response = await fetch(`${API}/orders/${id}/${path}`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ reason: reason.trim() }),
+      body: JSON.stringify(directCancel ? { to: 'CANCELLED', reason } : { reason }),
     });
-    if (response.ok) await load();
+    if (response.ok) { setActionMode(null); await load(); }
     else setError('Amalni bajarib bo‘lmadi.');
   }
-  async function review() {
-    const rating = Number(window.prompt('1 dan 5 gacha baho'));
+  async function review(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const rating = Number(data.get('rating'));
     if (!Number.isInteger(rating) || rating < 1 || rating > 5) return;
-    const body = window.prompt('Sharh (ixtiyoriy)') ?? undefined;
+    const body = String(data.get('body') ?? '').trim() || undefined;
     const response = await fetch(`${API}/orders/${id}/review`, {
       method: 'POST',
       credentials: 'include',
@@ -134,6 +162,14 @@ export default function OrderDetail({
     });
     if (response.ok) await load();
     else setError('Sharh faqat yakunlangan buyurtmaga bir marta yoziladi.');
+  }
+  async function sellerTransition(to: string) {
+    const response = await fetch(`${API}/orders/${id}/transition`, { method: 'POST', credentials: 'include', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ to }) });
+    if (response.ok) await load(); else setError('Bu holatga o‘tishga ruxsat yo‘q.');
+  }
+  async function decideCancellation(approved: boolean) {
+    const response = await fetch(`${API}/orders/${id}/cancellation-decision`, { method: 'POST', credentials: 'include', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ approved, reason: approved ? 'Seller approved buyer request' : 'Seller rejected buyer request' }) });
+    if (response.ok) await load(); else setError('Bekor qilish so‘roviga qaror saqlanmadi.');
   }
   if (error && !order)
     return (
@@ -156,6 +192,12 @@ export default function OrderDetail({
         <p className="muted">Buyurtma yuklanmoqda…</p>
       </main>
     );
+  const remaining = Math.max(0, new Date(order.sellerAcceptBy).getTime() - now);
+  const canCancel = ['WAITING_SELLER','ACCEPTED','PREPARING','READY'].includes(order.status) && order.viewerRole === 'BUYER';
+  const canReturn = ['DELIVERED','COMPLETED'].includes(order.status) && order.viewerRole === 'BUYER';
+  const canDispute = !['CANCELLED','REJECTED','TIMEOUT'].includes(order.status);
+  const sellerNext: Record<string, string> = { WAITING_SELLER: 'ACCEPTED', ACCEPTED: 'PREPARING', PREPARING: 'READY', READY: 'SHIPPED', SHIPPED: 'DELIVERED', DELIVERED: 'COMPLETED' };
+  const pendingCancellation = order.changes?.find((item) => item.kind === 'CANCELLATION_REQUEST' && typeof item.after === 'object' && item.after !== null && (item.after as { status?: string }).status === 'PENDING');
   return (
     <main className="shell py-10 buyer-workspace order-detail-workspace">
       <Link className="muted text-sm" href="/orders">
@@ -174,6 +216,7 @@ export default function OrderDetail({
           {order.status}
         </span>
       </div>
+      {order.status === 'WAITING_SELLER' && <div className="acceptance-clock mt-5" role="timer"><b>Sotuvchi tasdig‘i uchun qolgan vaqt</b><strong>{String(Math.floor(remaining / 60000)).padStart(2,'0')}:{String(Math.floor((remaining % 60000) / 1000)).padStart(2,'0')}</strong><small>60 daqiqada javob bo‘lmasa buyurtma avtomatik yopiladi.</small></div>}
       {error && (
         <p className="mt-4 text-sm text-[var(--danger)]" role="alert">
           {error}
@@ -221,33 +264,27 @@ export default function OrderDetail({
               ))}
             </ol>
           </section>
+          {(order.policySnapshots?.length ?? 0) > 0 && <section className="surface p-5"><h2 className="text-lg font-black">Buyurtmada saqlangan qoidalar</h2>{order.policySnapshots?.map((item) => <details className="mt-3" key={item.id}><summary>{item.policyType} · v{item.version}</summary><pre className="muted mt-2 whitespace-pre-wrap text-xs">{JSON.stringify(item.content, null, 2)}</pre></details>)}</section>}
+          {(order.changes?.length ?? 0) > 0 && <section className="surface p-5"><h2 className="text-lg font-black">O‘zgarish so‘rovlari</h2>{order.changes?.map((item) => <article className="mt-3 rounded-xl bg-[var(--surface-2)] p-3" key={item.id}><b>{item.kind}</b><p className="muted text-xs">{new Date(item.createdAt).toLocaleString('uz-UZ')}</p></article>)}</section>}
           <div className="flex flex-wrap gap-2">
-            {[
-              ['cancellation-request', 'Bekor qilish'],
-              ['return-request', 'Qaytarish'],
-              ['dispute', 'Nizo ochish'],
-            ].map(([path, label]) => (
-              <button
-                key={path}
-                className="rounded-full border border-[var(--line)] px-4 py-2 text-sm font-bold"
-                onClick={() => void action(path!)}
-              >
-                {label}
-              </button>
-            ))}
-            <button
+            {canCancel && <button className="rounded-full border border-[var(--line)] px-4 py-2 text-sm font-bold" onClick={() => setActionMode('cancel')}>Bekor qilish</button>}
+            {canReturn && <button className="rounded-full border border-[var(--line)] px-4 py-2 text-sm font-bold" onClick={() => setActionMode('return')}>Qaytarish</button>}
+            {canDispute && <button className="rounded-full border border-[var(--line)] px-4 py-2 text-sm font-bold" onClick={() => setActionMode('dispute')}>Nizo ochish</button>}
+            {order.status === 'COMPLETED' && !order.review && <button
               className="rounded-full border border-[var(--line)] px-4 py-2 text-sm font-bold"
-              onClick={() => void review()}
+              onClick={() => setActionMode('review')}
             >
               Sharh yozish
-            </button>
+            </button>}
           </div>
+          {order.viewerRole === 'SELLER' && sellerNext[order.status] && <section className="surface p-4"><h2 className="font-black">Keyingi ruxsat etilgan amal</h2><button className="rs-button mt-3" onClick={() => void sellerTransition(sellerNext[order.status]!)}>{sellerNext[order.status]} holatiga o‘tkazish</button></section>}
+          {order.viewerRole === 'SELLER' && pendingCancellation && <section className="surface p-4"><h2 className="font-black">Xaridorning bekor qilish so‘rovi</h2><p className="muted mt-2 text-sm">{String((pendingCancellation.after as { reason?: string }).reason ?? 'Sabab ko‘rsatilmagan')}</p><div className="mt-3 flex gap-2"><button className="rs-button" onClick={() => void decideCancellation(true)}>Tasdiqlash</button><button className="rounded-full border border-[var(--line)] px-4 font-bold" onClick={() => void decideCancellation(false)}>Rad etish</button></div></section>}
+          {actionMode && actionMode !== 'review' && <form className="surface action-form p-4" onSubmit={action}><label htmlFor="action-reason" className="font-black">Sabab</label><textarea id="action-reason" name="reason" minLength={3} required rows={3} placeholder="Qaroringiz sababini yozing"/><div className="flex gap-2"><button className="rs-button">Tasdiqlash</button><button type="button" onClick={() => setActionMode(null)}>Bekor</button></div></form>}
+          {actionMode === 'review' && <form className="surface action-form p-4" onSubmit={review}><label htmlFor="rating" className="font-black">Baho</label><select id="rating" name="rating" defaultValue="5">{[5,4,3,2,1].map((value) => <option key={value} value={value}>{value} yulduz</option>)}</select><label htmlFor="review-body">Sharh</label><textarea id="review-body" name="body" rows={3}/><div className="flex gap-2"><button className="rs-button">Sharhni yuborish</button><button type="button" onClick={() => setActionMode(null)}>Bekor</button></div></form>}
         </div>
         <section className="surface private-chat flex min-h-[32rem] flex-col p-5">
           <h2 className="text-lg font-black">Xususiy chat</h2>
-          <p className="muted text-sm">
-            Faqat buyurtma ishtirokchilari ko‘radi.
-          </p>
+          <p className="muted text-sm">Faqat buyurtma ishtirokchilari ko‘radi. <span className={`connection-state connection-state--${connection}`}>{connection === 'live' ? '● Jonli' : connection === 'connecting' ? '○ Ulanmoqda' : '○ Aloqa tiklanmoqda'}</span></p>
           <div
             className="mt-5 flex-1 space-y-3 overflow-y-auto"
             aria-live="polite"
@@ -257,7 +294,7 @@ export default function OrderDetail({
             )}
             {messages.map((message) => (
               <article
-                className="max-w-[85%] rounded-2xl bg-[var(--surface-2)] p-3"
+                className={`chat-bubble ${message.senderId === order.viewerId ? 'chat-bubble--mine' : 'chat-bubble--theirs'}`}
                 key={message.id}
               >
                 <p className="text-sm">{message.body}</p>
@@ -276,6 +313,7 @@ export default function OrderDetail({
               </article>
             ))}
           </div>
+          {uploadState && <p className="text-xs font-bold" role="status">{uploadState}</p>}
           <form
             className="mt-4 grid grid-cols-[1fr_auto] gap-2"
             onSubmit={send}

@@ -199,6 +199,31 @@ export class AdminService {
       },
     });
   }
+  async orders() {
+    const rows = await this.prisma.order.findMany({
+      take: 100,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        buyer: { select: { publicId: true, username: true } },
+        store: { select: { publicId: true, username: true, nameUz: true } },
+        _count: { select: { items: true, changes: true } },
+      },
+    });
+    return rows.map((order) => ({ ...order, totalMinor: order.totalMinor.toString(), subtotalMinor: order.subtotalMinor.toString(), discountMinor: order.discountMinor.toString() }));
+  }
+  riskEvents() {
+    return this.prisma.riskEvent.findMany({ take: 200, orderBy: [{ reviewedAt: 'asc' }, { score: 'desc' }, { createdAt: 'desc' }] });
+  }
+  async reviewRisk(actor: AuthenticatedUser, id: string, resolution: string) {
+    return this.prisma.$transaction(async (tx) => {
+      const event = await tx.riskEvent.findUnique({ where: { id } });
+      if (!event) throw new NotFoundException('Risk event not found');
+      if (event.reviewedAt) throw new ConflictException('Risk event was already reviewed');
+      const updated = await tx.riskEvent.update({ where: { id }, data: { reviewedAt: new Date(), metadata: { ...(event.metadata && typeof event.metadata === 'object' && !Array.isArray(event.metadata) ? event.metadata : {}), resolution } }, select: { id: true, reviewedAt: true } });
+      await tx.auditLog.create({ data: { actorId: actor.id, action: 'RISK_EVENT_REVIEWED', targetType: 'RiskEvent', targetId: id, reason: resolution, metadata: { score: event.score, signal: event.signal } } });
+      return updated;
+    });
+  }
 
   questionReports() {
     return this.prisma.questionReport.findMany({

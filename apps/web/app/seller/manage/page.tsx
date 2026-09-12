@@ -17,6 +17,7 @@ type Store = {
     answer?: { id: string; body: string } | null;
     listing?: { nameUz: string } | null;
   }[];
+  importedTestimonials: { id: string; sourceLabel: string; authorLabel: string; body: string; createdAt: string }[];
   listings: {
     publicId: string;
     nameUz: string;
@@ -34,6 +35,9 @@ export default function SellerManage() {
   const [stores, setStores] = useState<Store[] | null>(null);
   const [message, setMessage] = useState('');
   const [login, setLogin] = useState(false);
+  const [wizardStep, setWizardStep] = useState(1);
+  const [editTarget, setEditTarget] = useState<Store['listings'][number] | null>(null);
+  const [answerTarget, setAnswerTarget] = useState<string | null>(null);
   const load = useCallback(async () => {
     const response = await fetch(`${API}/seller/stores`, {
       credentials: 'include',
@@ -167,16 +171,25 @@ export default function SellerManage() {
     )
       form.reset();
   }
-  async function editListing(item: Store['listings'][number]) {
-    const nameUz = window.prompt('Mahsulot nomi', item.nameUz);
-    if (!nameUz) return;
-    const price = window.prompt('Narx', item.priceMinor);
-    if (price === null || !Number.isFinite(Number(price))) return;
+  async function addTestimonial(event: FormEvent<HTMLFormElement>, storeId: string) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    if (await post(`stores/${storeId}/testimonials`, { sourceLabel: data.get('sourceLabel'), authorLabel: data.get('authorLabel'), body: data.get('body') })) form.reset();
+  }
+  async function editListing(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!editTarget) return;
+    const data = new FormData(event.currentTarget);
+    const nameUz = String(data.get('nameUz') ?? '').trim();
+    const price = Number(data.get('priceMinor'));
+    if (!nameUz || !Number.isFinite(price)) return;
     await post(
-      `listings/${item.publicId}`,
+      `listings/${editTarget.publicId}`,
       { nameUz, priceMinor: Number(price) },
       'PATCH',
     );
+    setEditTarget(null);
   }
   async function addVariant(
     event: FormEvent<HTMLFormElement>,
@@ -197,10 +210,13 @@ export default function SellerManage() {
     )
       form.reset();
   }
-  async function answerQuestion(questionId: string) {
-    const body = window.prompt('Savolga javob');
-    if (!body?.trim()) return;
-    await post(`questions/${questionId}/answer`, { body: body.trim() });
+  async function answerQuestion(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!answerTarget) return;
+    const body = String(new FormData(event.currentTarget).get('body') ?? '').trim();
+    if (!body) return;
+    await post(`questions/${answerTarget}/answer`, { body });
+    setAnswerTarget(null);
   }
   if (login)
     return (
@@ -339,10 +355,13 @@ export default function SellerManage() {
           </div>
           <div className="mt-6 grid gap-6 lg:grid-cols-2">
             <form
-              className="grid gap-3 rounded-2xl bg-[var(--surface-2)] p-4"
+              className="product-wizard grid gap-3 rounded-2xl bg-[var(--surface-2)] p-4"
               onSubmit={(event) => void createListing(event, store.publicId)}
+              onChange={(event) => { const form = event.currentTarget; const values = Object.fromEntries(new FormData(form).entries()); localStorage.setItem(`resaller-draft-${store.publicId}`, JSON.stringify(values)); setMessage('Draft avtomatik saqlandi.'); }}
             >
-              <h3 className="font-black">Yangi mahsulot</h3>
+              <div><h3 className="font-black">Yangi mahsulot</h3><p className="muted text-xs">4 bosqich · draft avtomatik saqlanadi</p></div>
+              <ol className="wizard-steps">{['Tafsilotlar','Media','Narx va variant','Ko‘rish/publish'].map((label,index) => <li key={label} className={wizardStep === index + 1 ? 'is-active' : wizardStep > index + 1 ? 'is-done' : ''}><button type="button" onClick={() => setWizardStep(index + 1)}>{index + 1}. {label}</button></li>)}</ol>
+              <fieldset hidden={wizardStep !== 1} className="grid gap-3"><legend className="sr-only">Tafsilotlar</legend>
               <input
                 className="field"
                 name="nameUz"
@@ -357,7 +376,10 @@ export default function SellerManage() {
                 minLength={10}
                 placeholder="Batafsil tavsif"
               />
-              <div className="grid grid-cols-2 gap-3">
+              <input className="field" name="categorySlug" placeholder="Kategoriya slug" />
+              <button type="button" className="rs-button" onClick={() => setWizardStep(2)}>Media bosqichi →</button></fieldset>
+              <fieldset hidden={wizardStep !== 2} className="grid gap-3"><legend className="sr-only">Media</legend><div className="media-dropzone"><b>Rasmlarni draft yaratilgach yuklaysiz</b><p className="muted text-sm">JPG, PNG yoki WebP. Tizim siqadi va thumbnail yaratadi; mahsulot kartasidan tartib va variant media boshqariladi.</p></div><div className="flex justify-between"><button type="button" onClick={() => setWizardStep(1)}>← Orqaga</button><button type="button" className="rs-button" onClick={() => setWizardStep(3)}>Narx va variant →</button></div></fieldset>
+              <fieldset hidden={wizardStep !== 3} className="grid gap-3"><legend className="sr-only">Narx, stock va variant</legend><div className="grid grid-cols-2 gap-3">
                 <input
                   className="field"
                   name="priceMinor"
@@ -382,13 +404,10 @@ export default function SellerManage() {
                   required
                   placeholder="SKU"
                 />
-                <input
-                  className="field"
-                  name="categorySlug"
-                  placeholder="Kategoriya slug"
-                />
+                <input className="field" name="deliveryOverride" placeholder="Delivery override (ixtiyoriy)" />
               </div>
-              <button className="rs-button">Draft yaratish</button>
+              <div className="flex justify-between"><button type="button" onClick={() => setWizardStep(2)}>← Orqaga</button><button type="button" className="rs-button" onClick={() => setWizardStep(4)}>Preview →</button></div></fieldset>
+              <fieldset hidden={wizardStep !== 4} className="grid gap-3"><legend className="sr-only">Preview va publish</legend><div className="product-preview"><span>DESKTOP / MOBILE PREVIEW</span><b>Draftdagi mahsulot</b><p className="muted text-sm">Yaratilgach rasm qo‘shing, barcha variantlarni tekshiring va moderatsiyaga yuboring.</p></div><div className="flex justify-between"><button type="button" onClick={() => setWizardStep(3)}>← Orqaga</button><button className="rs-button">Draft yaratish</button></div></fieldset>
             </form>
             <div>
               <h3 className="font-black">
@@ -432,7 +451,7 @@ export default function SellerManage() {
                     </button>
                     <button
                       className="ml-4 mt-3 text-sm font-black"
-                      onClick={() => void editListing(item)}
+                      onClick={() => setEditTarget(item)}
                     >
                       Tahrirlash
                     </button>
@@ -573,7 +592,7 @@ export default function SellerManage() {
                   ) : (
                     <button
                       className="mt-3 text-sm font-black text-[var(--brand-strong)]"
-                      onClick={() => void answerQuestion(question.id)}
+                      onClick={() => setAnswerTarget(question.id)}
                     >
                       Javob berish
                     </button>
@@ -582,8 +601,14 @@ export default function SellerManage() {
               ))}
             </div>
           </div>
+          <div className="mt-6 grid gap-5 lg:grid-cols-2">
+            <form className="grid gap-3 rounded-2xl bg-[var(--surface-2)] p-4" onSubmit={(event) => void addTestimonial(event, store.publicId)}><h3 className="font-black">Import qilingan fikr</h3><p className="muted text-sm">Faqat ruxsat bilan olingan fikrni manbasi bilan kiriting. U verified review sifatida ko‘rsatilmaydi.</p><input className="field" name="sourceLabel" minLength={2} required placeholder="Manba, masalan Telegram"/><input className="field" name="authorLabel" minLength={2} required placeholder="Muallif nomi"/><textarea className="field min-h-24" name="body" minLength={3} maxLength={1000} required placeholder="Fikr matni"/><button className="rs-button">Import fikrni saqlash</button></form>
+            <section><h3 className="font-black">Saqlangan import fikrlar ({store.importedTestimonials.length})</h3><div className="mt-3 grid gap-3">{store.importedTestimonials.map((item) => <article className="rounded-2xl border border-[var(--line)] p-4" key={item.id}><span className="testimonial-source">IMPORT · {item.sourceLabel}</span><p className="mt-2 text-sm">{item.body}</p><div className="mt-3 flex justify-between"><b className="text-sm">{item.authorLabel}</b><button className="text-sm font-black text-[var(--danger)]" onClick={() => void post(`stores/${store.publicId}/testimonials/${item.id}`, {}, 'DELETE')}>O‘chirish</button></div></article>)}{!store.importedTestimonials.length && <p className="muted text-sm">Import fikr yo‘q.</p>}</div></section>
+          </div>
         </section>
       ))}
+      {editTarget && <div className="dialog-backdrop" role="presentation"><form className="surface app-dialog" role="dialog" aria-modal="true" aria-label="Mahsulotni tahrirlash" onSubmit={editListing}><h2 className="text-xl font-black">Mahsulotni tahrirlash</h2><label>Mahsulot nomi<input className="field" name="nameUz" defaultValue={editTarget.nameUz} minLength={2} required /></label><label>Narx<input className="field" name="priceMinor" type="number" min="0" defaultValue={editTarget.priceMinor} required /></label><div className="flex gap-2"><button className="rs-button">Saqlash</button><button type="button" onClick={() => setEditTarget(null)}>Bekor</button></div></form></div>}
+      {answerTarget && <div className="dialog-backdrop" role="presentation"><form className="surface app-dialog" role="dialog" aria-modal="true" aria-label="Savolga javob" onSubmit={answerQuestion}><h2 className="text-xl font-black">Savolga javob</h2><textarea className="field min-h-28" name="body" minLength={2} maxLength={2000} required autoFocus /><div className="flex gap-2"><button className="rs-button">Javobni yuborish</button><button type="button" onClick={() => setAnswerTarget(null)}>Bekor</button></div></form></div>}
     </main>
   );
 }
