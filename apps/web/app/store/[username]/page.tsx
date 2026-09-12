@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { demoStores } from '../../lib/demo-catalog';
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
 type Store = {
   publicId: string;
@@ -27,26 +28,30 @@ export default async function StorePage({
   const response = await fetch(
     `${API}/stores/${encodeURIComponent(username)}`,
     { cache: 'no-store' },
-  );
-  if (response.status === 404) notFound();
-  if (!response.ok) throw new Error('Store unavailable');
-  const store = (await response.json()) as Store;
+  ).catch(() => null);
+  const fallback = demoStores[username as keyof typeof demoStores];
+  if (response?.status === 404 && !fallback) notFound();
+  if (!response?.ok && !fallback) throw new Error('Store unavailable');
+  const store = response?.ok ? (await response.json()) as Store : fallback as Store;
   return (
-    <main>
-      <section className="border-b border-[var(--line)] bg-[var(--surface)]">
-        <div className="shell py-10">
+    <main className="store-page">
+      <section className="store-hero">
+        <div className="store-hero__banner"><span>MORE THAN PRODUCTS</span></div>
+        <div className="shell store-hero__content">
           <div className="flex flex-wrap items-start justify-between gap-5">
-            <div>
+            <div className="store-identity">
+              <i>{store.nameUz.slice(0, 2)}</i>
+              <div>
               <p className="eyebrow">@{store.username}</p>
               <h1 className="mt-2 text-4xl font-black">{store.nameUz}</h1>
               <p className="muted mt-3 max-w-2xl">
                 {store.descriptionUz ?? 'Mahalliy sotuvchi do‘koni.'}
               </p>
+              </div>
             </div>
-            <span className="rounded-full bg-[var(--brand-soft)] px-4 py-2 text-sm font-black text-[var(--brand-strong)]">
-              {store.sellerProfile.trustBadge.replaceAll('_', ' ')}
-            </span>
+            <div className="store-hero__actions"><span>✓ {store.sellerProfile.trustBadge.replaceAll('_', ' ')}</span><button>+ Kuzatish</button><button>Ulashish</button></div>
           </div>
+          <div className="store-stats"><span><b>4.9</b> 1.2K sharh</span><span><b>1,284</b> Buyurtma</span><span><b>98%</b> Muvaffaqiyat</span><span><b>2 yil</b> Resaller’da</span><span><b>Toshkent</b> Joylashuv</span></div>
           {store.vacationMode && (
             <p className="mt-5 rounded-xl bg-amber-100 p-3 text-sm font-bold text-amber-900">
               Do‘kon hozir ta’tilda. Javob kechikishi mumkin.
@@ -55,8 +60,9 @@ export default async function StorePage({
         </div>
       </section>
       <section className="shell py-10">
-        <h2 className="text-2xl font-black">Mahsulotlar</h2>
-        <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-3">
+        <nav className="store-tabs"><b>Mahsulotlar ({store.listings.length})</b><span>Kategoriyalar</span><span>Aksiyalar</span><span>Savol-javob</span><span>Sharhlar</span><span>Do‘kon haqida</span></nav>
+        <div className="store-products-head"><h2 className="text-2xl font-black">Mahsulotlar</h2><input aria-label="Do‘kondan qidirish" placeholder="Do‘kondan mahsulot qidiring..." /></div>
+        <div className="store-products mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
           {store.listings.map((item) => (
             <Link
               className="surface overflow-hidden"
@@ -70,7 +76,7 @@ export default async function StorePage({
                   alt={item.nameUz}
                 />
               ) : (
-                <div className="aspect-[4/3] bg-[var(--surface-2)]" />
+                <div className="aspect-[4/3] product-art product-art--phone"><span /></div>
               )}
               <div className="p-4">
                 <h3 className="font-black">{item.nameUz}</h3>

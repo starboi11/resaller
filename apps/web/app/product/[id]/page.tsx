@@ -2,6 +2,7 @@ import { StatePanel } from '@resaller/ui';
 import { notFound } from 'next/navigation';
 import { AddToCart } from '../add-to-cart';
 import { ProductActions } from '../product-actions';
+import { demoListings } from '../../lib/demo-catalog';
 
 export const dynamic = 'force-dynamic';
 const api = process.env.NEXT_PUBLIC_API_URL ?? 'http://127.0.0.1:4000/api/v1';
@@ -37,8 +38,9 @@ export default async function ProductPage({
     `${api}/marketplace/listings/${encodeURIComponent(id)}`,
     { cache: 'no-store' },
   ).catch(() => null);
-  if (response?.status === 404) notFound();
-  if (!response?.ok)
+  const fallback = demoListings.find((item) => item.publicId === id);
+  if (response?.status === 404 && !fallback) notFound();
+  if (!response?.ok && !fallback)
     return (
       <main className="shell py-12">
         <StatePanel
@@ -48,7 +50,7 @@ export default async function ProductPage({
         />
       </main>
     );
-  const product = (await response.json()) as Product;
+  const product = response?.ok ? (await response.json()) as Product : fallback as Product;
   const stock = product.variants.reduce(
     (sum, variant) => sum + (variant.inventory?.available ?? 0),
     0,
@@ -58,13 +60,13 @@ export default async function ProductPage({
       (variant) => (variant.inventory?.available ?? 0) > 0,
     ) ?? product.variants[0];
   return (
-    <main className="shell py-8 sm:py-12">
+    <main className="product-detail shell py-8 sm:py-12">
       <nav className="muted mb-6 text-sm" aria-label="Breadcrumb">
         <a href="/marketplace">Marketplace</a> <span aria-hidden="true">/</span>{' '}
         {product.category.nameUz}
       </nav>
-      <div className="grid gap-8 lg:grid-cols-[1.05fr_.95fr]">
-        <section aria-label="Mahsulot rasmlari">
+      <div className="product-detail__layout grid gap-8 lg:grid-cols-[1.05fr_.95fr]">
+        <section className="product-gallery" aria-label="Mahsulot rasmlari">
           {product.media[0] ? (
             <img
               src={`${api}/media/${product.media[0].storageKey}`}
@@ -73,13 +75,13 @@ export default async function ProductPage({
             />
           ) : (
             <div
-              className="surface aspect-square bg-gradient-to-br from-emerald-100 via-teal-50 to-slate-100 dark:from-emerald-950 dark:via-teal-950 dark:to-slate-950"
+              className={`surface product-gallery__fallback product-art product-art--${id === 'demo-2' ? 'shoe' : id === 'demo-3' ? 'laptop' : id === 'demo-4' ? 'watch' : id === 'demo-5' ? 'headphones' : 'phone'}`}
               role="img"
               aria-label="Mahsulot rasmi mavjud emas"
-            />
+            ><span /></div>
           )}
         </section>
-        <section className="lg:py-3">
+        <section className="product-info lg:py-3">
           <div className="flex flex-wrap gap-2">
             <span className="rounded-full bg-[var(--brand-soft)] px-3 py-1 text-xs font-black text-[var(--brand-strong)]">
               {product.store.sellerProfile.trustBadge.replaceAll('_', ' ')}
@@ -119,7 +121,7 @@ export default async function ProductPage({
               </div>
             </div>
           )}
-          <div className="surface mt-7 p-5">
+          <a href={`/store/${product.store.username}`} className="surface seller-summary mt-7 p-5">
             <div className="flex items-center justify-between gap-4">
               <div>
                 <p className="font-black">{product.store.nameUz}</p>
@@ -129,8 +131,8 @@ export default async function ProductPage({
                 Do‘kon →
               </span>
             </div>
-          </div>
-          <div className="mt-7">
+          </a>
+          <div className="product-buybar mt-7">
             <AddToCart
               listingPublicId={product.publicId}
               variantId={firstAvailable?.id ?? ''}
