@@ -14,3 +14,5 @@ uploads/*
 apps/api/data/media/*
 apps/api/data/private-media/*
 .tmp-backup-drill*/
+test-results/
+playwright-report/
