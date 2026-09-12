@@ -68,7 +68,8 @@ The backend foundation is completed before final UI implementation. A block is c
 5. [x] Admin: verification, moderation, users, disputes, reviews, security and audit
 6. [x] Loading, empty, error, offline, reduced-motion and responsive states
 7. [x] Playwright public and authenticated buyer journeys on desktop/mobile
-8. [ ] Authenticated seller/admin transactional journeys
+8. [x] Authenticated seller onboarding/store journey
+9. [ ] Authenticated admin transactional journey
 
 ## Stage Launch — External activation
 

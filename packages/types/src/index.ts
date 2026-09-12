@@ -1,5 +1,5 @@
 export type ApiErrorBody = { code: string; message: string; requestId: string; details?: Record<string, string[]> };
-export type HealthStatus = { status: 'ok' | 'degraded'; service: 'resaller-api'; timestamp: string; checks?: { database: 'up' | 'down'; redis: 'up' | 'down'; queue?: 'up' | 'down' } };
+export type HealthStatus = { status: 'ok' | 'degraded'; service: 'resaller-api'; timestamp: string; checks?: { database: 'up' | 'down'; redis: 'up' | 'down'; queue?: 'up' | 'down'; storage?: 'up' | 'down' } };
 
 export const PLATFORM_BUSINESS_RULES = Object.freeze({
   sellerAcceptanceMinutes: 60,

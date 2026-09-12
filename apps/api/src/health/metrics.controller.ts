@@ -1,22 +1,45 @@
-import { Controller, Get, Header, Inject, Req, UnauthorizedException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Header,
+  Inject,
+  Req,
+  UnauthorizedException,
+} from '@nestjs/common';
 import type { FastifyRequest } from 'fastify';
 import { PrismaService } from '../infrastructure/prisma.service.js';
 import { NotificationQueueService } from '../notifications/notification-queue.service.js';
 
 @Controller('metrics')
 export class MetricsController {
-  constructor(@Inject(PrismaService) private readonly prisma: PrismaService, @Inject(NotificationQueueService) private readonly queue: NotificationQueueService) {}
+  constructor(
+    @Inject(PrismaService) private readonly prisma: PrismaService,
+    @Inject(NotificationQueueService)
+    private readonly queue: NotificationQueueService,
+  ) {}
 
   @Get()
   @Header('content-type', 'text/plain; version=0.0.4; charset=utf-8')
   async metrics(@Req() request: FastifyRequest): Promise<string> {
     const token = process.env.METRICS_TOKEN;
-    if (token && request.headers.authorization !== `Bearer ${token}`) throw new UnauthorizedException('Metrics token required');
+    if (token && request.headers.authorization !== `Bearer ${token}`)
+      throw new UnauthorizedException('Metrics token required');
     const now = new Date();
-    const [pendingOrders, overdueOrders, openDisputes, unreviewedSecurity, failedDeliveries, queue] = await Promise.all([
+    const [
+      pendingOrders,
+      overdueOrders,
+      openDisputes,
+      unreviewedSecurity,
+      failedDeliveries,
+      queue,
+    ] = await Promise.all([
       this.prisma.order.count({ where: { status: 'WAITING_SELLER' } }),
-      this.prisma.order.count({ where: { status: 'WAITING_SELLER', sellerAcceptBy: { lt: now } } }),
-      this.prisma.dispute.count({ where: { status: { in: ['OPEN', 'EVIDENCE', 'REVIEW'] } } }),
+      this.prisma.order.count({
+        where: { status: 'WAITING_SELLER', sellerAcceptBy: { lt: now } },
+      }),
+      this.prisma.dispute.count({
+        where: { status: { in: ['OPEN', 'EVIDENCE', 'REVIEW'] } },
+      }),
       this.prisma.securityEvent.count({ where: { reviewedAt: null } }),
       this.prisma.notificationDelivery.count({ where: { status: 'FAILED' } }),
       this.queue.health(),
@@ -32,6 +55,8 @@ export class MetricsController {
       process_uptime_seconds: process.uptime(),
       process_resident_memory_bytes: process.memoryUsage().rss,
     };
-    return `${Object.entries(values).map(([name, value]) => `# TYPE ${name} gauge\n${name} ${value}`).join('\n')}\n`;
+    return `${Object.entries(values)
+      .map(([name, value]) => `# TYPE ${name} gauge\n${name} ${value}`)
+      .join('\n')}\n`;
   }
 }

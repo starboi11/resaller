@@ -154,6 +154,17 @@ export class CommerceService {
         members: {
           select: { role: true, user: { select: { username: true } } },
         },
+        questions: {
+          take: 50,
+          orderBy: { createdAt: 'desc' },
+          select: {
+            id: true,
+            body: true,
+            createdAt: true,
+            answer: { select: { id: true, body: true } },
+            listing: { select: { nameUz: true } },
+          },
+        },
         listings: {
           orderBy: { createdAt: 'desc' },
           select: {

@@ -54,6 +54,7 @@ export class OperationsService {
                 priceMinor: true,
                 currency: true,
                 storeId: true,
+                store: { select: { publicId: true, nameUz: true } },
               },
             },
           },
@@ -104,15 +105,21 @@ export class OperationsService {
   }
 
   async updateCartItem(userId: string, id: string, quantity: number) {
-    const item = await this.prisma.cartItem.findFirst({ where: { id, cart: { buyerId: userId } }, include: { variant: { include: { inventory: true } } } });
+    const item = await this.prisma.cartItem.findFirst({
+      where: { id, cart: { buyerId: userId } },
+      include: { variant: { include: { inventory: true } } },
+    });
     if (!item) throw new NotFoundException('Cart item not found');
-    if (!item.variant.inventory || item.variant.inventory.available < quantity) throw new ConflictException('Insufficient stock');
+    if (!item.variant.inventory || item.variant.inventory.available < quantity)
+      throw new ConflictException('Insufficient stock');
     await this.prisma.cartItem.update({ where: { id }, data: { quantity } });
     return this.cart(userId);
   }
 
   async removeCartItem(userId: string, id: string) {
-    const result = await this.prisma.cartItem.deleteMany({ where: { id, cart: { buyerId: userId } } });
+    const result = await this.prisma.cartItem.deleteMany({
+      where: { id, cart: { buyerId: userId } },
+    });
     if (!result.count) throw new NotFoundException('Cart item not found');
     return this.cart(userId);
   }
@@ -145,12 +152,41 @@ export class OperationsService {
   async order(user: AuthenticatedUser, publicId: string) {
     const order = await this.prisma.order.findUnique({
       where: { publicId },
-      include: { store: { select: { publicId: true, username: true, nameUz: true, sellerProfile: { select: { userId: true } }, members: { select: { userId: true } } } }, items: true, history: { orderBy: { createdAt: 'asc' } }, dispute: { include: { events: true, decision: true } }, review: true },
+      include: {
+        store: {
+          select: {
+            publicId: true,
+            username: true,
+            nameUz: true,
+            sellerProfile: { select: { userId: true } },
+            members: { select: { userId: true } },
+          },
+        },
+        items: true,
+        history: { orderBy: { createdAt: 'asc' } },
+        dispute: { include: { events: true, decision: true } },
+        review: true,
+      },
     });
     if (!order) throw new NotFoundException('Order not found');
-    const canView = order.buyerId === user.id || order.store.sellerProfile.userId === user.id || order.store.members.some((member) => member.userId === user.id) || user.roles.some((role) => ['SUPER_ADMIN', 'DISPUTE_ADMIN', 'SUPPORT_ADMIN'].includes(role));
+    const canView =
+      order.buyerId === user.id ||
+      order.store.sellerProfile.userId === user.id ||
+      order.store.members.some((member) => member.userId === user.id) ||
+      user.roles.some((role) =>
+        ['SUPER_ADMIN', 'DISPUTE_ADMIN', 'SUPPORT_ADMIN'].includes(role),
+      );
     if (!canView) throw new ForbiddenException('Order access denied');
-    return { ...order, totalMinor: order.totalMinor.toString(), subtotalMinor: order.subtotalMinor.toString(), discountMinor: order.discountMinor.toString(), items: order.items.map((item) => ({ ...item, unitPriceMinor: item.unitPriceMinor.toString() })) };
+    return {
+      ...order,
+      totalMinor: order.totalMinor.toString(),
+      subtotalMinor: order.subtotalMinor.toString(),
+      discountMinor: order.discountMinor.toString(),
+      items: order.items.map((item) => ({
+        ...item,
+        unitPriceMinor: item.unitPriceMinor.toString(),
+      })),
+    };
   }
 
   async sellerOrders(userId: string) {
@@ -747,7 +783,9 @@ export class OperationsService {
         kind: true,
         body: true,
         createdAt: true,
-        attachments: { select: { id: true, mimeType: true, sizeBytes: true } },
+        attachments: {
+          select: { id: true, fileName: true, mimeType: true, sizeBytes: true },
+        },
       },
     });
   }

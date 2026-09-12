@@ -28,7 +28,7 @@ type Message = {
   id: string;
   body?: string;
   createdAt: string;
-  attachments?: { id: string; originalName: string }[];
+  attachments?: { id: string; fileName: string }[];
 };
 export default function OrderDetail({
   params,
@@ -65,8 +65,22 @@ export default function OrderDetail({
   }, [id]);
   useEffect(() => {
     void load();
-    const timer = setInterval(() => void load(), 4000);
-    return () => clearInterval(timer);
+    if (!id) return;
+    const stream = new EventSource(`${API}/orders/${id}/messages/stream`, {
+      withCredentials: true,
+    });
+    stream.addEventListener('messages', (event) => {
+      try {
+        setMessages(JSON.parse((event as MessageEvent).data) as Message[]);
+      } catch {}
+    });
+    const fallback = setInterval(() => {
+      if (stream.readyState === EventSource.CLOSED) void load();
+    }, 5_000);
+    return () => {
+      stream.close();
+      clearInterval(fallback);
+    };
   }, [load]);
   async function send(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -81,6 +95,17 @@ export default function OrderDetail({
       body: JSON.stringify({ body }),
     });
     if (response.ok) {
+      const created = (await response.json()) as { id: string };
+      const file = data.get('file');
+      if (file instanceof File && file.size > 0) {
+        const upload = new FormData();
+        upload.set('file', file);
+        await fetch(`${API}/media/messages/${created.id}/attachment`, {
+          method: 'POST',
+          credentials: 'include',
+          body: upload,
+        });
+      }
       form.reset();
       await load();
     }
@@ -96,6 +121,19 @@ export default function OrderDetail({
     });
     if (response.ok) await load();
     else setError('Amalni bajarib bo‘lmadi.');
+  }
+  async function review() {
+    const rating = Number(window.prompt('1 dan 5 gacha baho'));
+    if (!Number.isInteger(rating) || rating < 1 || rating > 5) return;
+    const body = window.prompt('Sharh (ixtiyoriy)') ?? undefined;
+    const response = await fetch(`${API}/orders/${id}/review`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ rating, body }),
+    });
+    if (response.ok) await load();
+    else setError('Sharh faqat yakunlangan buyurtmaga bir marta yoziladi.');
   }
   if (error && !order)
     return (
@@ -197,6 +235,12 @@ export default function OrderDetail({
                 {label}
               </button>
             ))}
+            <button
+              className="rounded-full border border-[var(--line)] px-4 py-2 text-sm font-bold"
+              onClick={() => void review()}
+            >
+              Sharh yozish
+            </button>
           </div>
         </div>
         <section className="surface flex min-h-[32rem] flex-col p-5">
@@ -226,13 +270,16 @@ export default function OrderDetail({
                     key={file.id}
                     href={`${API}/media/private/attachments/${file.id}`}
                   >
-                    📎 {file.originalName}
+                    📎 {file.fileName}
                   </a>
                 ))}
               </article>
             ))}
           </div>
-          <form className="mt-4 flex gap-2" onSubmit={send}>
+          <form
+            className="mt-4 grid grid-cols-[1fr_auto] gap-2"
+            onSubmit={send}
+          >
             <label className="sr-only" htmlFor="message">
               Xabar
             </label>
@@ -243,6 +290,15 @@ export default function OrderDetail({
               maxLength={4000}
               placeholder="Xabar yozing…"
             />
+            <label className="col-span-2 cursor-pointer text-xs font-bold text-[var(--brand-strong)]">
+              📎 Fayl biriktirish
+              <input
+                className="sr-only"
+                type="file"
+                name="file"
+                accept="image/jpeg,image/png,image/webp,application/pdf"
+              />
+            </label>
             <button className="rs-button">Yuborish</button>
           </form>
         </section>

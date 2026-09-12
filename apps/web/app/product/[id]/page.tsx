@@ -13,6 +13,7 @@ type Product = {
   currency: string;
   category: { nameUz: string };
   store: {
+    publicId: string;
     nameUz: string;
     username: string;
     sellerProfile: { trustBadge: string; verifiedAt: string | null };
@@ -137,6 +138,7 @@ export default async function ProductPage({
             />
             <div className="mt-3">
               <ProductActions
+                storePublicId={product.store.publicId}
                 product={{
                   publicId: product.publicId,
                   nameUz: product.nameUz,

@@ -13,6 +13,7 @@ type Item = {
     priceMinor: string;
     currency: string;
     storeId: string;
+    store: { publicId: string; nameUz: string };
   };
 };
 type Cart = { items: Item[] };
@@ -82,6 +83,18 @@ export default function CartPage() {
           region: data.get('region'),
           address: data.get('address'),
         },
+        couponCodes: Object.fromEntries(
+          Array.from(
+            new Set(
+              cart?.items.map((item) => item.listing.store.publicId) ?? [],
+            ),
+          )
+            .map((storeId) => [
+              storeId,
+              String(data.get(`coupon-${storeId}`) ?? '').trim(),
+            ])
+            .filter(([, code]) => code),
+        ),
       }),
     });
     if (response.ok) {
@@ -222,6 +235,21 @@ export default function CartPage() {
                 minLength={5}
                 placeholder="To‘liq manzil"
               />
+              {Array.from(
+                new Map(
+                  cart?.items.map((item) => [
+                    item.listing.store.publicId,
+                    item.listing.store.nameUz,
+                  ]) ?? [],
+                ),
+              ).map(([storeId, name]) => (
+                <input
+                  key={storeId}
+                  className="field"
+                  name={`coupon-${storeId}`}
+                  placeholder={`${name} kupon kodi`}
+                />
+              ))}
             </div>
             <div className="my-5 flex justify-between border-t border-[var(--line)] pt-4">
               <span>Jami</span>

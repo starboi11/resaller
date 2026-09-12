@@ -9,7 +9,10 @@ import {
   Patch,
   Req,
   UseGuards,
+  Sse,
+  type MessageEvent,
 } from '@nestjs/common';
+import { from, interval, map, Observable, startWith, switchMap } from 'rxjs';
 import type { FastifyRequest } from 'fastify';
 import { type AuthenticatedUser, SessionGuard } from '../auth/session.guard.js';
 import { OperationsService } from './operations.service.js';
@@ -45,10 +48,17 @@ export class OperationsController {
   ) {
     return this.operations.addCartItem(req.user.id, input);
   }
-  @Patch('cart/items/:id') updateCartItem(@Req() req: FastifyRequest & { user: AuthenticatedUser }, @Param('id') id: string, @Body() input: UpdateCartItemDto) {
+  @Patch('cart/items/:id') updateCartItem(
+    @Req() req: FastifyRequest & { user: AuthenticatedUser },
+    @Param('id') id: string,
+    @Body() input: UpdateCartItemDto,
+  ) {
     return this.operations.updateCartItem(req.user.id, id, input.quantity);
   }
-  @Delete('cart/items/:id') removeCartItem(@Req() req: FastifyRequest & { user: AuthenticatedUser }, @Param('id') id: string) {
+  @Delete('cart/items/:id') removeCartItem(
+    @Req() req: FastifyRequest & { user: AuthenticatedUser },
+    @Param('id') id: string,
+  ) {
     return this.operations.removeCartItem(req.user.id, id);
   }
   @Post('checkout') checkout(
@@ -62,7 +72,10 @@ export class OperationsController {
   ) {
     return this.operations.buyerOrders(req.user.id);
   }
-  @Get('orders/:publicId') order(@Req() req: FastifyRequest & { user: AuthenticatedUser }, @Param('publicId') id: string) {
+  @Get('orders/:publicId') order(
+    @Req() req: FastifyRequest & { user: AuthenticatedUser },
+    @Param('publicId') id: string,
+  ) {
     return this.operations.order(req.user, id);
   }
   @Get('seller/orders') sellerOrders(
@@ -120,6 +133,18 @@ export class OperationsController {
     @Param('publicId') id: string,
   ) {
     return this.operations.messages(req.user, id);
+  }
+  @Sse('orders/:publicId/messages/stream')
+  async messageStream(
+    @Req() req: FastifyRequest & { user: AuthenticatedUser },
+    @Param('publicId') id: string,
+  ): Promise<Observable<MessageEvent>> {
+    await this.operations.messages(req.user, id);
+    return interval(2_000).pipe(
+      startWith(0),
+      switchMap(() => from(this.operations.messages(req.user, id))),
+      map((data) => ({ type: 'messages', data })),
+    );
   }
   @Post('questions') question(
     @Req() req: FastifyRequest & { user: AuthenticatedUser },

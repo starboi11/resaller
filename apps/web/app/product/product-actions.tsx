@@ -7,7 +7,13 @@ type Recent = {
   currency: string;
 };
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
-export function ProductActions({ product }: { product: Recent }) {
+export function ProductActions({
+  product,
+  storePublicId,
+}: {
+  product: Recent;
+  storePublicId: string;
+}) {
   const [saved, setSaved] = useState(false);
   useEffect(() => {
     try {
@@ -33,13 +39,37 @@ export function ProductActions({ product }: { product: Recent }) {
     if (response.ok) setSaved(!saved);
     else if (response.status === 401) window.location.href = '/login';
   }
+  async function ask() {
+    const body = window.prompt('Sotuvchiga savolingiz');
+    if (!body || body.trim().length < 3) return;
+    const response = await fetch(`${API}/questions`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        storePublicId,
+        listingPublicId: product.publicId,
+        body: body.trim(),
+      }),
+    });
+    if (response.status === 401) window.location.href = '/login';
+    else if (response.ok) window.alert('Savol yuborildi.');
+  }
   return (
-    <button
-      className="min-h-11 rounded-full border border-[var(--line)] px-4 text-sm font-black"
-      onClick={() => void favorite()}
-      aria-pressed={saved}
-    >
-      {saved ? '♥ Saqlangan' : '♡ Sevimliga'}
-    </button>
+    <div className="flex flex-wrap gap-2">
+      <button
+        className="min-h-11 rounded-full border border-[var(--line)] px-4 text-sm font-black"
+        onClick={() => void favorite()}
+        aria-pressed={saved}
+      >
+        {saved ? '♥ Saqlangan' : '♡ Sevimliga'}
+      </button>
+      <button
+        className="min-h-11 rounded-full border border-[var(--line)] px-4 text-sm font-black"
+        onClick={() => void ask()}
+      >
+        Savol berish
+      </button>
+    </div>
   );
 }

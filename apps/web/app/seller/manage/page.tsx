@@ -10,6 +10,13 @@ type Store = {
   status: string;
   vacationMode: boolean;
   members: { role: string; user: { username: string } }[];
+  questions: {
+    id: string;
+    body: string;
+    createdAt: string;
+    answer?: { id: string; body: string } | null;
+    listing?: { nameUz: string } | null;
+  }[];
   listings: {
     publicId: string;
     nameUz: string;
@@ -71,6 +78,20 @@ export default function SellerManage() {
       documentType: data.get('documentType'),
       documentNumber: data.get('documentNumber'),
     });
+  }
+  async function verificationDocument(file: File) {
+    const data = new FormData();
+    data.set('file', file);
+    const response = await fetch(`${API}/media/verification/document`, {
+      method: 'POST',
+      credentials: 'include',
+      body: data,
+    });
+    setMessage(
+      response.ok
+        ? 'Verification hujjati xavfsiz yuklandi.'
+        : 'Hujjat yuklanmadi. PDF/JPEG/PNG va 5 MB limitni tekshiring.',
+    );
   }
   async function createStore(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -176,6 +197,11 @@ export default function SellerManage() {
     )
       form.reset();
   }
+  async function answerQuestion(questionId: string) {
+    const body = window.prompt('Savolga javob');
+    if (!body?.trim()) return;
+    await post(`questions/${questionId}/answer`, { body: body.trim() });
+  }
   if (login)
     return (
       <main className="shell py-10">
@@ -244,6 +270,18 @@ export default function SellerManage() {
               placeholder="Hujjat raqami"
             />
             <button className="rs-button">Yuborish</button>
+            <label className="cursor-pointer rounded-full border border-[var(--line)] px-4 py-3 text-center text-sm font-bold">
+              Hujjat faylini yuklash
+              <input
+                className="sr-only"
+                type="file"
+                accept="application/pdf,image/jpeg,image/png"
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  if (file) void verificationDocument(file);
+                }}
+              />
+            </label>
           </form>
           <form className="surface grid gap-3 p-5" onSubmit={createStore}>
             <h2 className="font-black">3. Do‘kon yaratish</h2>
@@ -514,6 +552,34 @@ export default function SellerManage() {
                 </select>
                 <button className="rs-button">Qo‘shish</button>
               </form>
+            </div>
+          </div>
+          <div className="mt-6">
+            <h3 className="font-black">Xaridor savollari</h3>
+            <div className="mt-3 grid gap-3">
+              {store.questions.map((question) => (
+                <article
+                  className="rounded-2xl border border-[var(--line)] p-4"
+                  key={question.id}
+                >
+                  <p className="text-sm font-bold">
+                    {question.listing?.nameUz ?? 'Do‘kon haqida'}
+                  </p>
+                  <p className="mt-1">{question.body}</p>
+                  {question.answer ? (
+                    <p className="muted mt-2 text-sm">
+                      Javob: {question.answer.body}
+                    </p>
+                  ) : (
+                    <button
+                      className="mt-3 text-sm font-black text-[var(--brand-strong)]"
+                      onClick={() => void answerQuestion(question.id)}
+                    >
+                      Javob berish
+                    </button>
+                  )}
+                </article>
+              ))}
             </div>
           </div>
         </section>
