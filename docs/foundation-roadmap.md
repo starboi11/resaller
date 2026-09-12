@@ -56,17 +56,19 @@ The backend foundation is completed before final UI implementation. A block is c
 - [x] HTTPS routing and private production DB/Redis network
 - [x] Protected Prometheus metrics and baseline alert rules
 - [x] Automated encrypted backups and tested disposable restore drill
-- [ ] Browser E2E, accessibility, performance and staging penetration tests
+- [x] Desktop/mobile browser E2E plus baseline accessibility and performance budgets
+- [ ] Staging penetration test
 
 ## Stage UI — Frontend after foundation
 
-1. Shared design system, themes, accessibility and application shell
-2. Buyer: home, categories, store, search, favorites and recently viewed
-3. Commerce: cart, checkout, order detail, timeline, chat and review
-4. Seller: onboarding, store/team/settings, catalog/media, orders, Q&A and analytics
-5. Admin: verification, moderation, users, disputes, reviews, security and audit
-6. Loading, empty, error, offline, reduced-motion and responsive states
-7. Playwright buyer/seller/admin journeys and device QA
+1. [x] Shared design system, themes, accessibility and application shell
+2. [x] Buyer: home, categories, store, search, favorites and recently viewed
+3. [x] Commerce: cart, checkout, order detail, timeline and private chat
+4. [x] Seller: onboarding, store/team/settings, catalog/media and order Action Center
+5. [x] Admin: verification, moderation, users, disputes, reviews, security and audit
+6. [x] Loading, empty, error, offline, reduced-motion and responsive states
+7. [x] Playwright public and authenticated buyer journeys on desktop/mobile
+8. [ ] Authenticated seller/admin transactional journeys
 
 ## Stage Launch — External activation
 

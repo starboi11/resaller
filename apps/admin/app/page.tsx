@@ -1,6 +1,7 @@
 'use client';
 
 import { FormEvent, useCallback, useEffect, useState } from 'react';
+import Link from 'next/link';
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
 type Store = {
@@ -179,13 +180,18 @@ export default function AdminHome() {
             Har bir qaror sabab bilan audit tarixiga yoziladi.
           </p>
         </div>
-        <button
-          className="rs-button"
-          disabled={busy}
-          onClick={() => void load()}
-        >
-          Yangilash
-        </button>
+        <div className="flex gap-2">
+          <Link className="rs-button" href="/operations">
+            Barcha modullar
+          </Link>
+          <button
+            className="rs-button"
+            disabled={busy}
+            onClick={() => void load()}
+          >
+            Yangilash
+          </button>
+        </div>
       </header>
       <p
         className="mt-5 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300"

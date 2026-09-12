@@ -57,6 +57,10 @@ export class CommerceController {
     return this.commerce.createStore(request.user, input);
   }
 
+  @Get('seller/stores')
+  @UseGuards(SessionGuard)
+  sellerStores(@Req() request: FastifyRequest & { user: AuthenticatedUser }) { return this.commerce.sellerStores(request.user.id); }
+
   @Get('stores/:username')
   store(@Param('username') username: string) {
     return this.commerce.getStore(username);

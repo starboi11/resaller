@@ -3,14 +3,156 @@ import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { StatePanel } from '@resaller/ui';
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
-type Dashboard = { waitingOrders: number; lowStock: number; unansweredQuestions: number };
-type Order = { publicId: string; displayId: string; status: string; sellerAcceptBy: string; totalMinor: string; currency: string };
+type Dashboard = {
+  waitingOrders: number;
+  lowStock: number;
+  unansweredQuestions: number;
+};
+type Order = {
+  publicId: string;
+  displayId: string;
+  status: string;
+  sellerAcceptBy: string;
+  totalMinor: string;
+  currency: string;
+};
 export default function SellerDashboard() {
-  const [dashboard, setDashboard] = useState<Dashboard | null>(null); const [orders, setOrders] = useState<Order[]>([]); const [unauthorized, setUnauthorized] = useState(false);
-  const load = useCallback(async () => { const [summary, orderList] = await Promise.all([fetch(`${API}/seller/dashboard`, { credentials: 'include', cache: 'no-store' }), fetch(`${API}/seller/orders`, { credentials: 'include', cache: 'no-store' })]); if (summary.status === 401) { setUnauthorized(true); return; } if (summary.ok) setDashboard(await summary.json() as Dashboard); if (orderList.ok) setOrders(await orderList.json() as Order[]); }, []);
-  useEffect(() => { void load(); }, [load]);
-  async function transition(order: Order, to: 'ACCEPTED' | 'REJECTED') { const reason = to === 'REJECTED' ? window.prompt('Rad etish sababini yozing:') : undefined; if (to === 'REJECTED' && (!reason || reason.length < 3)) return; const response = await fetch(`${API}/orders/${order.publicId}/transition`, { method: 'POST', credentials: 'include', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ to, reason }) }); if (response.ok) await load(); }
-  if (unauthorized) return <main className="shell max-w-3xl py-10"><StatePanel tone="warning" title="Sotuvchi hisobi kerak" description="Action Center faqat sotuvchi va uning jamoasiga ochiq." action={<Link className="rs-button" href="/login">Hisobga kirish</Link>} /></main>;
-  const cards = [['Yangi buyurtmalar', dashboard?.waitingOrders ?? '—'],['Kam qolgan mahsulot',dashboard?.lowStock ?? '—'],['Javobsiz savollar',dashboard?.unansweredQuestions ?? '—']];
-  return <main className="shell py-10"><p className="eyebrow">Seller workspace</p><h1 className="mt-2 text-3xl font-black">Action Center</h1><p className="muted mt-2 text-sm">Eng shoshilinch ishlar birinchi ko‘rsatiladi.</p><section className="mt-8 grid gap-4 sm:grid-cols-3">{cards.map(([label,value], index)=><article key={label} className="surface p-5"><span className={`mb-4 block h-1.5 w-10 rounded-full ${index === 0 ? 'bg-amber-500' : index === 1 ? 'bg-red-500' : 'bg-violet-500'}`} /><p className="muted text-sm">{label}</p><p className="mt-2 text-3xl font-black">{value}</p></article>)}</section><section className="surface mt-8 p-5 sm:p-6"><div className="flex items-center justify-between"><div><h2 className="text-xl font-bold">60 daqiqalik navbat</h2><p className="muted mt-1 text-sm">Vaqti yaqin buyurtmalarni kechiktirmang.</p></div><button className="min-h-11 rounded-full border border-[var(--line)] px-4 text-sm font-bold" onClick={() => void load()}>Yangilash</button></div><div className="mt-5 grid gap-3">{orders.filter(order => order.status === 'WAITING_SELLER').map(order => <article key={order.publicId} className="flex flex-col gap-4 rounded-2xl bg-[var(--surface-2)] p-4 sm:flex-row sm:items-center sm:justify-between"><div><p className="font-bold">{order.displayId}</p><p className="muted text-sm">Muddat: {new Date(order.sellerAcceptBy).toLocaleString('uz-UZ')}</p></div><div className="flex gap-2"><button onClick={() => void transition(order, 'ACCEPTED')} className="rs-button">Qabul qilish</button><button onClick={() => void transition(order, 'REJECTED')} className="min-h-11 rounded-full border border-[var(--line)] px-4 font-bold">Rad etish</button></div></article>)}{orders.filter(order => order.status === 'WAITING_SELLER').length === 0 && <StatePanel compact tone="success" title="Navbat toza" description="Hozir javob kutayotgan buyurtma yo‘q." />}</div></section></main>;
+  const [dashboard, setDashboard] = useState<Dashboard | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [unauthorized, setUnauthorized] = useState(false);
+  const load = useCallback(async () => {
+    const [summary, orderList] = await Promise.all([
+      fetch(`${API}/seller/dashboard`, {
+        credentials: 'include',
+        cache: 'no-store',
+      }),
+      fetch(`${API}/seller/orders`, {
+        credentials: 'include',
+        cache: 'no-store',
+      }),
+    ]);
+    if (summary.status === 401) {
+      setUnauthorized(true);
+      return;
+    }
+    if (summary.ok) setDashboard((await summary.json()) as Dashboard);
+    if (orderList.ok) setOrders((await orderList.json()) as Order[]);
+  }, []);
+  useEffect(() => {
+    void load();
+  }, [load]);
+  async function transition(order: Order, to: 'ACCEPTED' | 'REJECTED') {
+    const reason =
+      to === 'REJECTED'
+        ? window.prompt('Rad etish sababini yozing:')
+        : undefined;
+    if (to === 'REJECTED' && (!reason || reason.length < 3)) return;
+    const response = await fetch(`${API}/orders/${order.publicId}/transition`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ to, reason }),
+    });
+    if (response.ok) await load();
+  }
+  if (unauthorized)
+    return (
+      <main className="shell max-w-3xl py-10">
+        <StatePanel
+          tone="warning"
+          title="Sotuvchi hisobi kerak"
+          description="Action Center faqat sotuvchi va uning jamoasiga ochiq."
+          action={
+            <Link className="rs-button" href="/login">
+              Hisobga kirish
+            </Link>
+          }
+        />
+      </main>
+    );
+  const cards = [
+    ['Yangi buyurtmalar', dashboard?.waitingOrders ?? '—'],
+    ['Kam qolgan mahsulot', dashboard?.lowStock ?? '—'],
+    ['Javobsiz savollar', dashboard?.unansweredQuestions ?? '—'],
+  ];
+  return (
+    <main className="shell py-10">
+      <p className="eyebrow">Seller workspace</p>
+      <h1 className="mt-2 text-3xl font-black">Action Center</h1>
+      <p className="muted mt-2 text-sm">
+        Eng shoshilinch ishlar birinchi ko‘rsatiladi.
+      </p>
+      <Link className="rs-button mt-5" href="/seller/manage">
+        Do‘kon va katalogni boshqarish
+      </Link>
+      <section className="mt-8 grid gap-4 sm:grid-cols-3">
+        {cards.map(([label, value], index) => (
+          <article key={label} className="surface p-5">
+            <span
+              className={`mb-4 block h-1.5 w-10 rounded-full ${index === 0 ? 'bg-amber-500' : index === 1 ? 'bg-red-500' : 'bg-violet-500'}`}
+            />
+            <p className="muted text-sm">{label}</p>
+            <p className="mt-2 text-3xl font-black">{value}</p>
+          </article>
+        ))}
+      </section>
+      <section className="surface mt-8 p-5 sm:p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold">60 daqiqalik navbat</h2>
+            <p className="muted mt-1 text-sm">
+              Vaqti yaqin buyurtmalarni kechiktirmang.
+            </p>
+          </div>
+          <button
+            className="min-h-11 rounded-full border border-[var(--line)] px-4 text-sm font-bold"
+            onClick={() => void load()}
+          >
+            Yangilash
+          </button>
+        </div>
+        <div className="mt-5 grid gap-3">
+          {orders
+            .filter((order) => order.status === 'WAITING_SELLER')
+            .map((order) => (
+              <article
+                key={order.publicId}
+                className="flex flex-col gap-4 rounded-2xl bg-[var(--surface-2)] p-4 sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div>
+                  <p className="font-bold">{order.displayId}</p>
+                  <p className="muted text-sm">
+                    Muddat:{' '}
+                    {new Date(order.sellerAcceptBy).toLocaleString('uz-UZ')}
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => void transition(order, 'ACCEPTED')}
+                    className="rs-button"
+                  >
+                    Qabul qilish
+                  </button>
+                  <button
+                    onClick={() => void transition(order, 'REJECTED')}
+                    className="min-h-11 rounded-full border border-[var(--line)] px-4 font-bold"
+                  >
+                    Rad etish
+                  </button>
+                </div>
+              </article>
+            ))}
+          {orders.filter((order) => order.status === 'WAITING_SELLER')
+            .length === 0 && (
+            <StatePanel
+              compact
+              tone="success"
+              title="Navbat toza"
+              description="Hozir javob kutayotgan buyurtma yo‘q."
+            />
+          )}
+        </div>
+      </section>
+    </main>
+  );
 }

@@ -6,6 +6,7 @@ import {
   Inject,
   Param,
   Post,
+  Patch,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -25,6 +26,7 @@ import {
   ReturnRequestDto,
   ReviewDto,
   TransitionOrderDto,
+  UpdateCartItemDto,
 } from './operations.dto.js';
 import type { OrderState } from '../orders/order-policy.js';
 
@@ -43,6 +45,12 @@ export class OperationsController {
   ) {
     return this.operations.addCartItem(req.user.id, input);
   }
+  @Patch('cart/items/:id') updateCartItem(@Req() req: FastifyRequest & { user: AuthenticatedUser }, @Param('id') id: string, @Body() input: UpdateCartItemDto) {
+    return this.operations.updateCartItem(req.user.id, id, input.quantity);
+  }
+  @Delete('cart/items/:id') removeCartItem(@Req() req: FastifyRequest & { user: AuthenticatedUser }, @Param('id') id: string) {
+    return this.operations.removeCartItem(req.user.id, id);
+  }
   @Post('checkout') checkout(
     @Req() req: FastifyRequest & { user: AuthenticatedUser },
     @Body() input: CheckoutDto,
@@ -53,6 +61,9 @@ export class OperationsController {
     @Req() req: FastifyRequest & { user: AuthenticatedUser },
   ) {
     return this.operations.buyerOrders(req.user.id);
+  }
+  @Get('orders/:publicId') order(@Req() req: FastifyRequest & { user: AuthenticatedUser }, @Param('publicId') id: string) {
+    return this.operations.order(req.user, id);
   }
   @Get('seller/orders') sellerOrders(
     @Req() req: FastifyRequest & { user: AuthenticatedUser },

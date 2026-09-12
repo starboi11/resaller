@@ -1,0 +1,45 @@
+'use client';
+import { useEffect, useState } from 'react';
+type Recent = {
+  publicId: string;
+  nameUz: string;
+  priceMinor: string;
+  currency: string;
+};
+const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
+export function ProductActions({ product }: { product: Recent }) {
+  const [saved, setSaved] = useState(false);
+  useEffect(() => {
+    try {
+      const old = JSON.parse(
+        localStorage.getItem('resaller-recent') ?? '[]',
+      ) as Recent[];
+      localStorage.setItem(
+        'resaller-recent',
+        JSON.stringify(
+          [
+            product,
+            ...old.filter((item) => item.publicId !== product.publicId),
+          ].slice(0, 20),
+        ),
+      );
+    } catch {}
+  }, [product]);
+  async function favorite() {
+    const response = await fetch(`${API}/favorites/${product.publicId}`, {
+      method: saved ? 'DELETE' : 'POST',
+      credentials: 'include',
+    });
+    if (response.ok) setSaved(!saved);
+    else if (response.status === 401) window.location.href = '/login';
+  }
+  return (
+    <button
+      className="min-h-11 rounded-full border border-[var(--line)] px-4 text-sm font-black"
+      onClick={() => void favorite()}
+      aria-pressed={saved}
+    >
+      {saved ? '♥ Saqlangan' : '♡ Sevimliga'}
+    </button>
+  );
+}

@@ -2,19 +2,23 @@
   "name": "resaller",
   "private": true,
   "packageManager": "pnpm@11.19.0",
-  "engines": { "node": ">=24.0.0" },
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
+    "test:e2e": "playwright test",
     "security:secrets": "node scripts/secret-scan.mjs",
     "check": "pnpm --filter @resaller/api db:validate && pnpm security:secrets && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "prettier": "3.9.6",
     "turbo": "2.10.12",
     "typescript": "7.0.2"

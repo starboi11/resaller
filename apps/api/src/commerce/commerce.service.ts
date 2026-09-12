@@ -125,6 +125,15 @@ export class CommerceService {
     }
   }
 
+  async sellerStores(userId: string) {
+    const stores = await this.prisma.store.findMany({
+      where: { OR: [{ sellerProfile: { userId } }, { members: { some: { userId } } }] },
+      orderBy: { createdAt: 'desc' },
+      select: { publicId: true, username: true, nameUz: true, status: true, vacationMode: true, settings: true, members: { select: { role: true, user: { select: { username: true } } } }, listings: { orderBy: { createdAt: 'desc' }, select: { publicId: true, nameUz: true, status: true, priceMinor: true, currency: true, variants: { select: { id: true, sku: true, options: true, priceOverrideMinor: true, inventory: true } }, media: { select: { id: true, storageKey: true, thumbnailStorageKey: true } } } } },
+    });
+    return stores.map((store) => ({ ...store, listings: store.listings.map((listing) => ({ ...listing, priceMinor: listing.priceMinor.toString(), variants: listing.variants.map((variant) => ({ ...variant, priceOverrideMinor: variant.priceOverrideMinor?.toString() ?? null })) })) }));
+  }
+
   async updateStoreSettings(
     user: AuthenticatedUser,
     publicId: string,
@@ -281,10 +290,11 @@ export class CommerceService {
         status: true,
         vacationMode: true,
         sellerProfile: { select: { trustBadge: true, verifiedAt: true } },
+        listings: { where: { status: 'ACTIVE' }, take: 60, orderBy: { createdAt: 'desc' }, select: { publicId: true, nameUz: true, priceMinor: true, currency: true, media: { take: 1, orderBy: { position: 'asc' }, select: { storageKey: true, thumbnailStorageKey: true } }, variants: { select: { inventory: { select: { available: true } } } } } },
       },
     });
     if (!store) throw new NotFoundException('Store not found');
-    return store;
+    return { ...store, listings: store.listings.map((listing) => ({ ...listing, priceMinor: listing.priceMinor.toString() })) };
   }
 
   async createListing(

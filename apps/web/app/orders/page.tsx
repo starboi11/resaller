@@ -3,9 +3,115 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Skeleton, StatePanel } from '@resaller/ui';
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
-type Order = { publicId: string; displayId: string; status: string; totalMinor: string; currency: string; sellerAcceptBy: string; createdAt: string; store: { username: string; nameUz: string }; items: unknown[] };
+type Order = {
+  publicId: string;
+  displayId: string;
+  status: string;
+  totalMinor: string;
+  currency: string;
+  store: { username: string; nameUz: string };
+  items: unknown[];
+};
 export default function Orders() {
-  const [orders, setOrders] = useState<Order[] | null>(null); const [unauthorized, setUnauthorized] = useState(false); const [failed, setFailed] = useState(false);
-  useEffect(() => { void fetch(`${API}/orders`, { credentials: 'include', cache: 'no-store' }).then(async response => { if (response.status === 401) { setUnauthorized(true); return; } if (!response.ok) throw new Error(); setOrders(await response.json() as Order[]); }).catch(() => setFailed(true)); }, []);
-  return <main className="shell max-w-3xl py-10"><p className="eyebrow">Xaridlar tarixi</p><h1 className="mt-2 text-3xl font-black">Buyurtmalar</h1><p className="muted mt-2 text-sm">Har bir sotuvchi buyurtmasi va uning holati alohida ko‘rinadi.</p>{unauthorized && <div className="mt-7"><StatePanel tone="warning" title="Hisobga kirish kerak" description="Buyurtmalar faqat sizga ko‘rinadi." action={<Link className="rs-button" href="/login">Hisobga kirish</Link>} /></div>}{orders === null && !unauthorized && !failed && <div className="mt-7 grid gap-4" aria-busy="true">{[1,2].map(item => <div className="surface p-6" key={item}><Skeleton className="h-5 w-32"/><Skeleton className="mt-3 h-4 w-48"/><Skeleton className="mt-6 h-8"/></div>)}</div>}{failed && <div className="mt-7"><StatePanel tone="danger" title="Buyurtmalar ochilmadi" description="Internetni tekshiring va sahifani qayta yuklang." /></div>}{orders?.length === 0 && <div className="mt-7"><StatePanel title="Hali buyurtma yo‘q" description="Marketplace’dan mahsulot tanlaganingizdan keyin buyurtmalar shu yerda ko‘rinadi." action={<Link className="rs-button" href="/marketplace">Mahsulot ko‘rish</Link>} /></div>}<section className="mt-7 grid gap-4">{orders?.map(order => <article key={order.publicId} className="surface p-5 sm:p-6"><div className="flex flex-wrap justify-between gap-3"><div><p className="font-black">{order.displayId}</p><p className="muted text-sm">{order.store.nameUz} · @{order.store.username}</p></div><span className="h-fit rounded-full bg-[var(--brand-soft)] px-3 py-1 text-sm font-bold text-[var(--brand-strong)]">{order.status}</span></div><div className="mt-5 flex justify-between border-t border-[var(--line)] pt-4 text-sm"><span className="muted">{order.items.length} turdagi mahsulot</span><strong>{Number(order.totalMinor).toLocaleString('uz-UZ')} {order.currency}</strong></div></article>)}</section></main>;
+  const [orders, setOrders] = useState<Order[] | null>(null);
+  const [unauthorized, setUnauthorized] = useState(false);
+  const [failed, setFailed] = useState(false);
+  useEffect(() => {
+    void fetch(`${API}/orders`, { credentials: 'include', cache: 'no-store' })
+      .then(async (response) => {
+        if (response.status === 401) {
+          setUnauthorized(true);
+          return;
+        }
+        if (!response.ok) throw new Error();
+        setOrders((await response.json()) as Order[]);
+      })
+      .catch(() => setFailed(true));
+  }, []);
+  return (
+    <main className="shell max-w-3xl py-10">
+      <p className="eyebrow">Xaridlar tarixi</p>
+      <h1 className="mt-2 text-3xl font-black">Buyurtmalar</h1>
+      <p className="muted mt-2 text-sm">
+        Har bir sotuvchi buyurtmasi va uning holati alohida ko‘rinadi.
+      </p>
+      {unauthorized && (
+        <div className="mt-7">
+          <StatePanel
+            tone="warning"
+            title="Hisobga kirish kerak"
+            description="Buyurtmalar faqat sizga ko‘rinadi."
+            action={
+              <Link className="rs-button" href="/login">
+                Hisobga kirish
+              </Link>
+            }
+          />
+        </div>
+      )}
+      {orders === null && !unauthorized && !failed && (
+        <div className="mt-7 grid gap-4" aria-busy="true">
+          {[1, 2].map((item) => (
+            <div className="surface p-6" key={item}>
+              <Skeleton className="h-5 w-32" />
+              <Skeleton className="mt-3 h-4 w-48" />
+              <Skeleton className="mt-6 h-8" />
+            </div>
+          ))}
+        </div>
+      )}
+      {failed && (
+        <div className="mt-7">
+          <StatePanel
+            tone="danger"
+            title="Buyurtmalar ochilmadi"
+            description="Internetni tekshiring va sahifani qayta yuklang."
+          />
+        </div>
+      )}
+      {orders?.length === 0 && (
+        <div className="mt-7">
+          <StatePanel
+            title="Hali buyurtma yo‘q"
+            description="Marketplace’dan mahsulot tanlaganingizdan keyin buyurtmalar shu yerda ko‘rinadi."
+            action={
+              <Link className="rs-button" href="/marketplace">
+                Mahsulot ko‘rish
+              </Link>
+            }
+          />
+        </div>
+      )}
+      <section className="mt-7 grid gap-4">
+        {orders?.map((order) => (
+          <Link
+            href={`/orders/${order.publicId}`}
+            key={order.publicId}
+            className="surface block p-5 transition-transform hover:-translate-y-0.5 sm:p-6"
+          >
+            <div className="flex flex-wrap justify-between gap-3">
+              <div>
+                <p className="font-black">{order.displayId}</p>
+                <p className="muted text-sm">
+                  {order.store.nameUz} · @{order.store.username}
+                </p>
+              </div>
+              <span className="h-fit rounded-full bg-[var(--brand-soft)] px-3 py-1 text-sm font-bold text-[var(--brand-strong)]">
+                {order.status}
+              </span>
+            </div>
+            <div className="mt-5 flex justify-between border-t border-[var(--line)] pt-4 text-sm">
+              <span className="muted">
+                {order.items.length} turdagi mahsulot
+              </span>
+              <strong>
+                {Number(order.totalMinor).toLocaleString('uz-UZ')}{' '}
+                {order.currency}
+              </strong>
+            </div>
+          </Link>
+        ))}
+      </section>
+    </main>
+  );
 }

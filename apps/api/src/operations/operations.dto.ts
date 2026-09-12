@@ -15,6 +15,9 @@ export class AddCartItemDto {
   @IsString() variantId!: string;
   @IsInt() @Min(1) @Max(99) quantity!: number;
 }
+export class UpdateCartItemDto {
+  @IsInt() @Min(1) @Max(99) quantity!: number;
+}
 export class CheckoutDto {
   @IsString() @MinLength(8) @MaxLength(100) idempotencyKey!: string;
   @IsObject() delivery!: Record<string, unknown>;

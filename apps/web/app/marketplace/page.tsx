@@ -19,11 +19,12 @@ const money = (value: string) =>
 export default async function Marketplace({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; category?: string }>;
 }) {
-  const { q } = await searchParams;
+  const { q, category } = await searchParams;
   const params = new URLSearchParams();
   if (q) params.set('q', q);
+  if (category) params.set('category', category);
   let products: Listing[] = [];
   let unavailable = false;
   try {
@@ -70,12 +71,17 @@ export default async function Marketplace({
       >
         {['Barchasi', 'Kiyim', 'Uy uchun', 'Elektronika', 'Go‘zallik'].map(
           (item, index) => (
-            <span
+            <Link
               key={item}
+              href={
+                index === 0
+                  ? '/marketplace'
+                  : `/marketplace?category=${encodeURIComponent(['', 'clothing', 'home', 'electronics', 'beauty'][index]!)}`
+              }
               className={`whitespace-nowrap rounded-full border px-4 py-2 text-sm font-bold ${index === 0 ? 'border-transparent bg-[var(--brand-soft)] text-[var(--brand-strong)]' : 'border-[var(--line)] bg-[var(--surface)]'}`}
             >
               {item}
-            </span>
+            </Link>
           ),
         )}
       </div>
