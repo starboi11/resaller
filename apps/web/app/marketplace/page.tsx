@@ -45,7 +45,7 @@ export default async function Marketplace({ searchParams }: { searchParams: Prom
       if (sort === 'price-desc') products.sort((a, b) => Number(b.priceMinor) - Number(a.priceMinor));
     }
   }
-  return <main className="catalog-page shell">
+  return <main className="catalog-page shell" role="search" aria-label="Marketplace qidiruvi va filterlar">
     <nav className="catalog-breadcrumb"><Link href="/">Bosh sahifa</Link><span>›</span><b>Marketplace</b></nav>
     <div className="catalog-title"><div><p className="eyebrow">Mahsulotlarni kashf eting</p><h1>{query.q ? `“${query.q}” natijalari` : 'Marketplace'}</h1><p>{products.length} ta mahsulot topildi</p></div><form className="catalog-sort"><input type="hidden" name="q" value={query.q ?? ''} /><input type="hidden" name="category" value={query.category ?? ''} /><input type="hidden" name="minPrice" value={query.minPrice ?? ''} /><input type="hidden" name="maxPrice" value={query.maxPrice ?? ''} /><input type="hidden" name="trust" value={query.trust ?? ''} /><label htmlFor="sort">Saralash</label><select id="sort" name="sort" defaultValue={sort}><option value="relevance">Tavsiya etilgan</option><option value="new">Eng yangi</option><option value="price-asc">Arzon narx</option><option value="price-desc">Qimmat narx</option></select><button>Qo‘llash</button></form></div>
     {demoMode && <p className="demo-notice" role="status">Development demo katalogi · productionda API xatosi real error holati sifatida ko‘rsatiladi</p>}

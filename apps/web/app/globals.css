@@ -89,6 +89,7 @@ a {
 }
 .skip-link:focus {
   transform: translateY(0);
+  pointer-events: none;
 }
 .site-header {
   position: sticky;

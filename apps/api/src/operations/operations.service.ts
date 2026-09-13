@@ -40,10 +40,9 @@ export class OperationsService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
 
   async cart(userId: string) {
-    const cart = await this.prisma.cart.upsert({
+    await this.prisma.cart.createMany({ data: [{ buyerId: userId }], skipDuplicates: true });
+    const cart = await this.prisma.cart.findUniqueOrThrow({
       where: { buyerId: userId },
-      create: { buyerId: userId },
-      update: {},
       include: {
         items: {
           include: {
