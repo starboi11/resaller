@@ -11,7 +11,22 @@ import rateLimit from '@fastify/rate-limit';
 import multipart from '@fastify/multipart';
 import { isOriginAllowed } from './common/origin-policy.js';
 
+function loadLocalEnvironment(): void {
+  if (process.env.DATABASE_URL) return;
+
+  for (const path of ['.env', '../../.env']) {
+    try {
+      process.loadEnvFile(path);
+      return;
+    } catch {
+      // Production injects environment variables; local development uses the
+      // first repository-level .env file available from the current cwd.
+    }
+  }
+}
+
 async function bootstrap(): Promise<void> {
+  loadLocalEnvironment();
   const env = parseApiEnvironment(process.env);
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ trustProxy: true, logger: { level: env.LOG_LEVEL, redact: ['req.headers.authorization', 'req.headers.cookie', 'res.headers.set-cookie'] } }));
   app.setGlobalPrefix('api');
