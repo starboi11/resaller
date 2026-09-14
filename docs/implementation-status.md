@@ -1,6 +1,6 @@
 # Phase D implementation status
 
-Updated: 2026-09-11
+Updated: 2026-09-14
 
 This file records implemented code, not planning completion. A phase is marked partial when its production or full workflow requirements still depend on missing integrations, staging evidence, or owner/legal input.
 
@@ -14,13 +14,13 @@ This file records implemented code, not planning completion. A phase is marked p
 | D6 Buyer marketplace | Implemented baseline | Search/filter, categories, store pages, listing details, favorites, follows, device-local recently viewed and mobile-first responsive states | Beta-driven recommendation/ranking iteration |
 | D7 Cart/orders | Core implemented | Multi-seller cart/checkout UI, atomic coupons, immutable snapshots, idempotency, concurrency-tested stock, cancellation/return/order timeline screens and 60-minute timeout | External delivery-provider integration |
 | D8 Chat/Q&A | Implemented baseline | SSE order chat, participant-authorized private attachment upload/download, product Q&A, seller answer UI, duplicate-safe reports and moderator decisions | Production load test of long-lived SSE connections |
-| D9 Reviews/trust/risk | Baseline implemented | Completed-order reviews, scheduled 90-day metrics, earned badge automation, advisory-lock job safety and deduplicated review-only timeout risk signals | Imported-testimonial UI and review moderation workflows |
+| D9 Reviews/trust/risk | Baseline implemented | Completed-order reviews, imported-testimonial management UI, review moderation, scheduled 90-day metrics, earned badge automation, advisory-lock job safety and deduplicated review-only timeout risk signals | Full buyer-to-review browser journey and beta calibration |
 | D10 Seller dashboard | Implemented baseline | Action Center, store/team/hours/vacation, product/variant/media management, coupons, promotions and 30-day analytics screens backed by role-protected APIs and audit logs | Beta-driven reporting refinements |
 | D11 Admin | Implemented baseline | Role-protected verification/store/listing/Q&A/dispute/users/reviews/security APIs and UI, immutable decisions, session revocation, last-super-admin protection, complete audits and mandatory TOTP | Production operator QA |
 | D12 Notifications/search/infra | Partial | In-app notification/account UI, encrypted endpoints, critical-event protection, durable Redis delivery queue, email/push webhook and Telegram adapters, PostgreSQL filters, local/S3 media and database/Redis/queue/disk readiness | Live provider/S3 credentials |
 | D13 Frontend integration | Implemented baseline | Phase C responsive design system and themes; home, marketplace, category, store, product, favorites, recent, cart/checkout, order timeline/private chat, account recovery/notification/session UI, seller onboarding/store/team/settings/catalog/media and admin operational modules connected to real APIs | Product-level visual refinement and authenticated beta feedback |
-| D14 Security hardening | Partial | Server authorization, validation, secure cookies, CSP/headers, CORS, origin/CSRF protection, redacted logs, rate limit, private-file authorization, tracked-file secret scanning and high-severity dependency gate | Broader upload malware scanning and staging pentest |
-| D15 Testing | Partial | Domain/auth/role/origin/notification tests, PostgreSQL concurrency, runtime authorization, full quality gate, Playwright desktop/mobile public plus buyer and seller onboarding/store journeys, keyboard/theme/overflow/image-alt and local performance budgets | Authenticated admin E2E, broader device lab and staging penetration test |
+| D14 Security hardening | Partial | Server authorization, validation, secure cookies, CSP/headers, CORS, origin/CSRF protection, redacted logs, rate limit, private-file authorization, ClamAV upload adapter, tracked-file secret scanning and high-severity dependency gate | Real ClamAV flow verification and staging pentest |
+| D15 Testing | Partial | Forty API/domain/database tests including PostgreSQL concurrency, full quality gate, and eighteen Chromium desktop/mobile browser tests including public, buyer, seller onboarding and authenticated moderator flows | Full checkout-to-review, seller fulfillment and admin decision journeys; Firefox/WebKit, device lab, visual regression and staging penetration test |
 | D16 Deployment | Ready for a server, not deployed | Local Compose, CI, production containers, private DB/Redis network, automatic migrations, Caddy HTTPS, protected metrics, alert rules, automated encrypted backups and a successful 13-migration restore drill | Server/DNS credentials, off-host backup target, live alert routing and production rollback rehearsal |
 | D17 Launch readiness | Blocked by launch inputs | Checklist documented | Legal publication, operating procedures, closed beta and production evidence |
 
