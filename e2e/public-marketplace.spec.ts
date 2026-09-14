@@ -5,7 +5,7 @@ test('buyer can navigate the mobile-first marketplace shell', async ({
 }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toContainText(
-    'Xarid qilish va sotishning yaxshiroq yo‘li.',
+    'Sotib ol. Sot. O‘s.',
   );
   await page.getByRole('link', { name: 'Mahsulotlarni ko‘rish' }).click();
   await expect(page).toHaveURL(/marketplace/);
