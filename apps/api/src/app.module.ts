@@ -10,6 +10,7 @@ import { NotificationsModule } from './notifications/notifications.module.js';
 import { MediaModule } from './media/media.module.js';
 import { TrustModule } from './trust/trust.module.js';
 import { MetricsController } from './health/metrics.controller.js';
+import { SupportModule } from './support/support.module.js';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { MetricsController } from './health/metrics.controller.js';
     NotificationsModule,
     MediaModule,
     TrustModule,
+    SupportModule,
   ],
   controllers: [HealthController, MetricsController, PlatformController],
 })

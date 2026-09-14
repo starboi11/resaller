@@ -35,24 +35,49 @@ export const apiEnvironmentSchema = z
     EMAIL_WEBHOOK_URL: optionalUrl,
     EMAIL_WEBHOOK_TOKEN: optionalSecret,
     TELEGRAM_BOT_TOKEN: optionalSecret,
+    TELEGRAM_WEBHOOK_SECRET: optionalSecret,
+    TELEGRAM_SUPPORT_CHAT_ID: optionalSecret,
+    TELEGRAM_SUPPORT_OPERATOR_NAME: z.string().min(1).default('Resaller Support'),
+    TELEGRAM_WEBHOOK_URL: optionalUrl,
     PUSH_WEBHOOK_URL: optionalUrl,
     PUSH_WEBHOOK_TOKEN: optionalSecret,
     METRICS_TOKEN: optionalSecret,
   })
   .superRefine((value, context) => {
-    if (value.MEDIA_STORAGE_DRIVER !== 's3') return;
-    for (const field of [
-      'S3_ENDPOINT',
-      'S3_BUCKET',
-      'S3_PRIVATE_BUCKET',
-      'S3_ACCESS_KEY_ID',
-      'S3_SECRET_ACCESS_KEY',
-    ] as const) {
-      if (!value[field])
+    if (value.MEDIA_STORAGE_DRIVER === 's3') {
+      for (const field of [
+        'S3_ENDPOINT',
+        'S3_BUCKET',
+        'S3_PRIVATE_BUCKET',
+        'S3_ACCESS_KEY_ID',
+        'S3_SECRET_ACCESS_KEY',
+      ] as const) {
+        if (!value[field])
+          context.addIssue({
+            code: 'custom',
+            path: [field],
+            message: `${field} is required for S3 media storage`,
+          });
+      }
+    }
+    if (value.TELEGRAM_BOT_TOKEN) {
+      for (const field of [
+        'TELEGRAM_WEBHOOK_SECRET',
+        'TELEGRAM_SUPPORT_CHAT_ID',
+        'TELEGRAM_WEBHOOK_URL',
+      ] as const) {
+        if (!value[field])
+          context.addIssue({
+            code: 'custom',
+            path: [field],
+            message: `${field} is required for Telegram support`,
+          });
+      }
+      if ((value.TELEGRAM_WEBHOOK_SECRET?.length ?? 0) < 32)
         context.addIssue({
           code: 'custom',
-          path: [field],
-          message: `${field} is required for S3 media storage`,
+          path: ['TELEGRAM_WEBHOOK_SECRET'],
+          message: 'TELEGRAM_WEBHOOK_SECRET must contain at least 32 characters',
         });
     }
   });

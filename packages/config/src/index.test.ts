@@ -37,3 +37,27 @@ describe('R2 environment', () => {
     expect(environment.S3_FORCE_PATH_STYLE).toBe(false);
   });
 });
+
+describe('Telegram support environment', () => {
+  it('requires the complete protected webhook configuration when enabled', () => {
+    expect(() =>
+      parseApiEnvironment({
+        ...base,
+        TELEGRAM_BOT_TOKEN: 'bot-token',
+      }),
+    ).toThrow(/TELEGRAM_WEBHOOK_SECRET/);
+  });
+
+  it('accepts a complete Telegram support configuration', () => {
+    const environment = parseApiEnvironment({
+      ...base,
+      TELEGRAM_BOT_TOKEN: 'bot-token',
+      TELEGRAM_WEBHOOK_SECRET: 'a-telegram-webhook-secret-with-32-characters',
+      TELEGRAM_SUPPORT_CHAT_ID: '-1001234567890',
+      TELEGRAM_SUPPORT_OPERATOR_NAME: 'Ziyodxon',
+      TELEGRAM_WEBHOOK_URL: 'https://api.resaller.uz/api/v1/support/telegram/webhook',
+    });
+    expect(environment.TELEGRAM_SUPPORT_CHAT_ID).toBe('-1001234567890');
+    expect(environment.TELEGRAM_SUPPORT_OPERATOR_NAME).toBe('Ziyodxon');
+  });
+});

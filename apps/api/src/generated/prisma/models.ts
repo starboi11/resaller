@@ -9,6 +9,8 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User.js'
+export type * from './models/SupportTicket.js'
+export type * from './models/SupportMessage.js'
 export type * from './models/Session.js'
 export type * from './models/PasswordResetToken.js'
 export type * from './models/TwoFactorChallenge.js'

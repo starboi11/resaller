@@ -130,6 +130,36 @@ model User {
   notificationEndpoints NotificationEndpoint[]
 }
 
+model SupportTicket {
+  id             String           @id @default(uuid()) @db.Uuid
+  publicId       String           @unique @default(cuid())
+  telegramChatId String           @unique
+  username       String?
+  displayName    String
+  status         String           @default("OPEN")
+  createdAt      DateTime         @default(now()) @db.Timestamptz
+  updatedAt      DateTime         @updatedAt @db.Timestamptz
+  lastMessageAt  DateTime         @default(now()) @db.Timestamptz
+  messages       SupportMessage[]
+
+  @@index([status, lastMessageAt])
+}
+
+model SupportMessage {
+  id                        String        @id @default(uuid()) @db.Uuid
+  ticketId                  String        @db.Uuid
+  direction                 String
+  telegramMessageId         String?
+  operatorTelegramMessageId String?       @unique
+  body                      String
+  metadata                  Json          @default("{}")
+  createdAt                 DateTime      @default(now()) @db.Timestamptz
+  ticket                    SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@unique([ticketId, telegramMessageId])
+  @@index([ticketId, createdAt])
+}
+
 model Session {
   id String @id @default(uuid()) @db.Uuid
   tokenHash String @unique
@@ -654,6 +684,7 @@ model CouponRedemption {
   order Order @relation(fields: [orderId], references: [id], onDelete: Restrict)
   @@unique([couponId, orderId])
   @@index([couponId, userId])
+  @@index([orderId])
 }
 
 model Promotion {

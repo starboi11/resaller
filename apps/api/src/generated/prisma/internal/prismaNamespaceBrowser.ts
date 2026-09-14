@@ -52,6 +52,8 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  SupportTicket: 'SupportTicket',
+  SupportMessage: 'SupportMessage',
   Session: 'Session',
   PasswordResetToken: 'PasswordResetToken',
   TwoFactorChallenge: 'TwoFactorChallenge',
@@ -140,6 +142,35 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const SupportTicketScalarFieldEnum = {
+  id: 'id',
+  publicId: 'publicId',
+  telegramChatId: 'telegramChatId',
+  username: 'username',
+  displayName: 'displayName',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  lastMessageAt: 'lastMessageAt'
+} as const
+
+export type SupportTicketScalarFieldEnum = (typeof SupportTicketScalarFieldEnum)[keyof typeof SupportTicketScalarFieldEnum]
+
+
+export const SupportMessageScalarFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  direction: 'direction',
+  telegramMessageId: 'telegramMessageId',
+  operatorTelegramMessageId: 'operatorTelegramMessageId',
+  body: 'body',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type SupportMessageScalarFieldEnum = (typeof SupportMessageScalarFieldEnum)[keyof typeof SupportMessageScalarFieldEnum]
 
 
 export const SessionScalarFieldEnum = {
