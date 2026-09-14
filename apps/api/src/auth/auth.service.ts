@@ -287,6 +287,7 @@ export class AuthService {
     });
     if (
       !session ||
+      !session.user ||
       session.revokedAt ||
       session.expiresAt <= new Date() ||
       session.user.deletedAt ||
