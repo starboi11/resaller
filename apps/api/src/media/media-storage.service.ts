@@ -13,6 +13,10 @@ export class MediaStorageService {
   private readonly root = resolve(process.env.MEDIA_ROOT ?? './data/media');
   private readonly driver = process.env.MEDIA_STORAGE_DRIVER ?? 'local';
   private readonly bucket = process.env.S3_BUCKET;
+  private readonly privateBucket = process.env.S3_PRIVATE_BUCKET;
+  private readonly privateRoot = resolve(
+    process.env.PRIVATE_MEDIA_ROOT ?? './data/private-media',
+  );
   private readonly s3 =
     this.driver === 's3'
       ? new S3Client({
@@ -70,9 +74,57 @@ export class MediaStorageService {
     await unlink(resolve(this.root, key)).catch(() => undefined);
   }
 
+  async putPrivate(key: string, bytes: Buffer, contentType: string): Promise<void> {
+    if (this.s3) {
+      await this.s3.send(
+        new PutObjectCommand({
+          Bucket: this.requiredPrivateBucket(),
+          Key: key,
+          Body: bytes,
+          ContentType: contentType,
+          CacheControl: 'private, no-store',
+        }),
+      );
+      return;
+    }
+    await mkdir(this.privateRoot, { recursive: true });
+    await writeFile(resolve(this.privateRoot, key), bytes, {
+      flag: 'wx',
+      mode: 0o600,
+    });
+  }
+
+  async getPrivate(key: string): Promise<Buffer> {
+    if (this.s3) {
+      const result = await this.s3.send(
+        new GetObjectCommand({ Bucket: this.requiredPrivateBucket(), Key: key }),
+      );
+      return Buffer.from(await result.Body!.transformToByteArray());
+    }
+    return readFile(resolve(this.privateRoot, key));
+  }
+
+  async deletePrivate(key: string): Promise<void> {
+    if (this.s3) {
+      await this.s3.send(
+        new DeleteObjectCommand({ Bucket: this.requiredPrivateBucket(), Key: key }),
+      );
+      return;
+    }
+    await unlink(resolve(this.privateRoot, key)).catch(() => undefined);
+  }
+
   private requiredBucket(): string {
     if (!this.bucket)
       throw new Error('S3_BUCKET is required when MEDIA_STORAGE_DRIVER=s3');
     return this.bucket;
+  }
+
+  private requiredPrivateBucket(): string {
+    if (!this.privateBucket)
+      throw new Error(
+        'S3_PRIVATE_BUCKET is required when MEDIA_STORAGE_DRIVER=s3',
+      );
+    return this.privateBucket;
   }
 }

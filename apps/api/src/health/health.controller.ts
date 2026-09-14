@@ -45,7 +45,11 @@ export class HealthController {
   }
   private async storageHealthy(): Promise<boolean> {
     if (process.env.MEDIA_STORAGE_DRIVER === 's3')
-      return Boolean(process.env.S3_ENDPOINT && process.env.S3_BUCKET);
+      return Boolean(
+        process.env.S3_ENDPOINT &&
+          process.env.S3_BUCKET &&
+          process.env.S3_PRIVATE_BUCKET,
+      );
     try {
       for (const root of [
         resolve(process.env.MEDIA_ROOT ?? './data/media'),

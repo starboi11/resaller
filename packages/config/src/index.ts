@@ -25,6 +25,7 @@ export const apiEnvironmentSchema = z
     S3_ENDPOINT: z.string().url().optional(),
     S3_REGION: z.string().min(1).default('auto'),
     S3_BUCKET: z.string().min(1).optional(),
+    S3_PRIVATE_BUCKET: z.string().min(1).optional(),
     S3_ACCESS_KEY_ID: z.string().min(1).optional(),
     S3_SECRET_ACCESS_KEY: z.string().min(1).optional(),
     S3_FORCE_PATH_STYLE: z
@@ -43,6 +44,7 @@ export const apiEnvironmentSchema = z
     for (const field of [
       'S3_ENDPOINT',
       'S3_BUCKET',
+      'S3_PRIVATE_BUCKET',
       'S3_ACCESS_KEY_ID',
       'S3_SECRET_ACCESS_KEY',
     ] as const) {

@@ -6,9 +6,7 @@ import {
   NotFoundException,
   UnsupportedMediaTypeException,
 } from '@nestjs/common';
-import { mkdir, readFile, unlink, writeFile } from 'node:fs/promises';
 import { randomBytes } from 'node:crypto';
-import { resolve } from 'node:path';
 import { PrismaService } from '../infrastructure/prisma.service.js';
 import type { AuthenticatedUser } from '../auth/session.guard.js';
 import { detectSafeImage } from './media-signature.js';
@@ -19,9 +17,6 @@ import { MalwareScannerService } from './malware-scanner.service.js';
 
 @Injectable()
 export class MediaService {
-  private readonly privateRoot = resolve(
-    process.env.PRIVATE_MEDIA_ROOT ?? './data/private-media',
-  );
   constructor(
     @Inject(PrismaService) private readonly prisma: PrismaService,
     @Inject(MediaStorageService) private readonly storage: MediaStorageService,
@@ -152,10 +147,8 @@ export class MediaService {
       throw new UnsupportedMediaTypeException(
         'Only valid PDF, JPEG, and PNG documents are accepted',
       );
-    await mkdir(this.privateRoot, { recursive: true });
     const storageKey = `${randomBytes(24).toString('hex')}.${document.extension}`;
-    const filePath = resolve(this.privateRoot, storageKey);
-    await writeFile(filePath, bytes, { flag: 'wx', mode: 0o600 });
+    await this.storage.putPrivate(storageKey, bytes, document.mimeType);
     const oldKey = verification.documentStorageKey;
     try {
       const updated = await this.prisma.$transaction(async (tx) => {
@@ -182,10 +175,10 @@ export class MediaService {
         return row;
       });
       if (oldKey && /^[a-f0-9]{48}\.(pdf|jpg|png)$/.test(oldKey))
-        await unlink(resolve(this.privateRoot, oldKey)).catch(() => undefined);
+        await this.storage.deletePrivate(oldKey);
       return updated;
     } catch (error) {
-      await unlink(filePath).catch(() => undefined);
+      await this.storage.deletePrivate(storageKey);
       throw error;
     }
   }
@@ -216,9 +209,7 @@ export class MediaService {
       },
     });
     return {
-      bytes: await readFile(
-        resolve(this.privateRoot, verification.documentStorageKey),
-      ),
+      bytes: await this.storage.getPrivate(verification.documentStorageKey),
       mimeType,
     };
   }
@@ -258,10 +249,8 @@ export class MediaService {
       throw new UnsupportedMediaTypeException(
         'Only valid PDF, JPEG, and PNG attachments are accepted',
       );
-    await mkdir(this.privateRoot, { recursive: true });
     const storageKey = `${randomBytes(24).toString('hex')}.${document.extension}`;
-    const filePath = resolve(this.privateRoot, storageKey);
-    await writeFile(filePath, bytes, { flag: 'wx', mode: 0o600 });
+    await this.storage.putPrivate(storageKey, bytes, document.mimeType);
     try {
       return await this.prisma.attachment.create({
         data: {
@@ -281,7 +270,7 @@ export class MediaService {
         },
       });
     } catch (error) {
-      await unlink(filePath).catch(() => undefined);
+      await this.storage.deletePrivate(storageKey);
       throw error;
     }
   }
@@ -328,7 +317,7 @@ export class MediaService {
       },
     });
     return {
-      bytes: await readFile(resolve(this.privateRoot, attachment.storageKey)),
+      bytes: await this.storage.getPrivate(attachment.storageKey),
       mimeType: attachment.mimeType,
       fileName: attachment.fileName,
     };
@@ -373,10 +362,8 @@ export class MediaService {
       throw new UnsupportedMediaTypeException(
         'Only valid PDF, JPEG, and PNG evidence is accepted',
       );
-    await mkdir(this.privateRoot, { recursive: true });
     const storageKey = `${randomBytes(24).toString('hex')}.${document.extension}`;
-    const filePath = resolve(this.privateRoot, storageKey);
-    await writeFile(filePath, bytes, { flag: 'wx', mode: 0o600 });
+    await this.storage.putPrivate(storageKey, bytes, document.mimeType);
     try {
       return await this.prisma.$transaction(async (tx) => {
         const evidence = await tx.disputeEvidence.create({
@@ -407,7 +394,7 @@ export class MediaService {
         return evidence;
       });
     } catch (error) {
-      await unlink(filePath).catch(() => undefined);
+      await this.storage.deletePrivate(storageKey);
       throw error;
     }
   }
@@ -449,7 +436,7 @@ export class MediaService {
       },
     });
     return {
-      bytes: await readFile(resolve(this.privateRoot, evidence.storageKey)),
+      bytes: await this.storage.getPrivate(evidence.storageKey),
       mimeType: evidence.mimeType,
       fileName: evidence.fileName,
     };
