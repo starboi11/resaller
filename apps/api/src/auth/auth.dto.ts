@@ -10,7 +10,7 @@ export class RegisterDto {
   username!: string;
 
   @IsString()
-  @MinLength(12)
+  @MinLength(6)
   @MaxLength(128)
   @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/)
   password!: string;
@@ -34,7 +34,7 @@ export class RequestPasswordResetDto {
 
 export class ResetPasswordDto {
   @IsString() @MinLength(32) @MaxLength(200) token!: string;
-  @IsString() @MinLength(12) @MaxLength(128) @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/) newPassword!: string;
+  @IsString() @MinLength(6) @MaxLength(128) @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/) newPassword!: string;
 }
 
 export class VerifyTwoFactorDto {

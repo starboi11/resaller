@@ -11,7 +11,7 @@ test('new buyer can register and reach protected account and cart screens', asyn
   await page.goto('/login');
   await page.getByRole('button', { name: 'Yangi hisob yaratish' }).click();
   await page.getByLabel('Username').fill(username);
-  await page.getByLabel('Parol').fill('Resaller-E2E-Password-2026');
+  await page.getByLabel('Parol').fill('Abcd12');
   await page.getByRole('button', { name: 'Hisob yaratish' }).click();
   await expect(page).toHaveURL(/marketplace/);
   await page.goto('/account');

@@ -66,14 +66,14 @@ export default function LoginPage() {
               className="field font-normal"
               name="password"
               type="password"
-              minLength={12}
+              minLength={6}
               autoComplete={
                 mode === 'login' ? 'current-password' : 'new-password'
               }
               required
             />
             <small className="muted font-normal">
-              Kamida 12 belgi, katta-kichik harf va raqam.
+              Kamida 6 belgi, katta-kichik harf va raqam.
             </small>
           </label>
           {message && (

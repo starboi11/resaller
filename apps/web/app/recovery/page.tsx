@@ -57,7 +57,7 @@ export default function Recovery() {
                   name="password"
                   type="password"
                   required
-                  minLength={12}
+                  minLength={6}
                 />
               </label>
             </>

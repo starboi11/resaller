@@ -12,6 +12,8 @@ describe('shared validation', () => {
   });
   it('requires a strong baseline password', () => {
     expect(passwordSchema.safeParse('LongEnoughPassword1').success).toBe(true);
+    expect(passwordSchema.safeParse('Abcd12').success).toBe(true);
+    expect(passwordSchema.safeParse('Abc12').success).toBe(false);
     expect(passwordSchema.safeParse('alllowercaseonly').success).toBe(false);
   });
 });
