@@ -35,7 +35,13 @@ async function bootstrap(): Promise<void> {
   await app.register(cookie);
   await app.register(multipart, { limits: { files: 1, fileSize: 5 * 1024 * 1024, fields: 0 } });
   await app.register(helmet, { contentSecurityPolicy: { directives: { defaultSrc: ["'self'"], frameAncestors: ["'none'"], objectSrc: ["'none'"] } } });
-  await app.register(rateLimit, { max: 120, timeWindow: '1 minute', keyGenerator: (request) => request.ip });
+  await app.register(rateLimit, {
+    // Browser suites and local development legitimately make many requests
+    // from one loopback address. Keep the stricter public limit in production.
+    max: env.NODE_ENV === 'production' ? 120 : 1_000,
+    timeWindow: '1 minute',
+    keyGenerator: (request) => request.ip,
+  });
   app.getHttpAdapter().getInstance().addHook('onRequest', async (request, reply) => {
     if (!isOriginAllowed(request.method, request.headers.origin, env.CORS_ORIGINS)) {
       await reply.code(403).send({ code: 'ORIGIN_FORBIDDEN', message: 'Cross-site request blocked', requestId: request.id });

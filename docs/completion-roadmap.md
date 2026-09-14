@@ -16,6 +16,10 @@ seller registers → verifies identity → creates store → creates product
 
 Every screen must answer one primary user question and expose one obvious next action. The approved cinematic black/deep-green, neon-mint and metallic Resaller identity remains the visual reference on desktop and mobile.
 
+### Local acceptance evidence
+
+- [x] The primary release journey passes through the real browser UI on desktop Chromium and a Pixel 7 viewport: seller creates a product and uploads media → moderator approves it → buyer finds it, adds it to cart and checks out → seller accepts within the visible 60-minute window and fulfills it → buyer leaves a verified review.
+
 ## C — Final UI/UX acceptance
 
 - [ ] Match home, search, filter, product, order tracking and order chat to the approved reference at desktop and mobile viewports.

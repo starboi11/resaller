@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 test('seller can start onboarding and create a draft store', async ({
   page,
 }, testInfo) => {
-  const stamp = `${Date.now()}${testInfo.project.name.length}`;
+  const stamp = `${Date.now()}${testInfo.workerIndex}`;
   const username = `seller_${stamp}`.slice(0, 32);
   await page.goto('/login');
   await page.getByRole('button', { name: 'Yangi hisob yaratish' }).click();
