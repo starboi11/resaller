@@ -26,11 +26,28 @@ test('keyboard focus and theme controls are available', async ({ page }) => {
   await expect(page.getByRole('link', { name: /asosiy qism/i })).toBeFocused();
   const theme = page.getByRole('button', { name: /mavzu/i });
   await expect(theme).toBeVisible();
-  await theme.click();
-  await expect(page.locator('html')).toHaveAttribute(
-    'data-theme',
-    /light|dark/,
-  );
+  for (const expected of ['light', 'dark', 'system']) {
+    await theme.click();
+    await expect.poll(() => page.evaluate(() => localStorage.getItem('resaller-theme'))).toBe(expected);
+    await expect(page.locator('html')).toHaveAttribute('data-theme', /light|dark/);
+  }
+});
+
+test('reduced motion removes decorative animation without hiding content', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'dark' });
+  await page.goto('/');
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  const motion = await page.locator('.market-hero__scene').evaluate((element) => {
+    const style = getComputedStyle(element);
+    return {
+      animationDuration: Number.parseFloat(style.animationDuration),
+      transitionDuration: Number.parseFloat(style.transitionDuration),
+    };
+  });
+  expect(motion.animationDuration).toBeLessThanOrEqual(0.01);
+  expect(motion.transitionDuration).toBeLessThanOrEqual(0.01);
 });
 
 test('account-protected screens provide a safe login path', async ({
@@ -45,14 +62,14 @@ test('account-protected screens provide a safe login path', async ({
 test('public pages have named controls, image alternatives and no horizontal overflow', async ({
   page,
 }) => {
-  for (const route of ['/', '/marketplace', '/categories', '/login']) {
+  for (const route of ['/', '/marketplace', '/product/demo-1', '/categories', '/login']) {
     await page.goto(route);
     const overflow = await page.evaluate(
       () =>
         document.documentElement.scrollWidth -
         document.documentElement.clientWidth,
     );
-    expect(overflow).toBeLessThanOrEqual(1);
+    expect(overflow, `${route} must not scroll horizontally`).toBeLessThanOrEqual(1);
     await expect(
       page.locator('button:not([aria-label])').filter({ hasText: /^$/ }),
     ).toHaveCount(0);

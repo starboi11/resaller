@@ -25,6 +25,7 @@ reply in the message body.
    production secret manager:
 
 ```dotenv
+TELEGRAM_SUPPORT_ENABLED=true
 TELEGRAM_BOT_TOKEN=<BotFather token>
 TELEGRAM_WEBHOOK_SECRET=<random 32+ character secret>
 TELEGRAM_SUPPORT_CHAT_ID=<private group numeric ID, usually starts with -100>

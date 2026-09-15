@@ -34,6 +34,10 @@ export const apiEnvironmentSchema = z
       .transform((value) => value === 'true'),
     EMAIL_WEBHOOK_URL: optionalUrl,
     EMAIL_WEBHOOK_TOKEN: optionalSecret,
+    TELEGRAM_SUPPORT_ENABLED: z
+      .enum(['true', 'false'])
+      .default('false')
+      .transform((value) => value === 'true'),
     TELEGRAM_BOT_TOKEN: optionalSecret,
     TELEGRAM_WEBHOOK_SECRET: optionalSecret,
     TELEGRAM_SUPPORT_CHAT_ID: optionalSecret,
@@ -60,8 +64,9 @@ export const apiEnvironmentSchema = z
           });
       }
     }
-    if (value.TELEGRAM_BOT_TOKEN) {
+    if (value.TELEGRAM_SUPPORT_ENABLED) {
       for (const field of [
+        'TELEGRAM_BOT_TOKEN',
         'TELEGRAM_WEBHOOK_SECRET',
         'TELEGRAM_SUPPORT_CHAT_ID',
         'TELEGRAM_WEBHOOK_URL',

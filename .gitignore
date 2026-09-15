@@ -16,3 +16,4 @@ apps/api/data/private-media/*
 .tmp-backup-drill*/
 test-results/
 playwright-report/
+artifacts/

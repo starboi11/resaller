@@ -131,6 +131,12 @@ export default function CartPage() {
     <main className="shell py-10 buyer-workspace cart-workspace">
       <p className="eyebrow">Xaridni yakunlash</p>
       <h1 className="mt-2 text-3xl font-black">Savat va yetkazib berish</h1>
+      <ol className="checkout-steps mt-6" aria-label="Checkout bosqichlari">
+        <li className="is-active"><b>1</b><span>Savat</span></li>
+        <li><b>2</b><span>Kontakt</span></li>
+        <li><b>3</b><span>Yetkazish</span></li>
+        <li><b>4</b><span>Tasdiqlash</span></li>
+      </ol>
       {message && (
         <p
           className="mt-4 rounded-xl bg-red-100 p-3 text-sm text-red-800"
@@ -160,6 +166,7 @@ export default function CartPage() {
               key={item.id}
             >
               <div>
+                <p className="cart-store">{item.listing.store.nameUz}</p>
                 <Link
                   className="font-black"
                   href={`/product/${item.listing.publicId}`}
@@ -207,6 +214,7 @@ export default function CartPage() {
               To‘lovni sotuvchi bilan platformadan tashqarida kelishasiz.
             </p>
             <div className="mt-5 grid gap-3">
+              <label className="checkout-field"><span>Ism va familiya</span>
               <input
                 className="field"
                 name="fullName"
@@ -214,27 +222,38 @@ export default function CartPage() {
                 minLength={3}
                 placeholder="Ism va familiya"
               />
+              </label>
+              <label className="checkout-field"><span>Telefon raqam</span>
               <input
                 className="field"
                 name="phone"
+                type="tel"
+                autoComplete="tel"
                 required
                 minLength={7}
                 placeholder="Telefon"
               />
+              </label>
+              <label className="checkout-field"><span>Viloyat yoki shahar</span>
               <input
                 className="field"
                 name="region"
+                autoComplete="address-level1"
                 required
                 minLength={2}
                 placeholder="Viloyat / shahar"
               />
+              </label>
+              <label className="checkout-field"><span>To‘liq manzil</span>
               <textarea
                 className="field min-h-24"
                 name="address"
+                autoComplete="street-address"
                 required
                 minLength={5}
                 placeholder="To‘liq manzil"
               />
+              </label>
               {Array.from(
                 new Map(
                   cart?.items.map((item) => [
@@ -243,12 +262,11 @@ export default function CartPage() {
                   ]) ?? [],
                 ),
               ).map(([storeId, name]) => (
-                <input
-                  key={storeId}
+                <label className="checkout-field" key={storeId}><span>{name} kuponi</span><input
                   className="field"
                   name={`coupon-${storeId}`}
                   placeholder={`${name} kupon kodi`}
-                />
+                /></label>
               ))}
             </div>
             <div className="my-5 flex justify-between border-t border-[var(--line)] pt-4">
@@ -258,6 +276,7 @@ export default function CartPage() {
             <button className="rs-button w-full" disabled={busy}>
               {busy ? 'Yaratilmoqda…' : 'Buyurtma berish'}
             </button>
+            <p className="checkout-assurance">Har bir do‘kon uchun alohida buyurtma yaratiladi. Seller 60 daqiqa ichida tasdiqlaydi.</p>
           </form>
         )}
       </div>

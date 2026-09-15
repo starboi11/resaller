@@ -49,6 +49,7 @@ export default async function Home() {
   return (
     <main className="market-home">
       <section className="shell market-hero">
+        <div className="market-hero__scene" aria-hidden="true" />
         <div className="market-hero__copy">
           <p className="market-hero__kicker">Oddiy marketplace’dan ko‘proq.</p>
           <h1>Sotib ol. <span>Sot. O‘s.</span></h1>
@@ -64,7 +65,7 @@ export default async function Home() {
             <span><b>Shaffof</b> Buyurtma tarixi</span>
           </div>
         </div>
-        <div className="hero-emblem" aria-hidden="true"><span>R</span></div>
+        <p className="market-hero__signature" aria-hidden="true">MORE THAN A MARKETPLACE</p>
       </section>
 
       <nav className="shell category-rail" aria-label="Mahsulot kategoriyalari">

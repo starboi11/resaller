@@ -1,6 +1,6 @@
 # Resaller completion roadmap
 
-Updated: 2026-09-14
+Updated: 2026-09-15
 
 This is the delivery order for closing the approved visual and product contract. A checkbox is complete only when the UI, API authorization, database behavior, error states, and browser evidence all pass.
 
@@ -23,9 +23,9 @@ Every screen must answer one primary user question and expose one obvious next a
 ## C — Final UI/UX acceptance
 
 - [ ] Match home, search, filter, product, order tracking and order chat to the approved reference at desktop and mobile viewports.
-- [ ] Keep cinematic/3D work concentrated in the entry experience, lazy-loaded with static and reduced-motion fallbacks.
+- [x] Keep cinematic/3D work concentrated in the entry experience, lazy-loaded with static and reduced-motion fallbacks.
 - [ ] Complete shared Dialog, Drawer, Toast, FormField, Tabs, FileUploader, Countdown, Timeline and Pagination components.
-- [ ] Capture and review reference screenshots for light, dark and system themes.
+- [x] Capture and review reference screenshots for light, dark and system themes.
 - [ ] Pass keyboard, contrast, screen-reader labels, reduced-motion, loading, empty, error, offline and restricted-state checks.
 
 ## D6–D13 — Complete the real workflows

@@ -43,14 +43,24 @@ describe('Telegram support environment', () => {
     expect(() =>
       parseApiEnvironment({
         ...base,
+        TELEGRAM_SUPPORT_ENABLED: 'true',
         TELEGRAM_BOT_TOKEN: 'bot-token',
       }),
     ).toThrow(/TELEGRAM_WEBHOOK_SECRET/);
   });
 
+  it('allows a token to remain configured while Telegram support is deferred', () => {
+    const environment = parseApiEnvironment({
+      ...base,
+      TELEGRAM_BOT_TOKEN: 'bot-token',
+    });
+    expect(environment.TELEGRAM_SUPPORT_ENABLED).toBe(false);
+  });
+
   it('accepts a complete Telegram support configuration', () => {
     const environment = parseApiEnvironment({
       ...base,
+      TELEGRAM_SUPPORT_ENABLED: 'true',
       TELEGRAM_BOT_TOKEN: 'bot-token',
       TELEGRAM_WEBHOOK_SECRET: 'a-telegram-webhook-secret-with-32-characters',
       TELEGRAM_SUPPORT_CHAT_ID: '-1001234567890',
