@@ -266,6 +266,7 @@ export type UserWhereInput = {
   disputeDecisions?: Prisma.DisputeDecisionListRelationFilter
   uploadedAttachments?: Prisma.AttachmentListRelationFilter
   notificationEndpoints?: Prisma.NotificationEndpointListRelationFilter
+  savedAddresses?: Prisma.SavedAddressListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -306,6 +307,7 @@ export type UserOrderByWithRelationInput = {
   disputeDecisions?: Prisma.DisputeDecisionOrderByRelationAggregateInput
   uploadedAttachments?: Prisma.AttachmentOrderByRelationAggregateInput
   notificationEndpoints?: Prisma.NotificationEndpointOrderByRelationAggregateInput
+  savedAddresses?: Prisma.SavedAddressOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -349,6 +351,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   disputeDecisions?: Prisma.DisputeDecisionListRelationFilter
   uploadedAttachments?: Prisma.AttachmentListRelationFilter
   notificationEndpoints?: Prisma.NotificationEndpointListRelationFilter
+  savedAddresses?: Prisma.SavedAddressListRelationFilter
 }, "id" | "publicId" | "username">
 
 export type UserOrderByWithAggregationInput = {
@@ -427,6 +430,7 @@ export type UserCreateInput = {
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -467,6 +471,7 @@ export type UserUncheckedCreateInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -507,6 +512,7 @@ export type UserUpdateInput = {
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -547,6 +553,7 @@ export type UserUncheckedUpdateInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -684,6 +691,20 @@ export type UserUpdaterolesInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type UserCreateNestedOneWithoutSavedAddressesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSavedAddressesInput, Prisma.UserUncheckedCreateWithoutSavedAddressesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSavedAddressesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSavedAddressesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSavedAddressesInput, Prisma.UserUncheckedCreateWithoutSavedAddressesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSavedAddressesInput
+  upsert?: Prisma.UserUpsertWithoutSavedAddressesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSavedAddressesInput, Prisma.UserUpdateWithoutSavedAddressesInput>, Prisma.UserUncheckedUpdateWithoutSavedAddressesInput>
 }
 
 export type UserCreateNestedOneWithoutSessionsInput = {
@@ -1036,6 +1057,182 @@ export type UserUpdateOneWithoutReviewedSecurityEventsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReviewedSecurityEventsInput, Prisma.UserUpdateWithoutReviewedSecurityEventsInput>, Prisma.UserUncheckedUpdateWithoutReviewedSecurityEventsInput>
 }
 
+export type UserCreateWithoutSavedAddressesInput = {
+  id?: string
+  publicId?: string
+  username: string
+  passwordHash: string
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutUserInput
+  storeMemberships?: Prisma.StoreMemberCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartCreateNestedManyWithoutBuyerInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
+  followedStores?: Prisma.StoreFollowerCreateNestedManyWithoutUserInput
+  questions?: Prisma.StoreQuestionCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  checkouts?: Prisma.CheckoutCreateNestedManyWithoutBuyerInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewCreateNestedManyWithoutModeratedByInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
+  notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSavedAddressesInput = {
+  id?: string
+  publicId?: string
+  username: string
+  passwordHash: string
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  accountStatus?: string
+  accountStatusReason?: string | null
+  accountStatusChangedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutUserInput
+  storeMemberships?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutBuyerInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
+  followedStores?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutUserInput
+  questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutAuthorInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  checkouts?: Prisma.CheckoutUncheckedCreateNestedManyWithoutBuyerInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  securityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutUserInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedCreateNestedManyWithoutReviewedByInput
+  moderatedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutModeratedByInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedCreateNestedManyWithoutUserInput
+  questionReports?: Prisma.QuestionReportUncheckedCreateNestedManyWithoutReporterInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
+  notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSavedAddressesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSavedAddressesInput, Prisma.UserUncheckedCreateWithoutSavedAddressesInput>
+}
+
+export type UserUpsertWithoutSavedAddressesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSavedAddressesInput, Prisma.UserUncheckedUpdateWithoutSavedAddressesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSavedAddressesInput, Prisma.UserUncheckedCreateWithoutSavedAddressesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSavedAddressesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSavedAddressesInput, Prisma.UserUncheckedUpdateWithoutSavedAddressesInput>
+}
+
+export type UserUpdateWithoutSavedAddressesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  sellerProfile?: Prisma.SellerProfileUpdateOneWithoutUserNestedInput
+  storeMemberships?: Prisma.StoreMemberUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUpdateManyWithoutBuyerNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
+  followedStores?: Prisma.StoreFollowerUpdateManyWithoutUserNestedInput
+  questions?: Prisma.StoreQuestionUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  checkouts?: Prisma.CheckoutUpdateManyWithoutBuyerNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUpdateManyWithoutModeratedByNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
+  notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSavedAddressesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  accountStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutUserNestedInput
+  storeMemberships?: Prisma.StoreMemberUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutBuyerNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
+  followedStores?: Prisma.StoreFollowerUncheckedUpdateManyWithoutUserNestedInput
+  questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutAuthorNestedInput
+  legalAcceptances?: Prisma.LegalAcceptanceUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  checkouts?: Prisma.CheckoutUncheckedUpdateManyWithoutBuyerNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  securityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutUserNestedInput
+  reviewedSecurityEvents?: Prisma.SecurityEventUncheckedUpdateManyWithoutReviewedByNestedInput
+  moderatedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutModeratedByNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  twoFactorChallenges?: Prisma.TwoFactorChallengeUncheckedUpdateManyWithoutUserNestedInput
+  questionReports?: Prisma.QuestionReportUncheckedUpdateManyWithoutReporterNestedInput
+  uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
+  disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
+  uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
+  notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UserCreateWithoutSessionsInput = {
   id?: string
   publicId?: string
@@ -1073,6 +1270,7 @@ export type UserCreateWithoutSessionsInput = {
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1112,6 +1310,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1167,6 +1366,7 @@ export type UserUpdateWithoutSessionsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1206,6 +1406,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPasswordResetTokensInput = {
@@ -1245,6 +1446,7 @@ export type UserCreateWithoutPasswordResetTokensInput = {
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
@@ -1284,6 +1486,7 @@ export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -1339,6 +1542,7 @@ export type UserUpdateWithoutPasswordResetTokensInput = {
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
@@ -1378,6 +1582,7 @@ export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTwoFactorChallengesInput = {
@@ -1417,6 +1622,7 @@ export type UserCreateWithoutTwoFactorChallengesInput = {
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTwoFactorChallengesInput = {
@@ -1456,6 +1662,7 @@ export type UserUncheckedCreateWithoutTwoFactorChallengesInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTwoFactorChallengesInput = {
@@ -1511,6 +1718,7 @@ export type UserUpdateWithoutTwoFactorChallengesInput = {
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTwoFactorChallengesInput = {
@@ -1550,6 +1758,7 @@ export type UserUncheckedUpdateWithoutTwoFactorChallengesInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSellerProfileInput = {
@@ -1589,6 +1798,7 @@ export type UserCreateWithoutSellerProfileInput = {
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSellerProfileInput = {
@@ -1628,6 +1838,7 @@ export type UserUncheckedCreateWithoutSellerProfileInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSellerProfileInput = {
@@ -1683,6 +1894,7 @@ export type UserUpdateWithoutSellerProfileInput = {
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSellerProfileInput = {
@@ -1722,6 +1934,7 @@ export type UserUncheckedUpdateWithoutSellerProfileInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutStoreMembershipsInput = {
@@ -1761,6 +1974,7 @@ export type UserCreateWithoutStoreMembershipsInput = {
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutStoreMembershipsInput = {
@@ -1800,6 +2014,7 @@ export type UserUncheckedCreateWithoutStoreMembershipsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutStoreMembershipsInput = {
@@ -1855,6 +2070,7 @@ export type UserUpdateWithoutStoreMembershipsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStoreMembershipsInput = {
@@ -1894,6 +2110,7 @@ export type UserUncheckedUpdateWithoutStoreMembershipsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCheckoutsInput = {
@@ -1933,6 +2150,7 @@ export type UserCreateWithoutCheckoutsInput = {
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCheckoutsInput = {
@@ -1972,6 +2190,7 @@ export type UserUncheckedCreateWithoutCheckoutsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCheckoutsInput = {
@@ -2027,6 +2246,7 @@ export type UserUpdateWithoutCheckoutsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCheckoutsInput = {
@@ -2066,6 +2286,7 @@ export type UserUncheckedUpdateWithoutCheckoutsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCartsInput = {
@@ -2105,6 +2326,7 @@ export type UserCreateWithoutCartsInput = {
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCartsInput = {
@@ -2144,6 +2366,7 @@ export type UserUncheckedCreateWithoutCartsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCartsInput = {
@@ -2199,6 +2422,7 @@ export type UserUpdateWithoutCartsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCartsInput = {
@@ -2238,6 +2462,7 @@ export type UserUncheckedUpdateWithoutCartsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFavoritesInput = {
@@ -2277,6 +2502,7 @@ export type UserCreateWithoutFavoritesInput = {
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFavoritesInput = {
@@ -2316,6 +2542,7 @@ export type UserUncheckedCreateWithoutFavoritesInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFavoritesInput = {
@@ -2371,6 +2598,7 @@ export type UserUpdateWithoutFavoritesInput = {
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFavoritesInput = {
@@ -2410,6 +2638,7 @@ export type UserUncheckedUpdateWithoutFavoritesInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFollowedStoresInput = {
@@ -2449,6 +2678,7 @@ export type UserCreateWithoutFollowedStoresInput = {
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFollowedStoresInput = {
@@ -2488,6 +2718,7 @@ export type UserUncheckedCreateWithoutFollowedStoresInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFollowedStoresInput = {
@@ -2543,6 +2774,7 @@ export type UserUpdateWithoutFollowedStoresInput = {
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFollowedStoresInput = {
@@ -2582,6 +2814,7 @@ export type UserUncheckedUpdateWithoutFollowedStoresInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutOrdersInput = {
@@ -2621,6 +2854,7 @@ export type UserCreateWithoutOrdersInput = {
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOrdersInput = {
@@ -2660,6 +2894,7 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOrdersInput = {
@@ -2715,6 +2950,7 @@ export type UserUpdateWithoutOrdersInput = {
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -2754,6 +2990,7 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutUploadedAttachmentsInput = {
@@ -2793,6 +3030,7 @@ export type UserCreateWithoutUploadedAttachmentsInput = {
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUploadedAttachmentsInput = {
@@ -2832,6 +3070,7 @@ export type UserUncheckedCreateWithoutUploadedAttachmentsInput = {
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutUploadedAttachmentsInput = {
@@ -2887,6 +3126,7 @@ export type UserUpdateWithoutUploadedAttachmentsInput = {
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUploadedAttachmentsInput = {
@@ -2926,6 +3166,7 @@ export type UserUncheckedUpdateWithoutUploadedAttachmentsInput = {
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutQuestionsInput = {
@@ -2965,6 +3206,7 @@ export type UserCreateWithoutQuestionsInput = {
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutQuestionsInput = {
@@ -3004,6 +3246,7 @@ export type UserUncheckedCreateWithoutQuestionsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutQuestionsInput = {
@@ -3059,6 +3302,7 @@ export type UserUpdateWithoutQuestionsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutQuestionsInput = {
@@ -3098,6 +3342,7 @@ export type UserUncheckedUpdateWithoutQuestionsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutQuestionReportsInput = {
@@ -3137,6 +3382,7 @@ export type UserCreateWithoutQuestionReportsInput = {
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutQuestionReportsInput = {
@@ -3176,6 +3422,7 @@ export type UserUncheckedCreateWithoutQuestionReportsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutQuestionReportsInput = {
@@ -3231,6 +3478,7 @@ export type UserUpdateWithoutQuestionReportsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutQuestionReportsInput = {
@@ -3270,6 +3518,7 @@ export type UserUncheckedUpdateWithoutQuestionReportsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutModeratedReviewsInput = {
@@ -3309,6 +3558,7 @@ export type UserCreateWithoutModeratedReviewsInput = {
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutModeratedReviewsInput = {
@@ -3348,6 +3598,7 @@ export type UserUncheckedCreateWithoutModeratedReviewsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutModeratedReviewsInput = {
@@ -3403,6 +3654,7 @@ export type UserUpdateWithoutModeratedReviewsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutModeratedReviewsInput = {
@@ -3442,6 +3694,7 @@ export type UserUncheckedUpdateWithoutModeratedReviewsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCouponRedemptionsInput = {
@@ -3481,6 +3734,7 @@ export type UserCreateWithoutCouponRedemptionsInput = {
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCouponRedemptionsInput = {
@@ -3520,6 +3774,7 @@ export type UserUncheckedCreateWithoutCouponRedemptionsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCouponRedemptionsInput = {
@@ -3575,6 +3830,7 @@ export type UserUpdateWithoutCouponRedemptionsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCouponRedemptionsInput = {
@@ -3614,6 +3870,7 @@ export type UserUncheckedUpdateWithoutCouponRedemptionsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutUploadedDisputeEvidenceInput = {
@@ -3653,6 +3910,7 @@ export type UserCreateWithoutUploadedDisputeEvidenceInput = {
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUploadedDisputeEvidenceInput = {
@@ -3692,6 +3950,7 @@ export type UserUncheckedCreateWithoutUploadedDisputeEvidenceInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutUploadedDisputeEvidenceInput = {
@@ -3747,6 +4006,7 @@ export type UserUpdateWithoutUploadedDisputeEvidenceInput = {
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUploadedDisputeEvidenceInput = {
@@ -3786,6 +4046,7 @@ export type UserUncheckedUpdateWithoutUploadedDisputeEvidenceInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDisputeDecisionsInput = {
@@ -3825,6 +4086,7 @@ export type UserCreateWithoutDisputeDecisionsInput = {
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDisputeDecisionsInput = {
@@ -3864,6 +4126,7 @@ export type UserUncheckedCreateWithoutDisputeDecisionsInput = {
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDisputeDecisionsInput = {
@@ -3919,6 +4182,7 @@ export type UserUpdateWithoutDisputeDecisionsInput = {
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDisputeDecisionsInput = {
@@ -3958,6 +4222,7 @@ export type UserUncheckedUpdateWithoutDisputeDecisionsInput = {
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -3997,6 +4262,7 @@ export type UserCreateWithoutNotificationsInput = {
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -4036,6 +4302,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -4091,6 +4358,7 @@ export type UserUpdateWithoutNotificationsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -4130,6 +4398,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationEndpointsInput = {
@@ -4169,6 +4438,7 @@ export type UserCreateWithoutNotificationEndpointsInput = {
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceCreateNestedManyWithoutUploadedByInput
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationEndpointsInput = {
@@ -4208,6 +4478,7 @@ export type UserUncheckedCreateWithoutNotificationEndpointsInput = {
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedCreateNestedManyWithoutUploadedByInput
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationEndpointsInput = {
@@ -4263,6 +4534,7 @@ export type UserUpdateWithoutNotificationEndpointsInput = {
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceUpdateManyWithoutUploadedByNestedInput
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationEndpointsInput = {
@@ -4302,6 +4574,7 @@ export type UserUncheckedUpdateWithoutNotificationEndpointsInput = {
   uploadedDisputeEvidence?: Prisma.DisputeEvidenceUncheckedUpdateManyWithoutUploadedByNestedInput
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationPreferencesInput = {
@@ -4341,6 +4614,7 @@ export type UserCreateWithoutNotificationPreferencesInput = {
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
@@ -4380,6 +4654,7 @@ export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationPreferencesInput = {
@@ -4435,6 +4710,7 @@ export type UserUpdateWithoutNotificationPreferencesInput = {
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
@@ -4474,6 +4750,7 @@ export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLegalAcceptancesInput = {
@@ -4513,6 +4790,7 @@ export type UserCreateWithoutLegalAcceptancesInput = {
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLegalAcceptancesInput = {
@@ -4552,6 +4830,7 @@ export type UserUncheckedCreateWithoutLegalAcceptancesInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLegalAcceptancesInput = {
@@ -4607,6 +4886,7 @@ export type UserUpdateWithoutLegalAcceptancesInput = {
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLegalAcceptancesInput = {
@@ -4646,6 +4926,7 @@ export type UserUncheckedUpdateWithoutLegalAcceptancesInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
@@ -4685,6 +4966,7 @@ export type UserCreateWithoutAuditLogsInput = {
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -4724,6 +5006,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -4779,6 +5062,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -4818,6 +5102,7 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSecurityEventsInput = {
@@ -4857,6 +5142,7 @@ export type UserCreateWithoutSecurityEventsInput = {
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSecurityEventsInput = {
@@ -4896,6 +5182,7 @@ export type UserUncheckedCreateWithoutSecurityEventsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSecurityEventsInput = {
@@ -4940,6 +5227,7 @@ export type UserCreateWithoutReviewedSecurityEventsInput = {
   disputeDecisions?: Prisma.DisputeDecisionCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewedSecurityEventsInput = {
@@ -4979,6 +5267,7 @@ export type UserUncheckedCreateWithoutReviewedSecurityEventsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedCreateNestedManyWithoutActorInput
   uploadedAttachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutUploaderInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedCreateNestedManyWithoutUserInput
+  savedAddresses?: Prisma.SavedAddressUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewedSecurityEventsInput = {
@@ -5034,6 +5323,7 @@ export type UserUpdateWithoutSecurityEventsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSecurityEventsInput = {
@@ -5073,6 +5363,7 @@ export type UserUncheckedUpdateWithoutSecurityEventsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutReviewedSecurityEventsInput = {
@@ -5123,6 +5414,7 @@ export type UserUpdateWithoutReviewedSecurityEventsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewedSecurityEventsInput = {
@@ -5162,6 +5454,7 @@ export type UserUncheckedUpdateWithoutReviewedSecurityEventsInput = {
   disputeDecisions?: Prisma.DisputeDecisionUncheckedUpdateManyWithoutActorNestedInput
   uploadedAttachments?: Prisma.AttachmentUncheckedUpdateManyWithoutUploaderNestedInput
   notificationEndpoints?: Prisma.NotificationEndpointUncheckedUpdateManyWithoutUserNestedInput
+  savedAddresses?: Prisma.SavedAddressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -5193,6 +5486,7 @@ export type UserCountOutputType = {
   disputeDecisions: number
   uploadedAttachments: number
   notificationEndpoints: number
+  savedAddresses: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -5219,6 +5513,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   disputeDecisions?: boolean | UserCountOutputTypeCountDisputeDecisionsArgs
   uploadedAttachments?: boolean | UserCountOutputTypeCountUploadedAttachmentsArgs
   notificationEndpoints?: boolean | UserCountOutputTypeCountNotificationEndpointsArgs
+  savedAddresses?: boolean | UserCountOutputTypeCountSavedAddressesArgs
 }
 
 /**
@@ -5392,6 +5687,13 @@ export type UserCountOutputTypeCountNotificationEndpointsArgs<ExtArgs extends ru
   where?: Prisma.NotificationEndpointWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSavedAddressesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SavedAddressWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -5431,6 +5733,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   disputeDecisions?: boolean | Prisma.User$disputeDecisionsArgs<ExtArgs>
   uploadedAttachments?: boolean | Prisma.User$uploadedAttachmentsArgs<ExtArgs>
   notificationEndpoints?: boolean | Prisma.User$notificationEndpointsArgs<ExtArgs>
+  savedAddresses?: boolean | Prisma.User$savedAddressesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -5508,6 +5811,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   disputeDecisions?: boolean | Prisma.User$disputeDecisionsArgs<ExtArgs>
   uploadedAttachments?: boolean | Prisma.User$uploadedAttachmentsArgs<ExtArgs>
   notificationEndpoints?: boolean | Prisma.User$notificationEndpointsArgs<ExtArgs>
+  savedAddresses?: boolean | Prisma.User$savedAddressesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -5540,6 +5844,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     disputeDecisions: Prisma.$DisputeDecisionPayload<ExtArgs>[]
     uploadedAttachments: Prisma.$AttachmentPayload<ExtArgs>[]
     notificationEndpoints: Prisma.$NotificationEndpointPayload<ExtArgs>[]
+    savedAddresses: Prisma.$SavedAddressPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -5973,6 +6278,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   disputeDecisions<T extends Prisma.User$disputeDecisionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$disputeDecisionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DisputeDecisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   uploadedAttachments<T extends Prisma.User$uploadedAttachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$uploadedAttachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notificationEndpoints<T extends Prisma.User$notificationEndpointsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationEndpointsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationEndpointPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  savedAddresses<T extends Prisma.User$savedAddressesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$savedAddressesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedAddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6976,6 +7282,30 @@ export type User$notificationEndpointsArgs<ExtArgs extends runtime.Types.Extensi
   take?: number
   skip?: number
   distinct?: Prisma.NotificationEndpointScalarFieldEnum | Prisma.NotificationEndpointScalarFieldEnum[]
+}
+
+/**
+ * User.savedAddresses
+ */
+export type User$savedAddressesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SavedAddress
+   */
+  select?: Prisma.SavedAddressSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SavedAddress
+   */
+  omit?: Prisma.SavedAddressOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SavedAddressInclude<ExtArgs> | null
+  where?: Prisma.SavedAddressWhereInput
+  orderBy?: Prisma.SavedAddressOrderByWithRelationInput | Prisma.SavedAddressOrderByWithRelationInput[]
+  cursor?: Prisma.SavedAddressWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SavedAddressScalarFieldEnum | Prisma.SavedAddressScalarFieldEnum[]
 }
 
 /**

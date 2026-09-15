@@ -26,6 +26,7 @@ import {
   cleanVariantOptions,
   validateCategoryAttributes,
 } from './catalog-validation.js';
+import { marketplaceScore } from './marketplace-search.js';
 
 @Injectable()
 export class CommerceService {
@@ -714,6 +715,8 @@ export class CommerceService {
   }
 
   async marketplace(query: MarketplaceQueryDto) {
+    const page = query.page ?? 1;
+    const pageSize = query.pageSize ?? 12;
     const listings = await this.prisma.listing.findMany({
       where: {
         status: 'ACTIVE',
@@ -725,15 +728,6 @@ export class CommerceService {
             ? { sellerProfile: { trustBadge: query.trust } }
             : {}),
         },
-        ...(query.q
-          ? {
-              OR: [
-                { nameUz: { contains: query.q, mode: 'insensitive' } },
-                { nameRu: { contains: query.q, mode: 'insensitive' } },
-                { descriptionUz: { contains: query.q, mode: 'insensitive' } },
-              ],
-            }
-          : {}),
         ...(query.category
           ? {
               category: {
@@ -763,23 +757,30 @@ export class CommerceService {
           : query.sort === 'price-desc'
             ? { priceMinor: 'desc' }
             : { createdAt: 'desc' },
-      take: 24,
+      take: 500,
       select: {
         publicId: true,
         nameUz: true,
         nameRu: true,
         priceMinor: true,
         currency: true,
-        category: { select: { slug: true, nameUz: true } },
+        descriptionUz: true,
+        descriptionRu: true,
+        category: { select: { slug: true, nameUz: true, nameRu: true } },
         store: {
           select: {
             username: true,
             nameUz: true,
+            nameRu: true,
             sellerProfile: { select: { trustBadge: true } },
           },
         },
         variants: {
           select: {
+            id: true,
+            sku: true,
+            options: true,
+            priceOverrideMinor: true,
             inventory: { select: { available: true, reserved: true } },
           },
         },
@@ -794,10 +795,19 @@ export class CommerceService {
         },
       },
     });
-    return listings.map((listing) => ({
+    const ranked = listings.map((listing) => ({
       ...listing,
       priceMinor: listing.priceMinor.toString(),
-    }));
+      variants: listing.variants.map((variant) => ({ ...variant, priceOverrideMinor: variant.priceOverrideMinor?.toString() ?? null })),
+      score: marketplaceScore(query.q ?? '', [listing.nameUz, listing.nameRu, listing.descriptionUz, listing.descriptionRu, listing.category.nameUz, listing.category.nameRu, listing.store.nameUz, listing.store.nameRu]),
+    })).filter((listing) => !query.q || listing.score > 0);
+    if (query.q && (!query.sort || query.sort === 'relevance')) ranked.sort((a, b) => b.score - a.score);
+    const total = ranked.length;
+    const start = (page - 1) * pageSize;
+    return {
+      items: ranked.slice(start, start + pageSize),
+      pagination: { page, pageSize, total, pages: Math.max(1, Math.ceil(total / pageSize)) },
+    };
   }
 
   async getListing(publicId: string) {
@@ -869,8 +879,9 @@ export class CommerceService {
                   reviews.length) *
                   10,
               ) / 10,
+            distribution: Object.fromEntries([5, 4, 3, 2, 1].map((rating) => [rating, reviews.filter((review) => review.rating === rating).length])),
           }
-        : { count: 0, average: null },
+        : { count: 0, average: null, distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 } },
       variants: listing.variants.map((variant) => ({
         ...variant,
         priceOverrideMinor: variant.priceOverrideMinor?.toString() ?? null,

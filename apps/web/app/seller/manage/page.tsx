@@ -38,6 +38,7 @@ export default function SellerManage() {
   const [wizardStep, setWizardStep] = useState(1);
   const [editTarget, setEditTarget] = useState<Store['listings'][number] | null>(null);
   const [answerTarget, setAnswerTarget] = useState<string | null>(null);
+  const [mediaVariant, setMediaVariant] = useState<Record<string,string>>({});
   const load = useCallback(async () => {
     const response = await fetch(`${API}/seller/stores`, {
       credentials: 'include',
@@ -123,9 +124,10 @@ export default function SellerManage() {
     });
     if (ok) form.reset();
   }
-  async function image(listingId: string, file: File) {
+  async function image(listingId: string, file: File, variantId?: string) {
     const data = new FormData();
     data.set('file', file);
+    if (variantId) data.set('variantId', variantId);
     const response = await fetch(`${API}/media/listings/${listingId}/images`, {
       method: 'POST',
       credentials: 'include',
@@ -436,11 +438,12 @@ export default function SellerManage() {
                           accept="image/jpeg,image/png,image/webp"
                           onChange={(event) => {
                             const file = event.target.files?.[0];
-                            if (file) void image(item.publicId, file);
+                            if (file) void image(item.publicId, file, mediaVariant[item.publicId]);
                           }}
                         />
                       </label>
                     </div>
+                    <label className="muted mt-3 block text-xs">Rasm qaysi variantga tegishli?<select className="field mt-1" value={mediaVariant[item.publicId]??''} onChange={(event)=>setMediaVariant(current=>({...current,[item.publicId]:event.target.value}))}><option value="">Barcha variantlar</option>{item.variants.map(variant=><option key={variant.id} value={variant.id}>{variant.sku}</option>)}</select></label>
                     <button
                       className="mt-3 text-sm font-black text-[var(--brand-strong)]"
                       onClick={() =>

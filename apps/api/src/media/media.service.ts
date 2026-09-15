@@ -27,6 +27,7 @@ export class MediaService {
     userId: string,
     listingPublicId: string,
     bytes: Buffer,
+    variantId?: string,
   ) {
     await this.scanner.assertClean(bytes);
     const listing = await this.prisma.listing.findUnique({
@@ -44,6 +45,7 @@ export class MediaService {
       throw new ForbiddenException('Listing access denied');
     if (listing.media.length >= 10)
       throw new ConflictException('A listing can contain at most 10 images');
+    if (variantId && !await this.prisma.listingVariant.findFirst({ where: { id: variantId, listingId: listing.id } })) throw new ConflictException('Variant does not belong to listing');
     const image = detectSafeImage(bytes);
     if (!image)
       throw new UnsupportedMediaTypeException(
@@ -74,6 +76,7 @@ export class MediaService {
       const media = await this.prisma.listingMedia.create({
         data: {
           listingId: listing.id,
+          variantId: variantId ?? null,
           storageKey,
           thumbnailStorageKey,
           mimeType: processed.mimeType,
@@ -89,6 +92,7 @@ export class MediaService {
           width: true,
           height: true,
           position: true,
+          variantId: true,
         },
       });
       return {

@@ -41,6 +41,7 @@ export type ListingMediaSumAggregateOutputType = {
 export type ListingMediaMinAggregateOutputType = {
   id: string | null
   listingId: string | null
+  variantId: string | null
   storageKey: string | null
   thumbnailStorageKey: string | null
   mimeType: string | null
@@ -52,6 +53,7 @@ export type ListingMediaMinAggregateOutputType = {
 export type ListingMediaMaxAggregateOutputType = {
   id: string | null
   listingId: string | null
+  variantId: string | null
   storageKey: string | null
   thumbnailStorageKey: string | null
   mimeType: string | null
@@ -63,6 +65,7 @@ export type ListingMediaMaxAggregateOutputType = {
 export type ListingMediaCountAggregateOutputType = {
   id: number
   listingId: number
+  variantId: number
   storageKey: number
   thumbnailStorageKey: number
   mimeType: number
@@ -88,6 +91,7 @@ export type ListingMediaSumAggregateInputType = {
 export type ListingMediaMinAggregateInputType = {
   id?: true
   listingId?: true
+  variantId?: true
   storageKey?: true
   thumbnailStorageKey?: true
   mimeType?: true
@@ -99,6 +103,7 @@ export type ListingMediaMinAggregateInputType = {
 export type ListingMediaMaxAggregateInputType = {
   id?: true
   listingId?: true
+  variantId?: true
   storageKey?: true
   thumbnailStorageKey?: true
   mimeType?: true
@@ -110,6 +115,7 @@ export type ListingMediaMaxAggregateInputType = {
 export type ListingMediaCountAggregateInputType = {
   id?: true
   listingId?: true
+  variantId?: true
   storageKey?: true
   thumbnailStorageKey?: true
   mimeType?: true
@@ -208,6 +214,7 @@ export type ListingMediaGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
 export type ListingMediaGroupByOutputType = {
   id: string
   listingId: string
+  variantId: string | null
   storageKey: string
   thumbnailStorageKey: string | null
   mimeType: string
@@ -242,6 +249,7 @@ export type ListingMediaWhereInput = {
   NOT?: Prisma.ListingMediaWhereInput | Prisma.ListingMediaWhereInput[]
   id?: Prisma.UuidFilter<"ListingMedia"> | string
   listingId?: Prisma.UuidFilter<"ListingMedia"> | string
+  variantId?: Prisma.UuidNullableFilter<"ListingMedia"> | string | null
   storageKey?: Prisma.StringFilter<"ListingMedia"> | string
   thumbnailStorageKey?: Prisma.StringNullableFilter<"ListingMedia"> | string | null
   mimeType?: Prisma.StringFilter<"ListingMedia"> | string
@@ -249,11 +257,13 @@ export type ListingMediaWhereInput = {
   height?: Prisma.IntNullableFilter<"ListingMedia"> | number | null
   position?: Prisma.IntFilter<"ListingMedia"> | number
   listing?: Prisma.XOR<Prisma.ListingScalarRelationFilter, Prisma.ListingWhereInput>
+  variant?: Prisma.XOR<Prisma.ListingVariantNullableScalarRelationFilter, Prisma.ListingVariantWhereInput> | null
 }
 
 export type ListingMediaOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   listingId?: Prisma.SortOrder
+  variantId?: Prisma.SortOrderInput | Prisma.SortOrder
   storageKey?: Prisma.SortOrder
   thumbnailStorageKey?: Prisma.SortOrderInput | Prisma.SortOrder
   mimeType?: Prisma.SortOrder
@@ -261,6 +271,7 @@ export type ListingMediaOrderByWithRelationInput = {
   height?: Prisma.SortOrderInput | Prisma.SortOrder
   position?: Prisma.SortOrder
   listing?: Prisma.ListingOrderByWithRelationInput
+  variant?: Prisma.ListingVariantOrderByWithRelationInput
 }
 
 export type ListingMediaWhereUniqueInput = Prisma.AtLeast<{
@@ -272,16 +283,19 @@ export type ListingMediaWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.ListingMediaWhereInput[]
   NOT?: Prisma.ListingMediaWhereInput | Prisma.ListingMediaWhereInput[]
   listingId?: Prisma.UuidFilter<"ListingMedia"> | string
+  variantId?: Prisma.UuidNullableFilter<"ListingMedia"> | string | null
   mimeType?: Prisma.StringFilter<"ListingMedia"> | string
   width?: Prisma.IntNullableFilter<"ListingMedia"> | number | null
   height?: Prisma.IntNullableFilter<"ListingMedia"> | number | null
   position?: Prisma.IntFilter<"ListingMedia"> | number
   listing?: Prisma.XOR<Prisma.ListingScalarRelationFilter, Prisma.ListingWhereInput>
+  variant?: Prisma.XOR<Prisma.ListingVariantNullableScalarRelationFilter, Prisma.ListingVariantWhereInput> | null
 }, "id" | "storageKey" | "thumbnailStorageKey" | "listingId_position">
 
 export type ListingMediaOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   listingId?: Prisma.SortOrder
+  variantId?: Prisma.SortOrderInput | Prisma.SortOrder
   storageKey?: Prisma.SortOrder
   thumbnailStorageKey?: Prisma.SortOrderInput | Prisma.SortOrder
   mimeType?: Prisma.SortOrder
@@ -301,6 +315,7 @@ export type ListingMediaScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ListingMediaScalarWhereWithAggregatesInput | Prisma.ListingMediaScalarWhereWithAggregatesInput[]
   id?: Prisma.UuidWithAggregatesFilter<"ListingMedia"> | string
   listingId?: Prisma.UuidWithAggregatesFilter<"ListingMedia"> | string
+  variantId?: Prisma.UuidNullableWithAggregatesFilter<"ListingMedia"> | string | null
   storageKey?: Prisma.StringWithAggregatesFilter<"ListingMedia"> | string
   thumbnailStorageKey?: Prisma.StringNullableWithAggregatesFilter<"ListingMedia"> | string | null
   mimeType?: Prisma.StringWithAggregatesFilter<"ListingMedia"> | string
@@ -318,11 +333,13 @@ export type ListingMediaCreateInput = {
   height?: number | null
   position: number
   listing: Prisma.ListingCreateNestedOneWithoutMediaInput
+  variant?: Prisma.ListingVariantCreateNestedOneWithoutMediaInput
 }
 
 export type ListingMediaUncheckedCreateInput = {
   id?: string
   listingId: string
+  variantId?: string | null
   storageKey: string
   thumbnailStorageKey?: string | null
   mimeType: string
@@ -340,11 +357,13 @@ export type ListingMediaUpdateInput = {
   height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   listing?: Prisma.ListingUpdateOneRequiredWithoutMediaNestedInput
+  variant?: Prisma.ListingVariantUpdateOneWithoutMediaNestedInput
 }
 
 export type ListingMediaUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   listingId?: Prisma.StringFieldUpdateOperationsInput | string
+  variantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storageKey?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -356,6 +375,7 @@ export type ListingMediaUncheckedUpdateInput = {
 export type ListingMediaCreateManyInput = {
   id?: string
   listingId: string
+  variantId?: string | null
   storageKey: string
   thumbnailStorageKey?: string | null
   mimeType: string
@@ -377,6 +397,7 @@ export type ListingMediaUpdateManyMutationInput = {
 export type ListingMediaUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   listingId?: Prisma.StringFieldUpdateOperationsInput | string
+  variantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storageKey?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -403,6 +424,7 @@ export type ListingMediaListingIdPositionCompoundUniqueInput = {
 export type ListingMediaCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   listingId?: Prisma.SortOrder
+  variantId?: Prisma.SortOrder
   storageKey?: Prisma.SortOrder
   thumbnailStorageKey?: Prisma.SortOrder
   mimeType?: Prisma.SortOrder
@@ -420,6 +442,7 @@ export type ListingMediaAvgOrderByAggregateInput = {
 export type ListingMediaMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   listingId?: Prisma.SortOrder
+  variantId?: Prisma.SortOrder
   storageKey?: Prisma.SortOrder
   thumbnailStorageKey?: Prisma.SortOrder
   mimeType?: Prisma.SortOrder
@@ -431,6 +454,7 @@ export type ListingMediaMaxOrderByAggregateInput = {
 export type ListingMediaMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   listingId?: Prisma.SortOrder
+  variantId?: Prisma.SortOrder
   storageKey?: Prisma.SortOrder
   thumbnailStorageKey?: Prisma.SortOrder
   mimeType?: Prisma.SortOrder
@@ -487,6 +511,48 @@ export type ListingMediaUncheckedUpdateManyWithoutListingNestedInput = {
   deleteMany?: Prisma.ListingMediaScalarWhereInput | Prisma.ListingMediaScalarWhereInput[]
 }
 
+export type ListingMediaCreateNestedManyWithoutVariantInput = {
+  create?: Prisma.XOR<Prisma.ListingMediaCreateWithoutVariantInput, Prisma.ListingMediaUncheckedCreateWithoutVariantInput> | Prisma.ListingMediaCreateWithoutVariantInput[] | Prisma.ListingMediaUncheckedCreateWithoutVariantInput[]
+  connectOrCreate?: Prisma.ListingMediaCreateOrConnectWithoutVariantInput | Prisma.ListingMediaCreateOrConnectWithoutVariantInput[]
+  createMany?: Prisma.ListingMediaCreateManyVariantInputEnvelope
+  connect?: Prisma.ListingMediaWhereUniqueInput | Prisma.ListingMediaWhereUniqueInput[]
+}
+
+export type ListingMediaUncheckedCreateNestedManyWithoutVariantInput = {
+  create?: Prisma.XOR<Prisma.ListingMediaCreateWithoutVariantInput, Prisma.ListingMediaUncheckedCreateWithoutVariantInput> | Prisma.ListingMediaCreateWithoutVariantInput[] | Prisma.ListingMediaUncheckedCreateWithoutVariantInput[]
+  connectOrCreate?: Prisma.ListingMediaCreateOrConnectWithoutVariantInput | Prisma.ListingMediaCreateOrConnectWithoutVariantInput[]
+  createMany?: Prisma.ListingMediaCreateManyVariantInputEnvelope
+  connect?: Prisma.ListingMediaWhereUniqueInput | Prisma.ListingMediaWhereUniqueInput[]
+}
+
+export type ListingMediaUpdateManyWithoutVariantNestedInput = {
+  create?: Prisma.XOR<Prisma.ListingMediaCreateWithoutVariantInput, Prisma.ListingMediaUncheckedCreateWithoutVariantInput> | Prisma.ListingMediaCreateWithoutVariantInput[] | Prisma.ListingMediaUncheckedCreateWithoutVariantInput[]
+  connectOrCreate?: Prisma.ListingMediaCreateOrConnectWithoutVariantInput | Prisma.ListingMediaCreateOrConnectWithoutVariantInput[]
+  upsert?: Prisma.ListingMediaUpsertWithWhereUniqueWithoutVariantInput | Prisma.ListingMediaUpsertWithWhereUniqueWithoutVariantInput[]
+  createMany?: Prisma.ListingMediaCreateManyVariantInputEnvelope
+  set?: Prisma.ListingMediaWhereUniqueInput | Prisma.ListingMediaWhereUniqueInput[]
+  disconnect?: Prisma.ListingMediaWhereUniqueInput | Prisma.ListingMediaWhereUniqueInput[]
+  delete?: Prisma.ListingMediaWhereUniqueInput | Prisma.ListingMediaWhereUniqueInput[]
+  connect?: Prisma.ListingMediaWhereUniqueInput | Prisma.ListingMediaWhereUniqueInput[]
+  update?: Prisma.ListingMediaUpdateWithWhereUniqueWithoutVariantInput | Prisma.ListingMediaUpdateWithWhereUniqueWithoutVariantInput[]
+  updateMany?: Prisma.ListingMediaUpdateManyWithWhereWithoutVariantInput | Prisma.ListingMediaUpdateManyWithWhereWithoutVariantInput[]
+  deleteMany?: Prisma.ListingMediaScalarWhereInput | Prisma.ListingMediaScalarWhereInput[]
+}
+
+export type ListingMediaUncheckedUpdateManyWithoutVariantNestedInput = {
+  create?: Prisma.XOR<Prisma.ListingMediaCreateWithoutVariantInput, Prisma.ListingMediaUncheckedCreateWithoutVariantInput> | Prisma.ListingMediaCreateWithoutVariantInput[] | Prisma.ListingMediaUncheckedCreateWithoutVariantInput[]
+  connectOrCreate?: Prisma.ListingMediaCreateOrConnectWithoutVariantInput | Prisma.ListingMediaCreateOrConnectWithoutVariantInput[]
+  upsert?: Prisma.ListingMediaUpsertWithWhereUniqueWithoutVariantInput | Prisma.ListingMediaUpsertWithWhereUniqueWithoutVariantInput[]
+  createMany?: Prisma.ListingMediaCreateManyVariantInputEnvelope
+  set?: Prisma.ListingMediaWhereUniqueInput | Prisma.ListingMediaWhereUniqueInput[]
+  disconnect?: Prisma.ListingMediaWhereUniqueInput | Prisma.ListingMediaWhereUniqueInput[]
+  delete?: Prisma.ListingMediaWhereUniqueInput | Prisma.ListingMediaWhereUniqueInput[]
+  connect?: Prisma.ListingMediaWhereUniqueInput | Prisma.ListingMediaWhereUniqueInput[]
+  update?: Prisma.ListingMediaUpdateWithWhereUniqueWithoutVariantInput | Prisma.ListingMediaUpdateWithWhereUniqueWithoutVariantInput[]
+  updateMany?: Prisma.ListingMediaUpdateManyWithWhereWithoutVariantInput | Prisma.ListingMediaUpdateManyWithWhereWithoutVariantInput[]
+  deleteMany?: Prisma.ListingMediaScalarWhereInput | Prisma.ListingMediaScalarWhereInput[]
+}
+
 export type NullableIntFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number
@@ -503,10 +569,12 @@ export type ListingMediaCreateWithoutListingInput = {
   width?: number | null
   height?: number | null
   position: number
+  variant?: Prisma.ListingVariantCreateNestedOneWithoutMediaInput
 }
 
 export type ListingMediaUncheckedCreateWithoutListingInput = {
   id?: string
+  variantId?: string | null
   storageKey: string
   thumbnailStorageKey?: string | null
   mimeType: string
@@ -547,6 +615,7 @@ export type ListingMediaScalarWhereInput = {
   NOT?: Prisma.ListingMediaScalarWhereInput | Prisma.ListingMediaScalarWhereInput[]
   id?: Prisma.UuidFilter<"ListingMedia"> | string
   listingId?: Prisma.UuidFilter<"ListingMedia"> | string
+  variantId?: Prisma.UuidNullableFilter<"ListingMedia"> | string | null
   storageKey?: Prisma.StringFilter<"ListingMedia"> | string
   thumbnailStorageKey?: Prisma.StringNullableFilter<"ListingMedia"> | string | null
   mimeType?: Prisma.StringFilter<"ListingMedia"> | string
@@ -555,8 +624,57 @@ export type ListingMediaScalarWhereInput = {
   position?: Prisma.IntFilter<"ListingMedia"> | number
 }
 
+export type ListingMediaCreateWithoutVariantInput = {
+  id?: string
+  storageKey: string
+  thumbnailStorageKey?: string | null
+  mimeType: string
+  width?: number | null
+  height?: number | null
+  position: number
+  listing: Prisma.ListingCreateNestedOneWithoutMediaInput
+}
+
+export type ListingMediaUncheckedCreateWithoutVariantInput = {
+  id?: string
+  listingId: string
+  storageKey: string
+  thumbnailStorageKey?: string | null
+  mimeType: string
+  width?: number | null
+  height?: number | null
+  position: number
+}
+
+export type ListingMediaCreateOrConnectWithoutVariantInput = {
+  where: Prisma.ListingMediaWhereUniqueInput
+  create: Prisma.XOR<Prisma.ListingMediaCreateWithoutVariantInput, Prisma.ListingMediaUncheckedCreateWithoutVariantInput>
+}
+
+export type ListingMediaCreateManyVariantInputEnvelope = {
+  data: Prisma.ListingMediaCreateManyVariantInput | Prisma.ListingMediaCreateManyVariantInput[]
+  skipDuplicates?: boolean
+}
+
+export type ListingMediaUpsertWithWhereUniqueWithoutVariantInput = {
+  where: Prisma.ListingMediaWhereUniqueInput
+  update: Prisma.XOR<Prisma.ListingMediaUpdateWithoutVariantInput, Prisma.ListingMediaUncheckedUpdateWithoutVariantInput>
+  create: Prisma.XOR<Prisma.ListingMediaCreateWithoutVariantInput, Prisma.ListingMediaUncheckedCreateWithoutVariantInput>
+}
+
+export type ListingMediaUpdateWithWhereUniqueWithoutVariantInput = {
+  where: Prisma.ListingMediaWhereUniqueInput
+  data: Prisma.XOR<Prisma.ListingMediaUpdateWithoutVariantInput, Prisma.ListingMediaUncheckedUpdateWithoutVariantInput>
+}
+
+export type ListingMediaUpdateManyWithWhereWithoutVariantInput = {
+  where: Prisma.ListingMediaScalarWhereInput
+  data: Prisma.XOR<Prisma.ListingMediaUpdateManyMutationInput, Prisma.ListingMediaUncheckedUpdateManyWithoutVariantInput>
+}
+
 export type ListingMediaCreateManyListingInput = {
   id?: string
+  variantId?: string | null
   storageKey: string
   thumbnailStorageKey?: string | null
   mimeType: string
@@ -573,10 +691,12 @@ export type ListingMediaUpdateWithoutListingInput = {
   width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
+  variant?: Prisma.ListingVariantUpdateOneWithoutMediaNestedInput
 }
 
 export type ListingMediaUncheckedUpdateWithoutListingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  variantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storageKey?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -587,6 +707,51 @@ export type ListingMediaUncheckedUpdateWithoutListingInput = {
 
 export type ListingMediaUncheckedUpdateManyWithoutListingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  variantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storageKey?: Prisma.StringFieldUpdateOperationsInput | string
+  thumbnailStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type ListingMediaCreateManyVariantInput = {
+  id?: string
+  listingId: string
+  storageKey: string
+  thumbnailStorageKey?: string | null
+  mimeType: string
+  width?: number | null
+  height?: number | null
+  position: number
+}
+
+export type ListingMediaUpdateWithoutVariantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  storageKey?: Prisma.StringFieldUpdateOperationsInput | string
+  thumbnailStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  listing?: Prisma.ListingUpdateOneRequiredWithoutMediaNestedInput
+}
+
+export type ListingMediaUncheckedUpdateWithoutVariantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  listingId?: Prisma.StringFieldUpdateOperationsInput | string
+  storageKey?: Prisma.StringFieldUpdateOperationsInput | string
+  thumbnailStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type ListingMediaUncheckedUpdateManyWithoutVariantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  listingId?: Prisma.StringFieldUpdateOperationsInput | string
   storageKey?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -600,6 +765,7 @@ export type ListingMediaUncheckedUpdateManyWithoutListingInput = {
 export type ListingMediaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   listingId?: boolean
+  variantId?: boolean
   storageKey?: boolean
   thumbnailStorageKey?: boolean
   mimeType?: boolean
@@ -607,11 +773,13 @@ export type ListingMediaSelect<ExtArgs extends runtime.Types.Extensions.Internal
   height?: boolean
   position?: boolean
   listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
+  variant?: boolean | Prisma.ListingMedia$variantArgs<ExtArgs>
 }, ExtArgs["result"]["listingMedia"]>
 
 export type ListingMediaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   listingId?: boolean
+  variantId?: boolean
   storageKey?: boolean
   thumbnailStorageKey?: boolean
   mimeType?: boolean
@@ -619,11 +787,13 @@ export type ListingMediaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   height?: boolean
   position?: boolean
   listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
+  variant?: boolean | Prisma.ListingMedia$variantArgs<ExtArgs>
 }, ExtArgs["result"]["listingMedia"]>
 
 export type ListingMediaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   listingId?: boolean
+  variantId?: boolean
   storageKey?: boolean
   thumbnailStorageKey?: boolean
   mimeType?: boolean
@@ -631,11 +801,13 @@ export type ListingMediaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   height?: boolean
   position?: boolean
   listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
+  variant?: boolean | Prisma.ListingMedia$variantArgs<ExtArgs>
 }, ExtArgs["result"]["listingMedia"]>
 
 export type ListingMediaSelectScalar = {
   id?: boolean
   listingId?: boolean
+  variantId?: boolean
   storageKey?: boolean
   thumbnailStorageKey?: boolean
   mimeType?: boolean
@@ -644,25 +816,30 @@ export type ListingMediaSelectScalar = {
   position?: boolean
 }
 
-export type ListingMediaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "listingId" | "storageKey" | "thumbnailStorageKey" | "mimeType" | "width" | "height" | "position", ExtArgs["result"]["listingMedia"]>
+export type ListingMediaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "listingId" | "variantId" | "storageKey" | "thumbnailStorageKey" | "mimeType" | "width" | "height" | "position", ExtArgs["result"]["listingMedia"]>
 export type ListingMediaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
+  variant?: boolean | Prisma.ListingMedia$variantArgs<ExtArgs>
 }
 export type ListingMediaIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
+  variant?: boolean | Prisma.ListingMedia$variantArgs<ExtArgs>
 }
 export type ListingMediaIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
+  variant?: boolean | Prisma.ListingMedia$variantArgs<ExtArgs>
 }
 
 export type $ListingMediaPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ListingMedia"
   objects: {
     listing: Prisma.$ListingPayload<ExtArgs>
+    variant: Prisma.$ListingVariantPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     listingId: string
+    variantId: string | null
     storageKey: string
     thumbnailStorageKey: string | null
     mimeType: string
@@ -1064,6 +1241,7 @@ readonly fields: ListingMediaFieldRefs;
 export interface Prisma__ListingMediaClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   listing<T extends Prisma.ListingDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ListingDefaultArgs<ExtArgs>>): Prisma.Prisma__ListingClient<runtime.Types.Result.GetResult<Prisma.$ListingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  variant<T extends Prisma.ListingMedia$variantArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ListingMedia$variantArgs<ExtArgs>>): Prisma.Prisma__ListingVariantClient<runtime.Types.Result.GetResult<Prisma.$ListingVariantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1095,6 +1273,7 @@ export interface Prisma__ListingMediaClient<T, Null = never, ExtArgs extends run
 export interface ListingMediaFieldRefs {
   readonly id: Prisma.FieldRef<"ListingMedia", 'String'>
   readonly listingId: Prisma.FieldRef<"ListingMedia", 'String'>
+  readonly variantId: Prisma.FieldRef<"ListingMedia", 'String'>
   readonly storageKey: Prisma.FieldRef<"ListingMedia", 'String'>
   readonly thumbnailStorageKey: Prisma.FieldRef<"ListingMedia", 'String'>
   readonly mimeType: Prisma.FieldRef<"ListingMedia", 'String'>
@@ -1499,6 +1678,25 @@ export type ListingMediaDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Limit how many ListingMedias to delete.
    */
   limit?: number
+}
+
+/**
+ * ListingMedia.variant
+ */
+export type ListingMedia$variantArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ListingVariant
+   */
+  select?: Prisma.ListingVariantSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ListingVariant
+   */
+  omit?: Prisma.ListingVariantOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ListingVariantInclude<ExtArgs> | null
+  where?: Prisma.ListingVariantWhereInput
 }
 
 /**

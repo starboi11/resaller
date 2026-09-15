@@ -128,6 +128,23 @@ model User {
   disputeDecisions DisputeDecision[]
   uploadedAttachments Attachment[]
   notificationEndpoints NotificationEndpoint[]
+  savedAddresses SavedAddress[]
+}
+
+model SavedAddress {
+  id String @id @default(uuid()) @db.Uuid
+  publicId String @unique @default(cuid())
+  userId String @db.Uuid
+  label String
+  fullName String
+  phone String
+  region String
+  address String
+  isDefault Boolean @default(false)
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, isDefault])
 }
 
 model SupportTicket {
@@ -355,6 +372,7 @@ model ListingVariant {
   cartItems CartItem[]
   orderItems OrderItem[]
   reservations StockReservation[]
+  media ListingMedia[]
   @@unique([listingId, sku])
 }
 
@@ -371,6 +389,7 @@ model Inventory {
 model ListingMedia {
     id String @id @default(uuid()) @db.Uuid
     listingId String @db.Uuid
+    variantId String? @db.Uuid
     storageKey String @unique
     thumbnailStorageKey String? @unique
     mimeType String
@@ -378,7 +397,9 @@ model ListingMedia {
     height Int?
     position Int
   listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  variant ListingVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
   @@unique([listingId, position])
+  @@index([variantId])
 }
 
 model Checkout {
@@ -524,6 +545,7 @@ model ConversationMember {
   conversationId String @db.Uuid
   userId String @db.Uuid
   joinedAt DateTime @default(now()) @db.Timestamptz
+  lastReadAt DateTime @default(now()) @db.Timestamptz
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   @@id([conversationId, userId])
 }

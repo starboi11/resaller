@@ -27,10 +27,15 @@ export class MediaController {
     const file = await request.file();
     if (!file)
       throw new UnsupportedMediaTypeException('Image file is required');
+    const variantField = file.fields.variantId;
+    const variantId = variantField && !Array.isArray(variantField) && 'value' in variantField
+      ? String(variantField.value)
+      : undefined;
     return this.media.uploadListingImage(
       request.user.id,
       publicId,
       await file.toBuffer(),
+      variantId,
     );
   }
   @Post('verification/document')

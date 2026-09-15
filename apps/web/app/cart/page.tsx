@@ -17,12 +17,14 @@ type Item = {
   };
 };
 type Cart = { items: Item[] };
+type Address = { publicId: string; label: string; fullName: string; phone: string; region: string; address: string; isDefault: boolean };
 
 export default function CartPage() {
   const [cart, setCart] = useState<Cart | null>(null);
   const [message, setMessage] = useState('');
   const [unauthorized, setUnauthorized] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [addresses, setAddresses] = useState<Address[]>([]);
   const load = useCallback(async () => {
     const response = await fetch(`${API}/cart`, {
       credentials: 'include',
@@ -32,7 +34,11 @@ export default function CartPage() {
       setUnauthorized(true);
       return;
     }
-    if (response.ok) setCart((await response.json()) as Cart);
+    if (response.ok) {
+      setCart((await response.json()) as Cart);
+      const saved = await fetch(`${API}/addresses`, { credentials: 'include', cache: 'no-store' });
+      if (saved.ok) setAddresses((await saved.json()) as Address[]);
+    }
     else setMessage('Savatni ochib bo‘lmadi.');
   }, []);
   useEffect(() => {
@@ -95,15 +101,16 @@ export default function CartPage() {
             ])
             .filter(([, code]) => code),
         ),
+        saveAddress: data.get('saveAddress') === 'on',
+        addressLabel: data.get('addressLabel'),
       }),
     });
     if (response.ok) {
       const result = (await response.json()) as {
         orders: { publicId: string }[];
       };
-      window.location.href = result.orders[0]
-        ? `/orders/${result.orders[0].publicId}`
-        : '/orders';
+      const orderIds = result.orders.map((order) => order.publicId).join(',');
+      window.location.href = `/checkout/success?checkout=${encodeURIComponent((result as { checkoutPublicId?: string }).checkoutPublicId ?? '')}&orders=${encodeURIComponent(orderIds)}`;
     } else {
       const error = (await response.json().catch(() => null)) as {
         message?: string;
@@ -214,6 +221,7 @@ export default function CartPage() {
               To‘lovni sotuvchi bilan platformadan tashqarida kelishasiz.
             </p>
             <div className="mt-5 grid gap-3">
+              {addresses.length > 0 && <label className="checkout-field"><span>Saqlangan manzil</span><select className="field" defaultValue="" onChange={(event) => { const selected=addresses.find(item=>item.publicId===event.target.value); const form=event.currentTarget.form; if(!selected||!form)return; for(const key of ['fullName','phone','region','address'] as const){const field=form.elements.namedItem(key) as HTMLInputElement|HTMLTextAreaElement|null;if(field)field.value=selected[key];} }}><option value="">Yangi manzil</option>{addresses.map(item=><option key={item.publicId} value={item.publicId}>{item.label} · {item.region}</option>)}</select></label>}
               <label className="checkout-field"><span>Ism va familiya</span>
               <input
                 className="field"
@@ -223,6 +231,8 @@ export default function CartPage() {
                 placeholder="Ism va familiya"
               />
               </label>
+              <label className="checkout-save"><input type="checkbox" name="saveAddress"/> <span>Bu manzilni keyingi xarid uchun saqlash</span></label>
+              <label className="checkout-field"><span>Manzil nomi</span><input className="field" name="addressLabel" maxLength={40} placeholder="Masalan: Uy"/></label>
               <label className="checkout-field"><span>Telefon raqam</span>
               <input
                 className="field"

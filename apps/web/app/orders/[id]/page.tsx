@@ -17,6 +17,7 @@ type Order = {
   changes?: { id: string; kind: string; before?: unknown; after?: unknown; createdAt: string }[];
   policySnapshots?: { id: string; policyType: string; version: number; content: unknown }[];
   review?: { id: string; rating: number } | null;
+  dispute?: { id: string; status: string; events?: { id: string; type: string; createdAt: string }[]; decision?: { outcome: string; reason: string } | null } | null;
   store: { nameUz: string; username: string };
   items: {
     id: string;
@@ -35,6 +36,8 @@ type Message = {
   id: string;
   senderId: string;
   body?: string;
+  kind?: string;
+  attachment?: { latitude?: number; longitude?: number } | null;
   createdAt: string;
   attachments?: { id: string; fileName: string }[];
 };
@@ -49,6 +52,8 @@ export default function OrderDetail({
   const [error, setError] = useState('');
   const [connection, setConnection] = useState<'connecting'|'live'|'offline'>('connecting');
   const [uploadState, setUploadState] = useState('');
+  const [unread, setUnread] = useState(0);
+  const [retryUpload, setRetryUpload] = useState<{ messageId: string; file: File } | null>(null);
   const [actionMode, setActionMode] = useState<string | null>(null);
   const [now, setNow] = useState(Date.now());
   useEffect(() => { const timer = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(timer); }, []);
@@ -83,10 +88,11 @@ export default function OrderDetail({
       withCredentials: true,
     });
     stream.onopen = () => setConnection('live');
-    stream.onerror = () => setConnection('offline');
+    stream.onerror = () => setConnection(stream.readyState === EventSource.CONNECTING ? 'connecting' : 'offline');
     stream.addEventListener('messages', (event) => {
       try {
-        setMessages(JSON.parse((event as MessageEvent).data) as Message[]);
+        const next = JSON.parse((event as MessageEvent).data) as Message[];
+        setMessages((current) => { const known=new Set(current.map(item=>item.id)); const incoming=next.filter(item=>!known.has(item.id)&&item.senderId!==order?.viewerId).length; if(incoming&&document.hidden)setUnread(value=>value+incoming); return next; });
       } catch {}
     });
     const fallback = setInterval(() => {
@@ -96,7 +102,14 @@ export default function OrderDetail({
       stream.close();
       clearInterval(fallback);
     };
-  }, [load]);
+  }, [load, order?.viewerId]);
+  useEffect(() => { const read=()=>{if(document.visibilityState==='visible'&&id){setUnread(0);void fetch(`${API}/orders/${id}/messages/read`,{method:'POST',credentials:'include'});}}; document.addEventListener('visibilitychange',read); window.addEventListener('focus',read); return()=>{document.removeEventListener('visibilitychange',read);window.removeEventListener('focus',read);}; },[id]);
+  async function uploadAttachment(messageId: string, file: File) {
+    setUploadState('Fayl yuklanmoqda…');
+    const upload=new FormData();upload.set('file',file);
+    const uploaded=await new Promise<boolean>((resolve)=>{const request=new XMLHttpRequest();request.open('POST',`${API}/media/messages/${messageId}/attachment`);request.withCredentials=true;request.upload.onprogress=(progress)=>{if(progress.lengthComputable)setUploadState(`Fayl yuklanmoqda: ${Math.round(progress.loaded/progress.total*100)}%`);};request.onload=()=>resolve(request.status>=200&&request.status<300);request.onerror=()=>resolve(false);request.send(upload);});
+    if(!uploaded){setRetryUpload({messageId,file});setUploadState('Fayl yuklanmadi. Qayta urinish mumkin.');return false;} setRetryUpload(null);setUploadState('Fayl yuklandi ✓');return true;
+  }
   async function send(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
@@ -113,24 +126,16 @@ export default function OrderDetail({
       const created = (await response.json()) as { id: string };
       const file = data.get('file');
       if (file instanceof File && file.size > 0) {
-        setUploadState('Fayl yuklanmoqda…');
-        const upload = new FormData();
-        upload.set('file', file);
-        const uploaded = await new Promise<boolean>((resolve) => {
-          const request = new XMLHttpRequest();
-          request.open('POST', `${API}/media/messages/${created.id}/attachment`);
-          request.withCredentials = true;
-          request.upload.onprogress = (progress) => { if (progress.lengthComputable) setUploadState(`Fayl yuklanmoqda: ${Math.round((progress.loaded / progress.total) * 100)}%`); };
-          request.onload = () => resolve(request.status >= 200 && request.status < 300);
-          request.onerror = () => resolve(false);
-          request.send(upload);
-        });
-        if (!uploaded) { setUploadState('Fayl yuklanmadi — faylni qayta tanlab urinib ko‘ring.'); return; }
-        setUploadState('Fayl yuklandi ✓');
+        if (!await uploadAttachment(created.id, file)) return;
       }
       form.reset();
       await load();
     }
+  }
+  function sendLocation() {
+    if(!navigator.geolocation)return setUploadState('Qurilmada joylashuv mavjud emas.');
+    setUploadState('Joylashuv olinmoqda…');
+    navigator.geolocation.getCurrentPosition(async(position)=>{const response=await fetch(`${API}/orders/${id}/messages/location`,{method:'POST',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({latitude:position.coords.latitude,longitude:position.coords.longitude,label:'Yetkazish joyi'})});setUploadState(response.ok?'Joylashuv yuborildi ✓':'Joylashuv yuborilmadi.');if(response.ok)await load();},()=>setUploadState('Joylashuvga ruxsat berilmadi.'),{enableHighAccuracy:false,timeout:10000});
   }
   async function action(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -138,12 +143,12 @@ export default function OrderDetail({
     const reason = String(new FormData(event.currentTarget).get('reason') ?? '').trim();
     if (!reason || reason.trim().length < 3) return;
     const directCancel = actionMode === 'cancel' && order?.status === 'WAITING_SELLER';
-    const path = directCancel ? 'transition' : actionMode === 'cancel' ? 'cancellation-request' : actionMode === 'return' ? 'return-request' : 'dispute';
+    const path = directCancel ? 'transition' : actionMode === 'cancel' ? 'cancellation-request' : actionMode === 'return' ? 'return-request' : actionMode === 'change' ? 'change-request' : 'dispute';
     const response = await fetch(`${API}/orders/${id}/${path}`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(directCancel ? { to: 'CANCELLED', reason } : { reason }),
+      body: JSON.stringify(directCancel ? { to: 'CANCELLED', reason } : actionMode === 'change' ? { request: reason } : { reason }),
     });
     if (response.ok) { setActionMode(null); await load(); }
     else setError('Amalni bajarib bo‘lmadi.');
@@ -171,6 +176,9 @@ export default function OrderDetail({
     const response = await fetch(`${API}/orders/${id}/cancellation-decision`, { method: 'POST', credentials: 'include', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ approved, reason: approved ? 'Seller approved buyer request' : 'Seller rejected buyer request' }) });
     if (response.ok) await load(); else setError('Bekor qilish so‘roviga qaror saqlanmadi.');
   }
+  async function decideChange(changeId: string, approved: boolean) { const response=await fetch(`${API}/orders/${id}/change-request/${changeId}/decision`,{method:'POST',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({approved})});if(response.ok)await load();else setError('O‘zgarish so‘roviga qaror saqlanmadi.'); }
+  async function decideReturn(approved:boolean){const response=await fetch(`${API}/orders/${id}/return-decision`,{method:'POST',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({approved})});if(response.ok)await load();else setError('Qaytarish qarori saqlanmadi.');}
+  async function uploadEvidence(file:File){if(!order?.dispute)return;setUploadState('Dalil yuklanmoqda…');const data=new FormData();data.set('file',file);const response=await fetch(`${API}/media/disputes/${order.dispute.id}/evidence`,{method:'POST',credentials:'include',body:data});setUploadState(response.ok?'Dalil xavfsiz saqlandi ✓':'Dalil yuklanmadi. Qayta urinib ko‘ring.');if(response.ok)await load();}
   if (error && !order)
     return (
       <main className="shell max-w-3xl py-10">
@@ -265,9 +273,10 @@ export default function OrderDetail({
             </ol>
           </section>
           {(order.policySnapshots?.length ?? 0) > 0 && <section className="surface p-5"><h2 className="text-lg font-black">Buyurtmada saqlangan qoidalar</h2>{order.policySnapshots?.map((item) => <details className="mt-3" key={item.id}><summary>{item.policyType} · v{item.version}</summary><pre className="muted mt-2 whitespace-pre-wrap text-xs">{JSON.stringify(item.content, null, 2)}</pre></details>)}</section>}
-          {(order.changes?.length ?? 0) > 0 && <section className="surface p-5"><h2 className="text-lg font-black">O‘zgarish so‘rovlari</h2>{order.changes?.map((item) => <article className="mt-3 rounded-xl bg-[var(--surface-2)] p-3" key={item.id}><b>{item.kind}</b><p className="muted text-xs">{new Date(item.createdAt).toLocaleString('uz-UZ')}</p></article>)}</section>}
+          {(order.changes?.length ?? 0) > 0 && <section className="surface p-5"><h2 className="text-lg font-black">O‘zgarish so‘rovlari</h2>{order.changes?.map((item) => {const detail=item.after as {status?:string;reason?:string;request?:string}|null;return <article className="order-change-card mt-3" key={item.id}><div><b>{item.kind.replaceAll('_',' ')}</b><span data-status={detail?.status}>{detail?.status??'SAQLANGAN'}</span></div><p>{detail?.request??detail?.reason??'Tafsilot mavjud emas'}</p><small className="muted">{new Date(item.createdAt).toLocaleString('uz-UZ')}</small>{order.viewerRole==='SELLER'&&item.kind==='BUYER_CHANGE_REQUEST'&&detail?.status==='PENDING'&&<div className="mt-3 flex gap-2"><button className="rs-button" onClick={()=>void decideChange(item.id,true)}>Qabul qilish</button><button onClick={()=>void decideChange(item.id,false)}>Rad etish</button></div>}</article>})}</section>}
           <div className="flex flex-wrap gap-2">
             {canCancel && <button className="rounded-full border border-[var(--line)] px-4 py-2 text-sm font-bold" onClick={() => setActionMode('cancel')}>Bekor qilish</button>}
+            {order.viewerRole==='BUYER'&&['WAITING_SELLER','ACCEPTED','PREPARING'].includes(order.status)&&<button className="rounded-full border border-[var(--line)] px-4 py-2 text-sm font-bold" onClick={()=>setActionMode('change')}>O‘zgartirish so‘rovi</button>}
             {canReturn && <button className="rounded-full border border-[var(--line)] px-4 py-2 text-sm font-bold" onClick={() => setActionMode('return')}>Qaytarish</button>}
             {canDispute && <button className="rounded-full border border-[var(--line)] px-4 py-2 text-sm font-bold" onClick={() => setActionMode('dispute')}>Nizo ochish</button>}
             {order.status === 'COMPLETED' && !order.review && <button
@@ -279,11 +288,13 @@ export default function OrderDetail({
           </div>
           {order.viewerRole === 'SELLER' && sellerNext[order.status] && <section className="surface p-4"><h2 className="font-black">Keyingi ruxsat etilgan amal</h2><button className="rs-button mt-3" onClick={() => void sellerTransition(sellerNext[order.status]!)}>{sellerNext[order.status]} holatiga o‘tkazish</button></section>}
           {order.viewerRole === 'SELLER' && pendingCancellation && <section className="surface p-4"><h2 className="font-black">Xaridorning bekor qilish so‘rovi</h2><p className="muted mt-2 text-sm">{String((pendingCancellation.after as { reason?: string }).reason ?? 'Sabab ko‘rsatilmagan')}</p><div className="mt-3 flex gap-2"><button className="rs-button" onClick={() => void decideCancellation(true)}>Tasdiqlash</button><button className="rounded-full border border-[var(--line)] px-4 font-bold" onClick={() => void decideCancellation(false)}>Rad etish</button></div></section>}
+          {order.viewerRole==='SELLER'&&order.status==='RETURN_REQUESTED'&&<section className="surface p-4"><h2 className="font-black">Qaytarish so‘rovi</h2><p className="muted mt-2 text-sm">Xaridor sababini o‘zgarishlar bo‘limida ko‘ring.</p><div className="mt-3 flex gap-2"><button className="rs-button" onClick={()=>void decideReturn(true)}>Qabul qilish</button><button onClick={()=>void decideReturn(false)}>Rad etish</button></div></section>}
+          {order.dispute&&<section className="surface dispute-workspace p-5"><div className="flex justify-between gap-3"><h2 className="font-black">Nizo va dalillar</h2><b>{order.dispute.status}</b></div><p className="muted mt-2 text-sm">Rasm yoki PDF dalil qo‘shing. Fayl faqat ishtirokchilar va moderatorga ko‘rinadi.</p><label className="rs-button mt-3 inline-block cursor-pointer">Dalil yuklash<input className="sr-only" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" onChange={event=>{const file=event.target.files?.[0];if(file)void uploadEvidence(file);}}/></label>{order.dispute.decision&&<div className="mt-4 rounded-xl bg-[var(--surface-2)] p-3"><b>Qaror: {order.dispute.decision.outcome}</b><p>{order.dispute.decision.reason}</p></div>}</section>}
           {actionMode && actionMode !== 'review' && <form className="surface action-form p-4" onSubmit={action}><label htmlFor="action-reason" className="font-black">Sabab</label><textarea id="action-reason" name="reason" minLength={3} required rows={3} placeholder="Qaroringiz sababini yozing"/><div className="flex gap-2"><button className="rs-button">Tasdiqlash</button><button type="button" onClick={() => setActionMode(null)}>Bekor</button></div></form>}
           {actionMode === 'review' && <form className="surface action-form p-4" onSubmit={review}><label htmlFor="rating" className="font-black">Baho</label><select id="rating" name="rating" defaultValue="5">{[5,4,3,2,1].map((value) => <option key={value} value={value}>{value} yulduz</option>)}</select><label htmlFor="review-body">Sharh</label><textarea id="review-body" name="body" rows={3}/><div className="flex gap-2"><button className="rs-button">Sharhni yuborish</button><button type="button" onClick={() => setActionMode(null)}>Bekor</button></div></form>}
         </div>
         <section className="surface private-chat flex min-h-[32rem] flex-col p-5">
-          <h2 className="text-lg font-black">Xususiy chat</h2>
+          <h2 className="text-lg font-black">Xususiy chat {unread>0&&<span className="unread-badge" aria-label={`${unread} ta yangi xabar`}>{unread}</span>}</h2>
           <p className="muted text-sm">Faqat buyurtma ishtirokchilari ko‘radi. <span className={`connection-state connection-state--${connection}`}>{connection === 'live' ? '● Jonli' : connection === 'connecting' ? '○ Ulanmoqda' : '○ Aloqa tiklanmoqda'}</span></p>
           <div
             className="mt-5 flex-1 space-y-3 overflow-y-auto"
@@ -298,6 +309,7 @@ export default function OrderDetail({
                 key={message.id}
               >
                 <p className="text-sm">{message.body}</p>
+                {message.kind==='LOCATION'&&message.attachment?.latitude!==undefined&&message.attachment.longitude!==undefined&&<a className="location-card" href={`https://www.openstreetmap.org/?mlat=${message.attachment.latitude}&mlon=${message.attachment.longitude}#map=17/${message.attachment.latitude}/${message.attachment.longitude}`} target="_blank" rel="noreferrer"><b>📍 {message.body||'Joylashuv'}</b><span>{message.attachment.latitude.toFixed(5)}, {message.attachment.longitude.toFixed(5)}</span><small>Xaritada ochish →</small></a>}
                 <time className="muted mt-1 block text-[11px]">
                   {new Date(message.createdAt).toLocaleTimeString('uz-UZ')}
                 </time>
@@ -313,7 +325,7 @@ export default function OrderDetail({
               </article>
             ))}
           </div>
-          {uploadState && <p className="text-xs font-bold" role="status">{uploadState}</p>}
+          {uploadState && <p className="text-xs font-bold" role="status">{uploadState} {retryUpload&&<button className="upload-retry" onClick={()=>void uploadAttachment(retryUpload.messageId,retryUpload.file)}>Qayta urinish</button>}</p>}
           <form
             className="mt-4 grid grid-cols-[1fr_auto] gap-2"
             onSubmit={send}
@@ -337,6 +349,7 @@ export default function OrderDetail({
                 accept="image/jpeg,image/png,image/webp,application/pdf"
               />
             </label>
+            <button type="button" className="chat-location-button" onClick={sendLocation}>📍 Joylashuv</button>
             <button className="rs-button">Yuborish</button>
           </form>
         </section>

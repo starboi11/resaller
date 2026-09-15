@@ -628,10 +628,6 @@ export type EnumStoreStatusFieldUpdateOperationsInput = {
   set?: $Enums.StoreStatus
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type StoreCreateNestedOneWithoutSettingsInput = {
   create?: Prisma.XOR<Prisma.StoreCreateWithoutSettingsInput, Prisma.StoreUncheckedCreateWithoutSettingsInput>
   connectOrCreate?: Prisma.StoreCreateOrConnectWithoutSettingsInput

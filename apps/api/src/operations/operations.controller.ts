@@ -23,11 +23,16 @@ import {
   CancellationRequestDto,
   CheckoutDto,
   MessageDto,
+  LocationMessageDto,
   OpenDisputeDto,
+  OrderChangeDecisionDto,
+  OrderChangeRequestDto,
   QuestionDto,
   QuestionReportDto,
   ReturnRequestDto,
+  ReturnDecisionDto,
   ReviewDto,
+  SavedAddressDto,
   TransitionOrderDto,
   UpdateCartItemDto,
 } from './operations.dto.js';
@@ -67,6 +72,9 @@ export class OperationsController {
   ) {
     return this.operations.checkout(req.user, input);
   }
+  @Get('addresses') addresses(@Req() req: FastifyRequest & { user: AuthenticatedUser }) { return this.operations.addresses(req.user.id); }
+  @Post('addresses') saveAddress(@Req() req: FastifyRequest & { user: AuthenticatedUser }, @Body() input: SavedAddressDto) { return this.operations.saveAddress(req.user.id, input); }
+  @Delete('addresses/:publicId') removeAddress(@Req() req: FastifyRequest & { user: AuthenticatedUser }, @Param('publicId') id: string) { return this.operations.removeAddress(req.user.id, id); }
   @Get('orders') orders(
     @Req() req: FastifyRequest & { user: AuthenticatedUser },
   ) {
@@ -102,6 +110,8 @@ export class OperationsController {
   ) {
     return this.operations.requestCancellation(req.user, id, input.reason);
   }
+  @Post('orders/:publicId/change-request') changeRequest(@Req() req: FastifyRequest & { user: AuthenticatedUser }, @Param('publicId') id: string, @Body() input: OrderChangeRequestDto) { return this.operations.requestOrderChange(req.user, id, input.request); }
+  @Post('orders/:publicId/change-request/:changeId/decision') changeDecision(@Req() req: FastifyRequest & { user: AuthenticatedUser }, @Param('publicId') id: string, @Param('changeId') changeId: string, @Body() input: OrderChangeDecisionDto) { return this.operations.decideOrderChange(req.user, id, changeId, input.approved, input.reason); }
   @Post('orders/:publicId/cancellation-decision') cancellationDecision(
     @Req() req: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') id: string,
@@ -121,6 +131,7 @@ export class OperationsController {
   ) {
     return this.operations.requestReturn(req.user, id, input.reason);
   }
+  @Post('orders/:publicId/return-decision') returnDecision(@Req() req: FastifyRequest & { user: AuthenticatedUser }, @Param('publicId') id: string, @Body() input: ReturnDecisionDto) { return this.operations.decideReturn(req.user, id, input.approved, input.reason); }
   @Post('orders/:publicId/messages') message(
     @Req() req: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') id: string,
@@ -128,6 +139,8 @@ export class OperationsController {
   ) {
     return this.operations.message(req.user, id, input.body);
   }
+  @Post('orders/:publicId/messages/location') locationMessage(@Req() req: FastifyRequest & { user: AuthenticatedUser }, @Param('publicId') id: string, @Body() input: LocationMessageDto) { return this.operations.locationMessage(req.user, id, input); }
+  @Post('orders/:publicId/messages/read') markRead(@Req() req: FastifyRequest & { user: AuthenticatedUser }, @Param('publicId') id: string) { return this.operations.markMessagesRead(req.user, id); }
   @Get('orders/:publicId/messages') messages(
     @Req() req: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') id: string,

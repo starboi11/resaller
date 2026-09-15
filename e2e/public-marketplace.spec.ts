@@ -91,3 +91,12 @@ test('initial marketplace rendering stays within the local performance budget', 
   expect(timing.dom).toBeLessThan(3000);
   expect(timing.load).toBeLessThan(5000);
 });
+
+test('marketplace keeps the query while switching Uzbek and Russian', async ({ page }) => {
+  await page.goto('/marketplace?q=telefon&lang=uz');
+  await page.getByRole('link', { name: 'RU', exact: true }).click();
+  await expect(page).toHaveURL(/q=telefon/);
+  await expect(page).toHaveURL(/lang=ru/);
+  await expect(page.getByText(/товаров найдено/)).toBeVisible();
+  await expect(page.getByRole('link', { name: 'UZ', exact: true })).toBeVisible();
+});

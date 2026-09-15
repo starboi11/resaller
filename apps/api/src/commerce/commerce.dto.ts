@@ -61,6 +61,14 @@ export class MarketplaceQueryDto {
   @IsOptional()
   @IsIn(['relevance', 'new', 'price-asc', 'price-desc'])
   sort?: 'relevance' | 'new' | 'price-asc' | 'price-desc';
+  @IsOptional()
+  @Transform(({ value }) => value === undefined ? 1 : Number(value))
+  @IsInt() @Min(1) @Max(10_000)
+  page: number = 1;
+  @IsOptional()
+  @Transform(({ value }) => value === undefined ? 12 : Number(value))
+  @IsInt() @Min(6) @Max(48)
+  pageSize: number = 12;
 }
 
 export class SellerVerificationDto {

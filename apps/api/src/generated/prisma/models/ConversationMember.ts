@@ -28,18 +28,21 @@ export type ConversationMemberMinAggregateOutputType = {
   conversationId: string | null
   userId: string | null
   joinedAt: Date | null
+  lastReadAt: Date | null
 }
 
 export type ConversationMemberMaxAggregateOutputType = {
   conversationId: string | null
   userId: string | null
   joinedAt: Date | null
+  lastReadAt: Date | null
 }
 
 export type ConversationMemberCountAggregateOutputType = {
   conversationId: number
   userId: number
   joinedAt: number
+  lastReadAt: number
   _all: number
 }
 
@@ -48,18 +51,21 @@ export type ConversationMemberMinAggregateInputType = {
   conversationId?: true
   userId?: true
   joinedAt?: true
+  lastReadAt?: true
 }
 
 export type ConversationMemberMaxAggregateInputType = {
   conversationId?: true
   userId?: true
   joinedAt?: true
+  lastReadAt?: true
 }
 
 export type ConversationMemberCountAggregateInputType = {
   conversationId?: true
   userId?: true
   joinedAt?: true
+  lastReadAt?: true
   _all?: true
 }
 
@@ -139,6 +145,7 @@ export type ConversationMemberGroupByOutputType = {
   conversationId: string
   userId: string
   joinedAt: Date
+  lastReadAt: Date
   _count: ConversationMemberCountAggregateOutputType | null
   _min: ConversationMemberMinAggregateOutputType | null
   _max: ConversationMemberMaxAggregateOutputType | null
@@ -166,6 +173,7 @@ export type ConversationMemberWhereInput = {
   conversationId?: Prisma.UuidFilter<"ConversationMember"> | string
   userId?: Prisma.UuidFilter<"ConversationMember"> | string
   joinedAt?: Prisma.DateTimeFilter<"ConversationMember"> | Date | string
+  lastReadAt?: Prisma.DateTimeFilter<"ConversationMember"> | Date | string
   conversation?: Prisma.XOR<Prisma.ConversationScalarRelationFilter, Prisma.ConversationWhereInput>
 }
 
@@ -173,6 +181,7 @@ export type ConversationMemberOrderByWithRelationInput = {
   conversationId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
+  lastReadAt?: Prisma.SortOrder
   conversation?: Prisma.ConversationOrderByWithRelationInput
 }
 
@@ -184,6 +193,7 @@ export type ConversationMemberWhereUniqueInput = Prisma.AtLeast<{
   conversationId?: Prisma.UuidFilter<"ConversationMember"> | string
   userId?: Prisma.UuidFilter<"ConversationMember"> | string
   joinedAt?: Prisma.DateTimeFilter<"ConversationMember"> | Date | string
+  lastReadAt?: Prisma.DateTimeFilter<"ConversationMember"> | Date | string
   conversation?: Prisma.XOR<Prisma.ConversationScalarRelationFilter, Prisma.ConversationWhereInput>
 }, "conversationId_userId">
 
@@ -191,6 +201,7 @@ export type ConversationMemberOrderByWithAggregationInput = {
   conversationId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
+  lastReadAt?: Prisma.SortOrder
   _count?: Prisma.ConversationMemberCountOrderByAggregateInput
   _max?: Prisma.ConversationMemberMaxOrderByAggregateInput
   _min?: Prisma.ConversationMemberMinOrderByAggregateInput
@@ -203,11 +214,13 @@ export type ConversationMemberScalarWhereWithAggregatesInput = {
   conversationId?: Prisma.UuidWithAggregatesFilter<"ConversationMember"> | string
   userId?: Prisma.UuidWithAggregatesFilter<"ConversationMember"> | string
   joinedAt?: Prisma.DateTimeWithAggregatesFilter<"ConversationMember"> | Date | string
+  lastReadAt?: Prisma.DateTimeWithAggregatesFilter<"ConversationMember"> | Date | string
 }
 
 export type ConversationMemberCreateInput = {
   userId: string
   joinedAt?: Date | string
+  lastReadAt?: Date | string
   conversation: Prisma.ConversationCreateNestedOneWithoutMembersInput
 }
 
@@ -215,11 +228,13 @@ export type ConversationMemberUncheckedCreateInput = {
   conversationId: string
   userId: string
   joinedAt?: Date | string
+  lastReadAt?: Date | string
 }
 
 export type ConversationMemberUpdateInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReadAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conversation?: Prisma.ConversationUpdateOneRequiredWithoutMembersNestedInput
 }
 
@@ -227,23 +242,27 @@ export type ConversationMemberUncheckedUpdateInput = {
   conversationId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReadAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ConversationMemberCreateManyInput = {
   conversationId: string
   userId: string
   joinedAt?: Date | string
+  lastReadAt?: Date | string
 }
 
 export type ConversationMemberUpdateManyMutationInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReadAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ConversationMemberUncheckedUpdateManyInput = {
   conversationId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReadAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ConversationMemberListRelationFilter = {
@@ -265,18 +284,21 @@ export type ConversationMemberCountOrderByAggregateInput = {
   conversationId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
+  lastReadAt?: Prisma.SortOrder
 }
 
 export type ConversationMemberMaxOrderByAggregateInput = {
   conversationId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
+  lastReadAt?: Prisma.SortOrder
 }
 
 export type ConversationMemberMinOrderByAggregateInput = {
   conversationId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
+  lastReadAt?: Prisma.SortOrder
 }
 
 export type ConversationMemberCreateNestedManyWithoutConversationInput = {
@@ -324,11 +346,13 @@ export type ConversationMemberUncheckedUpdateManyWithoutConversationNestedInput 
 export type ConversationMemberCreateWithoutConversationInput = {
   userId: string
   joinedAt?: Date | string
+  lastReadAt?: Date | string
 }
 
 export type ConversationMemberUncheckedCreateWithoutConversationInput = {
   userId: string
   joinedAt?: Date | string
+  lastReadAt?: Date | string
 }
 
 export type ConversationMemberCreateOrConnectWithoutConversationInput = {
@@ -364,26 +388,31 @@ export type ConversationMemberScalarWhereInput = {
   conversationId?: Prisma.UuidFilter<"ConversationMember"> | string
   userId?: Prisma.UuidFilter<"ConversationMember"> | string
   joinedAt?: Prisma.DateTimeFilter<"ConversationMember"> | Date | string
+  lastReadAt?: Prisma.DateTimeFilter<"ConversationMember"> | Date | string
 }
 
 export type ConversationMemberCreateManyConversationInput = {
   userId: string
   joinedAt?: Date | string
+  lastReadAt?: Date | string
 }
 
 export type ConversationMemberUpdateWithoutConversationInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReadAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ConversationMemberUncheckedUpdateWithoutConversationInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReadAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ConversationMemberUncheckedUpdateManyWithoutConversationInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReadAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -392,6 +421,7 @@ export type ConversationMemberSelect<ExtArgs extends runtime.Types.Extensions.In
   conversationId?: boolean
   userId?: boolean
   joinedAt?: boolean
+  lastReadAt?: boolean
   conversation?: boolean | Prisma.ConversationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["conversationMember"]>
 
@@ -399,6 +429,7 @@ export type ConversationMemberSelectCreateManyAndReturn<ExtArgs extends runtime.
   conversationId?: boolean
   userId?: boolean
   joinedAt?: boolean
+  lastReadAt?: boolean
   conversation?: boolean | Prisma.ConversationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["conversationMember"]>
 
@@ -406,6 +437,7 @@ export type ConversationMemberSelectUpdateManyAndReturn<ExtArgs extends runtime.
   conversationId?: boolean
   userId?: boolean
   joinedAt?: boolean
+  lastReadAt?: boolean
   conversation?: boolean | Prisma.ConversationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["conversationMember"]>
 
@@ -413,9 +445,10 @@ export type ConversationMemberSelectScalar = {
   conversationId?: boolean
   userId?: boolean
   joinedAt?: boolean
+  lastReadAt?: boolean
 }
 
-export type ConversationMemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"conversationId" | "userId" | "joinedAt", ExtArgs["result"]["conversationMember"]>
+export type ConversationMemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"conversationId" | "userId" | "joinedAt" | "lastReadAt", ExtArgs["result"]["conversationMember"]>
 export type ConversationMemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   conversation?: boolean | Prisma.ConversationDefaultArgs<ExtArgs>
 }
@@ -435,6 +468,7 @@ export type $ConversationMemberPayload<ExtArgs extends runtime.Types.Extensions.
     conversationId: string
     userId: string
     joinedAt: Date
+    lastReadAt: Date
   }, ExtArgs["result"]["conversationMember"]>
   composites: {}
 }
@@ -862,6 +896,7 @@ export interface ConversationMemberFieldRefs {
   readonly conversationId: Prisma.FieldRef<"ConversationMember", 'String'>
   readonly userId: Prisma.FieldRef<"ConversationMember", 'String'>
   readonly joinedAt: Prisma.FieldRef<"ConversationMember", 'DateTime'>
+  readonly lastReadAt: Prisma.FieldRef<"ConversationMember", 'DateTime'>
 }
     
 

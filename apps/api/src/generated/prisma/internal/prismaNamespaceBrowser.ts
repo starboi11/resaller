@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  SavedAddress: 'SavedAddress',
   SupportTicket: 'SupportTicket',
   SupportMessage: 'SupportMessage',
   Session: 'Session',
@@ -142,6 +143,23 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const SavedAddressScalarFieldEnum = {
+  id: 'id',
+  publicId: 'publicId',
+  userId: 'userId',
+  label: 'label',
+  fullName: 'fullName',
+  phone: 'phone',
+  region: 'region',
+  address: 'address',
+  isDefault: 'isDefault',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SavedAddressScalarFieldEnum = (typeof SavedAddressScalarFieldEnum)[keyof typeof SavedAddressScalarFieldEnum]
 
 
 export const SupportTicketScalarFieldEnum = {
@@ -371,6 +389,7 @@ export type InventoryScalarFieldEnum = (typeof InventoryScalarFieldEnum)[keyof t
 export const ListingMediaScalarFieldEnum = {
   id: 'id',
   listingId: 'listingId',
+  variantId: 'variantId',
   storageKey: 'storageKey',
   thumbnailStorageKey: 'thumbnailStorageKey',
   mimeType: 'mimeType',
@@ -516,7 +535,8 @@ export type ConversationScalarFieldEnum = (typeof ConversationScalarFieldEnum)[k
 export const ConversationMemberScalarFieldEnum = {
   conversationId: 'conversationId',
   userId: 'userId',
-  joinedAt: 'joinedAt'
+  joinedAt: 'joinedAt',
+  lastReadAt: 'lastReadAt'
 } as const
 
 export type ConversationMemberScalarFieldEnum = (typeof ConversationMemberScalarFieldEnum)[keyof typeof ConversationMemberScalarFieldEnum]

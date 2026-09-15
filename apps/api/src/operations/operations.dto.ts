@@ -2,6 +2,7 @@ import {
   IsBoolean,
   IsInt,
   IsObject,
+  IsNumber,
   IsOptional,
   IsString,
   Max,
@@ -22,6 +23,16 @@ export class CheckoutDto {
   @IsString() @MinLength(8) @MaxLength(100) idempotencyKey!: string;
   @IsObject() delivery!: Record<string, unknown>;
   @IsOptional() @IsObject() couponCodes?: Record<string, string>;
+  @IsOptional() @IsBoolean() saveAddress?: boolean;
+  @IsOptional() @IsString() @MaxLength(40) addressLabel?: string;
+}
+export class SavedAddressDto {
+  @IsString() @MinLength(2) @MaxLength(40) label!: string;
+  @IsString() @MinLength(3) @MaxLength(100) fullName!: string;
+  @IsString() @MinLength(7) @MaxLength(30) phone!: string;
+  @IsString() @MinLength(2) @MaxLength(100) region!: string;
+  @IsString() @MinLength(5) @MaxLength(500) address!: string;
+  @IsOptional() @IsBoolean() isDefault?: boolean;
 }
 export class TransitionOrderDto {
   @IsString() to!: string;
@@ -30,12 +41,23 @@ export class TransitionOrderDto {
 export class CancellationRequestDto {
   @IsString() @MinLength(3) @MaxLength(500) reason!: string;
 }
+export class OrderChangeRequestDto {
+  @IsString() @MinLength(3) @MaxLength(1000) request!: string;
+}
+export class OrderChangeDecisionDto {
+  @IsBoolean() approved!: boolean;
+  @IsOptional() @IsString() @MaxLength(500) reason?: string;
+}
 export class CancellationDecisionDto {
   @IsBoolean() approved!: boolean;
   @IsOptional() @IsString() @MaxLength(500) reason?: string;
 }
 export class ReturnRequestDto {
   @IsString() @MinLength(3) @MaxLength(500) reason!: string;
+}
+export class ReturnDecisionDto {
+  @IsBoolean() approved!: boolean;
+  @IsOptional() @IsString() @MaxLength(500) reason?: string;
 }
 export class QuestionReportDto {
   @IsString() @MinLength(3) @MaxLength(500) reason!: string;
@@ -45,6 +67,11 @@ export class OpenDisputeDto {
 }
 export class MessageDto {
   @IsString() @MinLength(1) @MaxLength(4000) body!: string;
+}
+export class LocationMessageDto {
+  @IsNumber() @Min(-90) @Max(90) latitude!: number;
+  @IsNumber() @Min(-180) @Max(180) longitude!: number;
+  @IsOptional() @IsString() @MaxLength(200) label?: string;
 }
 export class AnswerDto {
   @IsString() @MinLength(1) @MaxLength(2000) body!: string;

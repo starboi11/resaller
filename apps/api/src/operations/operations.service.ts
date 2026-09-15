@@ -18,8 +18,10 @@ import { PLATFORM_BUSINESS_RULES } from '@resaller/types';
 import type {
   AddCartItemDto,
   CheckoutDto,
+  LocationMessageDto,
   QuestionDto,
   ReviewDto,
+  SavedAddressDto,
 } from './operations.dto.js';
 import type { Prisma } from '../generated/prisma/client.js';
 import { couponDiscount } from './coupon-policy.js';
@@ -38,6 +40,23 @@ const serializeCart = (cart: any) => ({
 @Injectable()
 export class OperationsService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
+
+  addresses(userId: string) {
+    return this.prisma.savedAddress.findMany({ where: { userId }, orderBy: [{ isDefault: 'desc' }, { updatedAt: 'desc' }] });
+  }
+
+  async saveAddress(userId: string, input: SavedAddressDto) {
+    return this.prisma.$transaction(async (tx) => {
+      if (input.isDefault) await tx.savedAddress.updateMany({ where: { userId }, data: { isDefault: false } });
+      return tx.savedAddress.create({ data: { userId, ...input } });
+    });
+  }
+
+  async removeAddress(userId: string, publicId: string) {
+    const result = await this.prisma.savedAddress.deleteMany({ where: { userId, publicId } });
+    if (!result.count) throw new NotFoundException('Address not found');
+    return { removed: true };
+  }
 
   async cart(userId: string) {
     await this.prisma.cart.createMany({ data: [{ buyerId: userId }], skipDuplicates: true });
@@ -263,6 +282,10 @@ export class OperationsService {
         const checkout = await tx.checkout.create({
           data: { buyerId: user.id, idempotencyKey: input.idempotencyKey },
         });
+        if (input.saveAddress) {
+          const delivery = input.delivery as Record<string, unknown>;
+          await tx.savedAddress.create({ data: { userId: user.id, label: input.addressLabel?.trim() || 'Asosiy manzil', fullName: String(delivery.fullName ?? ''), phone: String(delivery.phone ?? ''), region: String(delivery.region ?? ''), address: String(delivery.address ?? ''), isDefault: (await tx.savedAddress.count({ where: { userId: user.id } })) === 0 } });
+        }
         const byStore = new Map<string, typeof cart.items>();
         for (const item of cart.items)
           byStore.set(item.listing.storeId, [
@@ -576,6 +599,26 @@ export class OperationsService {
     return { id: change.id, status: 'PENDING' };
   }
 
+  async requestOrderChange(user: AuthenticatedUser, publicId: string, request: string) {
+    const order = await this.prisma.order.findUnique({ where: { publicId }, include: { store: { include: { sellerProfile: true } } } });
+    if (!order || order.buyerId !== user.id) throw new NotFoundException('Order not found');
+    if (!['WAITING_SELLER','ACCEPTED','PREPARING'].includes(order.status)) throw new ConflictException('Order can no longer be changed');
+    const change = await this.prisma.orderChange.create({ data: { orderId: order.id, actorId: user.id, kind: 'BUYER_CHANGE_REQUEST', before: { orderStatus: order.status }, after: { status: 'PENDING', request } } });
+    await this.prisma.notification.create({ data: { userId: order.store.sellerProfile.userId, severity: 'ACTION_REQUIRED', type: 'ORDER_CHANGE_REQUESTED', payload: { orderPublicId: publicId, changeId: change.id, request } } });
+    return { id: change.id, status: 'PENDING' };
+  }
+
+  async decideOrderChange(user: AuthenticatedUser, publicId: string, changeId: string, approved: boolean, reason?: string) {
+    const order = await this.prisma.order.findUnique({ where: { publicId }, include: { store: { include: { sellerProfile: true, members: true } } } });
+    if (!order) throw new NotFoundException('Order not found');
+    const seller=order.store.sellerProfile.userId===user.id||order.store.members.some(member=>member.userId===user.id); if(!seller)throw new ForbiddenException('Only seller can decide');
+    const change=await this.prisma.orderChange.findFirst({where:{id:changeId,orderId:order.id,kind:'BUYER_CHANGE_REQUEST'}}); if(!change)throw new NotFoundException('Change request not found');
+    const after=change.after as {status?:string;request?:string}|null; if(after?.status!=='PENDING')throw new ConflictException('Change request already decided');
+    await this.prisma.orderChange.update({where:{id:change.id},data:{after:{...after,status:approved?'APPROVED':'REJECTED',reason:reason??null,decidedAt:new Date().toISOString()}}});
+    await this.prisma.notification.create({data:{userId:order.buyerId,severity:'INFO',type:'ORDER_CHANGE_DECIDED',payload:{orderPublicId:publicId,approved,reason:reason??null}}});
+    return {id:change.id,status:approved?'APPROVED':'REJECTED'};
+  }
+
   async decideCancellation(
     user: AuthenticatedUser,
     publicId: string,
@@ -739,6 +782,17 @@ export class OperationsService {
     );
   }
 
+  async decideReturn(user: AuthenticatedUser, publicId: string, approved: boolean, reason?: string) {
+    return this.prisma.$transaction(async (tx) => {
+      const order=await tx.order.findUnique({where:{publicId},include:{store:{include:{sellerProfile:true,members:true}},changes:{where:{kind:'RETURN_REQUEST'},orderBy:{createdAt:'desc'},take:1}}});
+      if(!order)throw new NotFoundException('Order not found'); const seller=order.store.sellerProfile.userId===user.id||order.store.members.some(member=>member.userId===user.id);if(!seller)throw new ForbiddenException('Only seller can decide return');if(order.status!=='RETURN_REQUESTED'||!order.changes[0])throw new ConflictException('No pending return request');
+      const after=order.changes[0].after as {status?:string;reason?:string}|null;if(after?.status!=='PENDING')throw new ConflictException('Return already decided');
+      await tx.orderChange.update({where:{id:order.changes[0].id},data:{after:{...after,status:approved?'APPROVED':'REJECTED',decisionReason:reason??null,decidedAt:new Date().toISOString()}}});
+      if(!approved)await tx.order.update({where:{id:order.id},data:{status:'COMPLETED',history:{create:{fromStatus:'RETURN_REQUESTED',toStatus:'COMPLETED',actorId:user.id,reason:reason??'Return rejected'}}}});
+      await tx.notification.create({data:{userId:order.buyerId,severity:approved?'ACTION_REQUIRED':'INFO',type:'RETURN_DECIDED',payload:{orderPublicId:publicId,approved,reason:reason??null}}});return {status:approved?'RETURN_APPROVED':'COMPLETED'};
+    },{isolationLevel:'Serializable'});
+  }
+
   async message(user: AuthenticatedUser, orderPublicId: string, body: string) {
     const order = await this.prisma.order.findUnique({
       where: { publicId: orderPublicId },
@@ -759,6 +813,19 @@ export class OperationsService {
       data: { conversationId: order.conversation.id, senderId: user.id, body },
       select: { id: true, body: true, createdAt: true },
     });
+  }
+
+  async locationMessage(user: AuthenticatedUser, orderPublicId: string, input: LocationMessageDto) {
+    await this.messages(user, orderPublicId);
+    const order = await this.prisma.order.findUniqueOrThrow({ where: { publicId: orderPublicId }, select: { conversation: { select: { id: true } } } });
+    return this.prisma.message.create({ data: { conversationId: order.conversation!.id, senderId: user.id, kind: 'LOCATION', body: input.label ?? 'Joylashuv', attachment: { latitude: input.latitude, longitude: input.longitude } }, select: { id: true, kind: true, body: true, attachment: true, createdAt: true } });
+  }
+
+  async markMessagesRead(user: AuthenticatedUser, orderPublicId: string) {
+    await this.messages(user, orderPublicId);
+    const order = await this.prisma.order.findUniqueOrThrow({ where: { publicId: orderPublicId }, select: { conversation: { select: { id: true } } } });
+    await this.prisma.conversationMember.upsert({ where: { conversationId_userId: { conversationId: order.conversation!.id, userId: user.id } }, create: { conversationId: order.conversation!.id, userId: user.id, lastReadAt: new Date() }, update: { lastReadAt: new Date() } });
+    return { read: true };
   }
 
   async messages(user: AuthenticatedUser, orderPublicId: string) {
@@ -785,6 +852,7 @@ export class OperationsService {
         senderId: true,
         kind: true,
         body: true,
+        attachment: true,
         createdAt: true,
         attachments: {
           select: { id: true, fileName: true, mimeType: true, sizeBytes: true },

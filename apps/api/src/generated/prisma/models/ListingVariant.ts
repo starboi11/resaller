@@ -217,6 +217,7 @@ export type ListingVariantWhereInput = {
   cartItems?: Prisma.CartItemListRelationFilter
   orderItems?: Prisma.OrderItemListRelationFilter
   reservations?: Prisma.StockReservationListRelationFilter
+  media?: Prisma.ListingMediaListRelationFilter
 }
 
 export type ListingVariantOrderByWithRelationInput = {
@@ -230,6 +231,7 @@ export type ListingVariantOrderByWithRelationInput = {
   cartItems?: Prisma.CartItemOrderByRelationAggregateInput
   orderItems?: Prisma.OrderItemOrderByRelationAggregateInput
   reservations?: Prisma.StockReservationOrderByRelationAggregateInput
+  media?: Prisma.ListingMediaOrderByRelationAggregateInput
 }
 
 export type ListingVariantWhereUniqueInput = Prisma.AtLeast<{
@@ -247,6 +249,7 @@ export type ListingVariantWhereUniqueInput = Prisma.AtLeast<{
   cartItems?: Prisma.CartItemListRelationFilter
   orderItems?: Prisma.OrderItemListRelationFilter
   reservations?: Prisma.StockReservationListRelationFilter
+  media?: Prisma.ListingMediaListRelationFilter
 }, "id" | "listingId_sku">
 
 export type ListingVariantOrderByWithAggregationInput = {
@@ -283,6 +286,7 @@ export type ListingVariantCreateInput = {
   cartItems?: Prisma.CartItemCreateNestedManyWithoutVariantInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutVariantInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutVariantInput
+  media?: Prisma.ListingMediaCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantUncheckedCreateInput = {
@@ -295,6 +299,7 @@ export type ListingVariantUncheckedCreateInput = {
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutVariantInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutVariantInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutVariantInput
+  media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantUpdateInput = {
@@ -307,6 +312,7 @@ export type ListingVariantUpdateInput = {
   cartItems?: Prisma.CartItemUpdateManyWithoutVariantNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutVariantNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutVariantNestedInput
+  media?: Prisma.ListingMediaUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantUncheckedUpdateInput = {
@@ -319,6 +325,7 @@ export type ListingVariantUncheckedUpdateInput = {
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutVariantNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutVariantNestedInput
   reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutVariantNestedInput
+  media?: Prisma.ListingMediaUncheckedUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantCreateManyInput = {
@@ -394,6 +401,11 @@ export type ListingVariantScalarRelationFilter = {
   isNot?: Prisma.ListingVariantWhereInput
 }
 
+export type ListingVariantNullableScalarRelationFilter = {
+  is?: Prisma.ListingVariantWhereInput | null
+  isNot?: Prisma.ListingVariantWhereInput | null
+}
+
 export type ListingVariantCreateNestedManyWithoutListingInput = {
   create?: Prisma.XOR<Prisma.ListingVariantCreateWithoutListingInput, Prisma.ListingVariantUncheckedCreateWithoutListingInput> | Prisma.ListingVariantCreateWithoutListingInput[] | Prisma.ListingVariantUncheckedCreateWithoutListingInput[]
   connectOrCreate?: Prisma.ListingVariantCreateOrConnectWithoutListingInput | Prisma.ListingVariantCreateOrConnectWithoutListingInput[]
@@ -458,6 +470,22 @@ export type ListingVariantUpdateOneRequiredWithoutInventoryNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ListingVariantUpdateToOneWithWhereWithoutInventoryInput, Prisma.ListingVariantUpdateWithoutInventoryInput>, Prisma.ListingVariantUncheckedUpdateWithoutInventoryInput>
 }
 
+export type ListingVariantCreateNestedOneWithoutMediaInput = {
+  create?: Prisma.XOR<Prisma.ListingVariantCreateWithoutMediaInput, Prisma.ListingVariantUncheckedCreateWithoutMediaInput>
+  connectOrCreate?: Prisma.ListingVariantCreateOrConnectWithoutMediaInput
+  connect?: Prisma.ListingVariantWhereUniqueInput
+}
+
+export type ListingVariantUpdateOneWithoutMediaNestedInput = {
+  create?: Prisma.XOR<Prisma.ListingVariantCreateWithoutMediaInput, Prisma.ListingVariantUncheckedCreateWithoutMediaInput>
+  connectOrCreate?: Prisma.ListingVariantCreateOrConnectWithoutMediaInput
+  upsert?: Prisma.ListingVariantUpsertWithoutMediaInput
+  disconnect?: Prisma.ListingVariantWhereInput | boolean
+  delete?: Prisma.ListingVariantWhereInput | boolean
+  connect?: Prisma.ListingVariantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ListingVariantUpdateToOneWithWhereWithoutMediaInput, Prisma.ListingVariantUpdateWithoutMediaInput>, Prisma.ListingVariantUncheckedUpdateWithoutMediaInput>
+}
+
 export type ListingVariantCreateNestedOneWithoutCartItemsInput = {
   create?: Prisma.XOR<Prisma.ListingVariantCreateWithoutCartItemsInput, Prisma.ListingVariantUncheckedCreateWithoutCartItemsInput>
   connectOrCreate?: Prisma.ListingVariantCreateOrConnectWithoutCartItemsInput
@@ -509,6 +537,7 @@ export type ListingVariantCreateWithoutListingInput = {
   cartItems?: Prisma.CartItemCreateNestedManyWithoutVariantInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutVariantInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutVariantInput
+  media?: Prisma.ListingMediaCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantUncheckedCreateWithoutListingInput = {
@@ -520,6 +549,7 @@ export type ListingVariantUncheckedCreateWithoutListingInput = {
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutVariantInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutVariantInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutVariantInput
+  media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantCreateOrConnectWithoutListingInput = {
@@ -568,6 +598,7 @@ export type ListingVariantCreateWithoutInventoryInput = {
   cartItems?: Prisma.CartItemCreateNestedManyWithoutVariantInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutVariantInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutVariantInput
+  media?: Prisma.ListingMediaCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantUncheckedCreateWithoutInventoryInput = {
@@ -579,6 +610,7 @@ export type ListingVariantUncheckedCreateWithoutInventoryInput = {
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutVariantInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutVariantInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutVariantInput
+  media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantCreateOrConnectWithoutInventoryInput = {
@@ -606,6 +638,7 @@ export type ListingVariantUpdateWithoutInventoryInput = {
   cartItems?: Prisma.CartItemUpdateManyWithoutVariantNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutVariantNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutVariantNestedInput
+  media?: Prisma.ListingMediaUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantUncheckedUpdateWithoutInventoryInput = {
@@ -614,6 +647,71 @@ export type ListingVariantUncheckedUpdateWithoutInventoryInput = {
   sku?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutVariantNestedInput
+  orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutVariantNestedInput
+  reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutVariantNestedInput
+  media?: Prisma.ListingMediaUncheckedUpdateManyWithoutVariantNestedInput
+}
+
+export type ListingVariantCreateWithoutMediaInput = {
+  id?: string
+  sku: string
+  options: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceOverrideMinor?: bigint | number | null
+  listing: Prisma.ListingCreateNestedOneWithoutVariantsInput
+  inventory?: Prisma.InventoryCreateNestedOneWithoutVariantInput
+  cartItems?: Prisma.CartItemCreateNestedManyWithoutVariantInput
+  orderItems?: Prisma.OrderItemCreateNestedManyWithoutVariantInput
+  reservations?: Prisma.StockReservationCreateNestedManyWithoutVariantInput
+}
+
+export type ListingVariantUncheckedCreateWithoutMediaInput = {
+  id?: string
+  listingId: string
+  sku: string
+  options: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceOverrideMinor?: bigint | number | null
+  inventory?: Prisma.InventoryUncheckedCreateNestedOneWithoutVariantInput
+  cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutVariantInput
+  orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutVariantInput
+  reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutVariantInput
+}
+
+export type ListingVariantCreateOrConnectWithoutMediaInput = {
+  where: Prisma.ListingVariantWhereUniqueInput
+  create: Prisma.XOR<Prisma.ListingVariantCreateWithoutMediaInput, Prisma.ListingVariantUncheckedCreateWithoutMediaInput>
+}
+
+export type ListingVariantUpsertWithoutMediaInput = {
+  update: Prisma.XOR<Prisma.ListingVariantUpdateWithoutMediaInput, Prisma.ListingVariantUncheckedUpdateWithoutMediaInput>
+  create: Prisma.XOR<Prisma.ListingVariantCreateWithoutMediaInput, Prisma.ListingVariantUncheckedCreateWithoutMediaInput>
+  where?: Prisma.ListingVariantWhereInput
+}
+
+export type ListingVariantUpdateToOneWithWhereWithoutMediaInput = {
+  where?: Prisma.ListingVariantWhereInput
+  data: Prisma.XOR<Prisma.ListingVariantUpdateWithoutMediaInput, Prisma.ListingVariantUncheckedUpdateWithoutMediaInput>
+}
+
+export type ListingVariantUpdateWithoutMediaInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.StringFieldUpdateOperationsInput | string
+  options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  listing?: Prisma.ListingUpdateOneRequiredWithoutVariantsNestedInput
+  inventory?: Prisma.InventoryUpdateOneWithoutVariantNestedInput
+  cartItems?: Prisma.CartItemUpdateManyWithoutVariantNestedInput
+  orderItems?: Prisma.OrderItemUpdateManyWithoutVariantNestedInput
+  reservations?: Prisma.StockReservationUpdateManyWithoutVariantNestedInput
+}
+
+export type ListingVariantUncheckedUpdateWithoutMediaInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  listingId?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.StringFieldUpdateOperationsInput | string
+  options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  inventory?: Prisma.InventoryUncheckedUpdateOneWithoutVariantNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutVariantNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutVariantNestedInput
   reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutVariantNestedInput
@@ -628,6 +726,7 @@ export type ListingVariantCreateWithoutCartItemsInput = {
   inventory?: Prisma.InventoryCreateNestedOneWithoutVariantInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutVariantInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutVariantInput
+  media?: Prisma.ListingMediaCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantUncheckedCreateWithoutCartItemsInput = {
@@ -639,6 +738,7 @@ export type ListingVariantUncheckedCreateWithoutCartItemsInput = {
   inventory?: Prisma.InventoryUncheckedCreateNestedOneWithoutVariantInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutVariantInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutVariantInput
+  media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantCreateOrConnectWithoutCartItemsInput = {
@@ -666,6 +766,7 @@ export type ListingVariantUpdateWithoutCartItemsInput = {
   inventory?: Prisma.InventoryUpdateOneWithoutVariantNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutVariantNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutVariantNestedInput
+  media?: Prisma.ListingMediaUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantUncheckedUpdateWithoutCartItemsInput = {
@@ -677,6 +778,7 @@ export type ListingVariantUncheckedUpdateWithoutCartItemsInput = {
   inventory?: Prisma.InventoryUncheckedUpdateOneWithoutVariantNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutVariantNestedInput
   reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutVariantNestedInput
+  media?: Prisma.ListingMediaUncheckedUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantCreateWithoutOrderItemsInput = {
@@ -688,6 +790,7 @@ export type ListingVariantCreateWithoutOrderItemsInput = {
   inventory?: Prisma.InventoryCreateNestedOneWithoutVariantInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutVariantInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutVariantInput
+  media?: Prisma.ListingMediaCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantUncheckedCreateWithoutOrderItemsInput = {
@@ -699,6 +802,7 @@ export type ListingVariantUncheckedCreateWithoutOrderItemsInput = {
   inventory?: Prisma.InventoryUncheckedCreateNestedOneWithoutVariantInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutVariantInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutVariantInput
+  media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantCreateOrConnectWithoutOrderItemsInput = {
@@ -726,6 +830,7 @@ export type ListingVariantUpdateWithoutOrderItemsInput = {
   inventory?: Prisma.InventoryUpdateOneWithoutVariantNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutVariantNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutVariantNestedInput
+  media?: Prisma.ListingMediaUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantUncheckedUpdateWithoutOrderItemsInput = {
@@ -737,6 +842,7 @@ export type ListingVariantUncheckedUpdateWithoutOrderItemsInput = {
   inventory?: Prisma.InventoryUncheckedUpdateOneWithoutVariantNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutVariantNestedInput
   reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutVariantNestedInput
+  media?: Prisma.ListingMediaUncheckedUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantCreateWithoutReservationsInput = {
@@ -748,6 +854,7 @@ export type ListingVariantCreateWithoutReservationsInput = {
   inventory?: Prisma.InventoryCreateNestedOneWithoutVariantInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutVariantInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutVariantInput
+  media?: Prisma.ListingMediaCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantUncheckedCreateWithoutReservationsInput = {
@@ -759,6 +866,7 @@ export type ListingVariantUncheckedCreateWithoutReservationsInput = {
   inventory?: Prisma.InventoryUncheckedCreateNestedOneWithoutVariantInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutVariantInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutVariantInput
+  media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantCreateOrConnectWithoutReservationsInput = {
@@ -786,6 +894,7 @@ export type ListingVariantUpdateWithoutReservationsInput = {
   inventory?: Prisma.InventoryUpdateOneWithoutVariantNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutVariantNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutVariantNestedInput
+  media?: Prisma.ListingMediaUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantUncheckedUpdateWithoutReservationsInput = {
@@ -797,6 +906,7 @@ export type ListingVariantUncheckedUpdateWithoutReservationsInput = {
   inventory?: Prisma.InventoryUncheckedUpdateOneWithoutVariantNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutVariantNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutVariantNestedInput
+  media?: Prisma.ListingMediaUncheckedUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantCreateManyListingInput = {
@@ -815,6 +925,7 @@ export type ListingVariantUpdateWithoutListingInput = {
   cartItems?: Prisma.CartItemUpdateManyWithoutVariantNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutVariantNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutVariantNestedInput
+  media?: Prisma.ListingMediaUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantUncheckedUpdateWithoutListingInput = {
@@ -826,6 +937,7 @@ export type ListingVariantUncheckedUpdateWithoutListingInput = {
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutVariantNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutVariantNestedInput
   reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutVariantNestedInput
+  media?: Prisma.ListingMediaUncheckedUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantUncheckedUpdateManyWithoutListingInput = {
@@ -844,12 +956,14 @@ export type ListingVariantCountOutputType = {
   cartItems: number
   orderItems: number
   reservations: number
+  media: number
 }
 
 export type ListingVariantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   cartItems?: boolean | ListingVariantCountOutputTypeCountCartItemsArgs
   orderItems?: boolean | ListingVariantCountOutputTypeCountOrderItemsArgs
   reservations?: boolean | ListingVariantCountOutputTypeCountReservationsArgs
+  media?: boolean | ListingVariantCountOutputTypeCountMediaArgs
 }
 
 /**
@@ -883,6 +997,13 @@ export type ListingVariantCountOutputTypeCountReservationsArgs<ExtArgs extends r
   where?: Prisma.StockReservationWhereInput
 }
 
+/**
+ * ListingVariantCountOutputType without action
+ */
+export type ListingVariantCountOutputTypeCountMediaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ListingMediaWhereInput
+}
+
 
 export type ListingVariantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -895,6 +1016,7 @@ export type ListingVariantSelect<ExtArgs extends runtime.Types.Extensions.Intern
   cartItems?: boolean | Prisma.ListingVariant$cartItemsArgs<ExtArgs>
   orderItems?: boolean | Prisma.ListingVariant$orderItemsArgs<ExtArgs>
   reservations?: boolean | Prisma.ListingVariant$reservationsArgs<ExtArgs>
+  media?: boolean | Prisma.ListingVariant$mediaArgs<ExtArgs>
   _count?: boolean | Prisma.ListingVariantCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["listingVariant"]>
 
@@ -931,6 +1053,7 @@ export type ListingVariantInclude<ExtArgs extends runtime.Types.Extensions.Inter
   cartItems?: boolean | Prisma.ListingVariant$cartItemsArgs<ExtArgs>
   orderItems?: boolean | Prisma.ListingVariant$orderItemsArgs<ExtArgs>
   reservations?: boolean | Prisma.ListingVariant$reservationsArgs<ExtArgs>
+  media?: boolean | Prisma.ListingVariant$mediaArgs<ExtArgs>
   _count?: boolean | Prisma.ListingVariantCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ListingVariantIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -948,6 +1071,7 @@ export type $ListingVariantPayload<ExtArgs extends runtime.Types.Extensions.Inte
     cartItems: Prisma.$CartItemPayload<ExtArgs>[]
     orderItems: Prisma.$OrderItemPayload<ExtArgs>[]
     reservations: Prisma.$StockReservationPayload<ExtArgs>[]
+    media: Prisma.$ListingMediaPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1354,6 +1478,7 @@ export interface Prisma__ListingVariantClient<T, Null = never, ExtArgs extends r
   cartItems<T extends Prisma.ListingVariant$cartItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ListingVariant$cartItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CartItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orderItems<T extends Prisma.ListingVariant$orderItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ListingVariant$orderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reservations<T extends Prisma.ListingVariant$reservationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ListingVariant$reservationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StockReservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  media<T extends Prisma.ListingVariant$mediaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ListingVariant$mediaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ListingMediaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1877,6 +2002,30 @@ export type ListingVariant$reservationsArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.StockReservationScalarFieldEnum | Prisma.StockReservationScalarFieldEnum[]
+}
+
+/**
+ * ListingVariant.media
+ */
+export type ListingVariant$mediaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ListingMedia
+   */
+  select?: Prisma.ListingMediaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ListingMedia
+   */
+  omit?: Prisma.ListingMediaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ListingMediaInclude<ExtArgs> | null
+  where?: Prisma.ListingMediaWhereInput
+  orderBy?: Prisma.ListingMediaOrderByWithRelationInput | Prisma.ListingMediaOrderByWithRelationInput[]
+  cursor?: Prisma.ListingMediaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ListingMediaScalarFieldEnum | Prisma.ListingMediaScalarFieldEnum[]
 }
 
 /**
