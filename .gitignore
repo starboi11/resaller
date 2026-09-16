@@ -17,3 +17,4 @@ apps/api/data/private-media/*
 test-results/
 playwright-report/
 artifacts/
+.secrets/

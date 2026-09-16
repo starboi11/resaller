@@ -24,7 +24,12 @@ export default function LoginPage() {
         username: data.get('username'),
         password: data.get('password'),
       }),
-    });
+    }).catch(() => null);
+    if (!response) {
+      setMessage('Server bilan ulanib bo‘lmadi. Internetni tekshirib, qayta urinib ko‘ring.');
+      setBusy(false);
+      return;
+    }
     if (response.ok) {
       router.push('/marketplace');
       router.refresh();

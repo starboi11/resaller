@@ -15,5 +15,10 @@ pg_dump --format=custom --no-owner --no-privileges "$DATABASE_URL" \
   | gzip -9 \
   | openssl enc -aes-256-cbc -pbkdf2 -salt -pass env:BACKUP_ENCRYPTION_KEY -out "$target"
 (cd "$backup_dir" && sha256sum "$(basename "$target")" > "$(basename "$target").sha256")
+if [ -n "${BACKUP_S3_BUCKET:-}" ]; then
+  : "${BACKUP_S3_ENDPOINT:?BACKUP_S3_ENDPOINT is required when BACKUP_S3_BUCKET is set}"
+  aws s3 cp "$target" "s3://$BACKUP_S3_BUCKET/$(basename "$target")" --endpoint-url "$BACKUP_S3_ENDPOINT" --only-show-errors
+  aws s3 cp "$target.sha256" "s3://$BACKUP_S3_BUCKET/$(basename "$target").sha256" --endpoint-url "$BACKUP_S3_ENDPOINT" --only-show-errors
+fi
 find "$backup_dir" -type f -name 'resaller-*.dump.gz.enc*' -mtime "+$retention_days" -delete
 echo "Encrypted backup created: $target"

@@ -1,0 +1,23 @@
+services:
+  proxy:
+    environment:
+      DOMAIN: '${STAGING_DOMAIN}'
+  web:
+    build:
+      args:
+        NEXT_PUBLIC_API_URL: 'https://${STAGING_DOMAIN}/api/v1'
+    environment:
+      NEXT_PUBLIC_API_URL: 'https://${STAGING_DOMAIN}/api/v1'
+  admin:
+    build:
+      args:
+        NEXT_PUBLIC_API_URL: 'https://${STAGING_DOMAIN}/api/v1'
+    environment:
+      NEXT_PUBLIC_API_URL: 'https://${STAGING_DOMAIN}/api/v1'
+  api:
+    environment:
+      CORS_ORIGINS: 'https://${STAGING_DOMAIN},https://admin.${STAGING_DOMAIN}'
+  postgres:
+    ports: []
+  redis:
+    ports: []

@@ -1,6 +1,10 @@
 import { defineConfig, devices } from '@playwright/test';
 
-try { process.loadEnvFile('.env'); } catch { /* CI supplies environment directly. */ }
+try {
+  process.loadEnvFile('.env');
+} catch {
+  /* CI supplies environment directly. */
+}
 
 export default defineConfig({
   testDir: './e2e',
@@ -14,7 +18,10 @@ export default defineConfig({
   },
   projects: [
     { name: 'desktop-chromium', use: { ...devices['Desktop Chrome'] } },
-    { name: 'mobile-chromium', use: { ...devices['Pixel 7'] } },
+    { name: 'desktop-firefox', use: { ...devices['Desktop Firefox'] } },
+    { name: 'desktop-webkit', use: { ...devices['Desktop Safari'] } },
+    { name: 'mobile-android', use: { ...devices['Pixel 7'] } },
+    { name: 'mobile-iphone', use: { ...devices['iPhone 13'] } },
   ],
   webServer: [
     {

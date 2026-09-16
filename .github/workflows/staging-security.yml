@@ -1,0 +1,19 @@
+name: Staging security checks
+on:
+  workflow_dispatch:
+    inputs:
+      staging_url:
+        description: HTTPS staging origin
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  zap-baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: zaproxy/action-baseline@v0.14.0
+        with:
+          target: ${{ inputs.staging_url }}
+          fail_action: true

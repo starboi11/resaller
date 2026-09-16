@@ -50,6 +50,7 @@ services:
       S3_ENDPOINT: '${S3_ENDPOINT:-http://localhost:9000}'
       S3_REGION: '${S3_REGION:-auto}'
       S3_BUCKET: '${S3_BUCKET:-resaller-media}'
+      S3_PRIVATE_BUCKET: '${S3_PRIVATE_BUCKET:-resaller-private-media}'
       S3_ACCESS_KEY_ID: '${S3_ACCESS_KEY_ID:-local-unused}'
       S3_SECRET_ACCESS_KEY: '${S3_SECRET_ACCESS_KEY:-local-unused}'
       S3_FORCE_PATH_STYLE: '${S3_FORCE_PATH_STYLE:-true}'
@@ -107,11 +108,37 @@ services:
       BACKUP_ENCRYPTION_KEY: '${BACKUP_ENCRYPTION_KEY}'
       BACKUP_DIR: /backups
       BACKUP_RETENTION_DAYS: '${BACKUP_RETENTION_DAYS:-14}'
+      BACKUP_S3_ENDPOINT: '${BACKUP_S3_ENDPOINT:-}'
+      BACKUP_S3_BUCKET: '${BACKUP_S3_BUCKET:-}'
+      AWS_ACCESS_KEY_ID: '${BACKUP_S3_ACCESS_KEY_ID:-}'
+      AWS_SECRET_ACCESS_KEY: '${BACKUP_S3_SECRET_ACCESS_KEY:-}'
+      AWS_DEFAULT_REGION: '${BACKUP_S3_REGION:-auto}'
     command: ['sh', '-c', 'while true; do resaller-backup; sleep 86400; done']
     depends_on:
       postgres: { condition: service_healthy }
     volumes:
       - encrypted_backups:/backups
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    restart: unless-stopped
+    command:
+      [
+        '--config.file=/etc/prometheus/prometheus.yml',
+        '--storage.tsdb.retention.time=30d',
+      ]
+    volumes:
+      - ./infrastructure/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./infrastructure/prometheus-alerts.yml:/etc/prometheus/prometheus-alerts.yml:ro
+      - ./.secrets/metrics_token:/run/secrets/metrics_token:ro
+      - prometheus_data:/prometheus
+    depends_on: [api, alertmanager]
+  alertmanager:
+    image: prom/alertmanager:v0.28.1
+    restart: unless-stopped
+    command: ['--config.file=/etc/alertmanager/alertmanager.yml']
+    volumes:
+      - ./infrastructure/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - alertmanager_data:/alertmanager
 volumes:
   postgres_prod:
   redis_prod:
@@ -120,3 +147,5 @@ volumes:
   private_media_prod:
   encrypted_backups:
   clamav_data:
+  prometheus_data:
+  alertmanager_data:
