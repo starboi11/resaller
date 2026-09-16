@@ -16,8 +16,21 @@
 
 ## Requires owner/legal approval
 
-- [ ] Publish privacy notice, buyer terms, seller terms, prohibited-listing policy, returns and disputes policy
-- [ ] Confirm support and moderation operating procedures
+- [x] Prepare draft privacy notice, buyer terms, seller terms, prohibited-listing policy, returns/disputes policy and support/moderation SOP
+- [ ] Replace every `[LEGAL_APPROVAL_REQUIRED]` and operator/contact placeholder
+- [ ] Obtain written approval from an Uzbekistan-qualified lawyer and the owner
+- [ ] Publish the approved, versioned documents and capture user acceptance
+- [ ] Rehearse and approve support/moderation procedures with named operators
 - [ ] Recruit 20–50 beta sellers and complete closed beta
+
+## Final external-service gate immediately before global launch
+
+- [ ] Register the Telegram webhook and bind the approved operator Telegram ID
+- [ ] Configure `support@resaller.uz`/temporary Gmail forwarding and a real email provider
+- [ ] Install Telegram, email and push notification credentials in the server secret manager
+- [ ] Revoke every R2 credential previously exposed in chat or screenshots
+- [ ] Create new bucket-scoped R2 Object Read & Write credentials and install them only in staging/production secrets
+- [ ] Run R2 public/private upload-download authorization smoke tests
+- [ ] Approve the AI provider, model, monthly/hard cost budget, processing region, retention, training opt-out and DPA
 
 Production launch is blocked until every unchecked item has evidence and an owner.
