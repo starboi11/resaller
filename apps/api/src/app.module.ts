@@ -11,6 +11,7 @@ import { MediaModule } from './media/media.module.js';
 import { TrustModule } from './trust/trust.module.js';
 import { MetricsController } from './health/metrics.controller.js';
 import { SupportModule } from './support/support.module.js';
+import { AssistantModule } from './assistant/assistant.module.js';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { SupportModule } from './support/support.module.js';
     MediaModule,
     TrustModule,
     SupportModule,
+    AssistantModule,
   ],
   controllers: [HealthController, MetricsController, PlatformController],
 })

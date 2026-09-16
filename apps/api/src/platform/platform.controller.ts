@@ -2,9 +2,29 @@ import { Controller, Get } from '@nestjs/common';
 import { PLATFORM_BUSINESS_RULES } from '@resaller/types';
 
 const modules = [
-  'auth', 'users', 'sellers', 'stores', 'listings', 'inventory', 'marketplace',
-  'cart', 'orders', 'chat', 'questions', 'reviews', 'trust', 'risk', 'coupons',
-  'promotions', 'notifications', 'search', 'disputes', 'admin', 'audit', 'security',
+  'auth',
+  'users',
+  'sellers',
+  'stores',
+  'listings',
+  'inventory',
+  'marketplace',
+  'cart',
+  'orders',
+  'chat',
+  'questions',
+  'reviews',
+  'trust',
+  'risk',
+  'coupons',
+  'promotions',
+  'notifications',
+  'search',
+  'disputes',
+  'admin',
+  'audit',
+  'security',
+  'assistant',
 ] as const;
 
 @Controller('platform')

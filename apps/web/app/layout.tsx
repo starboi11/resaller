@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { SiteHeader } from './components/site-header';
 import { NetworkStatus } from './components/network-status';
+import { AiAssistant } from './components/ai-assistant';
 export const metadata: Metadata = {
   title: { default: 'Resaller.uz', template: '%s — Resaller.uz' },
   description: 'O‘zbekistondagi ishonchli marketplace',
@@ -22,6 +23,7 @@ export default function RootLayout({
         <NetworkStatus />
         <SiteHeader />
         <div id="main-content">{children}</div>
+        <AiAssistant />
       </body>
     </html>
   );
