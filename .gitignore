@@ -13,6 +13,7 @@ uploads/*
 !uploads/.gitkeep
 apps/api/data/media/*
 apps/api/data/private-media/*
+apps/api/.e2e-data/
 .tmp-backup-drill*/
 test-results/
 playwright-report/

@@ -10,7 +10,7 @@ Current evidence-based readiness:
 
 - Local application and core commerce workflow: **implemented baseline**
 - Automated code-quality gate: **passing**
-- Cross-browser and visual test definitions: **implemented, latest local full matrix not re-run in this audit**
+- Cross-browser and visual test matrix: **passing locally (96 passed, 4 intentional skips)**
 - Staging: **configuration ready, no deployed-host evidence**
 - Legal and operations: **drafted, not owner/lawyer approved**
 - Closed beta: **not started**
@@ -29,13 +29,18 @@ UI/UX owner acceptance → local full browser matrix → staging deployment
 - Prisma schema validation passed.
 - Tracked/untracked candidate-file secret scan passed.
 - Monorepo lint and TypeScript checks passed.
-- Unit/domain suite passed: 49 API tests; the PostgreSQL concurrency test was skipped because Docker/PostgreSQL was unavailable.
+- Unit/domain suite passed: 49 API tests, with the database-specific test run separately.
+- Docker PostgreSQL and Redis started successfully; all 17 migrations were applied.
+- The real PostgreSQL checkout concurrency integration test passed.
 - Web, admin, API and shared-package production builds passed.
 - Production dependency audit has no known vulnerabilities after updating the transitive `mysql2` override to `3.23.1`.
 - There are 17 versioned Prisma migrations.
 - Playwright defines Chromium, Firefox, WebKit, Pixel 7 and iPhone 13 projects.
 - A real database-backed seller → moderation → buyer checkout → seller fulfilment → verified review browser journey exists.
-- Visual baselines exist for the five Playwright projects, but the complete latest matrix needs a clean rerun.
+- The full Playwright matrix passed: Chromium, Firefox, WebKit, Pixel 7 and iPhone 13; 96 passed and 4 intentional duplicate-journey skips.
+- The seller → moderation → buyer checkout → seller fulfilment → verified review journey passed against an isolated clean E2E database.
+- Ten visual baselines passed across all five browser/device projects.
+- The production dependency audit reported no known vulnerabilities.
 - Production Compose, Caddy HTTPS, private database/Redis networking, ClamAV, Prometheus, Alertmanager and encrypted-backup automation are represented in infrastructure code.
 - Privacy, buyer, seller, returns/disputes, prohibited-listing and support/moderation documents exist as drafts.
 
@@ -43,9 +48,9 @@ UI/UX owner acceptance → local full browser matrix → staging deployment
 
 ### 1. Final local acceptance
 
-- Start Docker/PostgreSQL/Redis and run all 17 migrations from a clean database.
-- Run the skipped checkout concurrency integration test.
-- Run the entire Playwright matrix, not only Chromium.
+- [x] Start Docker/PostgreSQL/Redis and run all 17 migrations from a clean database.
+- [x] Run the checkout concurrency integration test against PostgreSQL.
+- [x] Run the entire local Playwright matrix across Chromium, Firefox, WebKit, Android and iPhone.
 - Review buyer, seller and admin screens on desktop, small Android and iPhone viewports.
 - Obtain owner acceptance for home, marketplace, product, checkout, order, chat, seller wizard and admin operations visuals.
 - Record remaining loading, empty, error, offline, restricted, keyboard, contrast and reduced-motion findings.

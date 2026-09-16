@@ -10,6 +10,7 @@ test('seller can start onboarding and create a draft store', async ({
   await page.getByLabel('Username').fill(username);
   await page.getByLabel('Parol').fill('Resaller-Seller-E2E-2026');
   await page.getByRole('button', { name: 'Hisob yaratish' }).click();
+  await expect(page).toHaveURL(/marketplace/);
   await page.goto('/seller/manage');
   await page.getByRole('button', { name: 'Ariza boshlash' }).click();
   const storeForm = page

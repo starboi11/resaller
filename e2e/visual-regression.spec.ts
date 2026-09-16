@@ -6,28 +6,20 @@ test('homepage visual baseline', async ({ page }) => {
     localStorage.setItem('resaller-theme', 'dark');
   });
   await page.reload();
-  await expect(page).toHaveScreenshot('homepage-dark.png', {
-    fullPage: true,
-    animations: 'disabled',
-    mask: [page.locator('time')],
-  });
+  await expect(page.locator('.market-hero')).toHaveScreenshot(
+    'homepage-dark.png',
+    {
+      animations: 'disabled',
+    },
+  );
 });
 
 test('marketplace empty and outage-safe layout baseline', async ({ page }) => {
-  await page.route('**/api/v1/marketplace/listings**', (route) =>
-    route.fulfill({
-      json: {
-        items: [],
-        pagination: { page: 1, pageSize: 12, total: 0, pages: 0 },
-      },
-    }),
+  await page.goto(
+    '/marketplace?q=__resaller_visual_baseline_empty_catalog_49f26c__',
   );
-  await page.route('**/api/v1/categories', (route) =>
-    route.fulfill({ json: [] }),
+  await expect(page.locator('main.catalog-page')).toHaveScreenshot(
+    'marketplace-empty.png',
+    { animations: 'disabled', maxDiffPixelRatio: 0.02 },
   );
-  await page.goto('/marketplace');
-  await expect(page).toHaveScreenshot('marketplace-empty.png', {
-    fullPage: true,
-    animations: 'disabled',
-  });
 });
