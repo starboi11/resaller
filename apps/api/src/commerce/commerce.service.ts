@@ -16,6 +16,7 @@ import type {
   CreateCouponDto,
   CreatePromotionDto,
   CreateTestimonialDto,
+  CreateCollectionDto,
   MarketplaceQueryDto,
   SellerVerificationDto,
   StoreSettingsDto,
@@ -152,6 +153,9 @@ export class CommerceService {
         nameUz: true,
         status: true,
         vacationMode: true,
+        logoStorageKey: true,
+        bannerStorageKey: true,
+        premiumUntil: true,
         settings: true,
         members: {
           select: { role: true, user: { select: { username: true } } },
@@ -169,7 +173,24 @@ export class CommerceService {
         },
         importedTestimonials: {
           orderBy: { createdAt: 'desc' },
-          select: { id: true, sourceLabel: true, authorLabel: true, body: true, createdAt: true },
+          select: {
+            id: true,
+            sourceLabel: true,
+            authorLabel: true,
+            body: true,
+            createdAt: true,
+          },
+        },
+        collections: {
+          orderBy: { position: 'asc' },
+          include: {
+            items: {
+              orderBy: { position: 'asc' },
+              include: {
+                listing: { select: { publicId: true, nameUz: true } },
+              },
+            },
+          },
         },
         listings: {
           orderBy: { createdAt: 'desc' },
@@ -178,6 +199,8 @@ export class CommerceService {
             nameUz: true,
             status: true,
             priceMinor: true,
+            salePriceMinor: true,
+            videoStorageKey: true,
             currency: true,
             variants: {
               select: {
@@ -189,7 +212,14 @@ export class CommerceService {
               },
             },
             media: {
-              select: { id: true, storageKey: true, thumbnailStorageKey: true },
+              orderBy: { position: 'asc' },
+              select: {
+                id: true,
+                storageKey: true,
+                thumbnailStorageKey: true,
+                position: true,
+                variantId: true,
+              },
             },
           },
         },
@@ -200,6 +230,7 @@ export class CommerceService {
       listings: store.listings.map((listing) => ({
         ...listing,
         priceMinor: listing.priceMinor.toString(),
+        salePriceMinor: listing.salePriceMinor?.toString() ?? null,
         variants: listing.variants.map((variant) => ({
           ...variant,
           priceOverrideMinor: variant.priceOverrideMinor?.toString() ?? null,
@@ -363,8 +394,17 @@ export class CommerceService {
         descriptionRu: true,
         status: true,
         vacationMode: true,
+        logoStorageKey: true,
+        bannerStorageKey: true,
+        premiumUntil: true,
         sellerProfile: { select: { trustBadge: true, verifiedAt: true } },
-        settings: { select: { deliverySettings: true, workingHours: true, vacationMessageUz: true } },
+        settings: {
+          select: {
+            deliverySettings: true,
+            workingHours: true,
+            vacationMessageUz: true,
+          },
+        },
         policies: {
           take: 1,
           orderBy: { version: 'desc' },
@@ -392,6 +432,18 @@ export class CommerceService {
             authorLabel: true,
             body: true,
             createdAt: true,
+          },
+        },
+        collections: {
+          where: { active: true },
+          orderBy: { position: 'asc' },
+          select: {
+            publicId: true,
+            nameUz: true,
+            items: {
+              orderBy: { position: 'asc' },
+              select: { listing: { select: { publicId: true, nameUz: true } } },
+            },
           },
         },
         listings: {
@@ -430,6 +482,13 @@ export class CommerceService {
     storePublicId: string,
     input: CreateListingDto,
   ) {
+    if (
+      input.salePriceMinor !== undefined &&
+      input.salePriceMinor >= input.priceMinor
+    )
+      throw new BadRequestException(
+        'Sale price must be lower than the regular price',
+      );
     const store = await this.prisma.store.findUnique({
       where: { publicId: storePublicId },
       include: { sellerProfile: true, members: { where: { userId: user.id } } },
@@ -454,8 +513,13 @@ export class CommerceService {
         nameUz: input.nameUz,
         nameRu: input.nameRu ?? null,
         descriptionUz: input.descriptionUz,
+        descriptionRu: input.descriptionRu ?? null,
         attributeValues,
         priceMinor: BigInt(input.priceMinor),
+        salePriceMinor:
+          input.salePriceMinor === undefined
+            ? null
+            : BigInt(input.salePriceMinor),
         variants: {
           create: {
             sku: input.sku,
@@ -469,10 +533,15 @@ export class CommerceService {
         nameUz: true,
         status: true,
         priceMinor: true,
+        salePriceMinor: true,
         variants: { select: { sku: true, inventory: true } },
       },
     });
-    return { ...listing, priceMinor: listing.priceMinor.toString() };
+    return {
+      ...listing,
+      priceMinor: listing.priceMinor.toString(),
+      salePriceMinor: listing.salePriceMinor?.toString() ?? null,
+    };
   }
 
   async updateListing(
@@ -503,6 +572,16 @@ export class CommerceService {
       throw new ConflictException(
         'Listing cannot be edited in its current status',
       );
+    const nextPrice = input.priceMinor ?? Number(listing.priceMinor);
+    const nextSale =
+      input.salePriceMinor ??
+      (listing.salePriceMinor === null
+        ? undefined
+        : Number(listing.salePriceMinor));
+    if (nextSale !== undefined && nextSale >= nextPrice)
+      throw new BadRequestException(
+        'Sale price must be lower than the regular price',
+      );
     return this.prisma.$transaction(async (tx) => {
       const updated = await tx.listing.update({
         where: { id: listing.id },
@@ -511,8 +590,14 @@ export class CommerceService {
           ...(input.descriptionUz !== undefined
             ? { descriptionUz: input.descriptionUz }
             : {}),
+          ...(input.descriptionRu !== undefined
+            ? { descriptionRu: input.descriptionRu }
+            : {}),
           ...(input.priceMinor !== undefined
             ? { priceMinor: BigInt(input.priceMinor) }
+            : {}),
+          ...(input.salePriceMinor !== undefined
+            ? { salePriceMinor: BigInt(input.salePriceMinor) }
             : {}),
           ...(input.attributeValues !== undefined
             ? {
@@ -714,6 +799,68 @@ export class CommerceService {
     });
   }
 
+  async reorderMedia(user: AuthenticatedUser, publicId: string, ids: string[]) {
+    const listing = await this.editableListing(user, publicId);
+    const media = await this.prisma.listingMedia.findMany({
+      where: { listingId: listing.id },
+      select: { id: true },
+    });
+    if (
+      ids.length !== media.length ||
+      new Set(ids).size !== ids.length ||
+      media.some((item) => !ids.includes(item.id))
+    )
+      throw new BadRequestException(
+        'Media order must contain every image exactly once',
+      );
+    await this.prisma.$transaction(async (tx) => {
+      for (let index = 0; index < ids.length; index++)
+        await tx.listingMedia.update({
+          where: { id: ids[index]! },
+          data: { position: 1000 + index },
+        });
+      for (let index = 0; index < ids.length; index++)
+        await tx.listingMedia.update({
+          where: { id: ids[index]! },
+          data: { position: index },
+        });
+    });
+    return { ordered: true };
+  }
+
+  async createCollection(
+    user: AuthenticatedUser,
+    storePublicId: string,
+    input: CreateCollectionDto,
+  ) {
+    const store = await this.managedStore(user.id, storePublicId);
+    const listings = await this.prisma.listing.findMany({
+      where: { publicId: { in: input.listingPublicIds }, storeId: store.id },
+      select: { id: true, publicId: true },
+    });
+    if (listings.length !== new Set(input.listingPublicIds).size)
+      throw new BadRequestException('Collection contains an invalid listing');
+    return this.prisma.collection.create({
+      data: {
+        storeId: store.id,
+        nameUz: input.nameUz,
+        nameRu: input.nameRu ?? null,
+        items: {
+          create: listings.map((listing, index) => ({
+            listingId: listing.id,
+            position: index,
+          })),
+        },
+      },
+      include: {
+        items: {
+          orderBy: { position: 'asc' },
+          include: { listing: { select: { publicId: true, nameUz: true } } },
+        },
+      },
+    });
+  }
+
   async marketplace(query: MarketplaceQueryDto) {
     const page = query.page ?? 1;
     const pageSize = query.pageSize ?? 12;
@@ -763,6 +910,7 @@ export class CommerceService {
         nameUz: true,
         nameRu: true,
         priceMinor: true,
+        salePriceMinor: true,
         currency: true,
         descriptionUz: true,
         descriptionRu: true,
@@ -795,18 +943,39 @@ export class CommerceService {
         },
       },
     });
-    const ranked = listings.map((listing) => ({
-      ...listing,
-      priceMinor: listing.priceMinor.toString(),
-      variants: listing.variants.map((variant) => ({ ...variant, priceOverrideMinor: variant.priceOverrideMinor?.toString() ?? null })),
-      score: marketplaceScore(query.q ?? '', [listing.nameUz, listing.nameRu, listing.descriptionUz, listing.descriptionRu, listing.category.nameUz, listing.category.nameRu, listing.store.nameUz, listing.store.nameRu]),
-    })).filter((listing) => !query.q || listing.score > 0);
-    if (query.q && (!query.sort || query.sort === 'relevance')) ranked.sort((a, b) => b.score - a.score);
+    const ranked = listings
+      .map((listing) => ({
+        ...listing,
+        priceMinor: listing.priceMinor.toString(),
+        salePriceMinor: listing.salePriceMinor?.toString() ?? null,
+        variants: listing.variants.map((variant) => ({
+          ...variant,
+          priceOverrideMinor: variant.priceOverrideMinor?.toString() ?? null,
+        })),
+        score: marketplaceScore(query.q ?? '', [
+          listing.nameUz,
+          listing.nameRu,
+          listing.descriptionUz,
+          listing.descriptionRu,
+          listing.category.nameUz,
+          listing.category.nameRu,
+          listing.store.nameUz,
+          listing.store.nameRu,
+        ]),
+      }))
+      .filter((listing) => !query.q || listing.score > 0);
+    if (query.q && (!query.sort || query.sort === 'relevance'))
+      ranked.sort((a, b) => b.score - a.score);
     const total = ranked.length;
     const start = (page - 1) * pageSize;
     return {
       items: ranked.slice(start, start + pageSize),
-      pagination: { page, pageSize, total, pages: Math.max(1, Math.ceil(total / pageSize)) },
+      pagination: {
+        page,
+        pageSize,
+        total,
+        pages: Math.max(1, Math.ceil(total / pageSize)),
+      },
     };
   }
 
@@ -826,7 +995,13 @@ export class CommerceService {
             username: true,
             nameUz: true,
             vacationMode: true,
-            settings: { select: { deliverySettings: true, workingHours: true, vacationMessageUz: true } },
+            settings: {
+              select: {
+                deliverySettings: true,
+                workingHours: true,
+                vacationMessageUz: true,
+              },
+            },
             policies: {
               take: 1,
               orderBy: { version: 'desc' },
@@ -868,6 +1043,7 @@ export class CommerceService {
       ...listing,
       purchasable: listing.status === 'ACTIVE' && !listing.store.vacationMode,
       priceMinor: listing.priceMinor.toString(),
+      salePriceMinor: listing.salePriceMinor?.toString() ?? null,
       questions,
       reviews,
       rating: reviews.length
@@ -879,9 +1055,18 @@ export class CommerceService {
                   reviews.length) *
                   10,
               ) / 10,
-            distribution: Object.fromEntries([5, 4, 3, 2, 1].map((rating) => [rating, reviews.filter((review) => review.rating === rating).length])),
+            distribution: Object.fromEntries(
+              [5, 4, 3, 2, 1].map((rating) => [
+                rating,
+                reviews.filter((review) => review.rating === rating).length,
+              ]),
+            ),
           }
-        : { count: 0, average: null, distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 } },
+        : {
+            count: 0,
+            average: null,
+            distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
+          },
       variants: listing.variants.map((variant) => ({
         ...variant,
         priceOverrideMinor: variant.priceOverrideMinor?.toString() ?? null,
@@ -980,18 +1165,52 @@ export class CommerceService {
     };
   }
 
-  async createTestimonial(user: AuthenticatedUser, publicId: string, input: CreateTestimonialDto) {
+  async createTestimonial(
+    user: AuthenticatedUser,
+    publicId: string,
+    input: CreateTestimonialDto,
+  ) {
     const store = await this.managedStore(user.id, publicId);
-    const created = await this.prisma.importedTestimonial.create({ data: { storeId: store.id, sourceLabel: input.sourceLabel.trim(), authorLabel: input.authorLabel.trim(), body: input.body.trim() } });
-    await this.prisma.auditLog.create({ data: { actorId: user.id, action: 'IMPORTED_TESTIMONIAL_CREATED', targetType: 'ImportedTestimonial', targetId: created.id, metadata: { storeId: store.id, sourceLabel: created.sourceLabel } } });
+    const created = await this.prisma.importedTestimonial.create({
+      data: {
+        storeId: store.id,
+        sourceLabel: input.sourceLabel.trim(),
+        authorLabel: input.authorLabel.trim(),
+        body: input.body.trim(),
+      },
+    });
+    await this.prisma.auditLog.create({
+      data: {
+        actorId: user.id,
+        action: 'IMPORTED_TESTIMONIAL_CREATED',
+        targetType: 'ImportedTestimonial',
+        targetId: created.id,
+        metadata: { storeId: store.id, sourceLabel: created.sourceLabel },
+      },
+    });
     return created;
   }
 
-  async removeTestimonial(user: AuthenticatedUser, publicId: string, id: string) {
+  async removeTestimonial(
+    user: AuthenticatedUser,
+    publicId: string,
+    id: string,
+  ) {
     const store = await this.managedStore(user.id, publicId);
-    const removed = await this.prisma.importedTestimonial.deleteMany({ where: { id, storeId: store.id } });
-    if (!removed.count) throw new NotFoundException('Imported testimonial not found');
-    await this.prisma.auditLog.create({ data: { actorId: user.id, action: 'IMPORTED_TESTIMONIAL_REMOVED', targetType: 'ImportedTestimonial', targetId: id, metadata: { storeId: store.id } } });
+    const removed = await this.prisma.importedTestimonial.deleteMany({
+      where: { id, storeId: store.id },
+    });
+    if (!removed.count)
+      throw new NotFoundException('Imported testimonial not found');
+    await this.prisma.auditLog.create({
+      data: {
+        actorId: user.id,
+        action: 'IMPORTED_TESTIMONIAL_REMOVED',
+        targetType: 'ImportedTestimonial',
+        targetId: id,
+        metadata: { storeId: store.id },
+      },
+    });
     return { removed: true };
   }
 

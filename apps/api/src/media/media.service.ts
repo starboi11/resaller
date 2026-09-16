@@ -20,7 +20,8 @@ export class MediaService {
   constructor(
     @Inject(PrismaService) private readonly prisma: PrismaService,
     @Inject(MediaStorageService) private readonly storage: MediaStorageService,
-    @Inject(MalwareScannerService) private readonly scanner: MalwareScannerService,
+    @Inject(MalwareScannerService)
+    private readonly scanner: MalwareScannerService,
   ) {}
 
   async uploadListingImage(
@@ -45,7 +46,13 @@ export class MediaService {
       throw new ForbiddenException('Listing access denied');
     if (listing.media.length >= 10)
       throw new ConflictException('A listing can contain at most 10 images');
-    if (variantId && !await this.prisma.listingVariant.findFirst({ where: { id: variantId, listingId: listing.id } })) throw new ConflictException('Variant does not belong to listing');
+    if (
+      variantId &&
+      !(await this.prisma.listingVariant.findFirst({
+        where: { id: variantId, listingId: listing.id },
+      }))
+    )
+      throw new ConflictException('Variant does not belong to listing');
     const image = detectSafeImage(bytes);
     if (!image)
       throw new UnsupportedMediaTypeException(
@@ -110,7 +117,7 @@ export class MediaService {
   }
 
   async publicImage(storageKey: string) {
-    if (!/^[a-f0-9]{48}\.(jpg|png|webp)$/.test(storageKey))
+    if (!/^[a-f0-9]{48}\.(jpg|png|webp|mp4|webm)$/.test(storageKey))
       throw new NotFoundException('Media not found');
     const media = await this.prisma.listingMedia.findFirst({
       where: { OR: [{ storageKey }, { thumbnailStorageKey: storageKey }] },
@@ -124,8 +131,39 @@ export class MediaService {
         },
       },
     });
+    if (!media) {
+      const [store, listing] = await Promise.all([
+        this.prisma.store.findFirst({
+          where: {
+            status: 'ACTIVE',
+            OR: [
+              { logoStorageKey: storageKey },
+              { bannerStorageKey: storageKey },
+            ],
+          },
+        }),
+        this.prisma.listing.findFirst({
+          where: {
+            status: 'ACTIVE',
+            deletedAt: null,
+            videoStorageKey: storageKey,
+            store: { status: 'ACTIVE' },
+          },
+        }),
+      ]);
+      if (!store && !listing) throw new NotFoundException('Media not found');
+      const mimeType = storageKey.endsWith('.mp4')
+        ? 'video/mp4'
+        : storageKey.endsWith('.webm')
+          ? 'video/webm'
+          : storageKey.endsWith('.png')
+            ? 'image/png'
+            : storageKey.endsWith('.jpg')
+              ? 'image/jpeg'
+              : 'image/webp';
+      return { bytes: await this.storage.get(storageKey), mimeType };
+    }
     if (
-      !media ||
       media.listing.deletedAt ||
       media.listing.status !== 'ACTIVE' ||
       media.listing.store.status !== 'ACTIVE'
@@ -135,6 +173,68 @@ export class MediaService {
       bytes: await this.storage.get(storageKey),
       mimeType: media.mimeType,
     };
+  }
+
+  async uploadStoreAsset(
+    userId: string,
+    publicId: string,
+    kind: string,
+    bytes: Buffer,
+  ) {
+    if (!['logo', 'banner'].includes(kind))
+      throw new NotFoundException('Asset type not found');
+    await this.scanner.assertClean(bytes);
+    const store = await this.prisma.store.findUnique({
+      where: { publicId },
+      include: { sellerProfile: true, members: true },
+    });
+    if (!store) throw new NotFoundException('Store not found');
+    if (
+      store.sellerProfile.userId !== userId &&
+      !store.members.some((member) => member.userId === userId)
+    )
+      throw new ForbiddenException();
+    const image = detectSafeImage(bytes);
+    if (!image) throw new UnsupportedMediaTypeException('Valid image required');
+    const processed = await processListingImage(bytes);
+    const key = `${randomBytes(24).toString('hex')}.${processed.extension}`;
+    await this.storage.put(key, processed.image, processed.mimeType);
+    await this.prisma.store.update({
+      where: { id: store.id },
+      data:
+        kind === 'logo' ? { logoStorageKey: key } : { bannerStorageKey: key },
+    });
+    return { storageKey: key, url: `/api/v1/media/${key}` };
+  }
+
+  async uploadListingVideo(userId: string, publicId: string, bytes: Buffer) {
+    await this.scanner.assertClean(bytes);
+    if (bytes.length > 50 * 1024 * 1024)
+      throw new ConflictException('Video must be 50 MB or smaller');
+    const mp4 = bytes.subarray(4, 12).toString('ascii').includes('ftyp');
+    const webm = bytes.subarray(0, 4).toString('hex') === '1a45dfa3';
+    if (!mp4 && !webm)
+      throw new UnsupportedMediaTypeException(
+        'Only valid MP4 or WebM video is accepted',
+      );
+    const listing = await this.prisma.listing.findUnique({
+      where: { publicId },
+      include: { store: { include: { sellerProfile: true, members: true } } },
+    });
+    if (!listing) throw new NotFoundException('Listing not found');
+    if (
+      listing.store.sellerProfile.userId !== userId &&
+      !listing.store.members.some((member) => member.userId === userId)
+    )
+      throw new ForbiddenException();
+    const extension = mp4 ? 'mp4' : 'webm';
+    const key = `${randomBytes(24).toString('hex')}.${extension}`;
+    await this.storage.put(key, bytes, mp4 ? 'video/mp4' : 'video/webm');
+    await this.prisma.listing.update({
+      where: { id: listing.id },
+      data: { videoStorageKey: key },
+    });
+    return { storageKey: key, url: `/api/v1/media/${key}` };
   }
 
   async uploadVerificationDocument(userId: string, bytes: Buffer) {

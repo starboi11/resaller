@@ -1,0 +1,90 @@
+.draft-media-list,
+.media-reorder {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
+  gap: 0.65rem;
+}
+.draft-media-list > div,
+.media-reorder > div {
+  display: grid;
+  gap: 0.35rem;
+  border: 1px solid var(--line);
+  border-radius: 0.9rem;
+  padding: 0.65rem;
+  background: var(--surface);
+  cursor: grab;
+}
+.draft-media-list span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.72rem;
+}
+.draft-media-list button {
+  justify-self: end;
+}
+.media-reorder img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 0.55rem;
+}
+.premium-pill {
+  border-radius: 999px;
+  background: linear-gradient(110deg, #f4d67a, #f59e0b);
+  color: #261700;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.7rem;
+  font-weight: 1000;
+}
+.product-preview {
+  display: grid;
+  gap: 0.55rem;
+}
+.product-preview strong {
+  font-size: 1.3rem;
+}
+.product-preview small {
+  color: var(--muted);
+}
+.store-identity i img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+.store-collections {
+  margin-bottom: 2.5rem;
+}
+.store-collections h2 {
+  margin: 0.4rem 0 1.1rem;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+}
+.store-collections__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1rem;
+}
+.store-collections article {
+  border: 1px solid var(--line);
+  border-radius: 1.2rem;
+  padding: 1.1rem;
+  background: var(--surface);
+}
+.store-collections article div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+}
+.store-collections a {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.8rem;
+}
+.catalog-card del {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
+}

@@ -28,9 +28,10 @@ export class MediaController {
     if (!file)
       throw new UnsupportedMediaTypeException('Image file is required');
     const variantField = file.fields.variantId;
-    const variantId = variantField && !Array.isArray(variantField) && 'value' in variantField
-      ? String(variantField.value)
-      : undefined;
+    const variantId =
+      variantField && !Array.isArray(variantField) && 'value' in variantField
+        ? String(variantField.value)
+        : undefined;
     return this.media.uploadListingImage(
       request.user.id,
       publicId,
@@ -50,6 +51,34 @@ export class MediaController {
       );
     return this.media.uploadVerificationDocument(
       request.user.id,
+      await file.toBuffer(),
+    );
+  }
+  @Post('stores/:publicId/:kind')
+  @UseGuards(SessionGuard)
+  async uploadStoreAsset(
+    @Req() request: FastifyRequest & { user: AuthenticatedUser },
+    @Param('publicId') publicId: string,
+    @Param('kind') kind: string,
+  ) {
+    const file = await request.file();
+    if (!file) throw new UnsupportedMediaTypeException('Image required');
+    return this.media.uploadStoreAsset(
+      request.user.id,
+      publicId,
+      kind,
+      await file.toBuffer(),
+    );
+  }
+  @Post('listings/:publicId/video') @UseGuards(SessionGuard) async uploadVideo(
+    @Req() request: FastifyRequest & { user: AuthenticatedUser },
+    @Param('publicId') publicId: string,
+  ) {
+    const file = await request.file();
+    if (!file) throw new UnsupportedMediaTypeException('Video required');
+    return this.media.uploadListingVideo(
+      request.user.id,
+      publicId,
       await file.toBuffer(),
     );
   }

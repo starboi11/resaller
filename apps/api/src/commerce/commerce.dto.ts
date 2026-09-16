@@ -1,6 +1,7 @@
 import { Transform } from 'class-transformer';
 import {
   IsIn,
+  IsArray,
   IsInt,
   IsObject,
   IsOptional,
@@ -35,7 +36,17 @@ export class CreateListingDto {
   @IsString() @MinLength(2) @MaxLength(160) nameUz!: string;
   @IsOptional() @IsString() @MaxLength(160) nameRu?: string;
   @IsString() @MinLength(10) @MaxLength(5000) descriptionUz!: string;
+  @IsOptional()
+  @IsString()
+  @MinLength(10)
+  @MaxLength(5000)
+  descriptionRu?: string;
   @IsInt() @Min(0) @Max(9_000_000_000_000) priceMinor!: number;
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(9_000_000_000_000)
+  salePriceMinor?: number;
   @IsString() @MinLength(2) @MaxLength(40) sku!: string;
   @IsInt() @Min(0) @Max(1_000_000) stock!: number;
   @IsOptional() @IsString() @MaxLength(80) categorySlug?: string;
@@ -62,12 +73,16 @@ export class MarketplaceQueryDto {
   @IsIn(['relevance', 'new', 'price-asc', 'price-desc'])
   sort?: 'relevance' | 'new' | 'price-asc' | 'price-desc';
   @IsOptional()
-  @Transform(({ value }) => value === undefined ? 1 : Number(value))
-  @IsInt() @Min(1) @Max(10_000)
+  @Transform(({ value }) => (value === undefined ? 1 : Number(value)))
+  @IsInt()
+  @Min(1)
+  @Max(10_000)
   page: number = 1;
   @IsOptional()
-  @Transform(({ value }) => value === undefined ? 12 : Number(value))
-  @IsInt() @Min(6) @Max(48)
+  @Transform(({ value }) => (value === undefined ? 12 : Number(value)))
+  @IsInt()
+  @Min(6)
+  @Max(48)
   pageSize: number = 12;
 }
 
@@ -97,7 +112,17 @@ export class UpdateListingDto {
   @MinLength(10)
   @MaxLength(5000)
   descriptionUz?: string;
+  @IsOptional()
+  @IsString()
+  @MinLength(10)
+  @MaxLength(5000)
+  descriptionRu?: string;
   @IsOptional() @IsInt() @Min(0) @Max(9_000_000_000_000) priceMinor?: number;
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(9_000_000_000_000)
+  salePriceMinor?: number;
   @IsOptional() @IsInt() @Min(0) @Max(1_000_000) stock?: number;
   @IsOptional() @IsObject() attributeValues?: Record<string, unknown>;
 }
@@ -156,4 +181,12 @@ export class CreateTestimonialDto {
   @IsString() @MinLength(2) @MaxLength(80) sourceLabel!: string;
   @IsString() @MinLength(2) @MaxLength(80) authorLabel!: string;
   @IsString() @MinLength(3) @MaxLength(1000) body!: string;
+}
+export class MediaOrderDto {
+  @IsArray() @IsString({ each: true }) ids!: string[];
+}
+export class CreateCollectionDto {
+  @IsString() @MinLength(2) @MaxLength(80) nameUz!: string;
+  @IsOptional() @IsString() @MaxLength(80) nameRu?: string;
+  @IsArray() @IsString({ each: true }) listingPublicIds!: string[];
 }

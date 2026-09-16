@@ -67,6 +67,8 @@ export const ModelName = {
   Category: 'Category',
   CategoryAttribute: 'CategoryAttribute',
   Listing: 'Listing',
+  Collection: 'Collection',
+  CollectionItem: 'CollectionItem',
   ListingVariant: 'ListingVariant',
   Inventory: 'Inventory',
   ListingMedia: 'ListingMedia',
@@ -273,6 +275,9 @@ export const StoreScalarFieldEnum = {
   orderPrefix: 'orderPrefix',
   status: 'status',
   vacationMode: 'vacationMode',
+  logoStorageKey: 'logoStorageKey',
+  bannerStorageKey: 'bannerStorageKey',
+  premiumUntil: 'premiumUntil',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -353,6 +358,8 @@ export const ListingScalarFieldEnum = {
   descriptionUz: 'descriptionUz',
   descriptionRu: 'descriptionRu',
   priceMinor: 'priceMinor',
+  salePriceMinor: 'salePriceMinor',
+  videoStorageKey: 'videoStorageKey',
   currency: 'currency',
   condition: 'condition',
   attributeValues: 'attributeValues',
@@ -362,6 +369,29 @@ export const ListingScalarFieldEnum = {
 } as const
 
 export type ListingScalarFieldEnum = (typeof ListingScalarFieldEnum)[keyof typeof ListingScalarFieldEnum]
+
+
+export const CollectionScalarFieldEnum = {
+  id: 'id',
+  publicId: 'publicId',
+  storeId: 'storeId',
+  nameUz: 'nameUz',
+  nameRu: 'nameRu',
+  position: 'position',
+  active: 'active',
+  createdAt: 'createdAt'
+} as const
+
+export type CollectionScalarFieldEnum = (typeof CollectionScalarFieldEnum)[keyof typeof CollectionScalarFieldEnum]
+
+
+export const CollectionItemScalarFieldEnum = {
+  collectionId: 'collectionId',
+  listingId: 'listingId',
+  position: 'position'
+} as const
+
+export type CollectionItemScalarFieldEnum = (typeof CollectionItemScalarFieldEnum)[keyof typeof CollectionItemScalarFieldEnum]
 
 
 export const ListingVariantScalarFieldEnum = {

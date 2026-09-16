@@ -22,6 +22,8 @@ import {
   CreateCouponDto,
   CreatePromotionDto,
   CreateTestimonialDto,
+  CreateCollectionDto,
+  MediaOrderDto,
   MarketplaceQueryDto,
   SellerVerificationDto,
   StoreSettingsDto,
@@ -179,6 +181,20 @@ export class CommerceController {
     @Param('publicId') publicId: string,
   ) {
     return this.commerce.submitListing(request.user, publicId);
+  }
+  @Patch('listings/:publicId/media-order') @UseGuards(SessionGuard) mediaOrder(
+    @Req() request: FastifyRequest & { user: AuthenticatedUser },
+    @Param('publicId') publicId: string,
+    @Body() input: MediaOrderDto,
+  ) {
+    return this.commerce.reorderMedia(request.user, publicId, input.ids);
+  }
+  @Post('stores/:publicId/collections') @UseGuards(SessionGuard) collection(
+    @Req() request: FastifyRequest & { user: AuthenticatedUser },
+    @Param('publicId') publicId: string,
+    @Body() input: CreateCollectionDto,
+  ) {
+    return this.commerce.createCollection(request.user, publicId, input);
   }
 
   @Get('marketplace/listings')

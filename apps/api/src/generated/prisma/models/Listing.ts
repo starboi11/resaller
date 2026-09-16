@@ -28,10 +28,12 @@ export type AggregateListing = {
 
 export type ListingAvgAggregateOutputType = {
   priceMinor: number | null
+  salePriceMinor: number | null
 }
 
 export type ListingSumAggregateOutputType = {
   priceMinor: bigint | null
+  salePriceMinor: bigint | null
 }
 
 export type ListingMinAggregateOutputType = {
@@ -46,6 +48,8 @@ export type ListingMinAggregateOutputType = {
   descriptionUz: string | null
   descriptionRu: string | null
   priceMinor: bigint | null
+  salePriceMinor: bigint | null
+  videoStorageKey: string | null
   currency: string | null
   condition: string | null
   createdAt: Date | null
@@ -65,6 +69,8 @@ export type ListingMaxAggregateOutputType = {
   descriptionUz: string | null
   descriptionRu: string | null
   priceMinor: bigint | null
+  salePriceMinor: bigint | null
+  videoStorageKey: string | null
   currency: string | null
   condition: string | null
   createdAt: Date | null
@@ -84,6 +90,8 @@ export type ListingCountAggregateOutputType = {
   descriptionUz: number
   descriptionRu: number
   priceMinor: number
+  salePriceMinor: number
+  videoStorageKey: number
   currency: number
   condition: number
   attributeValues: number
@@ -96,10 +104,12 @@ export type ListingCountAggregateOutputType = {
 
 export type ListingAvgAggregateInputType = {
   priceMinor?: true
+  salePriceMinor?: true
 }
 
 export type ListingSumAggregateInputType = {
   priceMinor?: true
+  salePriceMinor?: true
 }
 
 export type ListingMinAggregateInputType = {
@@ -114,6 +124,8 @@ export type ListingMinAggregateInputType = {
   descriptionUz?: true
   descriptionRu?: true
   priceMinor?: true
+  salePriceMinor?: true
+  videoStorageKey?: true
   currency?: true
   condition?: true
   createdAt?: true
@@ -133,6 +145,8 @@ export type ListingMaxAggregateInputType = {
   descriptionUz?: true
   descriptionRu?: true
   priceMinor?: true
+  salePriceMinor?: true
+  videoStorageKey?: true
   currency?: true
   condition?: true
   createdAt?: true
@@ -152,6 +166,8 @@ export type ListingCountAggregateInputType = {
   descriptionUz?: true
   descriptionRu?: true
   priceMinor?: true
+  salePriceMinor?: true
+  videoStorageKey?: true
   currency?: true
   condition?: true
   attributeValues?: true
@@ -259,6 +275,8 @@ export type ListingGroupByOutputType = {
   descriptionUz: string
   descriptionRu: string | null
   priceMinor: bigint
+  salePriceMinor: bigint | null
+  videoStorageKey: string | null
   currency: string
   condition: string | null
   attributeValues: runtime.JsonValue
@@ -302,6 +320,8 @@ export type ListingWhereInput = {
   descriptionUz?: Prisma.StringFilter<"Listing"> | string
   descriptionRu?: Prisma.StringNullableFilter<"Listing"> | string | null
   priceMinor?: Prisma.BigIntFilter<"Listing"> | bigint | number
+  salePriceMinor?: Prisma.BigIntNullableFilter<"Listing"> | bigint | number | null
+  videoStorageKey?: Prisma.StringNullableFilter<"Listing"> | string | null
   currency?: Prisma.StringFilter<"Listing"> | string
   condition?: Prisma.StringNullableFilter<"Listing"> | string | null
   attributeValues?: Prisma.JsonFilter<"Listing">
@@ -315,6 +335,7 @@ export type ListingWhereInput = {
   cartItems?: Prisma.CartItemListRelationFilter
   favorites?: Prisma.FavoriteListRelationFilter
   questions?: Prisma.StoreQuestionListRelationFilter
+  collectionItems?: Prisma.CollectionItemListRelationFilter
 }
 
 export type ListingOrderByWithRelationInput = {
@@ -329,6 +350,8 @@ export type ListingOrderByWithRelationInput = {
   descriptionUz?: Prisma.SortOrder
   descriptionRu?: Prisma.SortOrderInput | Prisma.SortOrder
   priceMinor?: Prisma.SortOrder
+  salePriceMinor?: Prisma.SortOrderInput | Prisma.SortOrder
+  videoStorageKey?: Prisma.SortOrderInput | Prisma.SortOrder
   currency?: Prisma.SortOrder
   condition?: Prisma.SortOrderInput | Prisma.SortOrder
   attributeValues?: Prisma.SortOrder
@@ -342,6 +365,7 @@ export type ListingOrderByWithRelationInput = {
   cartItems?: Prisma.CartItemOrderByRelationAggregateInput
   favorites?: Prisma.FavoriteOrderByRelationAggregateInput
   questions?: Prisma.StoreQuestionOrderByRelationAggregateInput
+  collectionItems?: Prisma.CollectionItemOrderByRelationAggregateInput
 }
 
 export type ListingWhereUniqueInput = Prisma.AtLeast<{
@@ -359,6 +383,8 @@ export type ListingWhereUniqueInput = Prisma.AtLeast<{
   descriptionUz?: Prisma.StringFilter<"Listing"> | string
   descriptionRu?: Prisma.StringNullableFilter<"Listing"> | string | null
   priceMinor?: Prisma.BigIntFilter<"Listing"> | bigint | number
+  salePriceMinor?: Prisma.BigIntNullableFilter<"Listing"> | bigint | number | null
+  videoStorageKey?: Prisma.StringNullableFilter<"Listing"> | string | null
   currency?: Prisma.StringFilter<"Listing"> | string
   condition?: Prisma.StringNullableFilter<"Listing"> | string | null
   attributeValues?: Prisma.JsonFilter<"Listing">
@@ -372,6 +398,7 @@ export type ListingWhereUniqueInput = Prisma.AtLeast<{
   cartItems?: Prisma.CartItemListRelationFilter
   favorites?: Prisma.FavoriteListRelationFilter
   questions?: Prisma.StoreQuestionListRelationFilter
+  collectionItems?: Prisma.CollectionItemListRelationFilter
 }, "id" | "publicId">
 
 export type ListingOrderByWithAggregationInput = {
@@ -386,6 +413,8 @@ export type ListingOrderByWithAggregationInput = {
   descriptionUz?: Prisma.SortOrder
   descriptionRu?: Prisma.SortOrderInput | Prisma.SortOrder
   priceMinor?: Prisma.SortOrder
+  salePriceMinor?: Prisma.SortOrderInput | Prisma.SortOrder
+  videoStorageKey?: Prisma.SortOrderInput | Prisma.SortOrder
   currency?: Prisma.SortOrder
   condition?: Prisma.SortOrderInput | Prisma.SortOrder
   attributeValues?: Prisma.SortOrder
@@ -414,6 +443,8 @@ export type ListingScalarWhereWithAggregatesInput = {
   descriptionUz?: Prisma.StringWithAggregatesFilter<"Listing"> | string
   descriptionRu?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
   priceMinor?: Prisma.BigIntWithAggregatesFilter<"Listing"> | bigint | number
+  salePriceMinor?: Prisma.BigIntNullableWithAggregatesFilter<"Listing"> | bigint | number | null
+  videoStorageKey?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
   currency?: Prisma.StringWithAggregatesFilter<"Listing"> | string
   condition?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
   attributeValues?: Prisma.JsonWithAggregatesFilter<"Listing">
@@ -432,6 +463,8 @@ export type ListingCreateInput = {
   descriptionUz: string
   descriptionRu?: string | null
   priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -445,6 +478,7 @@ export type ListingCreateInput = {
   cartItems?: Prisma.CartItemCreateNestedManyWithoutListingInput
   favorites?: Prisma.FavoriteCreateNestedManyWithoutListingInput
   questions?: Prisma.StoreQuestionCreateNestedManyWithoutListingInput
+  collectionItems?: Prisma.CollectionItemCreateNestedManyWithoutListingInput
 }
 
 export type ListingUncheckedCreateInput = {
@@ -459,6 +493,8 @@ export type ListingUncheckedCreateInput = {
   descriptionUz: string
   descriptionRu?: string | null
   priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -470,6 +506,7 @@ export type ListingUncheckedCreateInput = {
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutListingInput
   favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutListingInput
   questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutListingInput
+  collectionItems?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutListingInput
 }
 
 export type ListingUpdateInput = {
@@ -482,6 +519,8 @@ export type ListingUpdateInput = {
   descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -495,6 +534,7 @@ export type ListingUpdateInput = {
   cartItems?: Prisma.CartItemUpdateManyWithoutListingNestedInput
   favorites?: Prisma.FavoriteUpdateManyWithoutListingNestedInput
   questions?: Prisma.StoreQuestionUpdateManyWithoutListingNestedInput
+  collectionItems?: Prisma.CollectionItemUpdateManyWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateInput = {
@@ -509,6 +549,8 @@ export type ListingUncheckedUpdateInput = {
   descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -520,6 +562,7 @@ export type ListingUncheckedUpdateInput = {
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutListingNestedInput
   favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutListingNestedInput
   questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutListingNestedInput
+  collectionItems?: Prisma.CollectionItemUncheckedUpdateManyWithoutListingNestedInput
 }
 
 export type ListingCreateManyInput = {
@@ -534,6 +577,8 @@ export type ListingCreateManyInput = {
   descriptionUz: string
   descriptionRu?: string | null
   priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -552,6 +597,8 @@ export type ListingUpdateManyMutationInput = {
   descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -572,6 +619,8 @@ export type ListingUncheckedUpdateManyInput = {
   descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -602,6 +651,8 @@ export type ListingCountOrderByAggregateInput = {
   descriptionUz?: Prisma.SortOrder
   descriptionRu?: Prisma.SortOrder
   priceMinor?: Prisma.SortOrder
+  salePriceMinor?: Prisma.SortOrder
+  videoStorageKey?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   condition?: Prisma.SortOrder
   attributeValues?: Prisma.SortOrder
@@ -612,6 +663,7 @@ export type ListingCountOrderByAggregateInput = {
 
 export type ListingAvgOrderByAggregateInput = {
   priceMinor?: Prisma.SortOrder
+  salePriceMinor?: Prisma.SortOrder
 }
 
 export type ListingMaxOrderByAggregateInput = {
@@ -626,6 +678,8 @@ export type ListingMaxOrderByAggregateInput = {
   descriptionUz?: Prisma.SortOrder
   descriptionRu?: Prisma.SortOrder
   priceMinor?: Prisma.SortOrder
+  salePriceMinor?: Prisma.SortOrder
+  videoStorageKey?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   condition?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -645,6 +699,8 @@ export type ListingMinOrderByAggregateInput = {
   descriptionUz?: Prisma.SortOrder
   descriptionRu?: Prisma.SortOrder
   priceMinor?: Prisma.SortOrder
+  salePriceMinor?: Prisma.SortOrder
+  videoStorageKey?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   condition?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -654,6 +710,7 @@ export type ListingMinOrderByAggregateInput = {
 
 export type ListingSumOrderByAggregateInput = {
   priceMinor?: Prisma.SortOrder
+  salePriceMinor?: Prisma.SortOrder
 }
 
 export type ListingScalarRelationFilter = {
@@ -766,6 +823,28 @@ export type BigIntFieldUpdateOperationsInput = {
   divide?: bigint | number
 }
 
+export type NullableBigIntFieldUpdateOperationsInput = {
+  set?: bigint | number | null
+  increment?: bigint | number
+  decrement?: bigint | number
+  multiply?: bigint | number
+  divide?: bigint | number
+}
+
+export type ListingCreateNestedOneWithoutCollectionItemsInput = {
+  create?: Prisma.XOR<Prisma.ListingCreateWithoutCollectionItemsInput, Prisma.ListingUncheckedCreateWithoutCollectionItemsInput>
+  connectOrCreate?: Prisma.ListingCreateOrConnectWithoutCollectionItemsInput
+  connect?: Prisma.ListingWhereUniqueInput
+}
+
+export type ListingUpdateOneRequiredWithoutCollectionItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.ListingCreateWithoutCollectionItemsInput, Prisma.ListingUncheckedCreateWithoutCollectionItemsInput>
+  connectOrCreate?: Prisma.ListingCreateOrConnectWithoutCollectionItemsInput
+  upsert?: Prisma.ListingUpsertWithoutCollectionItemsInput
+  connect?: Prisma.ListingWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ListingUpdateToOneWithWhereWithoutCollectionItemsInput, Prisma.ListingUpdateWithoutCollectionItemsInput>, Prisma.ListingUncheckedUpdateWithoutCollectionItemsInput>
+}
+
 export type ListingCreateNestedOneWithoutVariantsInput = {
   create?: Prisma.XOR<Prisma.ListingCreateWithoutVariantsInput, Prisma.ListingUncheckedCreateWithoutVariantsInput>
   connectOrCreate?: Prisma.ListingCreateOrConnectWithoutVariantsInput
@@ -848,6 +927,8 @@ export type ListingCreateWithoutStoreInput = {
   descriptionUz: string
   descriptionRu?: string | null
   priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -860,6 +941,7 @@ export type ListingCreateWithoutStoreInput = {
   cartItems?: Prisma.CartItemCreateNestedManyWithoutListingInput
   favorites?: Prisma.FavoriteCreateNestedManyWithoutListingInput
   questions?: Prisma.StoreQuestionCreateNestedManyWithoutListingInput
+  collectionItems?: Prisma.CollectionItemCreateNestedManyWithoutListingInput
 }
 
 export type ListingUncheckedCreateWithoutStoreInput = {
@@ -873,6 +955,8 @@ export type ListingUncheckedCreateWithoutStoreInput = {
   descriptionUz: string
   descriptionRu?: string | null
   priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -884,6 +968,7 @@ export type ListingUncheckedCreateWithoutStoreInput = {
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutListingInput
   favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutListingInput
   questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutListingInput
+  collectionItems?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutListingInput
 }
 
 export type ListingCreateOrConnectWithoutStoreInput = {
@@ -927,6 +1012,8 @@ export type ListingScalarWhereInput = {
   descriptionUz?: Prisma.StringFilter<"Listing"> | string
   descriptionRu?: Prisma.StringNullableFilter<"Listing"> | string | null
   priceMinor?: Prisma.BigIntFilter<"Listing"> | bigint | number
+  salePriceMinor?: Prisma.BigIntNullableFilter<"Listing"> | bigint | number | null
+  videoStorageKey?: Prisma.StringNullableFilter<"Listing"> | string | null
   currency?: Prisma.StringFilter<"Listing"> | string
   condition?: Prisma.StringNullableFilter<"Listing"> | string | null
   attributeValues?: Prisma.JsonFilter<"Listing">
@@ -945,6 +1032,8 @@ export type ListingCreateWithoutCategoryInput = {
   descriptionUz: string
   descriptionRu?: string | null
   priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -957,6 +1046,7 @@ export type ListingCreateWithoutCategoryInput = {
   cartItems?: Prisma.CartItemCreateNestedManyWithoutListingInput
   favorites?: Prisma.FavoriteCreateNestedManyWithoutListingInput
   questions?: Prisma.StoreQuestionCreateNestedManyWithoutListingInput
+  collectionItems?: Prisma.CollectionItemCreateNestedManyWithoutListingInput
 }
 
 export type ListingUncheckedCreateWithoutCategoryInput = {
@@ -970,6 +1060,8 @@ export type ListingUncheckedCreateWithoutCategoryInput = {
   descriptionUz: string
   descriptionRu?: string | null
   priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -981,6 +1073,7 @@ export type ListingUncheckedCreateWithoutCategoryInput = {
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutListingInput
   favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutListingInput
   questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutListingInput
+  collectionItems?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutListingInput
 }
 
 export type ListingCreateOrConnectWithoutCategoryInput = {
@@ -1009,6 +1102,130 @@ export type ListingUpdateManyWithWhereWithoutCategoryInput = {
   data: Prisma.XOR<Prisma.ListingUpdateManyMutationInput, Prisma.ListingUncheckedUpdateManyWithoutCategoryInput>
 }
 
+export type ListingCreateWithoutCollectionItemsInput = {
+  id?: string
+  publicId?: string
+  type?: $Enums.ListingType
+  status?: $Enums.ListingStatus
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz: string
+  descriptionRu?: string | null
+  priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
+  currency?: string
+  condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  store: Prisma.StoreCreateNestedOneWithoutListingsInput
+  category: Prisma.CategoryCreateNestedOneWithoutListingsInput
+  variants?: Prisma.ListingVariantCreateNestedManyWithoutListingInput
+  media?: Prisma.ListingMediaCreateNestedManyWithoutListingInput
+  cartItems?: Prisma.CartItemCreateNestedManyWithoutListingInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutListingInput
+  questions?: Prisma.StoreQuestionCreateNestedManyWithoutListingInput
+}
+
+export type ListingUncheckedCreateWithoutCollectionItemsInput = {
+  id?: string
+  publicId?: string
+  storeId: string
+  categoryId: string
+  type?: $Enums.ListingType
+  status?: $Enums.ListingStatus
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz: string
+  descriptionRu?: string | null
+  priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
+  currency?: string
+  condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  variants?: Prisma.ListingVariantUncheckedCreateNestedManyWithoutListingInput
+  media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutListingInput
+  cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutListingInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutListingInput
+  questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutListingInput
+}
+
+export type ListingCreateOrConnectWithoutCollectionItemsInput = {
+  where: Prisma.ListingWhereUniqueInput
+  create: Prisma.XOR<Prisma.ListingCreateWithoutCollectionItemsInput, Prisma.ListingUncheckedCreateWithoutCollectionItemsInput>
+}
+
+export type ListingUpsertWithoutCollectionItemsInput = {
+  update: Prisma.XOR<Prisma.ListingUpdateWithoutCollectionItemsInput, Prisma.ListingUncheckedUpdateWithoutCollectionItemsInput>
+  create: Prisma.XOR<Prisma.ListingCreateWithoutCollectionItemsInput, Prisma.ListingUncheckedCreateWithoutCollectionItemsInput>
+  where?: Prisma.ListingWhereInput
+}
+
+export type ListingUpdateToOneWithWhereWithoutCollectionItemsInput = {
+  where?: Prisma.ListingWhereInput
+  data: Prisma.XOR<Prisma.ListingUpdateWithoutCollectionItemsInput, Prisma.ListingUncheckedUpdateWithoutCollectionItemsInput>
+}
+
+export type ListingUpdateWithoutCollectionItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumListingTypeFieldUpdateOperationsInput | $Enums.ListingType
+  status?: Prisma.EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  store?: Prisma.StoreUpdateOneRequiredWithoutListingsNestedInput
+  category?: Prisma.CategoryUpdateOneRequiredWithoutListingsNestedInput
+  variants?: Prisma.ListingVariantUpdateManyWithoutListingNestedInput
+  media?: Prisma.ListingMediaUpdateManyWithoutListingNestedInput
+  cartItems?: Prisma.CartItemUpdateManyWithoutListingNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutListingNestedInput
+  questions?: Prisma.StoreQuestionUpdateManyWithoutListingNestedInput
+}
+
+export type ListingUncheckedUpdateWithoutCollectionItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumListingTypeFieldUpdateOperationsInput | $Enums.ListingType
+  status?: Prisma.EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  variants?: Prisma.ListingVariantUncheckedUpdateManyWithoutListingNestedInput
+  media?: Prisma.ListingMediaUncheckedUpdateManyWithoutListingNestedInput
+  cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutListingNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutListingNestedInput
+  questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutListingNestedInput
+}
+
 export type ListingCreateWithoutVariantsInput = {
   id?: string
   publicId?: string
@@ -1019,6 +1236,8 @@ export type ListingCreateWithoutVariantsInput = {
   descriptionUz: string
   descriptionRu?: string | null
   priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1031,6 +1250,7 @@ export type ListingCreateWithoutVariantsInput = {
   cartItems?: Prisma.CartItemCreateNestedManyWithoutListingInput
   favorites?: Prisma.FavoriteCreateNestedManyWithoutListingInput
   questions?: Prisma.StoreQuestionCreateNestedManyWithoutListingInput
+  collectionItems?: Prisma.CollectionItemCreateNestedManyWithoutListingInput
 }
 
 export type ListingUncheckedCreateWithoutVariantsInput = {
@@ -1045,6 +1265,8 @@ export type ListingUncheckedCreateWithoutVariantsInput = {
   descriptionUz: string
   descriptionRu?: string | null
   priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1055,6 +1277,7 @@ export type ListingUncheckedCreateWithoutVariantsInput = {
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutListingInput
   favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutListingInput
   questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutListingInput
+  collectionItems?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutListingInput
 }
 
 export type ListingCreateOrConnectWithoutVariantsInput = {
@@ -1083,6 +1306,8 @@ export type ListingUpdateWithoutVariantsInput = {
   descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1095,6 +1320,7 @@ export type ListingUpdateWithoutVariantsInput = {
   cartItems?: Prisma.CartItemUpdateManyWithoutListingNestedInput
   favorites?: Prisma.FavoriteUpdateManyWithoutListingNestedInput
   questions?: Prisma.StoreQuestionUpdateManyWithoutListingNestedInput
+  collectionItems?: Prisma.CollectionItemUpdateManyWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateWithoutVariantsInput = {
@@ -1109,6 +1335,8 @@ export type ListingUncheckedUpdateWithoutVariantsInput = {
   descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1119,6 +1347,7 @@ export type ListingUncheckedUpdateWithoutVariantsInput = {
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutListingNestedInput
   favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutListingNestedInput
   questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutListingNestedInput
+  collectionItems?: Prisma.CollectionItemUncheckedUpdateManyWithoutListingNestedInput
 }
 
 export type ListingCreateWithoutMediaInput = {
@@ -1131,6 +1360,8 @@ export type ListingCreateWithoutMediaInput = {
   descriptionUz: string
   descriptionRu?: string | null
   priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1143,6 +1374,7 @@ export type ListingCreateWithoutMediaInput = {
   cartItems?: Prisma.CartItemCreateNestedManyWithoutListingInput
   favorites?: Prisma.FavoriteCreateNestedManyWithoutListingInput
   questions?: Prisma.StoreQuestionCreateNestedManyWithoutListingInput
+  collectionItems?: Prisma.CollectionItemCreateNestedManyWithoutListingInput
 }
 
 export type ListingUncheckedCreateWithoutMediaInput = {
@@ -1157,6 +1389,8 @@ export type ListingUncheckedCreateWithoutMediaInput = {
   descriptionUz: string
   descriptionRu?: string | null
   priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1167,6 +1401,7 @@ export type ListingUncheckedCreateWithoutMediaInput = {
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutListingInput
   favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutListingInput
   questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutListingInput
+  collectionItems?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutListingInput
 }
 
 export type ListingCreateOrConnectWithoutMediaInput = {
@@ -1195,6 +1430,8 @@ export type ListingUpdateWithoutMediaInput = {
   descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1207,6 +1444,7 @@ export type ListingUpdateWithoutMediaInput = {
   cartItems?: Prisma.CartItemUpdateManyWithoutListingNestedInput
   favorites?: Prisma.FavoriteUpdateManyWithoutListingNestedInput
   questions?: Prisma.StoreQuestionUpdateManyWithoutListingNestedInput
+  collectionItems?: Prisma.CollectionItemUpdateManyWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateWithoutMediaInput = {
@@ -1221,6 +1459,8 @@ export type ListingUncheckedUpdateWithoutMediaInput = {
   descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1231,6 +1471,7 @@ export type ListingUncheckedUpdateWithoutMediaInput = {
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutListingNestedInput
   favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutListingNestedInput
   questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutListingNestedInput
+  collectionItems?: Prisma.CollectionItemUncheckedUpdateManyWithoutListingNestedInput
 }
 
 export type ListingCreateWithoutCartItemsInput = {
@@ -1243,6 +1484,8 @@ export type ListingCreateWithoutCartItemsInput = {
   descriptionUz: string
   descriptionRu?: string | null
   priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1255,6 +1498,7 @@ export type ListingCreateWithoutCartItemsInput = {
   media?: Prisma.ListingMediaCreateNestedManyWithoutListingInput
   favorites?: Prisma.FavoriteCreateNestedManyWithoutListingInput
   questions?: Prisma.StoreQuestionCreateNestedManyWithoutListingInput
+  collectionItems?: Prisma.CollectionItemCreateNestedManyWithoutListingInput
 }
 
 export type ListingUncheckedCreateWithoutCartItemsInput = {
@@ -1269,6 +1513,8 @@ export type ListingUncheckedCreateWithoutCartItemsInput = {
   descriptionUz: string
   descriptionRu?: string | null
   priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1279,6 +1525,7 @@ export type ListingUncheckedCreateWithoutCartItemsInput = {
   media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutListingInput
   favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutListingInput
   questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutListingInput
+  collectionItems?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutListingInput
 }
 
 export type ListingCreateOrConnectWithoutCartItemsInput = {
@@ -1307,6 +1554,8 @@ export type ListingUpdateWithoutCartItemsInput = {
   descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1319,6 +1568,7 @@ export type ListingUpdateWithoutCartItemsInput = {
   media?: Prisma.ListingMediaUpdateManyWithoutListingNestedInput
   favorites?: Prisma.FavoriteUpdateManyWithoutListingNestedInput
   questions?: Prisma.StoreQuestionUpdateManyWithoutListingNestedInput
+  collectionItems?: Prisma.CollectionItemUpdateManyWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateWithoutCartItemsInput = {
@@ -1333,6 +1583,8 @@ export type ListingUncheckedUpdateWithoutCartItemsInput = {
   descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1343,6 +1595,7 @@ export type ListingUncheckedUpdateWithoutCartItemsInput = {
   media?: Prisma.ListingMediaUncheckedUpdateManyWithoutListingNestedInput
   favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutListingNestedInput
   questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutListingNestedInput
+  collectionItems?: Prisma.CollectionItemUncheckedUpdateManyWithoutListingNestedInput
 }
 
 export type ListingCreateWithoutFavoritesInput = {
@@ -1355,6 +1608,8 @@ export type ListingCreateWithoutFavoritesInput = {
   descriptionUz: string
   descriptionRu?: string | null
   priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1367,6 +1622,7 @@ export type ListingCreateWithoutFavoritesInput = {
   media?: Prisma.ListingMediaCreateNestedManyWithoutListingInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutListingInput
   questions?: Prisma.StoreQuestionCreateNestedManyWithoutListingInput
+  collectionItems?: Prisma.CollectionItemCreateNestedManyWithoutListingInput
 }
 
 export type ListingUncheckedCreateWithoutFavoritesInput = {
@@ -1381,6 +1637,8 @@ export type ListingUncheckedCreateWithoutFavoritesInput = {
   descriptionUz: string
   descriptionRu?: string | null
   priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1391,6 +1649,7 @@ export type ListingUncheckedCreateWithoutFavoritesInput = {
   media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutListingInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutListingInput
   questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutListingInput
+  collectionItems?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutListingInput
 }
 
 export type ListingCreateOrConnectWithoutFavoritesInput = {
@@ -1419,6 +1678,8 @@ export type ListingUpdateWithoutFavoritesInput = {
   descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1431,6 +1692,7 @@ export type ListingUpdateWithoutFavoritesInput = {
   media?: Prisma.ListingMediaUpdateManyWithoutListingNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutListingNestedInput
   questions?: Prisma.StoreQuestionUpdateManyWithoutListingNestedInput
+  collectionItems?: Prisma.CollectionItemUpdateManyWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateWithoutFavoritesInput = {
@@ -1445,6 +1707,8 @@ export type ListingUncheckedUpdateWithoutFavoritesInput = {
   descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1455,6 +1719,7 @@ export type ListingUncheckedUpdateWithoutFavoritesInput = {
   media?: Prisma.ListingMediaUncheckedUpdateManyWithoutListingNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutListingNestedInput
   questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutListingNestedInput
+  collectionItems?: Prisma.CollectionItemUncheckedUpdateManyWithoutListingNestedInput
 }
 
 export type ListingCreateWithoutQuestionsInput = {
@@ -1467,6 +1732,8 @@ export type ListingCreateWithoutQuestionsInput = {
   descriptionUz: string
   descriptionRu?: string | null
   priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1479,6 +1746,7 @@ export type ListingCreateWithoutQuestionsInput = {
   media?: Prisma.ListingMediaCreateNestedManyWithoutListingInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutListingInput
   favorites?: Prisma.FavoriteCreateNestedManyWithoutListingInput
+  collectionItems?: Prisma.CollectionItemCreateNestedManyWithoutListingInput
 }
 
 export type ListingUncheckedCreateWithoutQuestionsInput = {
@@ -1493,6 +1761,8 @@ export type ListingUncheckedCreateWithoutQuestionsInput = {
   descriptionUz: string
   descriptionRu?: string | null
   priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1503,6 +1773,7 @@ export type ListingUncheckedCreateWithoutQuestionsInput = {
   media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutListingInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutListingInput
   favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutListingInput
+  collectionItems?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutListingInput
 }
 
 export type ListingCreateOrConnectWithoutQuestionsInput = {
@@ -1531,6 +1802,8 @@ export type ListingUpdateWithoutQuestionsInput = {
   descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1543,6 +1816,7 @@ export type ListingUpdateWithoutQuestionsInput = {
   media?: Prisma.ListingMediaUpdateManyWithoutListingNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutListingNestedInput
   favorites?: Prisma.FavoriteUpdateManyWithoutListingNestedInput
+  collectionItems?: Prisma.CollectionItemUpdateManyWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateWithoutQuestionsInput = {
@@ -1557,6 +1831,8 @@ export type ListingUncheckedUpdateWithoutQuestionsInput = {
   descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1567,6 +1843,7 @@ export type ListingUncheckedUpdateWithoutQuestionsInput = {
   media?: Prisma.ListingMediaUncheckedUpdateManyWithoutListingNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutListingNestedInput
   favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutListingNestedInput
+  collectionItems?: Prisma.CollectionItemUncheckedUpdateManyWithoutListingNestedInput
 }
 
 export type ListingCreateManyStoreInput = {
@@ -1580,6 +1857,8 @@ export type ListingCreateManyStoreInput = {
   descriptionUz: string
   descriptionRu?: string | null
   priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1598,6 +1877,8 @@ export type ListingUpdateWithoutStoreInput = {
   descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1610,6 +1891,7 @@ export type ListingUpdateWithoutStoreInput = {
   cartItems?: Prisma.CartItemUpdateManyWithoutListingNestedInput
   favorites?: Prisma.FavoriteUpdateManyWithoutListingNestedInput
   questions?: Prisma.StoreQuestionUpdateManyWithoutListingNestedInput
+  collectionItems?: Prisma.CollectionItemUpdateManyWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateWithoutStoreInput = {
@@ -1623,6 +1905,8 @@ export type ListingUncheckedUpdateWithoutStoreInput = {
   descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1634,6 +1918,7 @@ export type ListingUncheckedUpdateWithoutStoreInput = {
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutListingNestedInput
   favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutListingNestedInput
   questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutListingNestedInput
+  collectionItems?: Prisma.CollectionItemUncheckedUpdateManyWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateManyWithoutStoreInput = {
@@ -1647,6 +1932,8 @@ export type ListingUncheckedUpdateManyWithoutStoreInput = {
   descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1666,6 +1953,8 @@ export type ListingCreateManyCategoryInput = {
   descriptionUz: string
   descriptionRu?: string | null
   priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1684,6 +1973,8 @@ export type ListingUpdateWithoutCategoryInput = {
   descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1696,6 +1987,7 @@ export type ListingUpdateWithoutCategoryInput = {
   cartItems?: Prisma.CartItemUpdateManyWithoutListingNestedInput
   favorites?: Prisma.FavoriteUpdateManyWithoutListingNestedInput
   questions?: Prisma.StoreQuestionUpdateManyWithoutListingNestedInput
+  collectionItems?: Prisma.CollectionItemUpdateManyWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateWithoutCategoryInput = {
@@ -1709,6 +2001,8 @@ export type ListingUncheckedUpdateWithoutCategoryInput = {
   descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1720,6 +2014,7 @@ export type ListingUncheckedUpdateWithoutCategoryInput = {
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutListingNestedInput
   favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutListingNestedInput
   questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutListingNestedInput
+  collectionItems?: Prisma.CollectionItemUncheckedUpdateManyWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateManyWithoutCategoryInput = {
@@ -1733,6 +2028,8 @@ export type ListingUncheckedUpdateManyWithoutCategoryInput = {
   descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1752,6 +2049,7 @@ export type ListingCountOutputType = {
   cartItems: number
   favorites: number
   questions: number
+  collectionItems: number
 }
 
 export type ListingCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1760,6 +2058,7 @@ export type ListingCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   cartItems?: boolean | ListingCountOutputTypeCountCartItemsArgs
   favorites?: boolean | ListingCountOutputTypeCountFavoritesArgs
   questions?: boolean | ListingCountOutputTypeCountQuestionsArgs
+  collectionItems?: boolean | ListingCountOutputTypeCountCollectionItemsArgs
 }
 
 /**
@@ -1807,6 +2106,13 @@ export type ListingCountOutputTypeCountQuestionsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.StoreQuestionWhereInput
 }
 
+/**
+ * ListingCountOutputType without action
+ */
+export type ListingCountOutputTypeCountCollectionItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CollectionItemWhereInput
+}
+
 
 export type ListingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1820,6 +2126,8 @@ export type ListingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   descriptionUz?: boolean
   descriptionRu?: boolean
   priceMinor?: boolean
+  salePriceMinor?: boolean
+  videoStorageKey?: boolean
   currency?: boolean
   condition?: boolean
   attributeValues?: boolean
@@ -1833,6 +2141,7 @@ export type ListingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   cartItems?: boolean | Prisma.Listing$cartItemsArgs<ExtArgs>
   favorites?: boolean | Prisma.Listing$favoritesArgs<ExtArgs>
   questions?: boolean | Prisma.Listing$questionsArgs<ExtArgs>
+  collectionItems?: boolean | Prisma.Listing$collectionItemsArgs<ExtArgs>
   _count?: boolean | Prisma.ListingCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["listing"]>
 
@@ -1848,6 +2157,8 @@ export type ListingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   descriptionUz?: boolean
   descriptionRu?: boolean
   priceMinor?: boolean
+  salePriceMinor?: boolean
+  videoStorageKey?: boolean
   currency?: boolean
   condition?: boolean
   attributeValues?: boolean
@@ -1870,6 +2181,8 @@ export type ListingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   descriptionUz?: boolean
   descriptionRu?: boolean
   priceMinor?: boolean
+  salePriceMinor?: boolean
+  videoStorageKey?: boolean
   currency?: boolean
   condition?: boolean
   attributeValues?: boolean
@@ -1892,6 +2205,8 @@ export type ListingSelectScalar = {
   descriptionUz?: boolean
   descriptionRu?: boolean
   priceMinor?: boolean
+  salePriceMinor?: boolean
+  videoStorageKey?: boolean
   currency?: boolean
   condition?: boolean
   attributeValues?: boolean
@@ -1900,7 +2215,7 @@ export type ListingSelectScalar = {
   deletedAt?: boolean
 }
 
-export type ListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "storeId" | "categoryId" | "type" | "status" | "nameUz" | "nameRu" | "descriptionUz" | "descriptionRu" | "priceMinor" | "currency" | "condition" | "attributeValues" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["listing"]>
+export type ListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "storeId" | "categoryId" | "type" | "status" | "nameUz" | "nameRu" | "descriptionUz" | "descriptionRu" | "priceMinor" | "salePriceMinor" | "videoStorageKey" | "currency" | "condition" | "attributeValues" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["listing"]>
 export type ListingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   store?: boolean | Prisma.StoreDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
@@ -1909,6 +2224,7 @@ export type ListingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   cartItems?: boolean | Prisma.Listing$cartItemsArgs<ExtArgs>
   favorites?: boolean | Prisma.Listing$favoritesArgs<ExtArgs>
   questions?: boolean | Prisma.Listing$questionsArgs<ExtArgs>
+  collectionItems?: boolean | Prisma.Listing$collectionItemsArgs<ExtArgs>
   _count?: boolean | Prisma.ListingCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ListingIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1930,6 +2246,7 @@ export type $ListingPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     cartItems: Prisma.$CartItemPayload<ExtArgs>[]
     favorites: Prisma.$FavoritePayload<ExtArgs>[]
     questions: Prisma.$StoreQuestionPayload<ExtArgs>[]
+    collectionItems: Prisma.$CollectionItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1943,6 +2260,8 @@ export type $ListingPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     descriptionUz: string
     descriptionRu: string | null
     priceMinor: bigint
+    salePriceMinor: bigint | null
+    videoStorageKey: string | null
     currency: string
     condition: string | null
     attributeValues: runtime.JsonValue
@@ -2350,6 +2669,7 @@ export interface Prisma__ListingClient<T, Null = never, ExtArgs extends runtime.
   cartItems<T extends Prisma.Listing$cartItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Listing$cartItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CartItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   favorites<T extends Prisma.Listing$favoritesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Listing$favoritesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FavoritePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   questions<T extends Prisma.Listing$questionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Listing$questionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StoreQuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  collectionItems<T extends Prisma.Listing$collectionItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Listing$collectionItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CollectionItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2390,6 +2710,8 @@ export interface ListingFieldRefs {
   readonly descriptionUz: Prisma.FieldRef<"Listing", 'String'>
   readonly descriptionRu: Prisma.FieldRef<"Listing", 'String'>
   readonly priceMinor: Prisma.FieldRef<"Listing", 'BigInt'>
+  readonly salePriceMinor: Prisma.FieldRef<"Listing", 'BigInt'>
+  readonly videoStorageKey: Prisma.FieldRef<"Listing", 'String'>
   readonly currency: Prisma.FieldRef<"Listing", 'String'>
   readonly condition: Prisma.FieldRef<"Listing", 'String'>
   readonly attributeValues: Prisma.FieldRef<"Listing", 'Json'>
@@ -2914,6 +3236,30 @@ export type Listing$questionsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.StoreQuestionScalarFieldEnum | Prisma.StoreQuestionScalarFieldEnum[]
+}
+
+/**
+ * Listing.collectionItems
+ */
+export type Listing$collectionItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CollectionItem
+   */
+  select?: Prisma.CollectionItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CollectionItem
+   */
+  omit?: Prisma.CollectionItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CollectionItemInclude<ExtArgs> | null
+  where?: Prisma.CollectionItemWhereInput
+  orderBy?: Prisma.CollectionItemOrderByWithRelationInput | Prisma.CollectionItemOrderByWithRelationInput[]
+  cursor?: Prisma.CollectionItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CollectionItemScalarFieldEnum | Prisma.CollectionItemScalarFieldEnum[]
 }
 
 /**

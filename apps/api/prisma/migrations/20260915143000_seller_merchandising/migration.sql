@@ -1,0 +1,10 @@
+ALTER TABLE "Store" ADD COLUMN "logoStorageKey" TEXT, ADD COLUMN "bannerStorageKey" TEXT, ADD COLUMN "premiumUntil" TIMESTAMPTZ;
+ALTER TABLE "Listing" ADD COLUMN "salePriceMinor" BIGINT, ADD COLUMN "videoStorageKey" TEXT;
+CREATE TABLE "Collection" ("id" UUID NOT NULL,"publicId" TEXT NOT NULL,"storeId" UUID NOT NULL,"nameUz" TEXT NOT NULL,"nameRu" TEXT,"position" INTEGER NOT NULL DEFAULT 0,"active" BOOLEAN NOT NULL DEFAULT true,"createdAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,CONSTRAINT "Collection_pkey" PRIMARY KEY ("id"));
+CREATE TABLE "CollectionItem" ("collectionId" UUID NOT NULL,"listingId" UUID NOT NULL,"position" INTEGER NOT NULL DEFAULT 0,CONSTRAINT "CollectionItem_pkey" PRIMARY KEY ("collectionId","listingId"));
+CREATE UNIQUE INDEX "Collection_publicId_key" ON "Collection"("publicId");
+CREATE INDEX "Collection_storeId_position_idx" ON "Collection"("storeId","position");
+CREATE INDEX "CollectionItem_collectionId_position_idx" ON "CollectionItem"("collectionId","position");
+ALTER TABLE "Collection" ADD CONSTRAINT "Collection_storeId_fkey" FOREIGN KEY ("storeId") REFERENCES "Store"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CollectionItem" ADD CONSTRAINT "CollectionItem_collectionId_fkey" FOREIGN KEY ("collectionId") REFERENCES "Collection"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CollectionItem" ADD CONSTRAINT "CollectionItem_listingId_fkey" FOREIGN KEY ("listingId") REFERENCES "Listing"("id") ON DELETE CASCADE ON UPDATE CASCADE;

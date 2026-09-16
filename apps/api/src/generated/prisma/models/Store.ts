@@ -36,6 +36,9 @@ export type StoreMinAggregateOutputType = {
   orderPrefix: string | null
   status: $Enums.StoreStatus | null
   vacationMode: boolean | null
+  logoStorageKey: string | null
+  bannerStorageKey: string | null
+  premiumUntil: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -52,6 +55,9 @@ export type StoreMaxAggregateOutputType = {
   orderPrefix: string | null
   status: $Enums.StoreStatus | null
   vacationMode: boolean | null
+  logoStorageKey: string | null
+  bannerStorageKey: string | null
+  premiumUntil: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -68,6 +74,9 @@ export type StoreCountAggregateOutputType = {
   orderPrefix: number
   status: number
   vacationMode: number
+  logoStorageKey: number
+  bannerStorageKey: number
+  premiumUntil: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -86,6 +95,9 @@ export type StoreMinAggregateInputType = {
   orderPrefix?: true
   status?: true
   vacationMode?: true
+  logoStorageKey?: true
+  bannerStorageKey?: true
+  premiumUntil?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -102,6 +114,9 @@ export type StoreMaxAggregateInputType = {
   orderPrefix?: true
   status?: true
   vacationMode?: true
+  logoStorageKey?: true
+  bannerStorageKey?: true
+  premiumUntil?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -118,6 +133,9 @@ export type StoreCountAggregateInputType = {
   orderPrefix?: true
   status?: true
   vacationMode?: true
+  logoStorageKey?: true
+  bannerStorageKey?: true
+  premiumUntil?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -207,6 +225,9 @@ export type StoreGroupByOutputType = {
   orderPrefix: string
   status: $Enums.StoreStatus
   vacationMode: boolean
+  logoStorageKey: string | null
+  bannerStorageKey: string | null
+  premiumUntil: Date | null
   createdAt: Date
   updatedAt: Date
   _count: StoreCountAggregateOutputType | null
@@ -244,6 +265,9 @@ export type StoreWhereInput = {
   orderPrefix?: Prisma.StringFilter<"Store"> | string
   status?: Prisma.EnumStoreStatusFilter<"Store"> | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFilter<"Store"> | boolean
+  logoStorageKey?: Prisma.StringNullableFilter<"Store"> | string | null
+  bannerStorageKey?: Prisma.StringNullableFilter<"Store"> | string | null
+  premiumUntil?: Prisma.DateTimeNullableFilter<"Store"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Store"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Store"> | Date | string
   sellerProfile?: Prisma.XOR<Prisma.SellerProfileScalarRelationFilter, Prisma.SellerProfileWhereInput>
@@ -259,6 +283,7 @@ export type StoreWhereInput = {
   metrics?: Prisma.SellerMetricListRelationFilter
   trustEvents?: Prisma.TrustEventListRelationFilter
   settings?: Prisma.XOR<Prisma.StoreSettingNullableScalarRelationFilter, Prisma.StoreSettingWhereInput> | null
+  collections?: Prisma.CollectionListRelationFilter
 }
 
 export type StoreOrderByWithRelationInput = {
@@ -273,6 +298,9 @@ export type StoreOrderByWithRelationInput = {
   orderPrefix?: Prisma.SortOrder
   status?: Prisma.SortOrder
   vacationMode?: Prisma.SortOrder
+  logoStorageKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  bannerStorageKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  premiumUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   sellerProfile?: Prisma.SellerProfileOrderByWithRelationInput
@@ -288,6 +316,7 @@ export type StoreOrderByWithRelationInput = {
   metrics?: Prisma.SellerMetricOrderByRelationAggregateInput
   trustEvents?: Prisma.TrustEventOrderByRelationAggregateInput
   settings?: Prisma.StoreSettingOrderByWithRelationInput
+  collections?: Prisma.CollectionOrderByRelationAggregateInput
 }
 
 export type StoreWhereUniqueInput = Prisma.AtLeast<{
@@ -305,6 +334,9 @@ export type StoreWhereUniqueInput = Prisma.AtLeast<{
   descriptionRu?: Prisma.StringNullableFilter<"Store"> | string | null
   status?: Prisma.EnumStoreStatusFilter<"Store"> | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFilter<"Store"> | boolean
+  logoStorageKey?: Prisma.StringNullableFilter<"Store"> | string | null
+  bannerStorageKey?: Prisma.StringNullableFilter<"Store"> | string | null
+  premiumUntil?: Prisma.DateTimeNullableFilter<"Store"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Store"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Store"> | Date | string
   sellerProfile?: Prisma.XOR<Prisma.SellerProfileScalarRelationFilter, Prisma.SellerProfileWhereInput>
@@ -320,6 +352,7 @@ export type StoreWhereUniqueInput = Prisma.AtLeast<{
   metrics?: Prisma.SellerMetricListRelationFilter
   trustEvents?: Prisma.TrustEventListRelationFilter
   settings?: Prisma.XOR<Prisma.StoreSettingNullableScalarRelationFilter, Prisma.StoreSettingWhereInput> | null
+  collections?: Prisma.CollectionListRelationFilter
 }, "id" | "publicId" | "username" | "orderPrefix">
 
 export type StoreOrderByWithAggregationInput = {
@@ -334,6 +367,9 @@ export type StoreOrderByWithAggregationInput = {
   orderPrefix?: Prisma.SortOrder
   status?: Prisma.SortOrder
   vacationMode?: Prisma.SortOrder
+  logoStorageKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  bannerStorageKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  premiumUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.StoreCountOrderByAggregateInput
@@ -356,6 +392,9 @@ export type StoreScalarWhereWithAggregatesInput = {
   orderPrefix?: Prisma.StringWithAggregatesFilter<"Store"> | string
   status?: Prisma.EnumStoreStatusWithAggregatesFilter<"Store"> | $Enums.StoreStatus
   vacationMode?: Prisma.BoolWithAggregatesFilter<"Store"> | boolean
+  logoStorageKey?: Prisma.StringNullableWithAggregatesFilter<"Store"> | string | null
+  bannerStorageKey?: Prisma.StringNullableWithAggregatesFilter<"Store"> | string | null
+  premiumUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"Store"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Store"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Store"> | Date | string
 }
@@ -371,6 +410,9 @@ export type StoreCreateInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sellerProfile: Prisma.SellerProfileCreateNestedOneWithoutStoresInput
@@ -386,6 +428,7 @@ export type StoreCreateInput = {
   metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateInput = {
@@ -400,6 +443,9 @@ export type StoreUncheckedCreateInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
@@ -414,6 +460,7 @@ export type StoreUncheckedCreateInput = {
   metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUpdateInput = {
@@ -427,6 +474,9 @@ export type StoreUpdateInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sellerProfile?: Prisma.SellerProfileUpdateOneRequiredWithoutStoresNestedInput
@@ -442,6 +492,7 @@ export type StoreUpdateInput = {
   metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateInput = {
@@ -456,6 +507,9 @@ export type StoreUncheckedUpdateInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
@@ -470,6 +524,7 @@ export type StoreUncheckedUpdateInput = {
   metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateManyInput = {
@@ -484,6 +539,9 @@ export type StoreCreateManyInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -499,6 +557,9 @@ export type StoreUpdateManyMutationInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -515,6 +576,9 @@ export type StoreUncheckedUpdateManyInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -541,6 +605,9 @@ export type StoreCountOrderByAggregateInput = {
   orderPrefix?: Prisma.SortOrder
   status?: Prisma.SortOrder
   vacationMode?: Prisma.SortOrder
+  logoStorageKey?: Prisma.SortOrder
+  bannerStorageKey?: Prisma.SortOrder
+  premiumUntil?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -557,6 +624,9 @@ export type StoreMaxOrderByAggregateInput = {
   orderPrefix?: Prisma.SortOrder
   status?: Prisma.SortOrder
   vacationMode?: Prisma.SortOrder
+  logoStorageKey?: Prisma.SortOrder
+  bannerStorageKey?: Prisma.SortOrder
+  premiumUntil?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -573,6 +643,9 @@ export type StoreMinOrderByAggregateInput = {
   orderPrefix?: Prisma.SortOrder
   status?: Prisma.SortOrder
   vacationMode?: Prisma.SortOrder
+  logoStorageKey?: Prisma.SortOrder
+  bannerStorageKey?: Prisma.SortOrder
+  premiumUntil?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -682,6 +755,20 @@ export type StoreUpdateOneRequiredWithoutListingsNestedInput = {
   upsert?: Prisma.StoreUpsertWithoutListingsInput
   connect?: Prisma.StoreWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.StoreUpdateToOneWithWhereWithoutListingsInput, Prisma.StoreUpdateWithoutListingsInput>, Prisma.StoreUncheckedUpdateWithoutListingsInput>
+}
+
+export type StoreCreateNestedOneWithoutCollectionsInput = {
+  create?: Prisma.XOR<Prisma.StoreCreateWithoutCollectionsInput, Prisma.StoreUncheckedCreateWithoutCollectionsInput>
+  connectOrCreate?: Prisma.StoreCreateOrConnectWithoutCollectionsInput
+  connect?: Prisma.StoreWhereUniqueInput
+}
+
+export type StoreUpdateOneRequiredWithoutCollectionsNestedInput = {
+  create?: Prisma.XOR<Prisma.StoreCreateWithoutCollectionsInput, Prisma.StoreUncheckedCreateWithoutCollectionsInput>
+  connectOrCreate?: Prisma.StoreCreateOrConnectWithoutCollectionsInput
+  upsert?: Prisma.StoreUpsertWithoutCollectionsInput
+  connect?: Prisma.StoreWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StoreUpdateToOneWithWhereWithoutCollectionsInput, Prisma.StoreUpdateWithoutCollectionsInput>, Prisma.StoreUncheckedUpdateWithoutCollectionsInput>
 }
 
 export type StoreCreateNestedOneWithoutFollowersInput = {
@@ -807,6 +894,9 @@ export type StoreCreateWithoutSellerProfileInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.StoreMemberCreateNestedManyWithoutStoreInput
@@ -821,6 +911,7 @@ export type StoreCreateWithoutSellerProfileInput = {
   metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutSellerProfileInput = {
@@ -834,6 +925,9 @@ export type StoreUncheckedCreateWithoutSellerProfileInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
@@ -848,6 +942,7 @@ export type StoreUncheckedCreateWithoutSellerProfileInput = {
   metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutSellerProfileInput = {
@@ -891,6 +986,9 @@ export type StoreScalarWhereInput = {
   orderPrefix?: Prisma.StringFilter<"Store"> | string
   status?: Prisma.EnumStoreStatusFilter<"Store"> | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFilter<"Store"> | boolean
+  logoStorageKey?: Prisma.StringNullableFilter<"Store"> | string | null
+  bannerStorageKey?: Prisma.StringNullableFilter<"Store"> | string | null
+  premiumUntil?: Prisma.DateTimeNullableFilter<"Store"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Store"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Store"> | Date | string
 }
@@ -906,6 +1004,9 @@ export type StoreCreateWithoutSettingsInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sellerProfile: Prisma.SellerProfileCreateNestedOneWithoutStoresInput
@@ -920,6 +1021,7 @@ export type StoreCreateWithoutSettingsInput = {
   promotions?: Prisma.PromotionCreateNestedManyWithoutStoreInput
   metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutSettingsInput = {
@@ -934,6 +1036,9 @@ export type StoreUncheckedCreateWithoutSettingsInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
@@ -947,6 +1052,7 @@ export type StoreUncheckedCreateWithoutSettingsInput = {
   promotions?: Prisma.PromotionUncheckedCreateNestedManyWithoutStoreInput
   metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutSettingsInput = {
@@ -976,6 +1082,9 @@ export type StoreUpdateWithoutSettingsInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sellerProfile?: Prisma.SellerProfileUpdateOneRequiredWithoutStoresNestedInput
@@ -990,6 +1099,7 @@ export type StoreUpdateWithoutSettingsInput = {
   promotions?: Prisma.PromotionUpdateManyWithoutStoreNestedInput
   metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutSettingsInput = {
@@ -1004,6 +1114,9 @@ export type StoreUncheckedUpdateWithoutSettingsInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
@@ -1017,6 +1130,7 @@ export type StoreUncheckedUpdateWithoutSettingsInput = {
   promotions?: Prisma.PromotionUncheckedUpdateManyWithoutStoreNestedInput
   metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateWithoutMembersInput = {
@@ -1030,6 +1144,9 @@ export type StoreCreateWithoutMembersInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sellerProfile: Prisma.SellerProfileCreateNestedOneWithoutStoresInput
@@ -1044,6 +1161,7 @@ export type StoreCreateWithoutMembersInput = {
   metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutMembersInput = {
@@ -1058,6 +1176,9 @@ export type StoreUncheckedCreateWithoutMembersInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
@@ -1071,6 +1192,7 @@ export type StoreUncheckedCreateWithoutMembersInput = {
   metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutMembersInput = {
@@ -1100,6 +1222,9 @@ export type StoreUpdateWithoutMembersInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sellerProfile?: Prisma.SellerProfileUpdateOneRequiredWithoutStoresNestedInput
@@ -1114,6 +1239,7 @@ export type StoreUpdateWithoutMembersInput = {
   metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutMembersInput = {
@@ -1128,6 +1254,9 @@ export type StoreUncheckedUpdateWithoutMembersInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
@@ -1141,6 +1270,7 @@ export type StoreUncheckedUpdateWithoutMembersInput = {
   metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateWithoutPoliciesInput = {
@@ -1154,6 +1284,9 @@ export type StoreCreateWithoutPoliciesInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sellerProfile: Prisma.SellerProfileCreateNestedOneWithoutStoresInput
@@ -1168,6 +1301,7 @@ export type StoreCreateWithoutPoliciesInput = {
   metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutPoliciesInput = {
@@ -1182,6 +1316,9 @@ export type StoreUncheckedCreateWithoutPoliciesInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
@@ -1195,6 +1332,7 @@ export type StoreUncheckedCreateWithoutPoliciesInput = {
   metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutPoliciesInput = {
@@ -1224,6 +1362,9 @@ export type StoreUpdateWithoutPoliciesInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sellerProfile?: Prisma.SellerProfileUpdateOneRequiredWithoutStoresNestedInput
@@ -1238,6 +1379,7 @@ export type StoreUpdateWithoutPoliciesInput = {
   metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutPoliciesInput = {
@@ -1252,6 +1394,9 @@ export type StoreUncheckedUpdateWithoutPoliciesInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
@@ -1265,6 +1410,7 @@ export type StoreUncheckedUpdateWithoutPoliciesInput = {
   metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateWithoutListingsInput = {
@@ -1278,6 +1424,9 @@ export type StoreCreateWithoutListingsInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sellerProfile: Prisma.SellerProfileCreateNestedOneWithoutStoresInput
@@ -1292,6 +1441,7 @@ export type StoreCreateWithoutListingsInput = {
   metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutListingsInput = {
@@ -1306,6 +1456,9 @@ export type StoreUncheckedCreateWithoutListingsInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
@@ -1319,6 +1472,7 @@ export type StoreUncheckedCreateWithoutListingsInput = {
   metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutListingsInput = {
@@ -1348,6 +1502,9 @@ export type StoreUpdateWithoutListingsInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sellerProfile?: Prisma.SellerProfileUpdateOneRequiredWithoutStoresNestedInput
@@ -1362,6 +1519,7 @@ export type StoreUpdateWithoutListingsInput = {
   metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutListingsInput = {
@@ -1376,10 +1534,154 @@ export type StoreUncheckedUpdateWithoutListingsInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
   policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
+  followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
+  questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
+  importedTestimonials?: Prisma.ImportedTestimonialUncheckedUpdateManyWithoutStoreNestedInput
+  coupons?: Prisma.CouponUncheckedUpdateManyWithoutStoreNestedInput
+  promotions?: Prisma.PromotionUncheckedUpdateManyWithoutStoreNestedInput
+  metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
+  trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
+  settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
+}
+
+export type StoreCreateWithoutCollectionsInput = {
+  id?: string
+  publicId?: string
+  username: string
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz?: string | null
+  descriptionRu?: string | null
+  orderPrefix: string
+  status?: $Enums.StoreStatus
+  vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile: Prisma.SellerProfileCreateNestedOneWithoutStoresInput
+  members?: Prisma.StoreMemberCreateNestedManyWithoutStoreInput
+  policies?: Prisma.StorePolicyCreateNestedManyWithoutStoreInput
+  listings?: Prisma.ListingCreateNestedManyWithoutStoreInput
+  orders?: Prisma.OrderCreateNestedManyWithoutStoreInput
+  followers?: Prisma.StoreFollowerCreateNestedManyWithoutStoreInput
+  questions?: Prisma.StoreQuestionCreateNestedManyWithoutStoreInput
+  importedTestimonials?: Prisma.ImportedTestimonialCreateNestedManyWithoutStoreInput
+  coupons?: Prisma.CouponCreateNestedManyWithoutStoreInput
+  promotions?: Prisma.PromotionCreateNestedManyWithoutStoreInput
+  metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
+  trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
+  settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
+}
+
+export type StoreUncheckedCreateWithoutCollectionsInput = {
+  id?: string
+  publicId?: string
+  sellerProfileId: string
+  username: string
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz?: string | null
+  descriptionRu?: string | null
+  orderPrefix: string
+  status?: $Enums.StoreStatus
+  vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
+  policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
+  listings?: Prisma.ListingUncheckedCreateNestedManyWithoutStoreInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutStoreInput
+  followers?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutStoreInput
+  questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutStoreInput
+  importedTestimonials?: Prisma.ImportedTestimonialUncheckedCreateNestedManyWithoutStoreInput
+  coupons?: Prisma.CouponUncheckedCreateNestedManyWithoutStoreInput
+  promotions?: Prisma.PromotionUncheckedCreateNestedManyWithoutStoreInput
+  metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
+  trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
+  settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
+}
+
+export type StoreCreateOrConnectWithoutCollectionsInput = {
+  where: Prisma.StoreWhereUniqueInput
+  create: Prisma.XOR<Prisma.StoreCreateWithoutCollectionsInput, Prisma.StoreUncheckedCreateWithoutCollectionsInput>
+}
+
+export type StoreUpsertWithoutCollectionsInput = {
+  update: Prisma.XOR<Prisma.StoreUpdateWithoutCollectionsInput, Prisma.StoreUncheckedUpdateWithoutCollectionsInput>
+  create: Prisma.XOR<Prisma.StoreCreateWithoutCollectionsInput, Prisma.StoreUncheckedCreateWithoutCollectionsInput>
+  where?: Prisma.StoreWhereInput
+}
+
+export type StoreUpdateToOneWithWhereWithoutCollectionsInput = {
+  where?: Prisma.StoreWhereInput
+  data: Prisma.XOR<Prisma.StoreUpdateWithoutCollectionsInput, Prisma.StoreUncheckedUpdateWithoutCollectionsInput>
+}
+
+export type StoreUpdateWithoutCollectionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
+  vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUpdateOneRequiredWithoutStoresNestedInput
+  members?: Prisma.StoreMemberUpdateManyWithoutStoreNestedInput
+  policies?: Prisma.StorePolicyUpdateManyWithoutStoreNestedInput
+  listings?: Prisma.ListingUpdateManyWithoutStoreNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutStoreNestedInput
+  followers?: Prisma.StoreFollowerUpdateManyWithoutStoreNestedInput
+  questions?: Prisma.StoreQuestionUpdateManyWithoutStoreNestedInput
+  importedTestimonials?: Prisma.ImportedTestimonialUpdateManyWithoutStoreNestedInput
+  coupons?: Prisma.CouponUpdateManyWithoutStoreNestedInput
+  promotions?: Prisma.PromotionUpdateManyWithoutStoreNestedInput
+  metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
+  trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
+  settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
+}
+
+export type StoreUncheckedUpdateWithoutCollectionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  sellerProfileId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
+  vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
+  policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
+  listings?: Prisma.ListingUncheckedUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
@@ -1402,6 +1704,9 @@ export type StoreCreateWithoutFollowersInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sellerProfile: Prisma.SellerProfileCreateNestedOneWithoutStoresInput
@@ -1416,6 +1721,7 @@ export type StoreCreateWithoutFollowersInput = {
   metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutFollowersInput = {
@@ -1430,6 +1736,9 @@ export type StoreUncheckedCreateWithoutFollowersInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
@@ -1443,6 +1752,7 @@ export type StoreUncheckedCreateWithoutFollowersInput = {
   metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutFollowersInput = {
@@ -1472,6 +1782,9 @@ export type StoreUpdateWithoutFollowersInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sellerProfile?: Prisma.SellerProfileUpdateOneRequiredWithoutStoresNestedInput
@@ -1486,6 +1799,7 @@ export type StoreUpdateWithoutFollowersInput = {
   metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutFollowersInput = {
@@ -1500,6 +1814,9 @@ export type StoreUncheckedUpdateWithoutFollowersInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
@@ -1513,6 +1830,7 @@ export type StoreUncheckedUpdateWithoutFollowersInput = {
   metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateWithoutOrdersInput = {
@@ -1526,6 +1844,9 @@ export type StoreCreateWithoutOrdersInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sellerProfile: Prisma.SellerProfileCreateNestedOneWithoutStoresInput
@@ -1540,6 +1861,7 @@ export type StoreCreateWithoutOrdersInput = {
   metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutOrdersInput = {
@@ -1554,6 +1876,9 @@ export type StoreUncheckedCreateWithoutOrdersInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
@@ -1567,6 +1892,7 @@ export type StoreUncheckedCreateWithoutOrdersInput = {
   metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutOrdersInput = {
@@ -1596,6 +1922,9 @@ export type StoreUpdateWithoutOrdersInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sellerProfile?: Prisma.SellerProfileUpdateOneRequiredWithoutStoresNestedInput
@@ -1610,6 +1939,7 @@ export type StoreUpdateWithoutOrdersInput = {
   metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutOrdersInput = {
@@ -1624,6 +1954,9 @@ export type StoreUncheckedUpdateWithoutOrdersInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
@@ -1637,6 +1970,7 @@ export type StoreUncheckedUpdateWithoutOrdersInput = {
   metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateWithoutQuestionsInput = {
@@ -1650,6 +1984,9 @@ export type StoreCreateWithoutQuestionsInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sellerProfile: Prisma.SellerProfileCreateNestedOneWithoutStoresInput
@@ -1664,6 +2001,7 @@ export type StoreCreateWithoutQuestionsInput = {
   metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutQuestionsInput = {
@@ -1678,6 +2016,9 @@ export type StoreUncheckedCreateWithoutQuestionsInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
@@ -1691,6 +2032,7 @@ export type StoreUncheckedCreateWithoutQuestionsInput = {
   metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutQuestionsInput = {
@@ -1720,6 +2062,9 @@ export type StoreUpdateWithoutQuestionsInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sellerProfile?: Prisma.SellerProfileUpdateOneRequiredWithoutStoresNestedInput
@@ -1734,6 +2079,7 @@ export type StoreUpdateWithoutQuestionsInput = {
   metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutQuestionsInput = {
@@ -1748,6 +2094,9 @@ export type StoreUncheckedUpdateWithoutQuestionsInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
@@ -1761,6 +2110,7 @@ export type StoreUncheckedUpdateWithoutQuestionsInput = {
   metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateWithoutImportedTestimonialsInput = {
@@ -1774,6 +2124,9 @@ export type StoreCreateWithoutImportedTestimonialsInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sellerProfile: Prisma.SellerProfileCreateNestedOneWithoutStoresInput
@@ -1788,6 +2141,7 @@ export type StoreCreateWithoutImportedTestimonialsInput = {
   metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutImportedTestimonialsInput = {
@@ -1802,6 +2156,9 @@ export type StoreUncheckedCreateWithoutImportedTestimonialsInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
@@ -1815,6 +2172,7 @@ export type StoreUncheckedCreateWithoutImportedTestimonialsInput = {
   metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutImportedTestimonialsInput = {
@@ -1844,6 +2202,9 @@ export type StoreUpdateWithoutImportedTestimonialsInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sellerProfile?: Prisma.SellerProfileUpdateOneRequiredWithoutStoresNestedInput
@@ -1858,6 +2219,7 @@ export type StoreUpdateWithoutImportedTestimonialsInput = {
   metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutImportedTestimonialsInput = {
@@ -1872,6 +2234,9 @@ export type StoreUncheckedUpdateWithoutImportedTestimonialsInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
@@ -1885,6 +2250,7 @@ export type StoreUncheckedUpdateWithoutImportedTestimonialsInput = {
   metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateWithoutMetricsInput = {
@@ -1898,6 +2264,9 @@ export type StoreCreateWithoutMetricsInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sellerProfile: Prisma.SellerProfileCreateNestedOneWithoutStoresInput
@@ -1912,6 +2281,7 @@ export type StoreCreateWithoutMetricsInput = {
   promotions?: Prisma.PromotionCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutMetricsInput = {
@@ -1926,6 +2296,9 @@ export type StoreUncheckedCreateWithoutMetricsInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
@@ -1939,6 +2312,7 @@ export type StoreUncheckedCreateWithoutMetricsInput = {
   promotions?: Prisma.PromotionUncheckedCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutMetricsInput = {
@@ -1968,6 +2342,9 @@ export type StoreUpdateWithoutMetricsInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sellerProfile?: Prisma.SellerProfileUpdateOneRequiredWithoutStoresNestedInput
@@ -1982,6 +2359,7 @@ export type StoreUpdateWithoutMetricsInput = {
   promotions?: Prisma.PromotionUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutMetricsInput = {
@@ -1996,6 +2374,9 @@ export type StoreUncheckedUpdateWithoutMetricsInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
@@ -2009,6 +2390,7 @@ export type StoreUncheckedUpdateWithoutMetricsInput = {
   promotions?: Prisma.PromotionUncheckedUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateWithoutTrustEventsInput = {
@@ -2022,6 +2404,9 @@ export type StoreCreateWithoutTrustEventsInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sellerProfile: Prisma.SellerProfileCreateNestedOneWithoutStoresInput
@@ -2036,6 +2421,7 @@ export type StoreCreateWithoutTrustEventsInput = {
   promotions?: Prisma.PromotionCreateNestedManyWithoutStoreInput
   metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutTrustEventsInput = {
@@ -2050,6 +2436,9 @@ export type StoreUncheckedCreateWithoutTrustEventsInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
@@ -2063,6 +2452,7 @@ export type StoreUncheckedCreateWithoutTrustEventsInput = {
   promotions?: Prisma.PromotionUncheckedCreateNestedManyWithoutStoreInput
   metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutTrustEventsInput = {
@@ -2092,6 +2482,9 @@ export type StoreUpdateWithoutTrustEventsInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sellerProfile?: Prisma.SellerProfileUpdateOneRequiredWithoutStoresNestedInput
@@ -2106,6 +2499,7 @@ export type StoreUpdateWithoutTrustEventsInput = {
   promotions?: Prisma.PromotionUpdateManyWithoutStoreNestedInput
   metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutTrustEventsInput = {
@@ -2120,6 +2514,9 @@ export type StoreUncheckedUpdateWithoutTrustEventsInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
@@ -2133,6 +2530,7 @@ export type StoreUncheckedUpdateWithoutTrustEventsInput = {
   promotions?: Prisma.PromotionUncheckedUpdateManyWithoutStoreNestedInput
   metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateWithoutCouponsInput = {
@@ -2146,6 +2544,9 @@ export type StoreCreateWithoutCouponsInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sellerProfile: Prisma.SellerProfileCreateNestedOneWithoutStoresInput
@@ -2160,6 +2561,7 @@ export type StoreCreateWithoutCouponsInput = {
   metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutCouponsInput = {
@@ -2174,6 +2576,9 @@ export type StoreUncheckedCreateWithoutCouponsInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
@@ -2187,6 +2592,7 @@ export type StoreUncheckedCreateWithoutCouponsInput = {
   metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutCouponsInput = {
@@ -2216,6 +2622,9 @@ export type StoreUpdateWithoutCouponsInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sellerProfile?: Prisma.SellerProfileUpdateOneRequiredWithoutStoresNestedInput
@@ -2230,6 +2639,7 @@ export type StoreUpdateWithoutCouponsInput = {
   metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutCouponsInput = {
@@ -2244,6 +2654,9 @@ export type StoreUncheckedUpdateWithoutCouponsInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
@@ -2257,6 +2670,7 @@ export type StoreUncheckedUpdateWithoutCouponsInput = {
   metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateWithoutPromotionsInput = {
@@ -2270,6 +2684,9 @@ export type StoreCreateWithoutPromotionsInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sellerProfile: Prisma.SellerProfileCreateNestedOneWithoutStoresInput
@@ -2284,6 +2701,7 @@ export type StoreCreateWithoutPromotionsInput = {
   metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutPromotionsInput = {
@@ -2298,6 +2716,9 @@ export type StoreUncheckedCreateWithoutPromotionsInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
@@ -2311,6 +2732,7 @@ export type StoreUncheckedCreateWithoutPromotionsInput = {
   metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutPromotionsInput = {
@@ -2340,6 +2762,9 @@ export type StoreUpdateWithoutPromotionsInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sellerProfile?: Prisma.SellerProfileUpdateOneRequiredWithoutStoresNestedInput
@@ -2354,6 +2779,7 @@ export type StoreUpdateWithoutPromotionsInput = {
   metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutPromotionsInput = {
@@ -2368,6 +2794,9 @@ export type StoreUncheckedUpdateWithoutPromotionsInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
@@ -2381,6 +2810,7 @@ export type StoreUncheckedUpdateWithoutPromotionsInput = {
   metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateManySellerProfileInput = {
@@ -2394,6 +2824,9 @@ export type StoreCreateManySellerProfileInput = {
   orderPrefix: string
   status?: $Enums.StoreStatus
   vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2409,6 +2842,9 @@ export type StoreUpdateWithoutSellerProfileInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.StoreMemberUpdateManyWithoutStoreNestedInput
@@ -2423,6 +2859,7 @@ export type StoreUpdateWithoutSellerProfileInput = {
   metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutSellerProfileInput = {
@@ -2436,6 +2873,9 @@ export type StoreUncheckedUpdateWithoutSellerProfileInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
@@ -2450,6 +2890,7 @@ export type StoreUncheckedUpdateWithoutSellerProfileInput = {
   metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateManyWithoutSellerProfileInput = {
@@ -2463,6 +2904,9 @@ export type StoreUncheckedUpdateManyWithoutSellerProfileInput = {
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2484,6 +2928,7 @@ export type StoreCountOutputType = {
   promotions: number
   metrics: number
   trustEvents: number
+  collections: number
 }
 
 export type StoreCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2498,6 +2943,7 @@ export type StoreCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   promotions?: boolean | StoreCountOutputTypeCountPromotionsArgs
   metrics?: boolean | StoreCountOutputTypeCountMetricsArgs
   trustEvents?: boolean | StoreCountOutputTypeCountTrustEventsArgs
+  collections?: boolean | StoreCountOutputTypeCountCollectionsArgs
 }
 
 /**
@@ -2587,6 +3033,13 @@ export type StoreCountOutputTypeCountTrustEventsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.TrustEventWhereInput
 }
 
+/**
+ * StoreCountOutputType without action
+ */
+export type StoreCountOutputTypeCountCollectionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CollectionWhereInput
+}
+
 
 export type StoreSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2600,6 +3053,9 @@ export type StoreSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   orderPrefix?: boolean
   status?: boolean
   vacationMode?: boolean
+  logoStorageKey?: boolean
+  bannerStorageKey?: boolean
+  premiumUntil?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   sellerProfile?: boolean | Prisma.SellerProfileDefaultArgs<ExtArgs>
@@ -2615,6 +3071,7 @@ export type StoreSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   metrics?: boolean | Prisma.Store$metricsArgs<ExtArgs>
   trustEvents?: boolean | Prisma.Store$trustEventsArgs<ExtArgs>
   settings?: boolean | Prisma.Store$settingsArgs<ExtArgs>
+  collections?: boolean | Prisma.Store$collectionsArgs<ExtArgs>
   _count?: boolean | Prisma.StoreCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["store"]>
 
@@ -2630,6 +3087,9 @@ export type StoreSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   orderPrefix?: boolean
   status?: boolean
   vacationMode?: boolean
+  logoStorageKey?: boolean
+  bannerStorageKey?: boolean
+  premiumUntil?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   sellerProfile?: boolean | Prisma.SellerProfileDefaultArgs<ExtArgs>
@@ -2647,6 +3107,9 @@ export type StoreSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   orderPrefix?: boolean
   status?: boolean
   vacationMode?: boolean
+  logoStorageKey?: boolean
+  bannerStorageKey?: boolean
+  premiumUntil?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   sellerProfile?: boolean | Prisma.SellerProfileDefaultArgs<ExtArgs>
@@ -2664,11 +3127,14 @@ export type StoreSelectScalar = {
   orderPrefix?: boolean
   status?: boolean
   vacationMode?: boolean
+  logoStorageKey?: boolean
+  bannerStorageKey?: boolean
+  premiumUntil?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type StoreOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "sellerProfileId" | "username" | "nameUz" | "nameRu" | "descriptionUz" | "descriptionRu" | "orderPrefix" | "status" | "vacationMode" | "createdAt" | "updatedAt", ExtArgs["result"]["store"]>
+export type StoreOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "sellerProfileId" | "username" | "nameUz" | "nameRu" | "descriptionUz" | "descriptionRu" | "orderPrefix" | "status" | "vacationMode" | "logoStorageKey" | "bannerStorageKey" | "premiumUntil" | "createdAt" | "updatedAt", ExtArgs["result"]["store"]>
 export type StoreInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sellerProfile?: boolean | Prisma.SellerProfileDefaultArgs<ExtArgs>
   members?: boolean | Prisma.Store$membersArgs<ExtArgs>
@@ -2683,6 +3149,7 @@ export type StoreInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   metrics?: boolean | Prisma.Store$metricsArgs<ExtArgs>
   trustEvents?: boolean | Prisma.Store$trustEventsArgs<ExtArgs>
   settings?: boolean | Prisma.Store$settingsArgs<ExtArgs>
+  collections?: boolean | Prisma.Store$collectionsArgs<ExtArgs>
   _count?: boolean | Prisma.StoreCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StoreIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2708,6 +3175,7 @@ export type $StorePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     metrics: Prisma.$SellerMetricPayload<ExtArgs>[]
     trustEvents: Prisma.$TrustEventPayload<ExtArgs>[]
     settings: Prisma.$StoreSettingPayload<ExtArgs> | null
+    collections: Prisma.$CollectionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2721,6 +3189,9 @@ export type $StorePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     orderPrefix: string
     status: $Enums.StoreStatus
     vacationMode: boolean
+    logoStorageKey: string | null
+    bannerStorageKey: string | null
+    premiumUntil: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["store"]>
@@ -3130,6 +3601,7 @@ export interface Prisma__StoreClient<T, Null = never, ExtArgs extends runtime.Ty
   metrics<T extends Prisma.Store$metricsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$metricsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SellerMetricPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   trustEvents<T extends Prisma.Store$trustEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$trustEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TrustEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   settings<T extends Prisma.Store$settingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$settingsArgs<ExtArgs>>): Prisma.Prisma__StoreSettingClient<runtime.Types.Result.GetResult<Prisma.$StoreSettingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  collections<T extends Prisma.Store$collectionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$collectionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CollectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3170,6 +3642,9 @@ export interface StoreFieldRefs {
   readonly orderPrefix: Prisma.FieldRef<"Store", 'String'>
   readonly status: Prisma.FieldRef<"Store", 'StoreStatus'>
   readonly vacationMode: Prisma.FieldRef<"Store", 'Boolean'>
+  readonly logoStorageKey: Prisma.FieldRef<"Store", 'String'>
+  readonly bannerStorageKey: Prisma.FieldRef<"Store", 'String'>
+  readonly premiumUntil: Prisma.FieldRef<"Store", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Store", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Store", 'DateTime'>
 }
@@ -3853,6 +4328,30 @@ export type Store$settingsArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   include?: Prisma.StoreSettingInclude<ExtArgs> | null
   where?: Prisma.StoreSettingWhereInput
+}
+
+/**
+ * Store.collections
+ */
+export type Store$collectionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Collection
+   */
+  select?: Prisma.CollectionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Collection
+   */
+  omit?: Prisma.CollectionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CollectionInclude<ExtArgs> | null
+  where?: Prisma.CollectionWhereInput
+  orderBy?: Prisma.CollectionOrderByWithRelationInput | Prisma.CollectionOrderByWithRelationInput[]
+  cursor?: Prisma.CollectionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CollectionScalarFieldEnum | Prisma.CollectionScalarFieldEnum[]
 }
 
 /**

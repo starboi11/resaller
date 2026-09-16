@@ -255,6 +255,9 @@ model Store {
   orderPrefix String @unique
   status StoreStatus @default(DRAFT)
   vacationMode Boolean @default(false)
+  logoStorageKey String?
+  bannerStorageKey String?
+  premiumUntil DateTime? @db.Timestamptz
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @updatedAt @db.Timestamptz
   sellerProfile SellerProfile @relation(fields: [sellerProfileId], references: [id])
@@ -270,6 +273,7 @@ model Store {
   metrics SellerMetric[]
   trustEvents TrustEvent[]
   settings StoreSetting?
+  collections Collection[]
   @@index([status, createdAt])
 }
 
@@ -344,6 +348,8 @@ model Listing {
   descriptionUz String
   descriptionRu String?
   priceMinor BigInt
+  salePriceMinor BigInt?
+  videoStorageKey String?
   currency String @default("UZS")
   condition String?
   attributeValues Json @default("{}")
@@ -357,8 +363,33 @@ model Listing {
   cartItems CartItem[]
   favorites Favorite[]
   questions StoreQuestion[]
+  collectionItems CollectionItem[]
   @@index([status, categoryId, createdAt])
   @@index([storeId, status])
+}
+
+model Collection {
+  id String @id @default(uuid()) @db.Uuid
+  publicId String @unique @default(cuid())
+  storeId String @db.Uuid
+  nameUz String
+  nameRu String?
+  position Int @default(0)
+  active Boolean @default(true)
+  createdAt DateTime @default(now()) @db.Timestamptz
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  items CollectionItem[]
+  @@index([storeId, position])
+}
+
+model CollectionItem {
+  collectionId String @db.Uuid
+  listingId String @db.Uuid
+  position Int @default(0)
+  collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  @@id([collectionId, listingId])
+  @@index([collectionId, position])
 }
 
 model ListingVariant {

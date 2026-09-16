@@ -448,14 +448,6 @@ export type ListingVariantUncheckedUpdateManyWithoutListingNestedInput = {
   deleteMany?: Prisma.ListingVariantScalarWhereInput | Prisma.ListingVariantScalarWhereInput[]
 }
 
-export type NullableBigIntFieldUpdateOperationsInput = {
-  set?: bigint | number | null
-  increment?: bigint | number
-  decrement?: bigint | number
-  multiply?: bigint | number
-  divide?: bigint | number
-}
-
 export type ListingVariantCreateNestedOneWithoutInventoryInput = {
   create?: Prisma.XOR<Prisma.ListingVariantCreateWithoutInventoryInput, Prisma.ListingVariantUncheckedCreateWithoutInventoryInput>
   connectOrCreate?: Prisma.ListingVariantCreateOrConnectWithoutInventoryInput

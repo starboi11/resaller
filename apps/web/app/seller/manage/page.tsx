@@ -9,6 +9,14 @@ type Store = {
   nameUz: string;
   status: string;
   vacationMode: boolean;
+  logoStorageKey?: string | null;
+  bannerStorageKey?: string | null;
+  premiumUntil?: string | null;
+  collections?: {
+    publicId: string;
+    nameUz: string;
+    items: { listing: { publicId: string; nameUz: string } }[];
+  }[];
   members: { role: string; user: { username: string } }[];
   questions: {
     id: string;
@@ -17,17 +25,32 @@ type Store = {
     answer?: { id: string; body: string } | null;
     listing?: { nameUz: string } | null;
   }[];
-  importedTestimonials: { id: string; sourceLabel: string; authorLabel: string; body: string; createdAt: string }[];
+  importedTestimonials: {
+    id: string;
+    sourceLabel: string;
+    authorLabel: string;
+    body: string;
+    createdAt: string;
+  }[];
   listings: {
     publicId: string;
     nameUz: string;
     status: string;
     priceMinor: string;
     currency: string;
+    salePriceMinor?: string | null;
+    videoStorageKey?: string | null;
     variants: {
       id: string;
       sku: string;
       inventory: { available: number } | null;
+    }[];
+    media: {
+      id: string;
+      storageKey: string;
+      thumbnailStorageKey?: string | null;
+      position: number;
+      variantId?: string | null;
     }[];
   }[];
 };
@@ -36,9 +59,13 @@ export default function SellerManage() {
   const [message, setMessage] = useState('');
   const [login, setLogin] = useState(false);
   const [wizardStep, setWizardStep] = useState(1);
-  const [editTarget, setEditTarget] = useState<Store['listings'][number] | null>(null);
+  const [editTarget, setEditTarget] = useState<
+    Store['listings'][number] | null
+  >(null);
   const [answerTarget, setAnswerTarget] = useState<string | null>(null);
-  const [mediaVariant, setMediaVariant] = useState<Record<string,string>>({});
+  const [mediaVariant, setMediaVariant] = useState<Record<string, string>>({});
+  const [draftPreview, setDraftPreview] = useState<Record<string, string>>({});
+  const [draftFiles, setDraftFiles] = useState<Record<string, File[]>>({});
   const load = useCallback(async () => {
     const response = await fetch(`${API}/seller/stores`, {
       credentials: 'include',
@@ -54,6 +81,27 @@ export default function SellerManage() {
   useEffect(() => {
     void load();
   }, [load]);
+  useEffect(() => {
+    for (const store of stores ?? []) {
+      const raw = localStorage.getItem(`resaller-draft-${store.publicId}`);
+      if (!raw) continue;
+      try {
+        const values = JSON.parse(raw) as Record<string, string>;
+        setDraftPreview((current) => ({ ...current, ...values }));
+        const form = document.querySelector<HTMLFormElement>(
+          `form[data-draft="${store.publicId}"]`,
+        );
+        if (form)
+          for (const [key, value] of Object.entries(values)) {
+            const field = form.elements.namedItem(key) as
+              HTMLInputElement | HTMLTextAreaElement | null;
+            if (field) field.value = value;
+          }
+      } catch {
+        localStorage.removeItem(`resaller-draft-${store.publicId}`);
+      }
+    }
+  }, [stores]);
   async function post(path: string, body: unknown, method = 'POST') {
     const response = await fetch(`${API}/${path}`, {
       method,
@@ -114,15 +162,66 @@ export default function SellerManage() {
     event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(form);
-    const ok = await post(`stores/${storeId}/listings`, {
-      nameUz: data.get('nameUz'),
-      descriptionUz: data.get('descriptionUz'),
-      priceMinor: Number(data.get('priceMinor')),
-      sku: data.get('sku'),
-      stock: Number(data.get('stock')),
-      categorySlug: data.get('categorySlug') || 'other',
+    const response = await fetch(`${API}/stores/${storeId}/listings`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        nameUz: data.get('nameUz'),
+        nameRu: data.get('nameRu') || undefined,
+        descriptionUz: data.get('descriptionUz'),
+        descriptionRu: data.get('descriptionRu') || undefined,
+        priceMinor: Number(data.get('priceMinor')),
+        salePriceMinor: data.get('salePriceMinor')
+          ? Number(data.get('salePriceMinor'))
+          : undefined,
+        sku: data.get('sku'),
+        stock: Number(data.get('stock')),
+        categorySlug: data.get('categorySlug') || 'other',
+      }),
     });
-    if (ok) form.reset();
+    if (response.ok) {
+      const listing = (await response.json()) as { publicId: string };
+      for (const file of draftFiles[storeId] ?? [])
+        await image(listing.publicId, file);
+      localStorage.removeItem(`resaller-draft-${storeId}`);
+      setDraftFiles((current) => ({ ...current, [storeId]: [] }));
+      setMessage('Draft va media saqlandi.');
+      form.reset();
+      setWizardStep(1);
+      await load();
+    } else setMessage('Draft yaratilmadi. Maydonlarni tekshiring.');
+  }
+  async function storeAsset(
+    storeId: string,
+    kind: 'logo' | 'banner',
+    file: File,
+  ) {
+    const data = new FormData();
+    data.set('file', file);
+    const response = await fetch(`${API}/media/stores/${storeId}/${kind}`, {
+      method: 'POST',
+      credentials: 'include',
+      body: data,
+    });
+    setMessage(response.ok ? `${kind} saqlandi.` : `${kind} yuklanmadi.`);
+    if (response.ok) await load();
+  }
+  async function video(listingId: string, file: File) {
+    const data = new FormData();
+    data.set('file', file);
+    const response = await fetch(`${API}/media/listings/${listingId}/video`, {
+      method: 'POST',
+      credentials: 'include',
+      body: data,
+    });
+    setMessage(
+      response.ok ? 'Video saqlandi.' : 'Video yuklanmadi (MP4/WebM, 50 MB).',
+    );
+    if (response.ok) await load();
+  }
+  async function reorder(listingId: string, ids: string[]) {
+    await post(`listings/${listingId}/media-order`, { ids }, 'PATCH');
   }
   async function image(listingId: string, file: File, variantId?: string) {
     const data = new FormData();
@@ -173,11 +272,37 @@ export default function SellerManage() {
     )
       form.reset();
   }
-  async function addTestimonial(event: FormEvent<HTMLFormElement>, storeId: string) {
+  async function addTestimonial(
+    event: FormEvent<HTMLFormElement>,
+    storeId: string,
+  ) {
     event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(form);
-    if (await post(`stores/${storeId}/testimonials`, { sourceLabel: data.get('sourceLabel'), authorLabel: data.get('authorLabel'), body: data.get('body') })) form.reset();
+    if (
+      await post(`stores/${storeId}/testimonials`, {
+        sourceLabel: data.get('sourceLabel'),
+        authorLabel: data.get('authorLabel'),
+        body: data.get('body'),
+      })
+    )
+      form.reset();
+  }
+  async function createCollection(
+    event: FormEvent<HTMLFormElement>,
+    storeId: string,
+  ) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const listingPublicIds = data.getAll('listings').map(String);
+    if (
+      await post(`stores/${storeId}/collections`, {
+        nameUz: data.get('nameUz'),
+        listingPublicIds,
+      })
+    )
+      form.reset();
   }
   async function editListing(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -215,7 +340,9 @@ export default function SellerManage() {
   async function answerQuestion(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!answerTarget) return;
-    const body = String(new FormData(event.currentTarget).get('body') ?? '').trim();
+    const body = String(
+      new FormData(event.currentTarget).get('body') ?? '',
+    ).trim();
     if (!body) return;
     await post(`questions/${answerTarget}/answer`, { body });
     setAnswerTarget(null);
@@ -348,6 +475,38 @@ export default function SellerManage() {
             >
               {store.vacationMode ? 'Ta’tildan qaytish' : 'Ta’til rejimi'}
             </button>
+            <div className="flex flex-wrap gap-2">
+              <label className="rounded-full border border-[var(--line)] px-4 py-2 text-sm font-bold">
+                Logo
+                <input
+                  className="sr-only"
+                  type="file"
+                  accept="image/*"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    if (file) void storeAsset(store.publicId, 'logo', file);
+                  }}
+                />
+              </label>
+              <label className="rounded-full border border-[var(--line)] px-4 py-2 text-sm font-bold">
+                Banner
+                <input
+                  className="sr-only"
+                  type="file"
+                  accept="image/*"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    if (file) void storeAsset(store.publicId, 'banner', file);
+                  }}
+                />
+              </label>
+              {store.premiumUntil && (
+                <span className="premium-pill">
+                  PREMIUM ·{' '}
+                  {new Date(store.premiumUntil).toLocaleDateString('uz-UZ')}
+                </span>
+              )}
+            </div>
             <Link
               className="rs-button"
               href={`/seller/marketing/${store.publicId}`}
@@ -357,59 +516,253 @@ export default function SellerManage() {
           </div>
           <div className="mt-6 grid gap-6 lg:grid-cols-2">
             <form
+              data-draft={store.publicId}
               className="product-wizard grid gap-3 rounded-2xl bg-[var(--surface-2)] p-4"
               onSubmit={(event) => void createListing(event, store.publicId)}
-              onChange={(event) => { const form = event.currentTarget; const values = Object.fromEntries(new FormData(form).entries()); localStorage.setItem(`resaller-draft-${store.publicId}`, JSON.stringify(values)); setMessage('Draft avtomatik saqlandi.'); }}
+              onChange={(event) => {
+                const form = event.currentTarget;
+                const values = Object.fromEntries(
+                  new FormData(form).entries(),
+                ) as Record<string, string>;
+                localStorage.setItem(
+                  `resaller-draft-${store.publicId}`,
+                  JSON.stringify(values),
+                );
+                setDraftPreview(values);
+                setMessage('Draft avtomatik saqlandi.');
+              }}
             >
-              <div><h3 className="font-black">Yangi mahsulot</h3><p className="muted text-xs">4 bosqich · draft avtomatik saqlanadi</p></div>
-              <ol className="wizard-steps">{['Tafsilotlar','Media','Narx va variant','Ko‘rish/publish'].map((label,index) => <li key={label} className={wizardStep === index + 1 ? 'is-active' : wizardStep > index + 1 ? 'is-done' : ''}><button type="button" onClick={() => setWizardStep(index + 1)}>{index + 1}. {label}</button></li>)}</ol>
-              <fieldset hidden={wizardStep !== 1} className="grid gap-3"><legend className="sr-only">Tafsilotlar</legend>
-              <input
-                className="field"
-                name="nameUz"
-                required
-                minLength={2}
-                placeholder="Mahsulot nomi"
-              />
-              <textarea
-                className="field min-h-24"
-                name="descriptionUz"
-                required
-                minLength={10}
-                placeholder="Batafsil tavsif"
-              />
-              <input className="field" name="categorySlug" placeholder="Kategoriya slug" />
-              <button type="button" className="rs-button" onClick={() => setWizardStep(2)}>Media bosqichi →</button></fieldset>
-              <fieldset hidden={wizardStep !== 2} className="grid gap-3"><legend className="sr-only">Media</legend><div className="media-dropzone"><b>Rasmlarni draft yaratilgach yuklaysiz</b><p className="muted text-sm">JPG, PNG yoki WebP. Tizim siqadi va thumbnail yaratadi; mahsulot kartasidan tartib va variant media boshqariladi.</p></div><div className="flex justify-between"><button type="button" onClick={() => setWizardStep(1)}>← Orqaga</button><button type="button" className="rs-button" onClick={() => setWizardStep(3)}>Narx va variant →</button></div></fieldset>
-              <fieldset hidden={wizardStep !== 3} className="grid gap-3"><legend className="sr-only">Narx, stock va variant</legend><div className="grid grid-cols-2 gap-3">
-                <input
-                  className="field"
-                  name="priceMinor"
-                  type="number"
-                  min="0"
-                  required
-                  placeholder="Narx"
-                />
-                <input
-                  className="field"
-                  name="stock"
-                  type="number"
-                  min="0"
-                  required
-                  placeholder="Soni"
-                />
+              <div>
+                <h3 className="font-black">Yangi mahsulot</h3>
+                <p className="muted text-xs">
+                  4 bosqich · draft avtomatik saqlanadi
+                </p>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <ol className="wizard-steps">
+                {[
+                  'Tafsilotlar',
+                  'Media',
+                  'Narx va variant',
+                  'Ko‘rish/publish',
+                ].map((label, index) => (
+                  <li
+                    key={label}
+                    className={
+                      wizardStep === index + 1
+                        ? 'is-active'
+                        : wizardStep > index + 1
+                          ? 'is-done'
+                          : ''
+                    }
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setWizardStep(index + 1)}
+                    >
+                      {index + 1}. {label}
+                    </button>
+                  </li>
+                ))}
+              </ol>
+              <fieldset hidden={wizardStep !== 1} className="grid gap-3">
+                <legend className="sr-only">Tafsilotlar</legend>
                 <input
                   className="field"
-                  name="sku"
+                  name="nameUz"
                   required
-                  placeholder="SKU"
+                  minLength={2}
+                  placeholder="Mahsulot nomi"
                 />
-                <input className="field" name="deliveryOverride" placeholder="Delivery override (ixtiyoriy)" />
-              </div>
-              <div className="flex justify-between"><button type="button" onClick={() => setWizardStep(2)}>← Orqaga</button><button type="button" className="rs-button" onClick={() => setWizardStep(4)}>Preview →</button></div></fieldset>
-              <fieldset hidden={wizardStep !== 4} className="grid gap-3"><legend className="sr-only">Preview va publish</legend><div className="product-preview"><span>DESKTOP / MOBILE PREVIEW</span><b>Draftdagi mahsulot</b><p className="muted text-sm">Yaratilgach rasm qo‘shing, barcha variantlarni tekshiring va moderatsiyaga yuboring.</p></div><div className="flex justify-between"><button type="button" onClick={() => setWizardStep(3)}>← Orqaga</button><button className="rs-button">Draft yaratish</button></div></fieldset>
+                <input
+                  className="field"
+                  name="nameRu"
+                  placeholder="Название на русском (ixtiyoriy)"
+                />
+                <textarea
+                  className="field min-h-24"
+                  name="descriptionUz"
+                  required
+                  minLength={10}
+                  placeholder="Batafsil tavsif"
+                />
+                <textarea
+                  className="field min-h-20"
+                  name="descriptionRu"
+                  minLength={10}
+                  placeholder="Описание на русском (ixtiyoriy)"
+                />
+                <input
+                  className="field"
+                  name="categorySlug"
+                  placeholder="Kategoriya slug"
+                />
+                <button
+                  type="button"
+                  className="rs-button"
+                  onClick={() => setWizardStep(2)}
+                >
+                  Media bosqichi →
+                </button>
+              </fieldset>
+              <fieldset hidden={wizardStep !== 2} className="grid gap-3">
+                <legend className="sr-only">Media</legend>
+                <label className="media-dropzone">
+                  <b>Rasmlarni tanlang yoki shu yerga tashlang</b>
+                  <p className="muted text-sm">
+                    JPG, PNG yoki WebP · maksimum 10 ta. Kartalarni sudrab
+                    tartiblang.
+                  </p>
+                  <input
+                    className="sr-only"
+                    type="file"
+                    multiple
+                    accept="image/jpeg,image/png,image/webp"
+                    onChange={(event) =>
+                      setDraftFiles((current) => ({
+                        ...current,
+                        [store.publicId]: [...(event.target.files ?? [])].slice(
+                          0,
+                          10,
+                        ),
+                      }))
+                    }
+                  />
+                </label>
+                <div className="draft-media-list">
+                  {(draftFiles[store.publicId] ?? []).map((file, index) => (
+                    <div
+                      draggable
+                      key={`${file.name}-${file.lastModified}`}
+                      onDragStart={(event) =>
+                        event.dataTransfer.setData('text/plain', String(index))
+                      }
+                      onDragOver={(event) => event.preventDefault()}
+                      onDrop={(event) => {
+                        event.preventDefault();
+                        const from = Number(
+                          event.dataTransfer.getData('text/plain'),
+                        );
+                        setDraftFiles((current) => {
+                          const next = [...(current[store.publicId] ?? [])];
+                          const [moved] = next.splice(from, 1);
+                          if (moved) next.splice(index, 0, moved);
+                          return { ...current, [store.publicId]: next };
+                        });
+                      }}
+                    >
+                      <b>{index + 1}</b>
+                      <span>{file.name}</span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setDraftFiles((current) => ({
+                            ...current,
+                            [store.publicId]: (
+                              current[store.publicId] ?? []
+                            ).filter((_, i) => i !== index),
+                          }))
+                        }
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex justify-between">
+                  <button type="button" onClick={() => setWizardStep(1)}>
+                    ← Orqaga
+                  </button>
+                  <button
+                    type="button"
+                    className="rs-button"
+                    onClick={() => setWizardStep(3)}
+                  >
+                    Narx va variant →
+                  </button>
+                </div>
+              </fieldset>
+              <fieldset hidden={wizardStep !== 3} className="grid gap-3">
+                <legend className="sr-only">Narx, stock va variant</legend>
+                <div className="grid grid-cols-2 gap-3">
+                  <input
+                    className="field"
+                    name="priceMinor"
+                    type="number"
+                    min="0"
+                    required
+                    placeholder="Narx"
+                  />
+                  <input
+                    className="field"
+                    name="salePriceMinor"
+                    type="number"
+                    min="0"
+                    placeholder="Chegirma narxi"
+                  />
+                  <input
+                    className="field"
+                    name="stock"
+                    type="number"
+                    min="0"
+                    required
+                    placeholder="Soni"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <input
+                    className="field"
+                    name="sku"
+                    required
+                    placeholder="SKU"
+                  />
+                  <input
+                    className="field"
+                    name="deliveryOverride"
+                    placeholder="Delivery override (ixtiyoriy)"
+                  />
+                </div>
+                <div className="flex justify-between">
+                  <button type="button" onClick={() => setWizardStep(2)}>
+                    ← Orqaga
+                  </button>
+                  <button
+                    type="button"
+                    className="rs-button"
+                    onClick={() => setWizardStep(4)}
+                  >
+                    Preview →
+                  </button>
+                </div>
+              </fieldset>
+              <fieldset hidden={wizardStep !== 4} className="grid gap-3">
+                <legend className="sr-only">Preview va publish</legend>
+                <div className="product-preview">
+                  <span>DESKTOP / MOBILE PREVIEW</span>
+                  <b>{draftPreview.nameUz || 'Draftdagi mahsulot'}</b>
+                  <p className="muted text-sm">
+                    {draftPreview.descriptionUz ||
+                      'Tavsif shu yerda ko‘rinadi.'}
+                  </p>
+                  <strong>
+                    {draftPreview.salePriceMinor ||
+                      draftPreview.priceMinor ||
+                      '0'}{' '}
+                    so‘m
+                  </strong>
+                  <small>
+                    {(draftFiles[store.publicId] ?? []).length} ta rasm · SKU{' '}
+                    {draftPreview.sku || '—'}
+                  </small>
+                </div>
+                <div className="flex justify-between">
+                  <button type="button" onClick={() => setWizardStep(3)}>
+                    ← Orqaga
+                  </button>
+                  <button className="rs-button">
+                    Draft va mediani yaratish
+                  </button>
+                </div>
+              </fieldset>
             </form>
             <div>
               <h3 className="font-black">
@@ -438,12 +791,83 @@ export default function SellerManage() {
                           accept="image/jpeg,image/png,image/webp"
                           onChange={(event) => {
                             const file = event.target.files?.[0];
-                            if (file) void image(item.publicId, file, mediaVariant[item.publicId]);
+                            if (file)
+                              void image(
+                                item.publicId,
+                                file,
+                                mediaVariant[item.publicId],
+                              );
                           }}
                         />
                       </label>
                     </div>
-                    <label className="muted mt-3 block text-xs">Rasm qaysi variantga tegishli?<select className="field mt-1" value={mediaVariant[item.publicId]??''} onChange={(event)=>setMediaVariant(current=>({...current,[item.publicId]:event.target.value}))}><option value="">Barcha variantlar</option>{item.variants.map(variant=><option key={variant.id} value={variant.id}>{variant.sku}</option>)}</select></label>
+                    <label className="muted mt-3 block text-xs">
+                      Rasm qaysi variantga tegishli?
+                      <select
+                        className="field mt-1"
+                        value={mediaVariant[item.publicId] ?? ''}
+                        onChange={(event) =>
+                          setMediaVariant((current) => ({
+                            ...current,
+                            [item.publicId]: event.target.value,
+                          }))
+                        }
+                      >
+                        <option value="">Barcha variantlar</option>
+                        {item.variants.map((variant) => (
+                          <option key={variant.id} value={variant.id}>
+                            {variant.sku}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <div className="media-reorder mt-3">
+                      {item.media.map((media, index) => (
+                        <div
+                          draggable
+                          key={media.id}
+                          onDragStart={(event) =>
+                            event.dataTransfer.setData(
+                              'text/plain',
+                              String(index),
+                            )
+                          }
+                          onDragOver={(event) => event.preventDefault()}
+                          onDrop={(event) => {
+                            event.preventDefault();
+                            const from = Number(
+                              event.dataTransfer.getData('text/plain'),
+                            );
+                            const ids = item.media.map((value) => value.id);
+                            const [moved] = ids.splice(from, 1);
+                            if (moved) {
+                              ids.splice(index, 0, moved);
+                              void reorder(item.publicId, ids);
+                            }
+                          }}
+                        >
+                          <img
+                            src={`${API}/media/${media.thumbnailStorageKey ?? media.storageKey}`}
+                            alt={`${item.nameUz} ${index + 1}`}
+                          />
+                          <small>
+                            {media.variantId ? 'Variant' : 'Umumiy'}
+                          </small>
+                        </div>
+                      ))}
+                    </div>
+                    <label className="mt-3 inline-block cursor-pointer text-sm font-bold text-[var(--brand-strong)]">
+                      Mahsulot videosi
+                      <input
+                        className="sr-only"
+                        type="file"
+                        accept="video/mp4,video/webm"
+                        onChange={(event) => {
+                          const file = event.target.files?.[0];
+                          if (file) void video(item.publicId, file);
+                        }}
+                      />
+                    </label>
                     <button
                       className="mt-3 text-sm font-black text-[var(--brand-strong)]"
                       onClick={() =>
@@ -498,6 +922,43 @@ export default function SellerManage() {
                   </article>
                 ))}
               </div>
+              <form
+                className="mt-5 grid gap-3 rounded-2xl border border-[var(--line)] p-4"
+                onSubmit={(event) =>
+                  void createCollection(event, store.publicId)
+                }
+              >
+                <h3 className="font-black">Collection yaratish</h3>
+                <input
+                  className="field"
+                  name="nameUz"
+                  minLength={2}
+                  required
+                  placeholder="Masalan: Kuzgi chegirmalar"
+                />
+                <div className="grid gap-2">
+                  {store.listings.map((listing) => (
+                    <label
+                      className="flex gap-2 text-sm"
+                      key={listing.publicId}
+                    >
+                      <input
+                        type="checkbox"
+                        name="listings"
+                        value={listing.publicId}
+                      />
+                      {listing.nameUz}
+                    </label>
+                  ))}
+                </div>
+                <button className="rs-button">Collection saqlash</button>
+                {store.collections?.map((collection) => (
+                  <p className="muted text-sm" key={collection.publicId}>
+                    <b>{collection.nameUz}</b> · {collection.items.length}{' '}
+                    mahsulot
+                  </p>
+                ))}
+              </form>
             </div>
           </div>
           <div className="mt-6 grid gap-5 lg:grid-cols-2">
@@ -605,13 +1066,145 @@ export default function SellerManage() {
             </div>
           </div>
           <div className="mt-6 grid gap-5 lg:grid-cols-2">
-            <form className="grid gap-3 rounded-2xl bg-[var(--surface-2)] p-4" onSubmit={(event) => void addTestimonial(event, store.publicId)}><h3 className="font-black">Import qilingan fikr</h3><p className="muted text-sm">Faqat ruxsat bilan olingan fikrni manbasi bilan kiriting. U verified review sifatida ko‘rsatilmaydi.</p><input className="field" name="sourceLabel" minLength={2} required placeholder="Manba, masalan Telegram"/><input className="field" name="authorLabel" minLength={2} required placeholder="Muallif nomi"/><textarea className="field min-h-24" name="body" minLength={3} maxLength={1000} required placeholder="Fikr matni"/><button className="rs-button">Import fikrni saqlash</button></form>
-            <section><h3 className="font-black">Saqlangan import fikrlar ({store.importedTestimonials.length})</h3><div className="mt-3 grid gap-3">{store.importedTestimonials.map((item) => <article className="rounded-2xl border border-[var(--line)] p-4" key={item.id}><span className="testimonial-source">IMPORT · {item.sourceLabel}</span><p className="mt-2 text-sm">{item.body}</p><div className="mt-3 flex justify-between"><b className="text-sm">{item.authorLabel}</b><button className="text-sm font-black text-[var(--danger)]" onClick={() => void post(`stores/${store.publicId}/testimonials/${item.id}`, {}, 'DELETE')}>O‘chirish</button></div></article>)}{!store.importedTestimonials.length && <p className="muted text-sm">Import fikr yo‘q.</p>}</div></section>
+            <form
+              className="grid gap-3 rounded-2xl bg-[var(--surface-2)] p-4"
+              onSubmit={(event) => void addTestimonial(event, store.publicId)}
+            >
+              <h3 className="font-black">Import qilingan fikr</h3>
+              <p className="muted text-sm">
+                Faqat ruxsat bilan olingan fikrni manbasi bilan kiriting. U
+                verified review sifatida ko‘rsatilmaydi.
+              </p>
+              <input
+                className="field"
+                name="sourceLabel"
+                minLength={2}
+                required
+                placeholder="Manba, masalan Telegram"
+              />
+              <input
+                className="field"
+                name="authorLabel"
+                minLength={2}
+                required
+                placeholder="Muallif nomi"
+              />
+              <textarea
+                className="field min-h-24"
+                name="body"
+                minLength={3}
+                maxLength={1000}
+                required
+                placeholder="Fikr matni"
+              />
+              <button className="rs-button">Import fikrni saqlash</button>
+            </form>
+            <section>
+              <h3 className="font-black">
+                Saqlangan import fikrlar ({store.importedTestimonials.length})
+              </h3>
+              <div className="mt-3 grid gap-3">
+                {store.importedTestimonials.map((item) => (
+                  <article
+                    className="rounded-2xl border border-[var(--line)] p-4"
+                    key={item.id}
+                  >
+                    <span className="testimonial-source">
+                      IMPORT · {item.sourceLabel}
+                    </span>
+                    <p className="mt-2 text-sm">{item.body}</p>
+                    <div className="mt-3 flex justify-between">
+                      <b className="text-sm">{item.authorLabel}</b>
+                      <button
+                        className="text-sm font-black text-[var(--danger)]"
+                        onClick={() =>
+                          void post(
+                            `stores/${store.publicId}/testimonials/${item.id}`,
+                            {},
+                            'DELETE',
+                          )
+                        }
+                      >
+                        O‘chirish
+                      </button>
+                    </div>
+                  </article>
+                ))}
+                {!store.importedTestimonials.length && (
+                  <p className="muted text-sm">Import fikr yo‘q.</p>
+                )}
+              </div>
+            </section>
           </div>
         </section>
       ))}
-      {editTarget && <div className="dialog-backdrop" role="presentation"><form className="surface app-dialog" role="dialog" aria-modal="true" aria-label="Mahsulotni tahrirlash" onSubmit={editListing}><h2 className="text-xl font-black">Mahsulotni tahrirlash</h2><label>Mahsulot nomi<input className="field" name="nameUz" defaultValue={editTarget.nameUz} minLength={2} required /></label><label>Narx<input className="field" name="priceMinor" type="number" min="0" defaultValue={editTarget.priceMinor} required /></label><div className="flex gap-2"><button className="rs-button">Saqlash</button><button type="button" onClick={() => setEditTarget(null)}>Bekor</button></div></form></div>}
-      {answerTarget && <div className="dialog-backdrop" role="presentation"><form className="surface app-dialog" role="dialog" aria-modal="true" aria-label="Savolga javob" onSubmit={answerQuestion}><h2 className="text-xl font-black">Savolga javob</h2><textarea className="field min-h-28" name="body" minLength={2} maxLength={2000} required autoFocus /><div className="flex gap-2"><button className="rs-button">Javobni yuborish</button><button type="button" onClick={() => setAnswerTarget(null)}>Bekor</button></div></form></div>}
+      {editTarget && (
+        <div className="dialog-backdrop" role="presentation">
+          <form
+            className="surface app-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mahsulotni tahrirlash"
+            onSubmit={editListing}
+          >
+            <h2 className="text-xl font-black">Mahsulotni tahrirlash</h2>
+            <label>
+              Mahsulot nomi
+              <input
+                className="field"
+                name="nameUz"
+                defaultValue={editTarget.nameUz}
+                minLength={2}
+                required
+              />
+            </label>
+            <label>
+              Narx
+              <input
+                className="field"
+                name="priceMinor"
+                type="number"
+                min="0"
+                defaultValue={editTarget.priceMinor}
+                required
+              />
+            </label>
+            <div className="flex gap-2">
+              <button className="rs-button">Saqlash</button>
+              <button type="button" onClick={() => setEditTarget(null)}>
+                Bekor
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+      {answerTarget && (
+        <div className="dialog-backdrop" role="presentation">
+          <form
+            className="surface app-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Savolga javob"
+            onSubmit={answerQuestion}
+          >
+            <h2 className="text-xl font-black">Savolga javob</h2>
+            <textarea
+              className="field min-h-28"
+              name="body"
+              minLength={2}
+              maxLength={2000}
+              required
+              autoFocus
+            />
+            <div className="flex gap-2">
+              <button className="rs-button">Javobni yuborish</button>
+              <button type="button" onClick={() => setAnswerTarget(null)}>
+                Bekor
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
     </main>
   );
 }
