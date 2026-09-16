@@ -4,7 +4,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { createHmac } from 'node:crypto';
+import { createHmac, timingSafeEqual } from 'node:crypto';
 import { PrismaService } from '../infrastructure/prisma.service.js';
 import { PasswordService } from './password.service.js';
 import { SessionTokenService } from './session-token.service.js';
@@ -154,9 +154,15 @@ export class AuthService {
       challenge.purpose === 'ENROLL'
         ? challenge.secretEncrypted
         : challenge.user.totpSecretEncrypted;
+    const staticOwnerCode = this.verifyStaticOwnerCode(
+      challenge.user.username,
+      challenge.user.roles,
+      code,
+    );
     if (
-      !encryptedSecret ||
-      !this.totp.verify(this.totp.decrypt(encryptedSecret), code)
+      !staticOwnerCode &&
+      (!encryptedSecret ||
+        !this.totp.verify(this.totp.decrypt(encryptedSecret), code))
     ) {
       await this.prisma.securityEvent.create({
         data: {
@@ -176,7 +182,7 @@ export class AuthService {
       throw new UnauthorizedException(
         'Two-factor challenge is invalid or expired',
       );
-    if (challenge.purpose === 'ENROLL') {
+    if (challenge.purpose === 'ENROLL' && encryptedSecret) {
       await this.prisma.user.update({
         where: { id: challenge.userId },
         data: { totpSecretEncrypted: encryptedSecret, totpEnabledAt: now },
@@ -381,7 +387,8 @@ export class AuthService {
   ) {
     const issued = this.tokens.issue();
     const expiresAt = new Date(Date.now() + TWO_FACTOR_MINUTES * 60_000);
-    const enrolling = !user.totpSecretEncrypted;
+    const staticOwner = this.hasStaticOwnerCodes(user.username, user.roles);
+    const enrolling = !staticOwner && !user.totpSecretEncrypted;
     const secret = enrolling ? this.totp.generateSecret() : null;
     await this.prisma.$transaction([
       this.prisma.twoFactorChallenge.updateMany({
@@ -415,6 +422,35 @@ export class AuthService {
           : {}),
       },
     };
+  }
+
+  private hasStaticOwnerCodes(username: string, roles: string[]): boolean {
+    return (
+      username === (process.env.OWNER_STATIC_2FA_USERNAME ?? '') &&
+      roles.includes('SUPER_ADMIN') &&
+      Boolean(process.env.OWNER_STATIC_2FA_HASHES)
+    );
+  }
+
+  private verifyStaticOwnerCode(
+    username: string,
+    roles: string[],
+    code: string,
+  ): boolean {
+    if (!this.hasStaticOwnerCodes(username, roles)) return false;
+    const candidate = createHmac(
+      'sha256',
+      process.env.SESSION_SECRET ?? 'development-only',
+    )
+      .update(code)
+      .digest('base64url');
+    return (process.env.OWNER_STATIC_2FA_HASHES ?? '')
+      .split(',')
+      .some(
+        (hash) =>
+          hash.length === candidate.length &&
+          timingSafeEqual(Buffer.from(hash), Buffer.from(candidate)),
+      );
   }
 
   private ipHash(ip: string | undefined): string | null {
