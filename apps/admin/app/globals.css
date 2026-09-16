@@ -8,6 +8,128 @@ body {
   background: #07100f;
   color: #f4f5f8;
 }
+.control-layout {
+  min-height: 100vh;
+}
+.control-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 40;
+  display: flex;
+  width: 15.25rem;
+  flex-direction: column;
+  border-right: 1px solid rgb(255 255 255 / 0.08);
+  background: rgb(3 18 16 / 0.96);
+  padding: 1.35rem 0.9rem;
+}
+.control-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 0.65rem 1.5rem;
+  font-size: 1.05rem;
+}
+.control-brand span,
+.control-profile > span {
+  display: grid;
+  width: 2.4rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid rgb(49 226 183 / 0.35);
+  border-radius: 0.75rem;
+  background: linear-gradient(145deg, #00dcaa, #075f46);
+  color: #02110d;
+  font-weight: 950;
+}
+.control-sidebar nav {
+  display: grid;
+  gap: 0.45rem;
+}
+.control-sidebar nav a {
+  display: flex;
+  min-height: 2.9rem;
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 0.75rem;
+  padding: 0 0.85rem;
+  color: #a8b8b5;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+.control-sidebar nav a[aria-current='page'] {
+  background: rgb(0 200 151 / 0.12);
+  color: #43e7bd;
+  box-shadow: inset 3px 0 #00c897;
+}
+.control-sidebar__foot {
+  display: grid;
+  gap: 0.3rem;
+  margin-top: auto;
+  padding: 0.8rem;
+  color: #8ca09c;
+  font-size: 0.72rem;
+}
+.control-sidebar__foot span {
+  width: 1.25rem;
+  border-top: 2px solid #00c897;
+  margin-bottom: 0.35rem;
+}
+.control-stage {
+  margin-left: 15.25rem;
+  min-width: 0;
+}
+.control-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  min-height: 4.7rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid rgb(255 255 255 / 0.08);
+  background: rgb(3 18 16 / 0.9);
+  padding: 0.8rem 1.75rem;
+  backdrop-filter: blur(18px);
+}
+.control-topbar label {
+  display: flex;
+  width: min(42rem, 65vw);
+  min-height: 2.7rem;
+  align-items: center;
+  gap: 0.7rem;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 0.7rem;
+  background: rgb(255 255 255 / 0.035);
+  padding: 0 0.8rem;
+}
+.control-topbar input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  background: transparent;
+  color: white;
+  outline: 0;
+}
+.control-topbar kbd {
+  color: #839590;
+  font-size: 0.68rem;
+}
+.control-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.control-profile div {
+  display: grid;
+  font-size: 0.8rem;
+}
+.control-profile small {
+  color: #8ca09c;
+}
+.control-content {
+  min-width: 0;
+}
 .admin-shell {
   min-height: 100vh;
 }
@@ -33,6 +155,8 @@ body {
 }
 .admin-shell h1 {
   letter-spacing: -0.05em;
+  font-size: clamp(1.65rem, 2.5vw, 2rem);
+  line-height: 1.08;
 }
 .admin-shell .metric {
   position: relative;
@@ -133,6 +257,43 @@ button:disabled {
 .panel h2 {
   margin: 0;
   font-size: 1.1rem;
+}
+@media (max-width: 800px) {
+  .control-sidebar {
+    inset: auto 0 0;
+    width: auto;
+    height: 4.5rem;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.55rem;
+  }
+  .control-brand,
+  .control-sidebar__foot {
+    display: none;
+  }
+  .control-sidebar nav {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .control-sidebar nav a {
+    justify-content: center;
+    font-size: 0.75rem;
+  }
+  .control-stage {
+    margin-left: 0;
+    padding-bottom: 4.5rem;
+  }
+  .control-topbar {
+    min-height: 4rem;
+    padding: 0.6rem 1rem;
+  }
+  .control-topbar label {
+    width: 100%;
+  }
+  .control-profile div {
+    display: none;
+  }
 }
 .queue-row {
   display: flex;

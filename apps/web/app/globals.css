@@ -17,6 +17,12 @@
   --warning: #9a5b00;
   --danger: #b42336;
   --shadow: 0 12px 34px rgb(28 24 54 / 0.08);
+  --type-display: clamp(2.45rem, 5vw, 4.6rem);
+  --type-page: clamp(1.7rem, 3vw, 2.25rem);
+  --type-section: clamp(1.25rem, 2vw, 1.55rem);
+  --type-card: 1rem;
+  --type-body: 0.875rem;
+  --type-support: 0.8125rem;
 }
 :root[data-theme='dark'] {
   color-scheme: dark;
@@ -54,6 +60,34 @@ body {
     'Segoe UI',
     sans-serif;
   text-rendering: optimizeLegibility;
+  font-size: var(--type-body);
+  line-height: 1.55;
+}
+h1,
+h2,
+h3,
+p {
+  text-wrap: pretty;
+}
+h1,
+h2,
+h3 {
+  letter-spacing: -0.025em;
+}
+.page-title {
+  font-size: var(--type-page);
+  line-height: 1.1;
+  font-weight: 900;
+}
+.section-title {
+  font-size: var(--type-section);
+  line-height: 1.2;
+  font-weight: 900;
+}
+.surface,
+.market-card,
+.product-card {
+  border-color: color-mix(in srgb, var(--line) 82%, transparent);
 }
 a {
   color: inherit;
