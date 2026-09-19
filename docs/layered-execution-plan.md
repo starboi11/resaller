@@ -43,7 +43,7 @@ Status: `BASELINE`; the earlier visual board is the canonical appearance referen
 Visual contract:
 
 - Black/deep-green surfaces with neon mint primary actions.
-- Resaller `R` identity, “BUY · SELL · GROW”, and the “Sotib ol. Sot. O‘s.” message.
+- Resaller `R` identity and the approved homepage message: “Xarid qilish va sotishning yaxshiroq yo‘li.” The earlier “Sotib ol. Sot. O‘s.” draft is superseded.
 - Dense desktop marketplace and compact mobile commerce layout.
 - Buyer navigation: home, search, cart, chat, profile.
 - Product, filter, order tracking, and order-chat mobile patterns follow the reference board.

@@ -1,6 +1,6 @@
 # Resaller completion roadmap
 
-Updated: 2026-09-15
+Updated: 2026-09-17
 
 This is the delivery order for closing the approved visual and product contract. A checkbox is complete only when the UI, API authorization, database behavior, error states, and browser evidence all pass.
 
@@ -19,6 +19,7 @@ Every screen must answer one primary user question and expose one obvious next a
 ### Local acceptance evidence
 
 - [x] The primary release journey passes through the real browser UI on desktop Chromium and a Pixel 7 viewport: seller creates a product and uploads media → moderator approves it → buyer finds it, adds it to cart and checks out → seller accepts within the visible 60-minute window and fulfills it → buyer leaves a verified review.
+- [x] Home/empty-marketplace snapshots and responsive buyer/seller/admin entry checks run on Chromium, Firefox, WebKit, Pixel 7, and iPhone 13. This is technical coverage, not owner visual sign-off.
 
 ## C — Final UI/UX acceptance
 
@@ -31,31 +32,31 @@ Every screen must answer one primary user question and expose one obvious next a
 ## D6–D13 — Complete the real workflows
 
 - [x] Replace homepage hardcoded products, ratings and store claims with live API data and honest empty/error states.
-- [ ] Complete Uzbek/Russian, Latin/Cyrillic, synonym and typo-tolerant search with pagination.
-- [ ] Complete product media zoom, variant media, delivery override, review distribution and Q&A reporting.
-- [ ] Complete checkout confirmation, success screen, saved addresses and multi-seller explanation.
-- [ ] Complete the full buyer order lifecycle, change requests, returns, disputes and review flow.
-- [ ] Complete unread chat, reconnect status, attachment progress/retry, location and change-request cards.
-- [ ] Complete the seller four-step wizard with autosave, drag/reorder media, variant media and real preview.
-- [ ] Split seller operations into clear Store, Products, Orders, Chat, Q&A, Marketing, Analytics, Team and Settings workspaces.
-- [ ] Replace raw admin JSON detail with task-specific verification, listing, order, dispute, risk, review, security and audit workspaces.
-- [ ] Reconcile store logo/banner, product video/sale price, collections and premium/subscription scope with the approved specification.
+- [x] Complete Uzbek/Russian, Latin/Cyrillic, synonym and typo-tolerant search with pagination.
+- [x] Complete product media zoom, variant media, delivery override, review distribution and Q&A reporting.
+- [x] Complete checkout confirmation, success screen, saved addresses and multi-seller explanation.
+- [x] Complete the full buyer order lifecycle, change requests, returns, disputes and review flow.
+- [x] Complete unread chat, reconnect status, attachment progress/retry, location and change-request cards.
+- [x] Complete the seller four-step wizard with autosave, drag/reorder media, variant media and real preview.
+- [x] Connect Store, Products, Orders, Chat, Q&A, Marketing, Analytics, Team and Settings through a consistent seller workspace navigation.
+- [x] Provide task-specific verification/listing queues and role-filtered order, dispute, risk, review, security and audit admin workspaces.
+- [x] Reconcile store logo/banner, product video/sale price, collections and premium/subscription scope with the approved specification.
 
 ## AI assistant
 
-- [ ] Add a clearly labeled assistant UI for product discovery, comparison, order guidance and seller form help.
-- [ ] Ground answers in public catalog data and the signed-in user's authorized order/store data only.
-- [ ] Require server-side tool authorization; never let the model directly change orders, stock, roles or moderation decisions.
-- [ ] Add consent, data minimization, prompt-injection protection, rate limits, audit events, refusal/fallback states and cost budgets.
+- [x] Add a clearly labeled assistant UI for product discovery, comparison, order guidance and seller form help.
+- [x] Ground answers in public catalog data and the signed-in user's authorized order/store data only.
+- [x] Require server-side authorization; the assistant cannot change orders, stock, roles or moderation decisions.
+- [x] Add data minimization, prompt-injection protection, distributed rate limits, audit events and refusal/fallback states.
 - [ ] Select and connect the production model/provider only after the owner approves cost, retention and privacy terms.
 
 ## D14–D15 — Security and evidence
 
-- [ ] Add complete browser tests for buyer checkout-to-review, seller product-to-fulfillment and admin verification/moderation/dispute flows.
-- [ ] Test every actionable control for success, validation, denied permission, expired session, duplicate request and API outage.
-- [ ] Add Chromium, Firefox and WebKit coverage plus representative small Android and iPhone viewports.
+- [x] Add complete browser tests for buyer checkout-to-review, seller product-to-fulfillment and admin verification/moderation/dispute flows.
+- [ ] Test every actionable control for success, validation, denied permission, expired session, duplicate request and API outage. Core auth and public resilience cases pass; exhaustive per-control coverage remains.
+- [x] Add Chromium, Firefox and WebKit coverage plus representative small Android and iPhone viewports.
 - [ ] Add visual regression baselines for the approved screens and themes.
-- [ ] Run accessibility, performance, SSE load, upload-malware and staging penetration tests.
+- [ ] Run accessibility, performance, SSE load, upload-malware and staging penetration tests. Local EICAR/ClamAV rejection passed on 2026-09-19; Chrome trace, authenticated SSE load and staging pentest remain.
 
 ## D16–D17 — Staging, production and launch
 

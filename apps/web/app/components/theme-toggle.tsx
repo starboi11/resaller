@@ -14,16 +14,18 @@ function applyTheme(theme: Theme) {
 }
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>('system');
+  const [theme, setTheme] = useState<Theme>('dark');
   useEffect(() => {
     const saved = localStorage.getItem('resaller-theme');
     const initial: Theme =
-      saved === 'light' || saved === 'dark' ? saved : 'system';
+      saved === 'light' || saved === 'dark' || saved === 'system'
+        ? saved
+        : 'dark';
     setTheme(initial);
     applyTheme(initial);
     const media = window.matchMedia('(prefers-color-scheme: dark)');
     const update = () => {
-      if ((localStorage.getItem('resaller-theme') ?? 'system') === 'system')
+      if (localStorage.getItem('resaller-theme') === 'system')
         applyTheme('system');
     };
     media.addEventListener('change', update);

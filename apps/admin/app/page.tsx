@@ -286,7 +286,7 @@ export default function AdminHome() {
             <Metric label="Xavfsizlik / 24s" value={queue.securityEvents24h} />
           </section>
           <section className="mt-8 grid gap-6 lg:grid-cols-2">
-            <QueueCard
+            <div id="verification"><QueueCard
               title="Seller verification"
               empty="Tekshiriladigan seller yo‘q."
             >
@@ -326,7 +326,7 @@ export default function AdminHome() {
                   </div>
                 </article>
               ))}
-            </QueueCard>
+            </QueueCard></div>
             <QueueCard
               title="Do‘kon tekshiruvi"
               empty="Tekshiriladigan do‘kon yo‘q."
@@ -359,7 +359,7 @@ export default function AdminHome() {
                 </article>
               ))}
             </QueueCard>
-            <QueueCard
+            <div id="listings"><QueueCard
               title="Mahsulot tekshiruvi"
               empty="Tekshiriladigan mahsulot yo‘q."
             >
@@ -390,7 +390,7 @@ export default function AdminHome() {
                   </div>
                 </article>
               ))}
-            </QueueCard>
+            </QueueCard></div>
           </section>
         </>
       )}

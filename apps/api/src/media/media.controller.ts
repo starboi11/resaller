@@ -170,6 +170,7 @@ export class MediaController {
   ) {
     const image = await this.media.publicImage(storageKey);
     return reply
+      .header('cross-origin-resource-policy', 'cross-origin')
       .header('cache-control', 'public, max-age=86400, immutable')
       .type(image.mimeType)
       .send(image.bytes);

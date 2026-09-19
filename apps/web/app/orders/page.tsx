@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Skeleton, StatePanel } from '@resaller/ui';
+import { orderStatusLabel } from '../lib/order-status';
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
 type Order = {
   publicId: string;
@@ -97,7 +98,7 @@ export default function Orders() {
                 </p>
               </div>
               <span className="h-fit rounded-full bg-[var(--brand-soft)] px-3 py-1 text-sm font-bold text-[var(--brand-strong)]">
-                {order.status}
+                {orderStatusLabel(order.status)}
               </span>
             </div>
             <div className="mt-5 flex justify-between border-t border-[var(--line)] pt-4 text-sm">

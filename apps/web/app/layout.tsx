@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: { default: 'Resaller.uz', template: '%s — Resaller.uz' },
   description: 'O‘zbekistondagi ishonchli marketplace',
 };
-const themeScript = `(function(){try{var t=localStorage.getItem('resaller-theme')||'system';var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.style.colorScheme=d?'dark':'light'}catch(e){}})()`;
+const themeScript = `(function(){try{var t=localStorage.getItem('resaller-theme')||'dark';var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.style.colorScheme=d?'dark':'light'}catch(e){}})()`;
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {

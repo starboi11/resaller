@@ -1,5 +1,12 @@
-import { expect, test, type BrowserContext, type Page } from '@playwright/test';
+import {
+  devices,
+  expect,
+  test,
+  type BrowserContext,
+  type Page,
+} from '@playwright/test';
 import pg from 'pg';
+import { orderStatusLabel } from '../apps/web/app/lib/order-status';
 
 const WEB = 'http://localhost:3000';
 const ADMIN = 'http://localhost:3001';
@@ -54,10 +61,10 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
   browser,
 }, testInfo) => {
   test.skip(
-    testInfo.project.name !== 'desktop-chromium',
-    'The full transactional journey runs once; cross-browser UI coverage is provided by the remaining suite.',
+    testInfo.project.name === 'mobile-iphone' && process.platform === 'win32',
+    'The Windows WebKit mobile runner stalls during the long multi-context transaction. iPhone layout and authenticated modules remain covered by the responsive suite.',
   );
-  test.setTimeout(150_000);
+  test.setTimeout(testInfo.project.name === 'mobile-iphone' ? 360_000 : 240_000);
   const database = new pg.Client({
     connectionString: process.env.DATABASE_URL,
   });
@@ -68,9 +75,25 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
   const adminName = `journey_admin_${stamp}`.slice(0, 32);
   const productName = `Journey mahsulot ${stamp}`;
   const contexts: BrowserContext[] = [];
+  const contextOptions =
+    testInfo.project.name === 'mobile-iphone'
+      ? devices['iPhone 13']
+      : testInfo.project.name === 'mobile-android'
+        ? devices['Pixel 7']
+      : { viewport: { width: 1440, height: 900 } };
+  const capture = async (page: Page, name: string) => {
+    // Dedicated visual suites own device screenshots. Keeping transactional
+    // evidence on Chromium avoids WebKit spending minutes serializing long pages.
+    if (testInfo.project.name !== 'desktop-chromium') return;
+    await page.screenshot({
+      path: testInfo.outputPath(`${name}.png`),
+      fullPage: true,
+      animations: 'disabled',
+    });
+  };
 
   try {
-    const sellerContext = await browser.newContext();
+    const sellerContext = await browser.newContext(contextOptions);
     contexts.push(sellerContext);
     const sellerPage = await register(sellerContext, WEB, sellerName);
     await createStore(sellerPage, stamp);
@@ -91,6 +114,8 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
 
     await sellerPage.reload();
     const wizard = sellerPage.locator('form.product-wizard');
+    await expect(wizard).toBeVisible();
+    await capture(sellerPage, 'seller-wizard');
     await wizard.getByPlaceholder('Mahsulot nomi').fill(productName);
     await wizard
       .getByPlaceholder('Batafsil tavsif')
@@ -112,14 +137,7 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
     await expect(productCard).toBeVisible();
     await productCard
       .locator('input[type=file][accept*="image/"]')
-      .setInputFiles({
-        name: 'journey-product.png',
-        mimeType: 'image/png',
-        buffer: Buffer.from(
-          'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
-          'base64',
-        ),
-      });
+      .setInputFiles('apps/web/public/brand/resaller-cinematic-hero.webp');
     await expect(
       sellerPage.getByText('Rasm siqildi va thumbnail yaratildi.'),
     ).toBeVisible();
@@ -128,7 +146,7 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
       .click();
     await expect(productCard).toContainText('PENDING_REVIEW');
 
-    const adminContext = await browser.newContext();
+    const adminContext = await browser.newContext(contextOptions);
     contexts.push(adminContext);
     const adminPage = await register(adminContext, ADMIN, adminName);
     await database.query(
@@ -140,6 +158,16 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
       .locator('article.queue-row')
       .filter({ hasText: productName });
     await expect(moderationRow).toBeVisible();
+    await capture(adminPage, 'admin-moderation');
+    await adminPage.getByRole('link', { name: 'Barcha modullar' }).click();
+    await expect(
+      adminPage.getByRole('heading', { name: 'Operatsion modullar' }),
+    ).toBeVisible();
+    await adminPage.getByRole('link', { name: 'Sharhlar' }).click();
+    await expect(adminPage).toHaveURL(/\/operations#reviews$/);
+    await expect(adminPage.getByRole('heading', { name: /Sharhlar \(/ })).toBeVisible();
+    await capture(adminPage, 'admin-operations');
+    await adminPage.goto(ADMIN);
     await moderationRow.getByRole('button', { name: 'Tasdiqlash' }).click();
     const decision = adminPage.getByRole('dialog', {
       name: 'Moderatsiya qarori',
@@ -157,20 +185,64 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
     const listingPublicId = listing.rows[0]?.publicId;
     expect(listingPublicId).toBeTruthy();
 
-    const buyerContext = await browser.newContext();
+    const buyerContext = await browser.newContext(contextOptions);
     contexts.push(buyerContext);
     const buyerPage = await register(buyerContext, WEB, buyerName);
+    await buyerPage.getByRole('button', { name: 'AI yordamchini ochish' }).click();
+    await buyerPage.getByLabel('Savolingiz').fill(`${productName} ni top`);
+    await buyerPage.getByRole('button', { name: 'Yordam so‘rash' }).click();
+    await expect(
+      buyerPage.locator('.ai-assistant__reply').getByRole('link', { name: new RegExp(productName) }),
+    ).toBeVisible();
+    await buyerPage.locator('.ai-assistant__panel header button').click();
     await buyerPage.goto(
       `${WEB}/marketplace?q=${encodeURIComponent(productName)}`,
     );
     await buyerPage
       .getByRole('link', { name: new RegExp(productName) })
       .click();
+    await expect(buyerPage).toHaveURL(/\/product\//);
+    await expect(
+      buyerPage.getByRole('heading', { name: productName }),
+    ).toBeVisible();
+    const imageSrc = await buyerPage
+      .locator('.product-gallery img')
+      .first()
+      .getAttribute('src');
+    expect(imageSrc).toBeTruthy();
+    const imageResponse = await buyerPage.request.get(imageSrc!);
+    expect(imageResponse.status(), await imageResponse.text()).toBe(200);
+    expect(imageResponse.headers()['content-type']).toContain('image/webp');
+    expect(imageResponse.headers()['cross-origin-resource-policy']).toBe(
+      'cross-origin',
+    );
+    expect((await imageResponse.body()).length).toBeGreaterThan(0);
+    const browserImage = await buyerPage.evaluate(async (src) => {
+      const response = await fetch(src);
+      return {
+        status: response.status,
+        type: response.headers.get('content-type'),
+        size: (await response.arrayBuffer()).byteLength,
+      };
+    }, imageSrc!);
+    expect(browserImage.status).toBe(200);
+    expect(browserImage.type).toContain('image/webp');
+    expect(browserImage.size).toBeGreaterThan(0);
+    await expect
+      .poll(() =>
+        buyerPage
+          .locator('.product-gallery img')
+          .first()
+          .evaluate((image) => (image as HTMLImageElement).naturalWidth),
+      )
+      .toBeGreaterThan(0);
+    await capture(buyerPage, 'buyer-product');
     await buyerPage.getByRole('button', { name: 'Savatga qo‘shish' }).click();
     await expect(
       buyerPage.getByRole('button', { name: 'Savatga qo‘shildi ✓' }),
     ).toBeVisible();
     await buyerPage.goto(`${WEB}/cart`);
+    await capture(buyerPage, 'buyer-cart');
     await buyerPage.getByPlaceholder('Ism va familiya').fill('Journey Buyer');
     await buyerPage.getByPlaceholder('Telefon').fill('+998901234567');
     await buyerPage.getByPlaceholder('Viloyat / shahar').fill('Toshkent');
@@ -180,6 +252,14 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
     await buyerPage.getByRole('button', { name: 'Buyurtma berish' }).click();
     await buyerPage.getByRole('link', { name: 'Buyurtmani kuzatish' }).click();
     await expect(buyerPage.getByRole('timer')).toContainText('60 daqiqada');
+    await buyerPage
+      .getByPlaceholder('Xabar yozing…')
+      .fill('Assalomu alaykum, buyurtmam qachon jo‘natiladi?');
+    await buyerPage.getByRole('button', { name: 'Yuborish' }).click();
+    await expect(
+      buyerPage.getByText('Assalomu alaykum, buyurtmam qachon jo‘natiladi?'),
+    ).toBeVisible();
+    await capture(buyerPage, 'buyer-order-chat');
     const orderUrl = buyerPage.url();
     expect(orderUrl).toContain('/orders/');
 
@@ -193,11 +273,18 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
       'DELIVERED',
       'COMPLETED',
     ]) {
+      const transitionPending = sellerPage.waitForResponse((response) =>
+        response.url().endsWith('/transition') && response.request().method() === 'POST',
+      );
       await sellerPage
-        .getByRole('button', { name: `${status} holatiga o‘tkazish` })
+        .getByRole('button', {
+          name: `${orderStatusLabel(status)} holatiga o‘tkazish`,
+        })
         .click();
+      const transitionResponse = await transitionPending;
+      expect(transitionResponse.ok(), await transitionResponse.text()).toBe(true);
       await expect(
-        sellerPage.getByText(status, { exact: true }).first(),
+        sellerPage.getByText(orderStatusLabel(status), { exact: true }).first(),
       ).toBeVisible();
     }
 
@@ -207,7 +294,12 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
     await buyerPage
       .getByLabel('Sharh')
       .fill('Mahsulot va buyurtma jarayoni juda yaxshi ishladi.');
+    const reviewResponsePending = buyerPage.waitForResponse((response) =>
+      response.url().endsWith('/review') && response.request().method() === 'POST',
+    );
     await buyerPage.getByRole('button', { name: 'Sharhni yuborish' }).click();
+    const reviewResponse = await reviewResponsePending;
+    expect(reviewResponse.status(), await reviewResponse.text()).toBe(201);
     await expect(
       buyerPage.getByRole('button', { name: 'Sharh yozish' }),
     ).toHaveCount(0);

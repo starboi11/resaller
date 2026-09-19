@@ -47,10 +47,13 @@ describe('AssistantService', () => {
       {
         publicId: 'product-1',
         nameUz: 'Telefon',
+        nameRu: 'Телефон',
+        descriptionUz: 'Yangi smartfon',
+        descriptionRu: 'Новый смартфон',
         priceMinor: 2_000_000,
         salePriceMinor: 1_800_000,
         currency: 'UZS',
-        store: { nameUz: 'Tech', sellerProfile: { trustBadge: 'TRUSTED' } },
+        store: { nameUz: 'Tech', nameRu: 'Тех', sellerProfile: { trustBadge: 'TRUSTED' } },
         variants: [{ inventory: { available: 3 } }],
       },
     ]);
@@ -64,7 +67,20 @@ describe('AssistantService', () => {
       id: 'product-1',
       type: 'PRODUCT',
     });
-    expect(findMany).toHaveBeenCalledWith(expect.objectContaining({ take: 6 }));
+    expect(findMany).toHaveBeenCalledWith(expect.objectContaining({ take: 250 }));
+  });
+
+  it('uses the same Cyrillic and typo-tolerant matching as marketplace search', async () => {
+    const findMany = vi.fn().mockResolvedValue([{
+      publicId: 'product-2', nameUz: 'Quloqchin', nameRu: 'Наушники',
+      descriptionUz: 'Simsiz audio', descriptionRu: 'Беспроводное аудио',
+      priceMinor: 300_000, salePriceMinor: null, currency: 'UZS',
+      store: { nameUz: 'Audio', nameRu: 'Аудио', sellerProfile: { trustBadge: 'TRUSTED' } },
+      variants: [{ inventory: { available: 2 } }],
+    }]);
+    const { assistant } = service({ listing: { findMany } });
+    const result = await assistant.answer(user, { mode: 'DISCOVER', message: 'қулоқчн' });
+    expect(result.sources[0]?.id).toBe('product-2');
   });
 
   it('never reveals an order to an unrelated user', async () => {

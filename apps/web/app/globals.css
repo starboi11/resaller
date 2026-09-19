@@ -2565,3 +2565,173 @@ a {
   font-weight: 900;
   color: var(--brand-strong);
 }
+
+/* Shared final hierarchy for discovery and all commerce workspaces. */
+.section-heading h2,
+.product-community h2,
+.checkout-card h2,
+.account-grid h2,
+.seller-queue h2 {
+  font-size: var(--type-section);
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+.buyer-workspace > h1,
+.seller-workspace > h1,
+.seller-manage-workspace h1,
+.catalog-title h1 {
+  font-size: var(--type-page);
+  line-height: 1.12;
+  letter-spacing: -0.045em;
+}
+.product-grid,
+.catalog-grid,
+.collection-grid,
+.account-grid,
+.seller-metrics {
+  gap: clamp(0.8rem, 1.4vw, 1.2rem);
+}
+.product-card,
+.catalog-card,
+.collection-grid > a,
+.account-grid > section,
+.seller-metrics article,
+.order-card,
+.cart-line,
+.checkout-card,
+.seller-queue,
+.filter-panel {
+  border-radius: 1.15rem;
+  box-shadow: var(--shadow);
+}
+.product-card:hover,
+.catalog-card:hover,
+.collection-grid > a:hover,
+.order-card:hover {
+  border-color: color-mix(in srgb, var(--brand) 65%, var(--line));
+  box-shadow: 0 15px 35px color-mix(in srgb, var(--brand) 12%, transparent);
+}
+.product-card__body,
+.catalog-card__body {
+  padding: 0.95rem;
+}
+.product-card h3,
+.catalog-card__body h2 {
+  font-size: var(--type-card);
+  line-height: 1.35;
+  font-weight: 800;
+}
+.product-card p,
+.catalog-card__body p,
+.store-line,
+.catalog-card__body > small,
+.product-card small {
+  font-size: var(--type-support);
+  line-height: 1.4;
+}
+.product-card strong,
+.catalog-card__body strong {
+  font-size: 1rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+.store-line b {
+  font-size: 0.72rem;
+}
+.catalog-breadcrumb,
+.catalog-title p,
+.catalog-sort,
+.filter-panel fieldset label,
+.filter-search input,
+.price-fields input,
+.catalog-chips a,
+.mobile-filter-panel label,
+.mobile-sort-label select,
+.wizard-steps button {
+  font-size: var(--type-support);
+}
+.filter-panel legend,
+.mobile-filter-panel legend,
+.checkout-field span,
+.app-dialog label {
+  font-size: var(--type-body);
+}
+.filter-panel,
+.checkout-card,
+.order-summary,
+.order-timeline,
+.private-chat,
+.seller-queue,
+.seller-manage-workspace > section.surface {
+  border-color: color-mix(in srgb, var(--brand) 18%, var(--line));
+}
+.filter-search,
+.catalog-sort select,
+.mobile-sort-label select,
+.price-fields input {
+  min-height: 44px;
+  color: var(--text);
+}
+.wizard-steps button {
+  min-height: 3.25rem;
+  line-height: 1.25;
+}
+.chat-bubble {
+  line-height: 1.5;
+}
+.chat-bubble small,
+.location-card small,
+.order-change-card [data-status] {
+  font-size: 0.75rem;
+}
+.rs-state,
+.catalog-empty,
+.product-preview,
+.media-dropzone {
+  border-radius: 1.15rem;
+}
+@media (max-width: 1099px) {
+  .product-grid .product-card:nth-child(n + 5) {
+    display: block;
+  }
+}
+@media (max-width: 700px) {
+  .buyer-workspace > h1,
+  .seller-workspace > h1,
+  .seller-manage-workspace h1,
+  .catalog-title h1 {
+    font-size: clamp(1.65rem, 7vw, 2rem);
+  }
+  .catalog-card__body,
+  .product-card__body {
+    padding: 0.8rem;
+  }
+  .product-card h3,
+  .catalog-card__body h2 {
+    font-size: 0.9rem;
+  }
+  .product-card strong,
+  .catalog-card__body strong {
+    font-size: 0.9rem;
+  }
+  .store-line {
+    flex-wrap: wrap;
+  }
+  .store-line b {
+    margin-left: 0;
+  }
+  .collection-grid > a {
+    min-height: 10rem;
+  }
+  .wizard-steps {
+    gap: 0.25rem;
+  }
+  .wizard-steps button {
+    padding: 0.35rem 0.2rem;
+    font-size: 0.72rem;
+  }
+  .app-dialog {
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+  }
+}

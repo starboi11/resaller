@@ -10,6 +10,13 @@ export class RedisService implements OnModuleDestroy {
   async ping(): Promise<boolean> {
     try { if (this.client.status === 'wait') await this.client.connect(); return (await this.client.ping()) === 'PONG'; } catch { return false; }
   }
+  async fixedWindowLimit(key: string, limit: number, ttlSeconds: number): Promise<boolean> {
+    await this.ready();
+    const namespaced = `resaller:limit:${key}`;
+    const count = await this.client.incr(namespaced);
+    if (count === 1) await this.client.expire(namespaced, ttlSeconds);
+    return count <= limit;
+  }
   async enqueueNotificationJob(id: string, payload: string, runAt = Date.now()): Promise<void> {
     await this.ready();
     await this.client.multi().hset('resaller:notify:jobs', id, payload).zadd('resaller:notify:scheduled', runAt, id).exec();

@@ -862,49 +862,49 @@ export class CommerceService {
   }
 
   async marketplace(query: MarketplaceQueryDto) {
-    const page = query.page ?? 1;
-    const pageSize = query.pageSize ?? 12;
-    const listings = await this.prisma.listing.findMany({
-      where: {
-        status: 'ACTIVE',
-        deletedAt: null,
-        store: {
-          status: 'ACTIVE',
-          vacationMode: false,
-          ...(query.trust
-            ? { sellerProfile: { trustBadge: query.trust } }
-            : {}),
-        },
-        ...(query.category
-          ? {
-              category: {
-                OR: [
-                  { slug: query.category },
-                  { nameUz: { equals: query.category, mode: 'insensitive' } },
-                ],
-              },
-            }
-          : {}),
-        ...(query.minPrice !== undefined || query.maxPrice !== undefined
-          ? {
-              priceMinor: {
-                ...(query.minPrice !== undefined
-                  ? { gte: BigInt(query.minPrice) }
-                  : {}),
-                ...(query.maxPrice !== undefined
-                  ? { lte: BigInt(query.maxPrice) }
-                  : {}),
-              },
-            }
+    // Fastify query values can still arrive as strings when this service is
+    // called outside the validation pipe (tests/internal callers included).
+    const page = Math.max(1, Number(query.page ?? 1));
+    const pageSize = Math.min(48, Math.max(6, Number(query.pageSize ?? 12)));
+    const where = {
+      status: 'ACTIVE' as const,
+      deletedAt: null,
+      store: {
+        status: 'ACTIVE' as const,
+        vacationMode: false,
+        ...(query.trust
+          ? { sellerProfile: { trustBadge: query.trust } }
           : {}),
       },
+      ...(query.category
+        ? {
+            category: {
+              OR: [
+                { slug: query.category },
+                { nameUz: { equals: query.category, mode: 'insensitive' as const } },
+              ],
+            },
+          }
+        : {}),
+      ...(query.minPrice !== undefined || query.maxPrice !== undefined
+        ? {
+            priceMinor: {
+              ...(query.minPrice !== undefined ? { gte: BigInt(query.minPrice) } : {}),
+              ...(query.maxPrice !== undefined ? { lte: BigInt(query.maxPrice) } : {}),
+            },
+          }
+        : {}),
+    };
+    const hasSearch = Boolean(query.q?.trim());
+    const listings = await this.prisma.listing.findMany({
+      where,
       orderBy:
         query.sort === 'price-asc'
           ? { priceMinor: 'asc' }
           : query.sort === 'price-desc'
             ? { priceMinor: 'desc' }
             : { createdAt: 'desc' },
-      take: 500,
+      ...(hasSearch ? {} : { skip: (page - 1) * pageSize, take: pageSize }),
       select: {
         publicId: true,
         nameUz: true,
@@ -966,10 +966,12 @@ export class CommerceService {
       .filter((listing) => !query.q || listing.score > 0);
     if (query.q && (!query.sort || query.sort === 'relevance'))
       ranked.sort((a, b) => b.score - a.score);
-    const total = ranked.length;
+    const total = hasSearch
+      ? ranked.length
+      : await this.prisma.listing.count({ where });
     const start = (page - 1) * pageSize;
     return {
-      items: ranked.slice(start, start + pageSize),
+      items: hasSearch ? ranked.slice(start, start + pageSize) : ranked,
       pagination: {
         page,
         pageSize,

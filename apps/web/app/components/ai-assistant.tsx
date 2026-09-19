@@ -81,11 +81,13 @@ export function AiAssistant() {
       <button
         className="ai-assistant__toggle"
         type="button"
+        aria-label={open ? 'AI yordamchini yopish' : 'AI yordamchini ochish'}
         aria-expanded={open}
         aria-controls="resaller-ai-panel"
         onClick={() => setOpen((value) => !value)}
       >
-        <span aria-hidden="true">✦</span> AI yordamchi
+        <span aria-hidden="true">✦</span>
+        <span className="ai-assistant__toggle-label">AI yordamchi</span>
       </button>
       {open && (
         <section
@@ -107,8 +109,9 @@ export function AiAssistant() {
             </button>
           </header>
           <p className="ai-assistant__notice">
-            Javoblar faqat katalog va sizga ruxsat berilgan ma’lumotlarga
-            asoslanadi. Yordamchi order, stock yoki rolni o‘zgartirmaydi.
+            Hozir xavfsiz lokal yordamchi ishlaydi. Javoblar faqat katalog va
+            sizga ruxsat berilgan ma’lumotlarga asoslanadi. Yordamchi order,
+            stock yoki rolni o‘zgartirmaydi.
           </p>
           <form onSubmit={ask}>
             <label>

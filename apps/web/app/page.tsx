@@ -63,7 +63,7 @@ async function getHomeData() {
 
 export default async function Home() {
   const { listings, categories, unavailable } = await getHomeData();
-  const products = listings.slice(0, 5);
+  const products = listings.slice(0, 6);
   const stores = [
     ...new Map(
       listings.map((item) => [item.store.username, item.store]),
@@ -77,13 +77,12 @@ export default async function Home() {
         <div className="market-hero__copy">
           <p className="market-hero__kicker">Oddiy marketplace’dan ko‘proq.</p>
           <h1>
-            Sotib ol. <span>Sot. O‘s.</span>
+            Xarid qilish va sotishning <span>yaxshiroq yo‘li.</span>
           </h1>
-          <h2>Mahsulot topish va savdo qilish uchun sodda marketplace.</h2>
-          <p>
-            Mahsulotni toping, do‘konni tekshiring va buyurtma holatini bir
-            joyda kuzating.
-          </p>
+          <h2>
+            Odamlar, mahsulotlar va yangi imkoniyatlar uchun ishonchli platforma.
+          </h2>
+          <p>Katta imkoniyatlar kichik qadamlardan boshlanadi.</p>
           <div className="market-hero__actions">
             <Link className="rs-button" href="/marketplace">
               Mahsulotlarni ko‘rish <b>→</b>
@@ -257,7 +256,7 @@ export default async function Home() {
       <footer className="market-footer shell">
         <div>
           <strong>RESALLER</strong>
-          <p>Sotib ol · Sot · O‘s</p>
+          <p>Xarid qilish va sotishning yaxshiroq yo‘li.</p>
         </div>
         <div>
           <b>Marketplace</b>

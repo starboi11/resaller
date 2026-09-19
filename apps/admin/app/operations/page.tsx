@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
+import { adminModules, canAccessModule, type AdminModule } from '../components/admin-modules';
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
 type Row = Record<string, unknown> & {
   id?: string;
@@ -19,29 +20,9 @@ type Row = Record<string, unknown> & {
   score?: number;
   roles?: string[];
 };
-const modules = [
-  ['orders', 'Buyurtmalar'],
-  ['risk-events', 'Risk signallari'],
-  ['users', 'Foydalanuvchilar'],
-  ['reviews', 'Sharhlar'],
-  ['security-events', 'Xavfsizlik'],
-  ['disputes', 'Nizolar'],
-  ['question-reports', 'Q&A reportlar'],
-  ['audit', 'Audit tarixi'],
-] as const;
-const moduleRoles: Record<(typeof modules)[number][0], string[]> = {
-  orders: ['SUPER_ADMIN', 'SUPPORT_ADMIN', 'DISPUTE_ADMIN'],
-  'risk-events': ['SUPER_ADMIN', 'SECURITY_ADMIN'],
-  users: ['SUPER_ADMIN', 'SUPPORT_ADMIN', 'SECURITY_ADMIN'],
-  reviews: ['SUPER_ADMIN', 'MODERATOR'],
-  'security-events': ['SUPER_ADMIN', 'SECURITY_ADMIN'],
-  disputes: ['SUPER_ADMIN', 'DISPUTE_ADMIN'],
-  'question-reports': ['SUPER_ADMIN', 'MODERATOR'],
-  audit: ['SUPER_ADMIN', 'SECURITY_ADMIN'],
-};
 export default function AdminOperations() {
   const [data, setData] = useState<Record<string, Row[]>>({});
-  const [active, setActive] = useState<(typeof modules)[number][0]>('users');
+  const [active, setActive] = useState<AdminModule>('users');
   const [message, setMessage] = useState('Modullar yuklanmoqda…');
   const [selected, setSelected] = useState<Row | null>(null);
   const [decision, setDecision] = useState<Row | null>(null);
@@ -56,11 +37,12 @@ export default function AdminOperations() {
       ? ((await identity.json()) as { user: { roles: string[] } }).user.roles
       : [];
     setRoles(currentRoles);
-    const available = modules.filter(([key]) =>
-      moduleRoles[key].some((role) => currentRoles.includes(role)),
-    );
-    if (available.length && !available.some(([key]) => key === active))
-      setActive(available[0]![0]);
+    const available = adminModules.filter(([key]) => canAccessModule(key, currentRoles));
+    const requested = window.location.hash.slice(1) as AdminModule;
+    if (available.length) {
+      if (available.some(([key]) => key === requested)) setActive(requested);
+      else if (!available.some(([key]) => key === active)) setActive(available[0]![0]);
+    }
     const entries = await Promise.all(
       available.map(async ([key]) => {
         const response = await fetch(`${API}/admin/${key}`, {
@@ -79,6 +61,15 @@ export default function AdminOperations() {
   useEffect(() => {
     void load();
   }, [load]);
+  useEffect(() => {
+    const syncModule = () => {
+      const requested = window.location.hash.slice(1) as AdminModule;
+      if (adminModules.some(([key]) => key === requested) && canAccessModule(requested, roles))
+        setActive(requested);
+    };
+    window.addEventListener('hashchange', syncModule);
+    return () => window.removeEventListener('hashchange', syncModule);
+  }, [roles]);
   async function patch(path: string, body: unknown) {
     const response = await fetch(`${API}/admin/${path}`, {
       method: 'PATCH',
@@ -119,9 +110,7 @@ export default function AdminOperations() {
       });
   }
   const rows = data[active] ?? [];
-  const visibleModules = modules.filter(([key]) =>
-    moduleRoles[key].some((role) => roles.includes(role)),
-  );
+  const visibleModules = adminModules.filter(([key]) => canAccessModule(key, roles));
   return (
     <main className="admin-shell mx-auto max-w-7xl p-5 sm:p-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
@@ -146,14 +135,24 @@ export default function AdminOperations() {
         {visibleModules.map(([key, label]) => (
           <button
             key={key}
-            onClick={() => setActive(key)}
+            onClick={() => { window.location.hash = key; setActive(key); }}
             className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold ${active === key ? 'bg-emerald-500 text-slate-950' : 'border border-white/10 bg-white/5'}`}
           >
             {label} ({data[key]?.length ?? 0})
           </button>
         ))}
       </nav>
-      <section className="mt-6 grid gap-3">
+      <div className="mt-8 flex flex-wrap items-end justify-between gap-2">
+        <div>
+          <h2 className="text-xl font-black sm:text-2xl">
+            {adminModules.find(([key]) => key === active)?.[1]} ({rows.length})
+          </h2>
+          <p className="mt-1 text-sm text-slate-400">
+            Har bir yozuvning tafsilotini ko‘rib, keyingi amalni tanlang.
+          </p>
+        </div>
+      </div>
+      <section className="operator-cards mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
         {rows.length === 0 && (
           <p className="rounded-2xl border border-white/10 bg-white/5 p-6 text-slate-400">
             Bu modulda ochiq yozuv yo‘q yoki rolingizda ko‘rish ruxsati mavjud
@@ -162,12 +161,12 @@ export default function AdminOperations() {
         )}
         {rows.map((row, index) => (
           <article
-            className="rounded-2xl border border-white/10 bg-white/5 p-5"
+            className="operator-card rounded-2xl border border-white/10 bg-white/5 p-5"
             key={String(row.id ?? row.publicId ?? index)}
           >
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
-                <strong>
+                <strong className="operator-card__title">
                   {String(
                     row.displayId ??
                       row.username ??
@@ -248,7 +247,7 @@ export default function AdminOperations() {
             <div className="flex justify-between">
               <div>
                 <p className="eyebrow">
-                  {modules.find(([key]) => key === active)?.[1]}
+                  {adminModules.find(([key]) => key === active)?.[1]}
                 </p>
                 <h2 className="text-xl font-black">Operator tekshiruvi</h2>
               </div>

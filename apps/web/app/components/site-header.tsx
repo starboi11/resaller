@@ -10,7 +10,7 @@ const links = [
   { href: '/marketplace', label: 'Qidiruv', icon: '⌕' },
   { href: '/cart', label: 'Savat', icon: '🛒' },
   { href: '/orders', label: 'Buyurtmalar', icon: '▣' },
-  { href: '/login', label: 'Profil', icon: '○' },
+  { href: '/account', label: 'Profil', icon: '○' },
 ];
 
 export function SiteHeader() {
@@ -22,14 +22,24 @@ export function SiteHeader() {
       <header className="site-header">
         <div className="shell header-inner">
           <BrandLogo />
-          <Link className="header-category" href="/categories">Kategoriyalar⌄</Link>
+          <Link className="header-category" href="/categories">
+            Kategoriyalar⌄
+          </Link>
           <form className="header-search" action="/marketplace">
             <span aria-hidden="true">⌕</span>
-            <input name="q" aria-label="Mahsulot qidirish" placeholder="Mahsulot, do‘kon yoki xizmat qidiring..." />
+            <input
+              name="q"
+              aria-label="Mahsulot qidirish"
+              placeholder="Mahsulot, do‘kon yoki xizmat qidiring..."
+            />
             <kbd>Ctrl K</kbd>
           </form>
           <nav className="desktop-nav" aria-label="Asosiy navigatsiya">
-            {[{ href: '/favorites', label: 'Sevimlilar' }, { href: '/orders', label: 'Buyurtmalar' }, { href: '/cart', label: 'Savat' }].map((link) => (
+            {[
+              { href: '/favorites', label: 'Sevimlilar' },
+              { href: '/orders', label: 'Buyurtmalar' },
+              { href: '/cart', label: 'Savat' },
+            ].map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -41,10 +51,12 @@ export function SiteHeader() {
           </nav>
           <div className="header-actions">
             <ThemeToggle />
-            <Link href="/login" className="account-link">
-              Kirish
+            <Link href="/account" className="account-link">
+              Hisob
             </Link>
-            <Link href="/seller/manage" className="sell-link">Sotishni boshlash</Link>
+            <Link href="/seller/manage" className="sell-link">
+              Sotishni boshlash
+            </Link>
           </div>
         </div>
       </header>

@@ -3,6 +3,15 @@ import Link from 'next/link';
 import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { StatePanel } from '@resaller/ui';
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
+function DraftImage({ file, name }: { file: File; name: string }) {
+  const [source, setSource] = useState('');
+  useEffect(() => {
+    const url = URL.createObjectURL(file);
+    setSource(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
+  return source ? <img className="product-preview__image" src={source} alt={`${name || 'Draft mahsulot'} preview`} /> : null;
+}
 type Store = {
   publicId: string;
   username: string;
@@ -384,6 +393,13 @@ export default function SellerManage() {
       >
         {message || 'Onboarding, jamoa, sozlama va mahsulotlar bitta joyda.'}
       </p>
+      <nav className="seller-section-nav" aria-label="Seller bo‘limlari">
+        <a href="#store">Store</a><a href="#products">Products</a>
+        <Link href="/seller">Orders</Link><Link href="/seller">Chat</Link>
+        <a href="#questions">Q&amp;A</a><a href="#marketing">Marketing</a>
+        <a href="#marketing">Analytics</a><a href="#team">Team</a>
+        <a href="#settings">Settings</a>
+      </nav>
       {stores?.length === 0 && (
         <section className="mt-7 grid gap-5 lg:grid-cols-3">
           <div className="surface p-5">
@@ -455,7 +471,7 @@ export default function SellerManage() {
         </section>
       )}
       {stores?.map((store) => (
-        <section className="surface mt-7 p-5 sm:p-7" key={store.publicId}>
+        <section id="store" className="surface mt-7 p-5 sm:p-7" key={store.publicId}>
           <div className="flex flex-wrap justify-between gap-4">
             <div>
               <h2 className="text-2xl font-black">{store.nameUz}</h2>
@@ -507,7 +523,7 @@ export default function SellerManage() {
                 </span>
               )}
             </div>
-            <Link
+            <Link id="marketing"
               className="rs-button"
               href={`/seller/marketing/${store.publicId}`}
             >
@@ -515,7 +531,7 @@ export default function SellerManage() {
             </Link>
           </div>
           <div className="mt-6 grid gap-6 lg:grid-cols-2">
-            <form
+            <form id="products"
               data-draft={store.publicId}
               className="product-wizard grid gap-3 rounded-2xl bg-[var(--surface-2)] p-4"
               onSubmit={(event) => void createListing(event, store.publicId)}
@@ -566,36 +582,55 @@ export default function SellerManage() {
               </ol>
               <fieldset hidden={wizardStep !== 1} className="grid gap-3">
                 <legend className="sr-only">Tafsilotlar</legend>
-                <input
-                  className="field"
-                  name="nameUz"
-                  required
-                  minLength={2}
-                  placeholder="Mahsulot nomi"
-                />
-                <input
-                  className="field"
-                  name="nameRu"
-                  placeholder="Название на русском (ixtiyoriy)"
-                />
-                <textarea
-                  className="field min-h-24"
-                  name="descriptionUz"
-                  required
-                  minLength={10}
-                  placeholder="Batafsil tavsif"
-                />
-                <textarea
-                  className="field min-h-20"
-                  name="descriptionRu"
-                  minLength={10}
-                  placeholder="Описание на русском (ixtiyoriy)"
-                />
-                <input
-                  className="field"
-                  name="categorySlug"
-                  placeholder="Kategoriya slug"
-                />
+                <label className="wizard-field">
+                  <span>Mahsulot nomi *</span>
+                  <input
+                    className="field"
+                    name="nameUz"
+                    required
+                    minLength={2}
+                    placeholder="Mahsulot nomi"
+                  />
+                </label>
+                <label className="wizard-field">
+                  <span>
+                    Ruscha nomi <small>(ixtiyoriy)</small>
+                  </span>
+                  <input
+                    className="field"
+                    name="nameRu"
+                    placeholder="Название на русском (ixtiyoriy)"
+                  />
+                </label>
+                <label className="wizard-field">
+                  <span>Batafsil tavsif *</span>
+                  <textarea
+                    className="field min-h-24"
+                    name="descriptionUz"
+                    required
+                    minLength={10}
+                    placeholder="Batafsil tavsif"
+                  />
+                </label>
+                <label className="wizard-field">
+                  <span>
+                    Ruscha tavsif <small>(ixtiyoriy)</small>
+                  </span>
+                  <textarea
+                    className="field min-h-20"
+                    name="descriptionRu"
+                    minLength={10}
+                    placeholder="Описание на русском (ixtiyoriy)"
+                  />
+                </label>
+                <label className="wizard-field">
+                  <span>Kategoriya kodi</span>
+                  <input
+                    className="field"
+                    name="categorySlug"
+                    placeholder="Kategoriya slug"
+                  />
+                </label>
                 <button
                   type="button"
                   className="rs-button"
@@ -684,42 +719,57 @@ export default function SellerManage() {
               <fieldset hidden={wizardStep !== 3} className="grid gap-3">
                 <legend className="sr-only">Narx, stock va variant</legend>
                 <div className="grid grid-cols-2 gap-3">
-                  <input
-                    className="field"
-                    name="priceMinor"
-                    type="number"
-                    min="0"
-                    required
-                    placeholder="Narx"
-                  />
-                  <input
-                    className="field"
-                    name="salePriceMinor"
-                    type="number"
-                    min="0"
-                    placeholder="Chegirma narxi"
-                  />
-                  <input
-                    className="field"
-                    name="stock"
-                    type="number"
-                    min="0"
-                    required
-                    placeholder="Soni"
-                  />
+                  <label className="wizard-field">
+                    <span>Narx, so‘m *</span>
+                    <input
+                      className="field"
+                      name="priceMinor"
+                      type="number"
+                      min="0"
+                      required
+                      placeholder="Narx"
+                    />
+                  </label>
+                  <label className="wizard-field">
+                    <span>Chegirma narxi</span>
+                    <input
+                      className="field"
+                      name="salePriceMinor"
+                      type="number"
+                      min="0"
+                      placeholder="Chegirma narxi"
+                    />
+                  </label>
+                  <label className="wizard-field">
+                    <span>Ombordagi soni *</span>
+                    <input
+                      className="field"
+                      name="stock"
+                      type="number"
+                      min="0"
+                      required
+                      placeholder="Soni"
+                    />
+                  </label>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                  <input
-                    className="field"
-                    name="sku"
-                    required
-                    placeholder="SKU"
-                  />
-                  <input
-                    className="field"
-                    name="deliveryOverride"
-                    placeholder="Delivery override (ixtiyoriy)"
-                  />
+                  <label className="wizard-field">
+                    <span>SKU *</span>
+                    <input
+                      className="field"
+                      name="sku"
+                      required
+                      placeholder="SKU"
+                    />
+                  </label>
+                  <label className="wizard-field">
+                    <span>Yetkazib berish istisnosi</span>
+                    <input
+                      className="field"
+                      name="deliveryOverride"
+                      placeholder="Delivery override (ixtiyoriy)"
+                    />
+                  </label>
                 </div>
                 <div className="flex justify-between">
                   <button type="button" onClick={() => setWizardStep(2)}>
@@ -738,6 +788,12 @@ export default function SellerManage() {
                 <legend className="sr-only">Preview va publish</legend>
                 <div className="product-preview">
                   <span>DESKTOP / MOBILE PREVIEW</span>
+                  {(draftFiles[store.publicId] ?? [])[0] && (
+                    <DraftImage
+                      file={(draftFiles[store.publicId] ?? [])[0]!}
+                      name={draftPreview.nameUz}
+                    />
+                  )}
                   <b>{draftPreview.nameUz || 'Draftdagi mahsulot'}</b>
                   <p className="muted text-sm">
                     {draftPreview.descriptionUz ||
@@ -962,7 +1018,7 @@ export default function SellerManage() {
             </div>
           </div>
           <div className="mt-6 grid gap-5 lg:grid-cols-2">
-            <form
+            <form id="settings"
               className="grid gap-3 rounded-2xl bg-[var(--surface-2)] p-4"
               onSubmit={(event) => void saveSettings(event, store.publicId)}
             >
@@ -1007,7 +1063,7 @@ export default function SellerManage() {
               />
               <button className="rs-button">Sozlamalarni saqlash</button>
             </form>
-            <div className="rounded-2xl bg-[var(--surface-2)] p-4">
+            <div id="team" className="rounded-2xl bg-[var(--surface-2)] p-4">
               <h3 className="font-black">Jamoa</h3>
               <div className="mt-2 flex flex-wrap gap-2">
                 {store.members.map((member) => (
@@ -1038,7 +1094,7 @@ export default function SellerManage() {
             </div>
           </div>
           <div className="mt-6">
-            <h3 className="font-black">Xaridor savollari</h3>
+            <h3 id="questions" className="font-black">Xaridor savollari</h3>
             <div className="mt-3 grid gap-3">
               {store.questions.map((question) => (
                 <article

@@ -2,13 +2,17 @@ import {
   ForbiddenException,
   HttpException,
   HttpStatus,
+  Inject,
   Injectable,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import { createHash } from 'node:crypto';
 import type { AuthenticatedUser } from '../auth/session.guard.js';
 import { PrismaService } from '../infrastructure/prisma.service.js';
+import { RedisService } from '../infrastructure/redis.service.js';
 import type { AssistantRequestDto } from './assistant.dto.js';
+import { marketplaceScore } from '../commerce/marketplace-search.js';
 
 const INJECTION_PATTERNS = [
   /ignore (all|any|the|previous) (instructions|rules)/i,
@@ -25,10 +29,13 @@ type WindowState = { startedAt: number; count: number };
 export class AssistantService {
   private readonly windows = new Map<string, WindowState>();
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    @Inject(PrismaService) private readonly prisma: PrismaService,
+    @Optional() @Inject(RedisService) private readonly redis?: RedisService,
+  ) {}
 
   async answer(user: AuthenticatedUser, input: AssistantRequestDto) {
-    this.enforceRateLimit(user.id);
+    await this.enforceRateLimit(user.id);
     const promptHash = createHash('sha256').update(input.message).digest('hex');
     if (INJECTION_PATTERNS.some((pattern) => pattern.test(input.message))) {
       await this.audit(user.id, input.mode, 'REFUSED_INJECTION', promptHash, 0);
@@ -60,57 +67,58 @@ export class AssistantService {
   }
 
   private async discover(message: string) {
-    const terms = message
-      .toLocaleLowerCase('uz')
-      .split(/[^\p{L}\p{N}]+/u)
-      .filter((term) => term.length > 2)
-      .slice(0, 6);
     const listings = await this.prisma.listing.findMany({
       where: {
         status: 'ACTIVE',
         deletedAt: null,
         store: { status: 'ACTIVE', vacationMode: false },
-        ...(terms.length
-          ? {
-              OR: terms.flatMap((term) => [
-                { nameUz: { contains: term, mode: 'insensitive' as const } },
-                { nameRu: { contains: term, mode: 'insensitive' as const } },
-                {
-                  descriptionUz: {
-                    contains: term,
-                    mode: 'insensitive' as const,
-                  },
-                },
-              ]),
-            }
-          : {}),
       },
-      take: 6,
+      take: 250,
       orderBy: { createdAt: 'desc' },
       select: {
         publicId: true,
         nameUz: true,
+        nameRu: true,
+        descriptionUz: true,
+        descriptionRu: true,
         priceMinor: true,
         salePriceMinor: true,
         currency: true,
         store: {
           select: {
             nameUz: true,
+            nameRu: true,
             sellerProfile: { select: { trustBadge: true } },
           },
         },
         variants: { select: { inventory: { select: { available: true } } } },
       },
     });
-    if (!listings.length)
+    const matches = listings
+      .map((listing) => ({
+        listing,
+        score: marketplaceScore(message, [
+          listing.nameUz,
+          listing.nameRu,
+          listing.descriptionUz,
+          listing.descriptionRu,
+          listing.store.nameUz,
+          listing.store.nameRu,
+        ]),
+      }))
+      .filter(({ score }) => score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 6)
+      .map(({ listing }) => listing);
+    if (!matches.length)
       return {
         answer:
           'Mos faol mahsulot topilmadi. Nomi, kategoriya yoki kerakli xususiyatni aniqroq yozing.',
         sources: [],
       };
     return {
-      answer: `Siz uchun ${listings.length} ta faol mahsulot topdim. Narx, mavjudlik va seller ishonch belgisini solishtiring.`,
-      sources: listings.map((listing) => ({
+      answer: `Siz uchun ${matches.length} ta faol mahsulot topdim. Narx, mavjudlik va seller ishonch belgisini solishtiring.`,
+      sources: matches.map((listing) => ({
         type: 'PRODUCT',
         id: listing.publicId,
         title: listing.nameUz,
@@ -239,7 +247,20 @@ export class AssistantService {
     };
   }
 
-  private enforceRateLimit(userId: string) {
+  private async enforceRateLimit(userId: string) {
+    if (this.redis) {
+      try {
+        if (!(await this.redis.fixedWindowLimit(`assistant:${userId}`, 20, 60)))
+          throw new HttpException(
+            'Assistant rate limit exceeded',
+            HttpStatus.TOO_MANY_REQUESTS,
+          );
+        return;
+      } catch (error) {
+        if (error instanceof HttpException) throw error;
+        // Local development remains usable when Redis is temporarily offline.
+      }
+    }
     const now = Date.now();
     const current = this.windows.get(userId);
     if (!current || now - current.startedAt >= 60_000) {

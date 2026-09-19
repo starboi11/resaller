@@ -21,6 +21,7 @@ body {
   border-right: 1px solid rgb(255 255 255 / 0.08);
   background: rgb(3 18 16 / 0.96);
   padding: 1.35rem 0.9rem;
+  overflow-y: auto;
 }
 .control-brand {
   display: flex;
@@ -61,6 +62,14 @@ body {
   color: #43e7bd;
   box-shadow: inset 3px 0 #00c897;
 }
+.control-nav-heading {
+  padding: 1rem 0.85rem 0.3rem;
+  color: #78918a;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
 .control-sidebar__foot {
   display: grid;
   gap: 0.3rem;
@@ -92,28 +101,11 @@ body {
   padding: 0.8rem 1.75rem;
   backdrop-filter: blur(18px);
 }
-.control-topbar label {
-  display: flex;
-  width: min(42rem, 65vw);
-  min-height: 2.7rem;
-  align-items: center;
-  gap: 0.7rem;
-  border: 1px solid rgb(255 255 255 / 0.1);
-  border-radius: 0.7rem;
-  background: rgb(255 255 255 / 0.035);
-  padding: 0 0.8rem;
-}
-.control-topbar input {
-  min-width: 0;
-  flex: 1;
-  border: 0;
-  background: transparent;
-  color: white;
-  outline: 0;
-}
-.control-topbar kbd {
-  color: #839590;
-  font-size: 0.68rem;
+.control-topbar__title {
+  margin: 0;
+  color: #b6c8c3;
+  font-size: 0.875rem;
+  font-weight: 750;
 }
 .control-profile {
   display: flex;
@@ -137,26 +129,20 @@ body {
 .admin-shell > div:first-child {
   position: relative;
 }
-.admin-shell > header::before,
-.admin-shell > div:first-child::before {
-  content: 'R';
-  display: grid;
-  width: 3rem;
-  aspect-ratio: 1;
-  place-items: center;
-  margin-bottom: 1rem;
-  border: 1px solid rgb(0 200 151 / 0.45);
-  border-radius: 0.8rem;
-  background: linear-gradient(145deg, #00c897, #075f46);
-  color: #02110d;
-  font-size: 1.4rem;
-  font-weight: 1000;
-  transform: skew(-8deg);
-}
 .admin-shell h1 {
   letter-spacing: -0.05em;
   font-size: clamp(1.65rem, 2.5vw, 2rem);
   line-height: 1.08;
+}
+.admin-shell h2,
+.admin-shell h3 {
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+  font-weight: 850;
+}
+.admin-shell h2 {
+  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
 }
 .admin-shell .metric {
   position: relative;
@@ -288,8 +274,8 @@ button:disabled {
     min-height: 4rem;
     padding: 0.6rem 1rem;
   }
-  .control-topbar label {
-    width: 100%;
+  .control-topbar__title {
+    font-size: 0.8rem;
   }
   .control-profile div {
     display: none;
@@ -407,4 +393,42 @@ button:disabled {
 .evidence-link small {
   color: #94a3b8;
   font-weight: 500;
+}
+.operator-card {
+  display: flex;
+  min-width: 0;
+  min-height: 11rem;
+  flex-direction: column;
+  justify-content: space-between;
+  background: rgb(8 37 31 / 0.55);
+  box-shadow: 0 14px 38px rgb(0 0 0 / 0.12);
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+.operator-card:hover {
+  border-color: rgb(49 226 183 / 0.38);
+  transform: translateY(-2px);
+}
+.operator-card__title {
+  display: block;
+  overflow-wrap: anywhere;
+  font-size: 1rem;
+  line-height: 1.3;
+  font-weight: 850;
+}
+.operator-card > button {
+  min-height: 2.75rem;
+  align-self: flex-start;
+}
+.operator-cards > p {
+  grid-column: 1 / -1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .operator-card {
+    transition: none;
+  }
+  .operator-card:hover {
+    transform: none;
+  }
 }

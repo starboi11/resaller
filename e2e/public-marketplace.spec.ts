@@ -5,7 +5,7 @@ test('buyer can navigate the mobile-first marketplace shell', async ({
 }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toContainText(
-    'Sotib ol. Sot. O‘s.',
+    'Xarid qilish va sotishning yaxshiroq yo‘li.',
   );
   await page
     .getByRole('link', { name: 'Mahsulotlarni ko‘rish →', exact: true })
@@ -25,6 +25,9 @@ test('buyer can navigate the mobile-first marketplace shell', async ({
 
 test('keyboard focus and theme controls are available', async ({ page }) => {
   await page.goto('/');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await page.evaluate(() => localStorage.setItem('resaller-theme', 'system'));
+  await page.reload();
   await page.keyboard.press('Tab');
   await expect(page.locator(':focus')).toBeVisible();
   const theme = page.getByRole('button', { name: /mavzu/i });
