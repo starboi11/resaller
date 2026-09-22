@@ -8,9 +8,49 @@ import {
 import pg from 'pg';
 import { orderStatusLabel } from '../apps/web/app/lib/order-status';
 
-const WEB = 'http://localhost:3000';
-const ADMIN = 'http://localhost:3001';
+const WEB = process.env.E2E_WEB_URL ?? 'http://localhost:3000';
+const ADMIN = process.env.E2E_ADMIN_URL ?? 'http://localhost:3001';
+const API = process.env.E2E_API_URL ?? 'http://localhost:4000/api/v1';
 const PASSWORD = 'Resaller-E2E-2026';
+
+async function verifyAuthenticatedSseLoad(
+  context: BrowserContext,
+  orderPublicId: string,
+) {
+  const cookie = (await context.cookies(API))
+    .map(({ name, value }) => `${name}=${value}`)
+    .join('; ');
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15_000);
+  const clients = 25;
+  try {
+    const results = await Promise.all(
+      Array.from({ length: clients }, async () => {
+        const response = await fetch(
+          `${API}/orders/${orderPublicId}/messages/stream`,
+          {
+            headers: { accept: 'text/event-stream', cookie },
+            signal: controller.signal,
+          },
+        );
+        if (!response.ok || !response.body)
+          return { status: response.status, received: false };
+        const firstEvent = await response.body.getReader().read();
+        return { status: response.status, received: !firstEvent.done };
+      }),
+    );
+    expect(results).toHaveLength(clients);
+    expect(results.map((result) => result.status)).toEqual(
+      Array(clients).fill(200),
+    );
+    expect(results.map((result) => result.received)).toEqual(
+      Array(clients).fill(true),
+    );
+  } finally {
+    clearTimeout(timeout);
+    controller.abort();
+  }
+}
 
 async function register(
   context: BrowserContext,
@@ -20,9 +60,9 @@ async function register(
   const page = await context.newPage();
   await page.goto(baseUrl);
   const ok = await page.evaluate(
-    async ({ username, password }) => {
+    async ({ username, password, api }) => {
       const response = await fetch(
-        'http://localhost:4000/api/v1/auth/register',
+        `${api}/auth/register`,
         {
           method: 'POST',
           credentials: 'include',
@@ -32,7 +72,7 @@ async function register(
       );
       return response.ok;
     },
-    { username, password: PASSWORD },
+    { username, password: PASSWORD, api: API },
   );
   expect(ok).toBe(true);
   return page;
@@ -66,7 +106,7 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
   );
   test.setTimeout(testInfo.project.name === 'mobile-iphone' ? 360_000 : 240_000);
   const database = new pg.Client({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: process.env.E2E_DATABASE_URL ?? process.env.DATABASE_URL,
   });
   await database.connect();
   const stamp = `${Date.now()}${testInfo.workerIndex}`;
@@ -199,6 +239,7 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
       `${WEB}/marketplace?q=${encodeURIComponent(productName)}`,
     );
     await buyerPage
+      .getByRole('region', { name: 'Mahsulotlar' })
       .getByRole('link', { name: new RegExp(productName) })
       .click();
     await expect(buyerPage).toHaveURL(/\/product\//);
@@ -262,6 +303,11 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
     await capture(buyerPage, 'buyer-order-chat');
     const orderUrl = buyerPage.url();
     expect(orderUrl).toContain('/orders/');
+    if (testInfo.project.name === 'desktop-chromium') {
+      const orderPublicId = new URL(orderUrl).pathname.split('/').pop();
+      expect(orderPublicId).toBeTruthy();
+      await verifyAuthenticatedSseLoad(buyerContext, orderPublicId!);
+    }
 
     await sellerPage.goto(`${WEB}/seller`);
     await sellerPage.getByRole('button', { name: 'Qabul qilish' }).click();

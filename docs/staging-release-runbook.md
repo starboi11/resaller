@@ -10,7 +10,7 @@ There are currently 17 Prisma migration directories. Staging must apply all of t
 - A separate token limited to `resaller-encrypted-backups`.
 - An alert receiver address/webhook and a production AI provider decision.
 
-Never paste these values into chat or Git. Put them only in `/opt/resaller/.env.staging`; put the metrics token in `/opt/resaller/.secrets/metrics_token` with mode `0600`.
+Never paste these values into chat or Git. Put them only in `/opt/resaller/.env.staging`; put the metrics token in `/opt/resaller/.secrets/metrics_token` and the operator alert URL in `/opt/resaller/.secrets/alertmanager_webhook_url`, both with mode `0600`.
 
 ## Host hardening
 
@@ -33,7 +33,7 @@ Verify:
 
 ## Evidence gates
 
-- Run the complete Playwright matrix (Chromium, Firefox, WebKit, Pixel 7 and iPhone 13).
+- Run the complete Playwright matrix (Chromium, Firefox, WebKit, Pixel 7 and iPhone 13) against the deployed URLs using `E2E_WEB_URL`, `E2E_ADMIN_URL` and `E2E_API_URL`; database-mutating suites require an isolated `E2E_DATABASE_URL`.
 - Run `pnpm test:clamav` inside the network containing ClamAV. The harmless EICAR test signature must return `FOUND`.
 - Run `pnpm test:sse-load` with a short-lived staging test session; archive the JSON result.
 - Trigger the `Staging security checks` workflow for an OWASP ZAP baseline.

@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test';
 
+const ADMIN = process.env.E2E_ADMIN_URL ?? 'http://localhost:3001';
+
 const roles = [
   'SUPER_ADMIN',
   'SECURITY_ADMIN',
@@ -70,7 +72,7 @@ test('admin operator can inspect and resolve risk, security and dispute records'
     return route.fulfill({ json: [] });
   });
 
-  await page.goto('http://localhost:3001/operations');
+  await page.goto(`${ADMIN}/operations`);
   await expect(
     page.getByRole('heading', { name: 'Operatsion modullar' }),
   ).toBeVisible();
@@ -144,7 +146,7 @@ test('verification queue uses a reasoned confirmation dialog', async ({
     },
   );
 
-  await page.goto('http://localhost:3001');
+  await page.goto(ADMIN);
   await expect(page.getByText('Test Seller LLC')).toBeVisible();
   await page.getByRole('button', { name: 'Tasdiqlash' }).click();
   const dialog = page.getByRole('dialog', { name: 'Moderatsiya qarori' });

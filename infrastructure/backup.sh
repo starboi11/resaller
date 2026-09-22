@@ -10,10 +10,21 @@ mkdir -p "$backup_dir"
 umask 077
 stamp="$(date -u +%Y%m%dT%H%M%SZ)"
 target="$backup_dir/resaller-$stamp.dump.gz.enc"
+temp_dir="$(mktemp -d "$backup_dir/.backup.XXXXXX")"
+trap 'rm -rf "$temp_dir"' EXIT
+dump_file="$temp_dir/resaller.dump"
+compressed_file="$temp_dir/resaller.dump.gz"
+encrypted_file="$temp_dir/resaller.dump.gz.enc"
 
-pg_dump --format=custom --no-owner --no-privileges "$DATABASE_URL" \
-  | gzip -9 \
-  | openssl enc -aes-256-cbc -pbkdf2 -salt -pass env:BACKUP_ENCRYPTION_KEY -out "$target"
+# Never pipe backup stages together: POSIX sh cannot reliably report a failed
+# pg_dump from a pipeline. Publish the artifact only after every stage passes.
+pg_dump --format=custom --no-owner --no-privileges --file="$dump_file" "$DATABASE_URL"
+test -s "$dump_file"
+gzip -9 -c "$dump_file" > "$compressed_file"
+test -s "$compressed_file"
+openssl enc -aes-256-cbc -pbkdf2 -salt -pass env:BACKUP_ENCRYPTION_KEY -in "$compressed_file" -out "$encrypted_file"
+test -s "$encrypted_file"
+mv "$encrypted_file" "$target"
 (cd "$backup_dir" && sha256sum "$(basename "$target")" > "$(basename "$target").sha256")
 if [ -n "${BACKUP_S3_BUCKET:-}" ]; then
   : "${BACKUP_S3_ENDPOINT:?BACKUP_S3_ENDPOINT is required when BACKUP_S3_BUCKET is set}"

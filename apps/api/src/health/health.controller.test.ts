@@ -8,6 +8,7 @@ describe('HealthController', () => {
         dependency as never,
         dependency as never,
         { health: async () => ({ status: 'up' }) } as never,
+        { healthy: async () => true } as never,
       ).health(),
     ).toMatchObject({ status: 'ok', service: 'resaller-api' });
   });

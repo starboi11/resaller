@@ -5,7 +5,7 @@ test('buyer can navigate the mobile-first marketplace shell', async ({
 }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toContainText(
-    'Xarid qilish va sotishning yaxshiroq yo‘li.',
+    'Xarid qilish va sotishning yaxshiroq yo‘li',
   );
   await page
     .getByRole('link', { name: 'Mahsulotlarni ko‘rish →', exact: true })
@@ -83,6 +83,11 @@ test('public pages have named controls, image alternatives and no horizontal ove
     '/login',
   ]) {
     await page.goto(route);
+    // The Next.js development toolbar is not part of the product UI and adds
+    // icon-only buttons while the test server is running in development mode.
+    await page.locator('nextjs-portal').evaluateAll((nodes) =>
+      nodes.forEach((node) => node.remove()),
+    );
     const overflow = await page.evaluate(
       () =>
         document.documentElement.scrollWidth -

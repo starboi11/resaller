@@ -7,5 +7,8 @@ route:
 
 receivers:
   - name: default
-    # Add a private email/Telegram webhook receiver on the staging server.
-    # No credential belongs in this repository.
+    # The Compose stack mounts this private URL from .secrets. A deployment
+    # without it must fail its preflight rather than silently dropping alerts.
+    webhook_configs:
+      - url_file: /run/secrets/alertmanager_webhook_url
+        send_resolved: true

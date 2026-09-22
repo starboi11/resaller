@@ -55,6 +55,7 @@ jobs:
           REDIS_URL: redis://localhost:6379
           SESSION_SECRET: ci-session-secret-at-least-32-characters
           CORS_ORIGINS: http://localhost:3000
+          RUN_DB_TESTS: '1'
       - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium firefox webkit
       - run: pnpm test:e2e

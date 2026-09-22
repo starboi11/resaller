@@ -48,7 +48,9 @@ export class TotpService {
   }
 
   private encryptionKey(): Buffer {
-    return createHash('sha256').update(process.env.SESSION_SECRET ?? 'development-only').digest();
+    return createHash('sha256')
+      .update(process.env.DATA_ENCRYPTION_KEY ?? process.env.SESSION_SECRET ?? 'development-only')
+      .digest();
   }
 
   private base32Encode(input: Buffer): string {

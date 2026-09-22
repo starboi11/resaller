@@ -36,13 +36,13 @@ export function SiteHeader() {
           </form>
           <nav className="desktop-nav" aria-label="Asosiy navigatsiya">
             {[
-              { href: '/favorites', label: 'Sevimlilar' },
-              { href: '/orders', label: 'Buyurtmalar' },
-              { href: '/cart', label: 'Savat' },
+              { href: '/favorites', label: '♡', accessible: 'Sevimlilar' },
+              { href: '/cart', label: '□', accessible: 'Savat' },
             ].map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
+                aria-label={link.accessible}
                 aria-current={active(link.href) ? 'page' : undefined}
               >
                 {link.label}

@@ -1,10 +1,16 @@
+# syntax=docker/dockerfile:1.7
 FROM node:24-alpine AS build
 WORKDIR /app
 RUN corepack enable
 COPY . .
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
-RUN pnpm install --frozen-lockfile && pnpm --filter @resaller/web build
+RUN --mount=type=cache,id=resaller-pnpm,target=/root/.local/share/pnpm/store,sharing=locked \
+    pnpm install --frozen-lockfile --fetch-timeout=600000 && pnpm --filter @resaller/web build
 ENV NODE_ENV=production
+RUN addgroup -S resaller && adduser -S resaller -G resaller && \
+    mkdir -p /app/apps/web/.next/cache && \
+    chown -R resaller:resaller /app/apps/web/.next/cache
+USER resaller
 EXPOSE 3000
 CMD ["pnpm", "--filter", "@resaller/web", "start"]

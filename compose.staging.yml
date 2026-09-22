@@ -17,6 +17,7 @@ services:
   api:
     environment:
       CORS_ORIGINS: 'https://${STAGING_DOMAIN},https://admin.${STAGING_DOMAIN}'
+      PUBLIC_WEB_URL: 'https://${STAGING_DOMAIN}'
   postgres:
     ports: []
   redis:

@@ -39,27 +39,35 @@ services:
       NODE_ENV: production
       API_HOST: 0.0.0.0
       API_PORT: 4000
-      DATABASE_URL: 'postgresql://resaller:${POSTGRES_PASSWORD}@postgres:5432/resaller?schema=public'
-      REDIS_URL: redis://redis:6379
-      SESSION_SECRET: '${SESSION_SECRET}'
+      DATABASE_URL: 'postgresql://resaller:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/resaller?schema=public'
+      REDIS_URL: 'redis://:${REDIS_PASSWORD:?REDIS_PASSWORD is required}@redis:6379'
+      SESSION_SECRET: '${SESSION_SECRET:?SESSION_SECRET is required}'
+      DATA_ENCRYPTION_KEY: '${DATA_ENCRYPTION_KEY:?DATA_ENCRYPTION_KEY is required}'
+      PUBLIC_WEB_URL: 'https://${DOMAIN}'
+      TRUST_PROXY: 'true'
       CORS_ORIGINS: 'https://${DOMAIN},https://admin.${DOMAIN}'
       LOG_LEVEL: info
       MEDIA_ROOT: /app/data/media
       PRIVATE_MEDIA_ROOT: /app/data/private-media
-      MEDIA_STORAGE_DRIVER: '${MEDIA_STORAGE_DRIVER:-local}'
-      S3_ENDPOINT: '${S3_ENDPOINT:-http://localhost:9000}'
+      MEDIA_STORAGE_DRIVER: s3
+      S3_ENDPOINT: '${S3_ENDPOINT:?S3_ENDPOINT is required}'
       S3_REGION: '${S3_REGION:-auto}'
-      S3_BUCKET: '${S3_BUCKET:-resaller-media}'
-      S3_PRIVATE_BUCKET: '${S3_PRIVATE_BUCKET:-resaller-private-media}'
-      S3_ACCESS_KEY_ID: '${S3_ACCESS_KEY_ID:-local-unused}'
-      S3_SECRET_ACCESS_KEY: '${S3_SECRET_ACCESS_KEY:-local-unused}'
+      S3_BUCKET: '${S3_BUCKET:?S3_BUCKET is required}'
+      S3_PRIVATE_BUCKET: '${S3_PRIVATE_BUCKET:?S3_PRIVATE_BUCKET is required}'
+      S3_ACCESS_KEY_ID: '${S3_ACCESS_KEY_ID:?S3_ACCESS_KEY_ID is required}'
+      S3_SECRET_ACCESS_KEY: '${S3_SECRET_ACCESS_KEY:?S3_SECRET_ACCESS_KEY is required}'
       S3_FORCE_PATH_STYLE: '${S3_FORCE_PATH_STYLE:-true}'
-      EMAIL_WEBHOOK_URL: '${EMAIL_WEBHOOK_URL:-}'
-      EMAIL_WEBHOOK_TOKEN: '${EMAIL_WEBHOOK_TOKEN:-}'
+      EMAIL_WEBHOOK_URL: '${EMAIL_WEBHOOK_URL:?EMAIL_WEBHOOK_URL is required}'
+      EMAIL_WEBHOOK_TOKEN: '${EMAIL_WEBHOOK_TOKEN:?EMAIL_WEBHOOK_TOKEN is required}'
+      TELEGRAM_SUPPORT_ENABLED: '${TELEGRAM_SUPPORT_ENABLED:-false}'
       TELEGRAM_BOT_TOKEN: '${TELEGRAM_BOT_TOKEN:-}'
+      TELEGRAM_WEBHOOK_SECRET: '${TELEGRAM_WEBHOOK_SECRET:-}'
+      TELEGRAM_SUPPORT_CHAT_ID: '${TELEGRAM_SUPPORT_CHAT_ID:-}'
+      TELEGRAM_SUPPORT_OPERATOR_NAME: '${TELEGRAM_SUPPORT_OPERATOR_NAME:-Resaller Support}'
+      TELEGRAM_WEBHOOK_URL: '${TELEGRAM_WEBHOOK_URL:-}'
       PUSH_WEBHOOK_URL: '${PUSH_WEBHOOK_URL:-}'
       PUSH_WEBHOOK_TOKEN: '${PUSH_WEBHOOK_TOKEN:-}'
-      METRICS_TOKEN: '${METRICS_TOKEN}'
+      METRICS_TOKEN: '${METRICS_TOKEN:?METRICS_TOKEN is required}'
       CLAMAV_HOST: clamav
       CLAMAV_PORT: 3310
     depends_on:
@@ -75,7 +83,7 @@ services:
     environment:
       POSTGRES_DB: resaller
       POSTGRES_USER: resaller
-      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
+      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}'
     volumes: ['postgres_prod:/var/lib/postgresql/data']
     healthcheck:
       {
@@ -87,11 +95,12 @@ services:
   redis:
     image: redis:8-alpine
     restart: unless-stopped
-    command: redis-server --appendonly yes
+    environment: { REDIS_PASSWORD: '${REDIS_PASSWORD:?REDIS_PASSWORD is required}' }
+    command: ['sh', '-c', 'exec redis-server --appendonly yes --requirepass "$$REDIS_PASSWORD"']
     volumes: ['redis_prod:/data']
     healthcheck:
       {
-        test: ['CMD', 'redis-cli', 'ping'],
+        test: ['CMD-SHELL', 'redis-cli -a "$$REDIS_PASSWORD" ping'],
         interval: 10s,
         timeout: 3s,
         retries: 10,
@@ -104,14 +113,14 @@ services:
     build: { context: ., dockerfile: infrastructure/Dockerfile.backup }
     restart: unless-stopped
     environment:
-      DATABASE_URL: 'postgresql://resaller:${POSTGRES_PASSWORD}@postgres:5432/resaller'
-      BACKUP_ENCRYPTION_KEY: '${BACKUP_ENCRYPTION_KEY}'
+      DATABASE_URL: 'postgresql://resaller:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/resaller'
+      BACKUP_ENCRYPTION_KEY: '${BACKUP_ENCRYPTION_KEY:?BACKUP_ENCRYPTION_KEY is required}'
       BACKUP_DIR: /backups
       BACKUP_RETENTION_DAYS: '${BACKUP_RETENTION_DAYS:-14}'
-      BACKUP_S3_ENDPOINT: '${BACKUP_S3_ENDPOINT:-}'
-      BACKUP_S3_BUCKET: '${BACKUP_S3_BUCKET:-}'
-      AWS_ACCESS_KEY_ID: '${BACKUP_S3_ACCESS_KEY_ID:-}'
-      AWS_SECRET_ACCESS_KEY: '${BACKUP_S3_SECRET_ACCESS_KEY:-}'
+      BACKUP_S3_ENDPOINT: '${BACKUP_S3_ENDPOINT:?BACKUP_S3_ENDPOINT is required}'
+      BACKUP_S3_BUCKET: '${BACKUP_S3_BUCKET:?BACKUP_S3_BUCKET is required}'
+      AWS_ACCESS_KEY_ID: '${BACKUP_S3_ACCESS_KEY_ID:?BACKUP_S3_ACCESS_KEY_ID is required}'
+      AWS_SECRET_ACCESS_KEY: '${BACKUP_S3_SECRET_ACCESS_KEY:?BACKUP_S3_SECRET_ACCESS_KEY is required}'
       AWS_DEFAULT_REGION: '${BACKUP_S3_REGION:-auto}'
     command: ['sh', '-c', 'while true; do resaller-backup; sleep 86400; done']
     depends_on:
@@ -130,6 +139,7 @@ services:
       - ./infrastructure/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./infrastructure/prometheus-alerts.yml:/etc/prometheus/prometheus-alerts.yml:ro
       - ./.secrets/metrics_token:/run/secrets/metrics_token:ro
+      - ./.secrets/alertmanager_webhook_url:/run/secrets/alertmanager_webhook_url:ro
       - prometheus_data:/prometheus
     depends_on: [api, alertmanager]
   alertmanager:
@@ -138,6 +148,7 @@ services:
     command: ['--config.file=/etc/alertmanager/alertmanager.yml']
     volumes:
       - ./infrastructure/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - ./.secrets/alertmanager_webhook_url:/run/secrets/alertmanager_webhook_url:ro
       - alertmanager_data:/alertmanager
 volumes:
   postgres_prod:

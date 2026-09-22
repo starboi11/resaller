@@ -6,7 +6,14 @@ try {
   /* CI supplies environment directly. */
 }
 
-if (!process.env.CI && process.env.DATABASE_URL) {
+const deployedTarget = Boolean(process.env.E2E_WEB_URL);
+
+if (
+  !process.env.CI &&
+  !deployedTarget &&
+  process.env.DATABASE_URL &&
+  process.env.E2E_USE_CONFIGURED_DATABASE !== 'true'
+) {
   const e2eDatabase = new URL(process.env.DATABASE_URL);
   e2eDatabase.pathname = '/resaller_e2e';
   process.env.DATABASE_URL = e2eDatabase.toString();
@@ -19,7 +26,7 @@ export default defineConfig({
   workers: 1,
   reporter: process.env.CI ? 'github' : 'list',
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: process.env.E2E_WEB_URL ?? 'http://localhost:3000',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
@@ -30,10 +37,12 @@ export default defineConfig({
     { name: 'mobile-android', use: { ...devices['Pixel 7'] } },
     { name: 'mobile-iphone', use: { ...devices['iPhone 13'] } },
   ],
-  webServer: [
+  webServer: deployedTarget ? undefined : [
     {
       command:
-        'node scripts/prepare-e2e-database.mjs && pnpm --filter @resaller/api dev',
+        process.env.E2E_USE_CONFIGURED_DATABASE === 'true'
+          ? 'pnpm --filter @resaller/api dev'
+          : 'node scripts/prepare-e2e-database.mjs && pnpm --filter @resaller/api dev',
       url: 'http://127.0.0.1:4000/api/v1/health/ready',
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,

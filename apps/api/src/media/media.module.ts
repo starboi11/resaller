@@ -9,5 +9,6 @@ import { MalwareScannerService } from './malware-scanner.service.js';
   imports: [AuthModule],
   controllers: [MediaController],
   providers: [MediaService, MediaStorageService, MalwareScannerService],
+  exports: [MediaStorageService],
 })
 export class MediaModule {}

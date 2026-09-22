@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { StatePanel } from '@resaller/ui';
+import { ProductImage } from './components/product-image';
 
 export const dynamic = 'force-dynamic';
 
@@ -63,7 +64,7 @@ async function getHomeData() {
 
 export default async function Home() {
   const { listings, categories, unavailable } = await getHomeData();
-  const products = listings.slice(0, 6);
+  const products = listings.slice(0, 4);
   const stores = [
     ...new Map(
       listings.map((item) => [item.store.username, item.store]),
@@ -77,12 +78,8 @@ export default async function Home() {
         <div className="market-hero__copy">
           <p className="market-hero__kicker">Oddiy marketplace’dan ko‘proq.</p>
           <h1>
-            Xarid qilish va sotishning <span>yaxshiroq yo‘li.</span>
+            Xarid qilish va sotishning <span>yaxshiroq yo‘li</span>
           </h1>
-          <h2>
-            Odamlar, mahsulotlar va yangi imkoniyatlar uchun ishonchli platforma.
-          </h2>
-          <p>Katta imkoniyatlar kichik qadamlardan boshlanadi.</p>
           <div className="market-hero__actions">
             <Link className="rs-button" href="/marketplace">
               Mahsulotlarni ko‘rish <b>→</b>
@@ -93,40 +90,33 @@ export default async function Home() {
           </div>
           <div className="market-hero__stats" aria-label="Platforma qoidalari">
             <span>
-              <b>0%</b> Marketplace komissiyasi
+              <i aria-hidden="true">%</i>
+              <span>
+                <b>0%</b>
+                <small>komissiya</small>
+              </span>
             </span>
             <span>
-              <b>60 daqiqa</b> Seller javob muddati
+              <i aria-hidden="true">↑</i>
+              <span>
+                <b>60 daqiqa</b>
+                <small>Tez javob</small>
+              </span>
             </span>
             <span>
-              <b>Shaffof</b> Buyurtma tarixi
+              <i aria-hidden="true">◇</i>
+              <span>
+                <b>Shaffof tarix</b>
+                <small>Ishonchli savdo</small>
+              </span>
             </span>
           </div>
         </div>
-        <p className="market-hero__signature" aria-hidden="true">
-          MORE THAN A MARKETPLACE
-        </p>
       </section>
 
-      <nav className="shell category-rail" aria-label="Mahsulot kategoriyalari">
-        {categories.slice(0, 8).map((category) => (
-          <Link
-            key={category.slug}
-            href={`/marketplace?category=${encodeURIComponent(category.slug)}`}
-          >
-            <span>{categoryIcons[category.nameUz] ?? '◇'}</span>
-            <b>{category.nameUz}</b>
-          </Link>
-        ))}
-        <Link href="/categories">
-          <span>•••</span>
-          <b>Barchasi</b>
-        </Link>
-      </nav>
-
-      <section className="shell home-section">
+      <section className="shell home-section home-featured">
         <div className="section-heading">
-          <h2>Yangi mahsulotlar</h2>
+          <h2>Siz uchun tanlangan</h2>
           <Link href="/marketplace?sort=new">Barchasini ko‘rish →</Link>
         </div>
         {unavailable ? (
@@ -165,17 +155,15 @@ export default async function Home() {
                   key={product.publicId}
                 >
                   <div className="product-card__visual">
-                    {productImage ? (
-                      <img
-                        src={`${API}/media/${productImage.thumbnailStorageKey ?? productImage.storageKey}`}
-                        alt={product.nameUz}
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="product-art product-art--phone">
-                        <span aria-hidden="true" />
-                      </div>
-                    )}
+                    <span className="favorite-mark" aria-hidden="true">♡</span>
+                    <ProductImage
+                      src={
+                        productImage
+                          ? `${API}/media/${productImage.thumbnailStorageKey ?? productImage.storageKey}`
+                          : undefined
+                      }
+                      alt={product.nameUz}
+                    />
                   </div>
                   <div className="product-card__body">
                     <h3>{product.nameUz}</h3>
@@ -190,9 +178,12 @@ export default async function Home() {
                         ✓ {badgeName(product.store.sellerProfile.trustBadge)}
                       </b>
                     </div>
-                    <small className={stock > 0 ? 'in-stock' : 'out-stock'}>
-                      {stock > 0 ? `${stock} dona mavjud` : 'Tugagan'}
-                    </small>
+                    <div className="product-card__meta">
+                      <small className={stock > 0 ? 'in-stock' : 'out-stock'}>
+                        {stock > 0 ? `${stock} dona mavjud` : 'Tugagan'}
+                      </small>
+                      <small>▣ Yetkazish kelishiladi</small>
+                    </div>
                   </div>
                 </Link>
               );
@@ -200,6 +191,24 @@ export default async function Home() {
           </div>
         )}
       </section>
+
+      {categories.length > 0 && (
+        <nav className="shell category-rail" aria-label="Mahsulot kategoriyalari">
+          {categories.slice(0, 8).map((category) => (
+            <Link
+              key={category.slug}
+              href={`/marketplace?category=${encodeURIComponent(category.slug)}`}
+            >
+              <span>{categoryIcons[category.nameUz] ?? '◇'}</span>
+              <b>{category.nameUz}</b>
+            </Link>
+          ))}
+          <Link href="/categories">
+            <span>•••</span>
+            <b>Barchasi</b>
+          </Link>
+        </nav>
+      )}
 
       {stores.length > 0 && (
         <section className="shell home-section">

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   DeleteObjectCommand,
   GetObjectCommand,
+  HeadBucketCommand,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
@@ -112,6 +113,22 @@ export class MediaStorageService {
       return;
     }
     await unlink(resolve(this.privateRoot, key)).catch(() => undefined);
+  }
+
+  async healthy(): Promise<boolean> {
+    try {
+      if (this.s3) {
+        await this.s3.send(new HeadBucketCommand({ Bucket: this.requiredBucket() }));
+        await this.s3.send(new HeadBucketCommand({ Bucket: this.requiredPrivateBucket() }));
+        return true;
+      }
+      for (const root of [this.root, this.privateRoot]) {
+        await mkdir(root, { recursive: true });
+      }
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   private requiredBucket(): string {

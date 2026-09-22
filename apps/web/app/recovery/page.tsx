@@ -1,10 +1,18 @@
 'use client';
 import Link from 'next/link';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
 export default function Recovery() {
   const [mode, setMode] = useState<'request' | 'reset'>('request');
+  const [resetToken, setResetToken] = useState('');
   const [message, setMessage] = useState('');
+  useEffect(() => {
+    const token = new URLSearchParams(window.location.search).get('token') ?? '';
+    if (token) {
+      setResetToken(token);
+      setMode('reset');
+    }
+  }, []);
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -48,7 +56,7 @@ export default function Recovery() {
             <>
               <label className="grid gap-2 font-bold">
                 Bir martalik token
-                <input className="field font-normal" name="token" required />
+              <input className="field font-normal" name="token" required value={resetToken} onChange={(event) => setResetToken(event.target.value)} />
               </label>
               <label className="grid gap-2 font-bold">
                 Yangi parol
@@ -73,7 +81,7 @@ export default function Recovery() {
             type="button"
             onClick={() => setMode(mode === 'request' ? 'reset' : 'request')}
           >
-            {mode === 'request' ? 'Token menda bor' : 'Yangi token so‘rash'}
+            {mode === 'request' ? 'Emaildan havolani ochdim' : 'Yangi tiklash havolasini so‘rash'}
           </button>
           <Link className="text-center text-sm" href="/login">
             Kirishga qaytish

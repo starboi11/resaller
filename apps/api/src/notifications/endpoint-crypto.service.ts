@@ -17,5 +17,9 @@ export class EndpointCryptoService {
     decipher.setAuthTag(Buffer.from(tag, 'base64url'));
     return Buffer.concat([decipher.update(Buffer.from(encrypted, 'base64url')), decipher.final()]).toString('utf8');
   }
-  private key(): Buffer { return createHash('sha256').update(process.env.SESSION_SECRET ?? 'development-only').digest(); }
+  private key(): Buffer {
+    return createHash('sha256')
+      .update(process.env.DATA_ENCRYPTION_KEY ?? process.env.SESSION_SECRET ?? 'development-only')
+      .digest();
+  }
 }

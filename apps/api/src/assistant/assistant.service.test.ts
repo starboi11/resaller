@@ -101,4 +101,17 @@ describe('AssistantService', () => {
       }),
     ).rejects.toThrow('Order access denied');
   });
+
+  it('does not compare listings from suspended or vacation stores', async () => {
+    const findMany = vi.fn().mockResolvedValue([]);
+    const { assistant } = service({ listing: { findMany } });
+    await assistant.answer(user, {
+      mode: 'COMPARE',
+      message: 'Taqqoslash',
+      entityIds: ['product-1', 'product-2'],
+    });
+    expect(findMany).toHaveBeenCalledWith(expect.objectContaining({
+      where: expect.objectContaining({ store: { status: 'ACTIVE', vacationMode: false } }),
+    }));
+  });
 });

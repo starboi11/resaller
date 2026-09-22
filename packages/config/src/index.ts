@@ -10,9 +10,17 @@ export const apiEnvironmentSchema = z
       .default('development'),
     API_PORT: z.coerce.number().int().positive().default(4000),
     API_HOST: z.string().default('0.0.0.0'),
+    TRUST_PROXY: z
+      .enum(['true', 'false'])
+      .default('false')
+      .transform((value) => value === 'true'),
     DATABASE_URL: z.string().min(1),
     REDIS_URL: z.string().url(),
     SESSION_SECRET: z.string().min(32),
+    // Keep encrypted long-lived data independent from session rotation. Existing
+    // development data may use SESSION_SECRET until a dedicated key is supplied.
+    DATA_ENCRYPTION_KEY: z.string().min(32).optional(),
+    PUBLIC_WEB_URL: optionalUrl,
     LOG_LEVEL: z
       .enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace'])
       .default('info'),

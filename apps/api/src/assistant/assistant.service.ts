@@ -136,7 +136,12 @@ export class AssistantService {
         sources: [],
       };
     const listings = await this.prisma.listing.findMany({
-      where: { publicId: { in: selected }, status: 'ACTIVE', deletedAt: null },
+      where: {
+        publicId: { in: selected },
+        status: 'ACTIVE',
+        deletedAt: null,
+        store: { status: 'ACTIVE', vacationMode: false },
+      },
       select: {
         publicId: true,
         nameUz: true,

@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test';
 
+const ADMIN = process.env.E2E_ADMIN_URL ?? 'http://localhost:3001';
+
 const buyerRoutes = [
   '/',
   '/marketplace',
@@ -37,7 +39,7 @@ test('admin entry and operator workspace render without clipping', async ({
   page,
 }) => {
   for (const route of ['/', '/operations']) {
-    await page.goto(`http://localhost:3001${route}`);
+    await page.goto(`${ADMIN}${route}`);
     await expect(page.locator('body')).toBeVisible();
     await expect(page.locator('main').first()).toBeVisible();
     await expect(page.getByRole('heading').first()).toBeVisible();

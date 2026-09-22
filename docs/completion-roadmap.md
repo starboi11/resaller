@@ -1,6 +1,6 @@
 # Resaller completion roadmap
 
-Updated: 2026-09-17
+Updated: 2026-09-22
 
 This is the delivery order for closing the approved visual and product contract. A checkbox is complete only when the UI, API authorization, database behavior, error states, and browser evidence all pass.
 
@@ -27,7 +27,7 @@ Every screen must answer one primary user question and expose one obvious next a
 - [x] Keep cinematic/3D work concentrated in the entry experience, lazy-loaded with static and reduced-motion fallbacks.
 - [ ] Complete shared Dialog, Drawer, Toast, FormField, Tabs, FileUploader, Countdown, Timeline and Pagination components.
 - [x] Capture and review reference screenshots for light, dark and system themes.
-- [ ] Pass keyboard, contrast, screen-reader labels, reduced-motion, loading, empty, error, offline and restricted-state checks.
+- [ ] Pass keyboard, contrast, screen-reader labels, reduced-motion, loading, empty, error, offline and restricted-state checks. Automated WCAG A/AA scans report no serious or critical violations on the five primary public routes across Chromium, Firefox, WebKit, Pixel 7 and iPhone 13; authenticated workspaces and manual screen-reader review remain.
 
 ## D6–D13 — Complete the real workflows
 
@@ -56,7 +56,7 @@ Every screen must answer one primary user question and expose one obvious next a
 - [ ] Test every actionable control for success, validation, denied permission, expired session, duplicate request and API outage. Core auth and public resilience cases pass; exhaustive per-control coverage remains.
 - [x] Add Chromium, Firefox and WebKit coverage plus representative small Android and iPhone viewports.
 - [ ] Add visual regression baselines for the approved screens and themes.
-- [ ] Run accessibility, performance, SSE load, upload-malware and staging penetration tests. Local EICAR/ClamAV rejection passed on 2026-09-19; Chrome trace, authenticated SSE load and staging pentest remain.
+- [ ] Run accessibility, performance, SSE load, upload-malware and staging penetration tests. Local WCAG automation, keyboard/reduced-motion/performance budgets, the full five-project browser matrix, 25 concurrent authenticated SSE connections, and EICAR/ClamAV rejection passed on 2026-09-22; manual assistive-technology review and a deployed-host penetration test remain.
 
 ## D16–D17 — Staging, production and launch
 
