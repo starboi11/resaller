@@ -6,6 +6,7 @@ test('homepage visual baseline', async ({ page }) => {
     localStorage.setItem('resaller-theme', 'dark');
   });
   await page.reload();
+  await page.waitForLoadState('networkidle');
   // Fixed controls and the Next.js dev indicator are separate surfaces. Their
   // position can overlap the hero by a few pixels depending on browser timing.
   await page.locator('.ai-assistant, nextjs-portal').evaluateAll((nodes) => {

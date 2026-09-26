@@ -5,7 +5,7 @@ Mobile-first, multi-seller marketplace implemented as a modular monolith.
 ## Prerequisites
 
 - Node.js 24 LTS-compatible runtime
-- Corepack / pnpm 12
+- pnpm 11.19.0 (use `pnpm.cmd` in PowerShell if `.ps1` execution is disabled)
 - Docker Desktop
 
 ## Start locally
