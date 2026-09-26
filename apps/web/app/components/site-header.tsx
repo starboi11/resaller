@@ -36,8 +36,8 @@ export function SiteHeader() {
           </form>
           <nav className="desktop-nav" aria-label="Asosiy navigatsiya">
             {[
-              { href: '/favorites', label: '♡', accessible: 'Sevimlilar' },
-              { href: '/cart', label: '□', accessible: 'Savat' },
+              { href: '/favorites', accessible: 'Sevimlilar', icon: 'heart' },
+              { href: '/cart', accessible: 'Savat', icon: 'cart' },
             ].map((link) => (
               <Link
                 key={link.href}
@@ -45,7 +45,33 @@ export function SiteHeader() {
                 aria-label={link.accessible}
                 aria-current={active(link.href) ? 'page' : undefined}
               >
-                {link.label}
+                {link.icon === 'heart' ? (
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z" />
+                  </svg>
+                ) : (
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="9" cy="21" r="1" />
+                    <circle cx="19" cy="21" r="1" />
+                    <path d="M2 2h2l2.5 13h13.2l2-9H5" />
+                  </svg>
+                )}
               </Link>
             ))}
           </nav>

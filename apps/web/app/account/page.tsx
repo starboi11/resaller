@@ -6,9 +6,8 @@ const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
 type Session = {
   id: string;
   createdAt: string;
-  lastSeenAt: string;
-  ipHash?: string;
-  revokedAt?: string;
+  userAgent?: string | null;
+  current: boolean;
 };
 type Endpoint = {
   id: string;
@@ -29,25 +28,32 @@ export default function Account() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [login, setLogin] = useState(false);
   const [message, setMessage] = useState('');
+  const [loadError, setLoadError] = useState(false);
   const load = useCallback(async () => {
-    const responses = await Promise.all(
-      ['auth/sessions', 'notifications/endpoints', 'notifications'].map(
-        (path) =>
-          fetch(`${API}/${path}`, {
-            credentials: 'include',
-            cache: 'no-store',
-          }),
-      ),
-    );
-    if (responses[0]?.status === 401) {
-      setLogin(true);
-      return;
+    try {
+      const responses = await Promise.all(
+        ['auth/sessions', 'notifications/endpoints', 'notifications'].map(
+          (path) =>
+            fetch(`${API}/${path}`, {
+              credentials: 'include',
+              cache: 'no-store',
+            }),
+        ),
+      );
+      if (responses[0]?.status === 401) {
+        setLogin(true);
+        return;
+      }
+      setLoadError(!responses[0]?.ok);
+      if (responses[0]?.ok)
+        setSessions((await responses[0].json()) as Session[]);
+      if (responses[1]?.ok)
+        setEndpoints((await responses[1].json()) as Endpoint[]);
+      if (responses[2]?.ok)
+        setNotifications((await responses[2].json()) as Notification[]);
+    } catch {
+      setLoadError(true);
     }
-    if (responses[0]?.ok) setSessions((await responses[0].json()) as Session[]);
-    if (responses[1]?.ok)
-      setEndpoints((await responses[1].json()) as Endpoint[]);
-    if (responses[2]?.ok)
-      setNotifications((await responses[2].json()) as Notification[]);
   }, []);
   useEffect(() => {
     void load();
@@ -104,6 +110,18 @@ export default function Account() {
       <p className="muted mt-2" aria-live="polite">
         {message || 'Sessiyalar va xabar kanallarini shu yerdan boshqaring.'}
       </p>
+      {loadError && (
+        <StatePanel
+          tone="danger"
+          title="Hisob ma’lumotlari yuklanmadi"
+          description="Aloqani tekshirib, qayta urinib ko‘ring."
+          action={
+            <button className="rs-button" onClick={() => void load()}>
+              Qayta urinish
+            </button>
+          }
+        />
+      )}
       <div className="account-grid mt-8 grid gap-6 lg:grid-cols-2">
         <section className="surface p-5">
           <h2 className="text-xl font-black">Faol qurilmalar</h2>
@@ -114,9 +132,20 @@ export default function Account() {
                 key={session.id}
               >
                 <p className="text-sm font-bold">
-                  Oxirgi faollik:{' '}
-                  {new Date(session.lastSeenAt).toLocaleString('uz-UZ')}
+                  {session.current ? 'Joriy qurilma' : 'Boshqa qurilma'} ·
+                  Kirgan vaqti:{' '}
+                  {Number.isNaN(Date.parse(session.createdAt))
+                    ? 'Noma’lum'
+                    : new Date(session.createdAt).toLocaleString('uz-UZ')}
                 </p>
+                {session.userAgent && (
+                  <p
+                    className="muted mt-1 truncate text-xs"
+                    title={session.userAgent}
+                  >
+                    {session.userAgent}
+                  </p>
+                )}
                 <button
                   className="mt-2 text-sm font-bold text-[var(--danger)]"
                   onClick={() => void remove(`auth/sessions/${session.id}`)}
@@ -126,6 +155,9 @@ export default function Account() {
               </article>
             ))}
           </div>
+          {!sessions.length && !loadError && (
+            <p className="muted mt-4 text-sm">Faol qurilma topilmadi.</p>
+          )}
         </section>
         <section className="surface p-5">
           <h2 className="text-xl font-black">Email, Telegram va push</h2>
@@ -133,7 +165,7 @@ export default function Account() {
             Manzil shifrlangan saqlanadi va qayta ko‘rsatilmaydi.
           </p>
           <form className="mt-4 grid gap-3" onSubmit={addEndpoint}>
-            <select className="field" name="channel">
+            <select className="field" name="channel" aria-label="Xabar kanali">
               <option value="EMAIL">Email</option>
               <option value="TELEGRAM">Telegram chat ID</option>
               <option value="PUSH">Push endpoint</option>

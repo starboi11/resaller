@@ -19,6 +19,10 @@ test('authenticated moderator can use the admin control center', async ({ page }
     await page.reload();
     await expect(page.getByRole('heading', { name: 'Admin boshqaruvi' })).toBeVisible();
     await expect(page.getByText('Moderatsiya navbati yangilandi.')).toBeVisible();
+    const verificationLink = page.getByRole('link', { name: 'Sotuvchini tekshirish' });
+    await verificationLink.click();
+    await expect(verificationLink).toHaveAttribute('aria-current', 'page');
+    await expect(page.getByRole('link', { name: 'Boshqaruv', exact: true })).not.toHaveAttribute('aria-current', 'page');
     await page.getByRole('link', { name: 'Barcha modullar' }).click();
     await expect(page.getByRole('heading', { name: 'Operatsion modullar' })).toBeVisible();
     await expect(page.getByRole('button', { name: /Sharhlar/ })).toBeVisible();

@@ -23,5 +23,7 @@ Before first production boot:
 5. Run `docker compose --env-file .env.production -f compose.production.yml config --quiet`; then build/boot staging first.
 6. In staging, verify `/api/v1/health/ready` is HTTP 200, private R2 access is denied without authorization, public media is available only for active listings, and ClamAV rejects EICAR.
 7. Create an encrypted off-host backup, run `infrastructure/restore-drill.sh` against only its disposable database, then rehearse application rollback.
+8. Record the tested Git commit and deploy that exact commit/image. After the server rebuild, run `LIVE_ORIGIN=https://resaller.uz pnpm test:live-smoke`; both root and admin HTTP URLs must redirect to HTTPS and both HTTPS responses must include HSTS. Compare the live account and seller screens with the same commit's browser evidence; a passing local suite does not verify an older server build.
+9. With dedicated staging test identities, verify browser cookie persistence after reload and the real R2 upload → reload → read path for an unpublished seller draft, then approval → public buyer image access. A bucket `HeadBucket` readiness result is not an object round-trip test.
 
 Do not rotate `DATA_ENCRYPTION_KEY` after accounts enable 2FA without a planned ciphertext re-encryption migration. Do not change the production `SESSION_SECRET` before revoking all active sessions deliberately.

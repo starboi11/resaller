@@ -10,7 +10,13 @@ function DraftImage({ file, name }: { file: File; name: string }) {
     setSource(url);
     return () => URL.revokeObjectURL(url);
   }, [file]);
-  return source ? <img className="product-preview__image" src={source} alt={`${name || 'Draft mahsulot'} preview`} /> : null;
+  return source ? (
+    <img
+      className="product-preview__image"
+      src={source}
+      alt={`${name || 'Draft mahsulot'} preview`}
+    />
+  ) : null;
 }
 type Store = {
   publicId: string;
@@ -66,8 +72,11 @@ type Store = {
 export default function SellerManage() {
   const [stores, setStores] = useState<Store[] | null>(null);
   const [message, setMessage] = useState('');
+  const [storeError, setStoreError] = useState('');
   const [login, setLogin] = useState(false);
   const [wizardStep, setWizardStep] = useState(1);
+  const [listingError, setListingError] = useState('');
+  const [creatingListing, setCreatingListing] = useState(false);
   const [editTarget, setEditTarget] = useState<
     Store['listings'][number] | null
   >(null);
@@ -158,10 +167,27 @@ export default function SellerManage() {
   async function createStore(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    const nameUz = String(data.get('nameUz') ?? '').trim();
+    const username = String(data.get('username') ?? '')
+      .trim()
+      .toLowerCase();
+    const orderPrefix = String(data.get('orderPrefix') ?? '')
+      .trim()
+      .toUpperCase();
+    const error =
+      nameUz.length < 2 || nameUz.length > 80
+        ? 'Do‘kon nomi 2–80 belgidan iborat bo‘lishi kerak.'
+        : !/^[a-z0-9_]{3,30}$/.test(username)
+          ? 'Do‘kon manzili 3–30 ta kichik lotin harfi, raqam yoki _ belgisidan iborat bo‘lishi kerak.'
+          : !/^[A-Z0-9]{2,8}$/.test(orderPrefix)
+            ? 'Buyurtma kodi 2–8 ta katta lotin harfi yoki raqamdan iborat bo‘lishi kerak. Masalan: XON.'
+            : '';
+    setStoreError(error);
+    if (error) return;
     await post('stores', {
-      username: data.get('username'),
-      nameUz: data.get('nameUz'),
-      orderPrefix: data.get('orderPrefix'),
+      username,
+      nameUz,
+      orderPrefix,
     });
   }
   async function createListing(
@@ -169,37 +195,92 @@ export default function SellerManage() {
     storeId: string,
   ) {
     event.preventDefault();
+    if (creatingListing) return;
     const form = event.currentTarget;
     const data = new FormData(form);
-    const response = await fetch(`${API}/stores/${storeId}/listings`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        nameUz: data.get('nameUz'),
-        nameRu: data.get('nameRu') || undefined,
-        descriptionUz: data.get('descriptionUz'),
-        descriptionRu: data.get('descriptionRu') || undefined,
-        priceMinor: Number(data.get('priceMinor')),
-        salePriceMinor: data.get('salePriceMinor')
-          ? Number(data.get('salePriceMinor'))
-          : undefined,
-        sku: data.get('sku'),
-        stock: Number(data.get('stock')),
-        categorySlug: data.get('categorySlug') || 'other',
-      }),
-    });
-    if (response.ok) {
-      const listing = (await response.json()) as { publicId: string };
-      for (const file of draftFiles[storeId] ?? [])
-        await image(listing.publicId, file);
-      localStorage.removeItem(`resaller-draft-${storeId}`);
-      setDraftFiles((current) => ({ ...current, [storeId]: [] }));
-      setMessage('Draft va media saqlandi.');
-      form.reset();
-      setWizardStep(1);
-      await load();
-    } else setMessage('Draft yaratilmadi. Maydonlarni tekshiring.');
+    const nameUz = String(data.get('nameUz') ?? '').trim();
+    const descriptionUz = String(data.get('descriptionUz') ?? '').trim();
+    const sku = String(data.get('sku') ?? '').trim();
+    const priceMinor = Number(data.get('priceMinor'));
+    const stock = Number(data.get('stock'));
+    const invalid =
+      nameUz.length < 2 || nameUz.length > 160
+        ? { step: 1, text: 'Mahsulot nomini kiriting (2–160 belgi).' }
+        : descriptionUz.length < 10 || descriptionUz.length > 5000
+          ? {
+              step: 1,
+              text: 'Tavsif kamida 10 belgidan iborat bo‘lishi kerak.',
+            }
+          : !String(data.get('priceMinor') ?? '').trim() ||
+              !Number.isInteger(priceMinor) ||
+              priceMinor < 0
+            ? { step: 3, text: 'Narxni to‘g‘ri kiriting.' }
+            : !String(data.get('stock') ?? '').trim() ||
+                !Number.isInteger(stock) ||
+                stock < 0
+              ? { step: 3, text: 'Ombordagi sonni to‘g‘ri kiriting.' }
+              : sku.length < 2 || sku.length > 40
+                ? {
+                    step: 3,
+                    text: 'SKU kodini kiriting (2–40 belgi). Masalan: XON-001.',
+                  }
+                : null;
+    if (invalid) {
+      setListingError(invalid.text);
+      setWizardStep(invalid.step);
+      return;
+    }
+    setListingError('');
+    setCreatingListing(true);
+    try {
+      const response = await fetch(`${API}/stores/${storeId}/listings`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          nameUz,
+          nameRu: data.get('nameRu') || undefined,
+          descriptionUz,
+          descriptionRu: data.get('descriptionRu') || undefined,
+          priceMinor,
+          salePriceMinor: data.get('salePriceMinor')
+            ? Number(data.get('salePriceMinor'))
+            : undefined,
+          sku,
+          stock,
+          categorySlug: data.get('categorySlug') || 'other',
+        }),
+      });
+      if (response.ok) {
+        const listing = (await response.json()) as { publicId: string };
+        let mediaFailed = false;
+        for (const file of draftFiles[storeId] ?? [])
+          if (!(await image(listing.publicId, file))) mediaFailed = true;
+        localStorage.removeItem(`resaller-draft-${storeId}`);
+        setDraftFiles((current) => ({ ...current, [storeId]: [] }));
+        setMessage(
+          mediaFailed
+            ? 'Draft yaratildi, ammo ayrim rasmlar yuklanmadi. Mahsulotlar bo‘limidan qayta yuklang.'
+            : 'Draft va media saqlandi.',
+        );
+        form.reset();
+        setWizardStep(1);
+        await load();
+      } else {
+        const error = (await response.json().catch(() => null)) as {
+          message?: string | string[];
+        } | null;
+        setListingError(
+          Array.isArray(error?.message)
+            ? error.message.join(' ')
+            : (error?.message ?? 'Draft yaratilmadi. Maydonlarni tekshiring.'),
+        );
+      }
+    } catch {
+      setListingError('Server bilan aloqa uzildi. Qayta urinib ko‘ring.');
+    } finally {
+      setCreatingListing(false);
+    }
   }
   async function storeAsset(
     storeId: string,
@@ -245,6 +326,7 @@ export default function SellerManage() {
       response.ok ? 'Rasm siqildi va thumbnail yaratildi.' : 'Rasm yuklanmadi.',
     );
     if (response.ok) await load();
+    return response.ok;
   }
   async function saveSettings(
     event: FormEvent<HTMLFormElement>,
@@ -394,10 +476,14 @@ export default function SellerManage() {
         {message || 'Onboarding, jamoa, sozlama va mahsulotlar bitta joyda.'}
       </p>
       <nav className="seller-section-nav" aria-label="Seller bo‘limlari">
-        <a href="#store">Store</a><a href="#products">Products</a>
-        <Link href="/seller">Orders</Link><Link href="/seller">Chat</Link>
-        <a href="#questions">Q&amp;A</a><a href="#marketing">Marketing</a>
-        <a href="#marketing">Analytics</a><a href="#team">Team</a>
+        <a href="#store">Store</a>
+        <a href="#products">Products</a>
+        <Link href="/seller">Orders</Link>
+        <Link href="/seller">Chat</Link>
+        <a href="#questions">Q&amp;A</a>
+        <a href="#marketing">Marketing</a>
+        <a href="#marketing">Analytics</a>
+        <a href="#team">Team</a>
         <a href="#settings">Settings</a>
       </nav>
       {stores?.length === 0 && (
@@ -412,7 +498,7 @@ export default function SellerManage() {
             </button>
           </div>
           <form className="surface grid gap-3 p-5" onSubmit={verification}>
-            <h2 className="font-black">2. Verification</h2>
+            <h2 className="font-black">2. Shaxsni tasdiqlash</h2>
             <input
               className="field"
               name="legalName"
@@ -444,34 +530,73 @@ export default function SellerManage() {
               />
             </label>
           </form>
-          <form className="surface grid gap-3 p-5" onSubmit={createStore}>
+          <form
+            className="surface grid gap-3 p-5"
+            onSubmit={createStore}
+            noValidate
+          >
             <h2 className="font-black">3. Do‘kon yaratish</h2>
+            <label htmlFor="store-name" className="text-sm font-bold">
+              Do‘kon nomi
+            </label>
             <input
+              id="store-name"
               className="field"
               name="nameUz"
               required
               placeholder="Do‘kon nomi"
             />
+            <label htmlFor="store-username" className="text-sm font-bold">
+              Do‘kon manzili
+            </label>
             <input
+              id="store-username"
               className="field"
               name="username"
               required
               pattern="[a-z0-9_]+"
-              placeholder="username"
+              placeholder="masalan: xon_store"
             />
+            <p className="muted text-xs">
+              Do‘kon havolasida ishlatiladi: resaller.uz/store/xon_store
+            </p>
+            <label htmlFor="store-order-prefix" className="text-sm font-bold">
+              Buyurtma kodi
+            </label>
             <input
+              id="store-order-prefix"
               className="field"
               name="orderPrefix"
               required
               pattern="[A-Z0-9]+"
-              placeholder="ORDER PREFIX"
+              minLength={2}
+              maxLength={8}
+              placeholder="Masalan: XON"
+              aria-describedby="store-order-prefix-help"
+              onChange={(event) => {
+                event.currentTarget.value =
+                  event.currentTarget.value.toUpperCase();
+                setStoreError('');
+              }}
             />
+            <p id="store-order-prefix-help" className="muted text-xs">
+              Buyurtma raqami shu kod bilan boshlanadi. Masalan: XON-12345.
+            </p>
+            {storeError && (
+              <p className="text-sm text-[var(--danger)]" role="alert">
+                {storeError}
+              </p>
+            )}
             <button className="rs-button">Yaratish</button>
           </form>
         </section>
       )}
       {stores?.map((store) => (
-        <section id="store" className="surface mt-7 p-5 sm:p-7" key={store.publicId}>
+        <section
+          id="store"
+          className="surface mt-7 p-5 sm:p-7"
+          key={store.publicId}
+        >
           <div className="flex flex-wrap justify-between gap-4">
             <div>
               <h2 className="text-2xl font-black">{store.nameUz}</h2>
@@ -523,7 +648,8 @@ export default function SellerManage() {
                 </span>
               )}
             </div>
-            <Link id="marketing"
+            <Link
+              id="marketing"
               className="rs-button"
               href={`/seller/marketing/${store.publicId}`}
             >
@@ -531,11 +657,14 @@ export default function SellerManage() {
             </Link>
           </div>
           <div className="mt-6 grid gap-6 lg:grid-cols-2">
-            <form id="products"
+            <form
+              id="products"
               data-draft={store.publicId}
               className="product-wizard grid gap-3 rounded-2xl bg-[var(--surface-2)] p-4"
+              noValidate
               onSubmit={(event) => void createListing(event, store.publicId)}
               onChange={(event) => {
+                setListingError('');
                 const form = event.currentTarget;
                 const values = Object.fromEntries(
                   new FormData(form).entries(),
@@ -554,6 +683,14 @@ export default function SellerManage() {
                   4 bosqich · draft avtomatik saqlanadi
                 </p>
               </div>
+              {listingError && (
+                <p
+                  className="rounded-xl border border-[var(--danger)] p-3 text-sm text-[var(--danger)]"
+                  role="alert"
+                >
+                  {listingError}
+                </p>
+              )}
               <ol className="wizard-steps">
                 {[
                   'Tafsilotlar',
@@ -754,13 +891,16 @@ export default function SellerManage() {
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <label className="wizard-field">
-                    <span>SKU *</span>
+                    <span>SKU (mahsulot kodi) *</span>
                     <input
                       className="field"
                       name="sku"
                       required
                       placeholder="SKU"
                     />
+                    <small className="muted">
+                      Har bir variant uchun alohida kod. Masalan: XON-001.
+                    </small>
                   </label>
                   <label className="wizard-field">
                     <span>Yetkazib berish istisnosi</span>
@@ -814,8 +954,10 @@ export default function SellerManage() {
                   <button type="button" onClick={() => setWizardStep(3)}>
                     ← Orqaga
                   </button>
-                  <button className="rs-button">
-                    Draft va mediani yaratish
+                  <button className="rs-button" disabled={creatingListing}>
+                    {creatingListing
+                      ? 'Saqlanmoqda…'
+                      : 'Draft va mediani yaratish'}
                   </button>
                 </div>
               </fieldset>
@@ -903,7 +1045,7 @@ export default function SellerManage() {
                           }}
                         >
                           <img
-                            src={`${API}/media/${media.thumbnailStorageKey ?? media.storageKey}`}
+                            src={`${API}/media/private/listings/${item.publicId}/${media.thumbnailStorageKey ?? media.storageKey}`}
                             alt={`${item.nameUz} ${index + 1}`}
                           />
                           <small>
@@ -1018,7 +1160,8 @@ export default function SellerManage() {
             </div>
           </div>
           <div className="mt-6 grid gap-5 lg:grid-cols-2">
-            <form id="settings"
+            <form
+              id="settings"
               className="grid gap-3 rounded-2xl bg-[var(--surface-2)] p-4"
               onSubmit={(event) => void saveSettings(event, store.publicId)}
             >
@@ -1094,7 +1237,9 @@ export default function SellerManage() {
             </div>
           </div>
           <div className="mt-6">
-            <h3 id="questions" className="font-black">Xaridor savollari</h3>
+            <h3 id="questions" className="font-black">
+              Xaridor savollari
+            </h3>
             <div className="mt-3 grid gap-3">
               {store.questions.map((question) => (
                 <article

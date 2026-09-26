@@ -24,5 +24,7 @@ Run `pnpm check`. CI executes lint, typecheck, tests, and builds in that order.
 See `docs/architecture.md`, `docs/security.md`, and `docs/development.md` before contributing.
 
 Current implementation coverage and production blockers are tracked in `docs/implementation-status.md` and `docs/launch-checklist.md`.
+After deployment, run `LIVE_ORIGIN=https://resaller.uz pnpm test:live-smoke` (or set `LIVE_ORIGIN` in PowerShell first) to check HTTPS redirects, HSTS, public routes, protected routes, and API readiness without creating production data.
+For a server handoff, follow `docs/server-handoff.md` and `docs/production-preflight.md`; a passing local build is not production approval.
 Foundation-first delivery order is tracked in `docs/foundation-roadmap.md`; final frontend work begins after stages F1–F6 are closed.
 The complete A–D delivery contract starts at `docs/master-roadmap.md`.

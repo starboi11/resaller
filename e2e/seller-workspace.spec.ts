@@ -18,9 +18,11 @@ test('seller can start onboarding and create a draft store', async ({
     .locator('..');
   await storeForm.getByPlaceholder('Do‘kon nomi').fill(`E2E Store ${stamp}`);
   await storeForm
-    .getByPlaceholder('username')
+    .getByLabel('Do‘kon manzili')
     .fill(`store_${stamp}`.slice(0, 30));
-  await storeForm.getByPlaceholder('ORDER PREFIX').fill(`E${stamp.slice(-6)}`);
+  await storeForm.getByRole('button', { name: 'Yaratish' }).click();
+  await expect(storeForm.getByRole('alert')).toContainText('Buyurtma kodi');
+  await storeForm.getByLabel('Buyurtma kodi').fill(`E${stamp.slice(-6)}`);
   await storeForm.getByRole('button', { name: 'Yaratish' }).click();
   await expect(
     page.getByRole('heading', { name: `E2E Store ${stamp}` }),
@@ -28,4 +30,18 @@ test('seller can start onboarding and create a draft store', async ({
   await expect(
     page.getByRole('link', { name: 'Marketing va analytics' }),
   ).toBeVisible();
+  const wizard = page.locator('form.product-wizard');
+  await wizard.getByPlaceholder('Mahsulot nomi').fill('Sinov mahsuloti');
+  await wizard
+    .getByPlaceholder('Batafsil tavsif')
+    .fill('Mahsulot uchun batafsil tavsif.');
+  await wizard.getByRole('button', { name: '3. Narx va variant' }).click();
+  await wizard.getByPlaceholder('Narx', { exact: true }).fill('10000');
+  await wizard.getByPlaceholder('Soni').fill('1');
+  await wizard.getByRole('button', { name: '4. Ko‘rish/publish' }).click();
+  await wizard
+    .getByRole('button', { name: 'Draft va mediani yaratish' })
+    .click();
+  await expect(wizard.getByRole('alert')).toContainText('SKU kodini kiriting');
+  await expect(wizard.getByPlaceholder('SKU')).toBeVisible();
 });

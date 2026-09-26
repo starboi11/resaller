@@ -17,7 +17,15 @@ type Item = {
   };
 };
 type Cart = { items: Item[] };
-type Address = { publicId: string; label: string; fullName: string; phone: string; region: string; address: string; isDefault: boolean };
+type Address = {
+  publicId: string;
+  label: string;
+  fullName: string;
+  phone: string;
+  region: string;
+  address: string;
+  isDefault: boolean;
+};
 
 export default function CartPage() {
   const [cart, setCart] = useState<Cart | null>(null);
@@ -36,10 +44,12 @@ export default function CartPage() {
     }
     if (response.ok) {
       setCart((await response.json()) as Cart);
-      const saved = await fetch(`${API}/addresses`, { credentials: 'include', cache: 'no-store' });
+      const saved = await fetch(`${API}/addresses`, {
+        credentials: 'include',
+        cache: 'no-store',
+      });
       if (saved.ok) setAddresses((await saved.json()) as Address[]);
-    }
-    else setMessage('Savatni ochib bo‘lmadi.');
+    } else setMessage('Savatni ochib bo‘lmadi.');
   }, []);
   useEffect(() => {
     void load();
@@ -139,10 +149,22 @@ export default function CartPage() {
       <p className="eyebrow">Xaridni yakunlash</p>
       <h1 className="mt-2 text-3xl font-black">Savat va yetkazib berish</h1>
       <ol className="checkout-steps mt-6" aria-label="Checkout bosqichlari">
-        <li className="is-active"><b>1</b><span>Savat</span></li>
-        <li><b>2</b><span>Kontakt</span></li>
-        <li><b>3</b><span>Yetkazish</span></li>
-        <li><b>4</b><span>Tasdiqlash</span></li>
+        <li className="is-active">
+          <b>1</b>
+          <span>Savat</span>
+        </li>
+        <li>
+          <b>2</b>
+          <span>Kontakt</span>
+        </li>
+        <li>
+          <b>3</b>
+          <span>Yetkazish</span>
+        </li>
+        <li>
+          <b>4</b>
+          <span>Tasdiqlash</span>
+        </li>
       </ol>
       {message && (
         <p
@@ -157,6 +179,22 @@ export default function CartPage() {
           <StatePanel
             title="Savat bo‘sh"
             description="Marketplace’dan kerakli mahsulotlarni tanlang."
+            icon={
+              <svg
+                viewBox="0 0 24 24"
+                width="22"
+                height="22"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="9" cy="21" r="1" />
+                <circle cx="19" cy="21" r="1" />
+                <path d="M2 2h2l2.5 13h13.2l2-9H5" />
+              </svg>
+            }
             action={
               <Link className="rs-button" href="/marketplace">
                 Mahsulot ko‘rish
@@ -221,48 +259,95 @@ export default function CartPage() {
               To‘lovni sotuvchi bilan platformadan tashqarida kelishasiz.
             </p>
             <div className="mt-5 grid gap-3">
-              {addresses.length > 0 && <label className="checkout-field"><span>Saqlangan manzil</span><select className="field" defaultValue="" onChange={(event) => { const selected=addresses.find(item=>item.publicId===event.target.value); const form=event.currentTarget.form; if(!selected||!form)return; for(const key of ['fullName','phone','region','address'] as const){const field=form.elements.namedItem(key) as HTMLInputElement|HTMLTextAreaElement|null;if(field)field.value=selected[key];} }}><option value="">Yangi manzil</option>{addresses.map(item=><option key={item.publicId} value={item.publicId}>{item.label} · {item.region}</option>)}</select></label>}
-              <label className="checkout-field"><span>Ism va familiya</span>
-              <input
-                className="field"
-                name="fullName"
-                required
-                minLength={3}
-                placeholder="Ism va familiya"
-              />
+              {addresses.length > 0 && (
+                <label className="checkout-field">
+                  <span>Saqlangan manzil</span>
+                  <select
+                    className="field"
+                    defaultValue=""
+                    onChange={(event) => {
+                      const selected = addresses.find(
+                        (item) => item.publicId === event.target.value,
+                      );
+                      const form = event.currentTarget.form;
+                      if (!selected || !form) return;
+                      for (const key of [
+                        'fullName',
+                        'phone',
+                        'region',
+                        'address',
+                      ] as const) {
+                        const field = form.elements.namedItem(key) as
+                          HTMLInputElement | HTMLTextAreaElement | null;
+                        if (field) field.value = selected[key];
+                      }
+                    }}
+                  >
+                    <option value="">Yangi manzil</option>
+                    {addresses.map((item) => (
+                      <option key={item.publicId} value={item.publicId}>
+                        {item.label} · {item.region}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              )}
+              <label className="checkout-field">
+                <span>Ism va familiya</span>
+                <input
+                  className="field"
+                  name="fullName"
+                  required
+                  minLength={3}
+                  placeholder="Ism va familiya"
+                />
               </label>
-              <label className="checkout-save"><input type="checkbox" name="saveAddress"/> <span>Bu manzilni keyingi xarid uchun saqlash</span></label>
-              <label className="checkout-field"><span>Manzil nomi</span><input className="field" name="addressLabel" maxLength={40} placeholder="Masalan: Uy"/></label>
-              <label className="checkout-field"><span>Telefon raqam</span>
-              <input
-                className="field"
-                name="phone"
-                type="tel"
-                autoComplete="tel"
-                required
-                minLength={7}
-                placeholder="Telefon"
-              />
+              <label className="checkout-save">
+                <input type="checkbox" name="saveAddress" />{' '}
+                <span>Bu manzilni keyingi xarid uchun saqlash</span>
               </label>
-              <label className="checkout-field"><span>Viloyat yoki shahar</span>
-              <input
-                className="field"
-                name="region"
-                autoComplete="address-level1"
-                required
-                minLength={2}
-                placeholder="Viloyat / shahar"
-              />
+              <label className="checkout-field">
+                <span>Manzil nomi</span>
+                <input
+                  className="field"
+                  name="addressLabel"
+                  maxLength={40}
+                  placeholder="Masalan: Uy"
+                />
               </label>
-              <label className="checkout-field"><span>To‘liq manzil</span>
-              <textarea
-                className="field min-h-24"
-                name="address"
-                autoComplete="street-address"
-                required
-                minLength={5}
-                placeholder="To‘liq manzil"
-              />
+              <label className="checkout-field">
+                <span>Telefon raqam</span>
+                <input
+                  className="field"
+                  name="phone"
+                  type="tel"
+                  autoComplete="tel"
+                  required
+                  minLength={7}
+                  placeholder="Telefon"
+                />
+              </label>
+              <label className="checkout-field">
+                <span>Viloyat yoki shahar</span>
+                <input
+                  className="field"
+                  name="region"
+                  autoComplete="address-level1"
+                  required
+                  minLength={2}
+                  placeholder="Viloyat / shahar"
+                />
+              </label>
+              <label className="checkout-field">
+                <span>To‘liq manzil</span>
+                <textarea
+                  className="field min-h-24"
+                  name="address"
+                  autoComplete="street-address"
+                  required
+                  minLength={5}
+                  placeholder="To‘liq manzil"
+                />
               </label>
               {Array.from(
                 new Map(
@@ -272,11 +357,14 @@ export default function CartPage() {
                   ]) ?? [],
                 ),
               ).map(([storeId, name]) => (
-                <label className="checkout-field" key={storeId}><span>{name} kuponi</span><input
-                  className="field"
-                  name={`coupon-${storeId}`}
-                  placeholder={`${name} kupon kodi`}
-                /></label>
+                <label className="checkout-field" key={storeId}>
+                  <span>{name} kuponi</span>
+                  <input
+                    className="field"
+                    name={`coupon-${storeId}`}
+                    placeholder={`${name} kupon kodi`}
+                  />
+                </label>
               ))}
             </div>
             <div className="my-5 flex justify-between border-t border-[var(--line)] pt-4">
@@ -286,7 +374,10 @@ export default function CartPage() {
             <button className="rs-button w-full" disabled={busy}>
               {busy ? 'Yaratilmoqda…' : 'Buyurtma berish'}
             </button>
-            <p className="checkout-assurance">Har bir do‘kon uchun alohida buyurtma yaratiladi. Seller 60 daqiqa ichida tasdiqlaydi.</p>
+            <p className="checkout-assurance">
+              Har bir do‘kon uchun alohida buyurtma yaratiladi. Seller 60 daqiqa
+              ichida tasdiqlaydi.
+            </p>
           </form>
         )}
       </div>

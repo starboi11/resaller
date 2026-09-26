@@ -163,6 +163,26 @@ export class MediaController {
       .type(document.mimeType)
       .send(document.bytes);
   }
+  @Get('private/listings/:publicId/:storageKey')
+  @UseGuards(SessionGuard)
+  async listingImageForOwner(
+    @Req() request: FastifyRequest & { user: AuthenticatedUser },
+    @Param('publicId') publicId: string,
+    @Param('storageKey') storageKey: string,
+    @Res() reply: FastifyReply,
+  ) {
+    const image = await this.media.listingImageForOwner(
+      request.user.id,
+      publicId,
+      storageKey,
+    );
+    return reply
+      .header('cache-control', 'private, no-store')
+      .header('cross-origin-resource-policy', 'same-site')
+      .type(image.mimeType)
+      .send(image.bytes);
+  }
+
   @Get(':storageKey')
   async image(
     @Param('storageKey') storageKey: string,

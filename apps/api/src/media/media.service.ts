@@ -175,6 +175,36 @@ export class MediaService {
     };
   }
 
+  async listingImageForOwner(userId: string, listingPublicId: string, storageKey: string) {
+    if (!/^[a-f0-9]{48}\.(jpg|png|webp)$/.test(storageKey))
+      throw new NotFoundException('Media not found');
+    const media = await this.prisma.listingMedia.findFirst({
+      where: {
+        OR: [{ storageKey }, { thumbnailStorageKey: storageKey }],
+        listing: { publicId: listingPublicId, deletedAt: null },
+      },
+      include: {
+        listing: {
+          select: {
+            store: {
+              select: {
+                sellerProfile: { select: { userId: true } },
+                members: { select: { userId: true } },
+              },
+            },
+          },
+        },
+      },
+    });
+    if (
+      !media ||
+      (media.listing.store.sellerProfile.userId !== userId &&
+        !media.listing.store.members.some((member) => member.userId === userId))
+    )
+      throw new NotFoundException('Media not found');
+    return { bytes: await this.storage.get(storageKey), mimeType: media.mimeType };
+  }
+
   async uploadStoreAsset(
     userId: string,
     publicId: string,

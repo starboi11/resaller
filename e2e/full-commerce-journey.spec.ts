@@ -61,15 +61,12 @@ async function register(
   await page.goto(baseUrl);
   const ok = await page.evaluate(
     async ({ username, password, api }) => {
-      const response = await fetch(
-        `${api}/auth/register`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ username, password }),
-        },
-      );
+      const response = await fetch(`${api}/auth/register`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
       return response.ok;
     },
     { username, password: PASSWORD, api: API },
@@ -88,9 +85,9 @@ async function createStore(page: Page, stamp: string) {
     .getByPlaceholder('Do‘kon nomi')
     .fill(`Journey Store ${stamp}`);
   await storeForm
-    .getByPlaceholder('username')
+    .getByLabel('Do‘kon manzili')
     .fill(`journey_store_${stamp}`.slice(0, 30));
-  await storeForm.getByPlaceholder('ORDER PREFIX').fill(`J${stamp.slice(-6)}`);
+  await storeForm.getByLabel('Buyurtma kodi').fill(`J${stamp.slice(-6)}`);
   await storeForm.getByRole('button', { name: 'Yaratish' }).click();
   await expect(
     page.getByRole('heading', { name: `Journey Store ${stamp}` }),
@@ -104,7 +101,9 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
     testInfo.project.name === 'mobile-iphone' && process.platform === 'win32',
     'The Windows WebKit mobile runner stalls during the long multi-context transaction. iPhone layout and authenticated modules remain covered by the responsive suite.',
   );
-  test.setTimeout(testInfo.project.name === 'mobile-iphone' ? 360_000 : 240_000);
+  test.setTimeout(
+    testInfo.project.name === 'mobile-iphone' ? 360_000 : 240_000,
+  );
   const database = new pg.Client({
     connectionString: process.env.E2E_DATABASE_URL ?? process.env.DATABASE_URL,
   });
@@ -120,7 +119,7 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
       ? devices['iPhone 13']
       : testInfo.project.name === 'mobile-android'
         ? devices['Pixel 7']
-      : { viewport: { width: 1440, height: 900 } };
+        : { viewport: { width: 1440, height: 900 } };
   const capture = async (page: Page, name: string) => {
     // Dedicated visual suites own device screenshots. Keeping transactional
     // evidence on Chromium avoids WebKit spending minutes serializing long pages.
@@ -181,6 +180,16 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
     await expect(
       sellerPage.getByText('Rasm siqildi va thumbnail yaratildi.'),
     ).toBeVisible();
+    const draftThumbnail = productCard.locator('.media-reorder img').first();
+    await expect(draftThumbnail).toBeVisible();
+    await expect.poll(() => draftThumbnail.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
+    const privateMediaUrl = await draftThumbnail.getAttribute('src');
+    expect(privateMediaUrl).toContain('/media/private/listings/');
+    const anonymousMedia = await browser.newContext(contextOptions);
+    contexts.push(anonymousMedia);
+    expect((await anonymousMedia.request.get(privateMediaUrl!)).status()).toBe(401);
+    await sellerPage.reload();
+    await expect.poll(() => sellerPage.locator('article').filter({ hasText: productName }).locator('.media-reorder img').first().evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
     await productCard
       .getByRole('button', { name: 'Moderatsiyaga yuborish' })
       .click();
@@ -205,7 +214,9 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
     ).toBeVisible();
     await adminPage.getByRole('link', { name: 'Sharhlar' }).click();
     await expect(adminPage).toHaveURL(/\/operations#reviews$/);
-    await expect(adminPage.getByRole('heading', { name: /Sharhlar \(/ })).toBeVisible();
+    await expect(
+      adminPage.getByRole('heading', { name: /Sharhlar \(/ }),
+    ).toBeVisible();
     await capture(adminPage, 'admin-operations');
     await adminPage.goto(ADMIN);
     await moderationRow.getByRole('button', { name: 'Tasdiqlash' }).click();
@@ -228,11 +239,16 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
     const buyerContext = await browser.newContext(contextOptions);
     contexts.push(buyerContext);
     const buyerPage = await register(buyerContext, WEB, buyerName);
-    await buyerPage.getByRole('button', { name: 'AI yordamchini ochish' }).click();
+    expect((await buyerPage.request.get(privateMediaUrl!)).status()).toBe(404);
+    await buyerPage
+      .getByRole('button', { name: 'AI yordamchini ochish' })
+      .click();
     await buyerPage.getByLabel('Savolingiz').fill(`${productName} ni top`);
     await buyerPage.getByRole('button', { name: 'Yordam so‘rash' }).click();
     await expect(
-      buyerPage.locator('.ai-assistant__reply').getByRole('link', { name: new RegExp(productName) }),
+      buyerPage
+        .locator('.ai-assistant__reply')
+        .getByRole('link', { name: new RegExp(productName) }),
     ).toBeVisible();
     await buyerPage.locator('.ai-assistant__panel header button').click();
     await buyerPage.goto(
@@ -319,8 +335,10 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
       'DELIVERED',
       'COMPLETED',
     ]) {
-      const transitionPending = sellerPage.waitForResponse((response) =>
-        response.url().endsWith('/transition') && response.request().method() === 'POST',
+      const transitionPending = sellerPage.waitForResponse(
+        (response) =>
+          response.url().endsWith('/transition') &&
+          response.request().method() === 'POST',
       );
       await sellerPage
         .getByRole('button', {
@@ -328,7 +346,9 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
         })
         .click();
       const transitionResponse = await transitionPending;
-      expect(transitionResponse.ok(), await transitionResponse.text()).toBe(true);
+      expect(transitionResponse.ok(), await transitionResponse.text()).toBe(
+        true,
+      );
       await expect(
         sellerPage.getByText(orderStatusLabel(status), { exact: true }).first(),
       ).toBeVisible();
@@ -340,8 +360,10 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
     await buyerPage
       .getByLabel('Sharh')
       .fill('Mahsulot va buyurtma jarayoni juda yaxshi ishladi.');
-    const reviewResponsePending = buyerPage.waitForResponse((response) =>
-      response.url().endsWith('/review') && response.request().method() === 'POST',
+    const reviewResponsePending = buyerPage.waitForResponse(
+      (response) =>
+        response.url().endsWith('/review') &&
+        response.request().method() === 'POST',
     );
     await buyerPage.getByRole('button', { name: 'Sharhni yuborish' }).click();
     const reviewResponse = await reviewResponsePending;

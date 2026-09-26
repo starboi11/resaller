@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test';
 
+const API = process.env.E2E_API_URL ?? 'http://localhost:4000/api/v1';
+
 test('new buyer can register and reach protected account and cart screens', async ({
   page,
 }, testInfo) => {
@@ -14,6 +16,20 @@ test('new buyer can register and reach protected account and cart screens', asyn
   await page.getByLabel('Parol').fill('Abcd12');
   await page.getByRole('button', { name: 'Hisob yaratish' }).click();
   await expect(page).toHaveURL(/marketplace/);
+  const sessionCookies = (await page.context().cookies(API)).filter((cookie) =>
+    cookie.name.endsWith('resaller_session'),
+  );
+  expect(sessionCookies).toHaveLength(1);
+  expect(sessionCookies[0]).toMatchObject({
+    httpOnly: true,
+    secure: API.startsWith('https:'),
+  });
+  await page.reload();
+  const currentUser = await page.evaluate(async (api) => {
+    const response = await fetch(`${api}/auth/me`, { credentials: 'include' });
+    return response.status;
+  }, API);
+  expect(currentUser).toBe(200);
   await page.goto('/account');
   await expect(
     page.getByRole('heading', { name: 'Hisob va xavfsizlik' }),
@@ -21,8 +37,11 @@ test('new buyer can register and reach protected account and cart screens', asyn
   await expect(
     page.getByRole('heading', { name: 'Faol qurilmalar' }),
   ).toBeVisible();
+  await expect(page.getByText('Invalid Date')).toHaveCount(0);
+  await expect(page.getByText('Joriy qurilma', { exact: false })).toBeVisible();
   await page.goto('/cart');
   await expect(page.getByText('Savat bo‘sh')).toBeVisible();
+  await expect(page.locator('.rs-state__icon svg')).toBeVisible();
 });
 
 test('password recovery keeps account existence private', async ({ page }) => {
