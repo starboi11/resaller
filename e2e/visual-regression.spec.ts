@@ -28,6 +28,13 @@ test('marketplace empty and outage-safe layout baseline', async ({ page }) => {
     '/marketplace?q=__resaller_visual_baseline_empty_catalog_49f26c__',
   );
   await page.waitForLoadState('networkidle');
+  await expect
+    .poll(() =>
+      page.locator('.catalog-title h1').evaluate((heading) =>
+        heading.scrollWidth <= heading.clientWidth,
+      ),
+    )
+    .toBe(true);
   await expect(page.locator('main.catalog-page')).toHaveScreenshot(
     'marketplace-empty.png',
     { animations: 'disabled', maxDiffPixelRatio: 0.02 },

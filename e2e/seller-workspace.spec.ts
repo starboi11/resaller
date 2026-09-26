@@ -12,6 +12,9 @@ test('seller can start onboarding and create a draft store', async ({
   await page.getByRole('button', { name: 'Hisob yaratish' }).click();
   await expect(page).toHaveURL(/marketplace/);
   await page.goto('/seller/manage');
+  await expect(
+    page.getByRole('navigation', { name: 'Seller bo‘limlari' }),
+  ).toHaveCount(0);
   await page.getByRole('button', { name: 'Ariza boshlash' }).click();
   const storeForm = page
     .getByRole('heading', { name: '3. Do‘kon yaratish' })
@@ -30,6 +33,13 @@ test('seller can start onboarding and create a draft store', async ({
   await expect(
     page.getByRole('link', { name: 'Marketing va analytics' }),
   ).toBeVisible();
+  const sectionNav = page.getByRole('navigation', {
+    name: 'Seller bo‘limlari',
+  });
+  await expect(
+    sectionNav.getByRole('link', { name: 'Marketing va tahlil' }),
+  ).toHaveAttribute('href', '#marketing');
+  await expect(sectionNav.getByRole('link')).toHaveCount(7);
   const wizard = page.locator('form.product-wizard');
   await wizard.getByPlaceholder('Mahsulot nomi').fill('Sinov mahsuloti');
   await wizard

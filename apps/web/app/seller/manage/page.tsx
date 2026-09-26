@@ -475,17 +475,17 @@ export default function SellerManage() {
       >
         {message || 'Onboarding, jamoa, sozlama va mahsulotlar bitta joyda.'}
       </p>
-      <nav className="seller-section-nav" aria-label="Seller bo‘limlari">
-        <a href="#store">Store</a>
-        <a href="#products">Products</a>
-        <Link href="/seller">Orders</Link>
-        <Link href="/seller">Chat</Link>
-        <a href="#questions">Q&amp;A</a>
-        <a href="#marketing">Marketing</a>
-        <a href="#marketing">Analytics</a>
-        <a href="#team">Team</a>
-        <a href="#settings">Settings</a>
-      </nav>
+      {(stores?.length ?? 0) > 0 && (
+        <nav className="seller-section-nav" aria-label="Seller bo‘limlari">
+          <a href="#store">Do‘kon</a>
+          <a href="#products">Mahsulotlar</a>
+          <Link href="/seller">Buyurtma va chat</Link>
+          <a href="#questions">Savollar</a>
+          <a href="#marketing">Marketing va tahlil</a>
+          <a href="#team">Jamoa</a>
+          <a href="#settings">Sozlamalar</a>
+        </nav>
+      )}
       {stores?.length === 0 && (
         <section className="mt-7 grid gap-5 lg:grid-cols-3">
           <div className="surface p-5">

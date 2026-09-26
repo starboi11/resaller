@@ -44,6 +44,23 @@ test('keyboard focus and theme controls are available', async ({ page }) => {
   }
 });
 
+test('advertised search shortcut focuses the search field', async ({
+  page,
+}, testInfo) => {
+  test.skip(
+    testInfo.project.name.startsWith('mobile-'),
+    'The desktop search field is hidden in the mobile header.',
+  );
+  await page.goto('/');
+  const search = page.getByRole('textbox', { name: 'Mahsulot qidirish' });
+  await search.fill('telefon');
+  await page.locator('body').click({ position: { x: 1, y: 1 } });
+  await page.keyboard.press('ControlOrMeta+k');
+  await expect(search).toBeFocused();
+  await page.keyboard.type('noutbuk');
+  await expect(search).toHaveValue('noutbuk');
+});
+
 test('reduced motion removes decorative animation without hiding content', async ({
   page,
 }) => {
@@ -85,9 +102,9 @@ test('public pages have named controls, image alternatives and no horizontal ove
     await page.goto(route);
     // The Next.js development toolbar is not part of the product UI and adds
     // icon-only buttons while the test server is running in development mode.
-    await page.locator('nextjs-portal').evaluateAll((nodes) =>
-      nodes.forEach((node) => node.remove()),
-    );
+    await page
+      .locator('nextjs-portal')
+      .evaluateAll((nodes) => nodes.forEach((node) => node.remove()));
     const overflow = await page.evaluate(
       () =>
         document.documentElement.scrollWidth -

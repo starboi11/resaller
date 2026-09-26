@@ -1154,9 +1154,13 @@ a {
   gap: 1rem;
   margin-top: 1.4rem;
 }
+.catalog-title > div {
+  min-width: 0;
+}
 .catalog-title h1 {
   margin: 0.3rem 0;
   font-size: clamp(1.8rem, 4vw, 2.7rem);
+  overflow-wrap: anywhere;
 }
 .catalog-title p {
   margin: 0;

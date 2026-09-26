@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ThemeToggle } from './theme-toggle';
@@ -15,6 +16,18 @@ const links = [
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const searchRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    const focusSearch = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        searchRef.current?.focus();
+        searchRef.current?.select();
+      }
+    };
+    document.addEventListener('keydown', focusSearch);
+    return () => document.removeEventListener('keydown', focusSearch);
+  }, []);
   const active = (href: string) =>
     pathname === href || pathname.startsWith(`${href}/`);
   return (
@@ -28,6 +41,7 @@ export function SiteHeader() {
           <form className="header-search" action="/marketplace">
             <span aria-hidden="true">⌕</span>
             <input
+              ref={searchRef}
               name="q"
               aria-label="Mahsulot qidirish"
               placeholder="Mahsulot, do‘kon yoki xizmat qidiring..."
