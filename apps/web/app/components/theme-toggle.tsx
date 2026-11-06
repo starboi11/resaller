@@ -14,13 +14,13 @@ function applyTheme(theme: Theme) {
 }
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>('dark');
+  const [theme, setTheme] = useState<Theme>('light');
   useEffect(() => {
     const saved = localStorage.getItem('resaller-theme');
     const initial: Theme =
       saved === 'light' || saved === 'dark' || saved === 'system'
         ? saved
-        : 'dark';
+        : 'light';
     setTheme(initial);
     applyTheme(initial);
     const media = window.matchMedia('(prefers-color-scheme: dark)');

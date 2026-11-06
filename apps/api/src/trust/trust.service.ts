@@ -1,6 +1,7 @@
 import {
   Inject,
   Injectable,
+  Logger,
   OnModuleDestroy,
   OnModuleInit,
 } from '@nestjs/common';
@@ -10,11 +11,12 @@ import { calculateTrust } from './trust-policy.js';
 @Injectable()
 export class TrustService implements OnModuleInit, OnModuleDestroy {
   private timer?: NodeJS.Timeout;
+  private readonly logger = new Logger(TrustService.name);
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
 
   onModuleInit(): void {
     this.timer = setInterval(
-      () => void this.recalculate().catch(() => undefined),
+      () => void this.recalculate().catch(() => this.logger.error('Trust recalculation failed; will retry on the next tick')),
       60 * 60 * 1000,
     );
     this.timer.unref();
@@ -42,22 +44,31 @@ export class TrustService implements OnModuleInit, OnModuleDestroy {
             },
             orders: {
               where: { createdAt: { gte: since } },
+              select: { status: true, fulfillmentStoreId: true, dispute: { select: { id: true } } },
+            },
+            fulfilledOrders: {
+              where: { createdAt: { gte: since } },
               select: { status: true, dispute: { select: { id: true } } },
             },
           },
         });
         for (const store of stores) {
+          // Resale orders: the reseller earns credit for completed sales, but
+          // rejections, timeouts and disputes count against the supplier that
+          // ships them, because the reseller cannot act on those orders.
+          const own = store.orders.filter((order) => !order.fulfillmentStoreId);
+          const shipped = [...own, ...store.fulfilledOrders];
           const inputs = {
             verified: Boolean(store.sellerProfile.verifiedAt),
             completed: store.orders.filter(
               (order) => order.status === 'COMPLETED',
             ).length,
-            cancelled: store.orders.filter((order) =>
+            cancelled: shipped.filter((order) =>
               ['CANCELLED', 'REJECTED'].includes(order.status),
             ).length,
-            timedOut: store.orders.filter((order) => order.status === 'TIMEOUT')
+            timedOut: shipped.filter((order) => order.status === 'TIMEOUT')
               .length,
-            disputes: store.orders.filter((order) => Boolean(order.dispute))
+            disputes: shipped.filter((order) => Boolean(order.dispute))
               .length,
           };
           const result = calculateTrust(inputs);

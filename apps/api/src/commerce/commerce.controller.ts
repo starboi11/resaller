@@ -1,4 +1,5 @@
 import {
+  GoneException,
   Body,
   Controller,
   Delete,
@@ -13,6 +14,7 @@ import {
 } from '@nestjs/common';
 import type { FastifyRequest } from 'fastify';
 import { type AuthenticatedUser, SessionGuard } from '../auth/session.guard.js';
+import { OwnerGuard } from '../owner/owner-access.js';
 import { CommerceService } from './commerce.service.js';
 import {
   AddStoreMemberDto,
@@ -41,7 +43,8 @@ export class CommerceController {
   @Post('seller/apply')
   @UseGuards(SessionGuard)
   apply(@Req() request: FastifyRequest & { user: AuthenticatedUser }) {
-    return this.commerce.applySeller(request.user);
+    // Closed by the owner-only decision (2026-11-03); kept as 410 so old clients get a clear answer.
+    throw new GoneException('Bu imkoniyat endi mavjud emas: Resaller’da faqat do‘kon egasi sotadi');
   }
 
   @Post('seller/verification')
@@ -50,7 +53,20 @@ export class CommerceController {
     @Req() request: FastifyRequest & { user: AuthenticatedUser },
     @Body() input: SellerVerificationDto,
   ) {
-    return this.commerce.submitVerification(request.user.id, input);
+    // Closed by the owner-only decision (2026-11-03); kept as 410 so old clients get a clear answer.
+    throw new GoneException('Bu imkoniyat endi mavjud emas: Resaller’da faqat do‘kon egasi sotadi');
+  }
+
+  @Get('seller/owner-status')
+  @UseGuards(SessionGuard)
+  ownerStatus(@Req() request: FastifyRequest & { user: AuthenticatedUser }) {
+    return this.commerce.ownerStatus(request.user.id);
+  }
+
+  @Get('seller/onboarding')
+  @UseGuards(SessionGuard, OwnerGuard)
+  onboarding(@Req() request: FastifyRequest & { user: AuthenticatedUser }) {
+    return this.commerce.sellerOnboarding(request.user.id);
   }
 
   @Post('stores')
@@ -59,11 +75,21 @@ export class CommerceController {
     @Req() request: FastifyRequest & { user: AuthenticatedUser },
     @Body() input: CreateStoreDto,
   ) {
-    return this.commerce.createStore(request.user, input);
+    // Closed by the owner-only decision (2026-11-03); kept as 410 so old clients get a clear answer.
+    throw new GoneException('Bu imkoniyat endi mavjud emas: Resaller’da faqat do‘kon egasi sotadi');
+  }
+
+  @Post('stores/:publicId/submit')
+  @UseGuards(SessionGuard, OwnerGuard)
+  submitStore(
+    @Req() request: FastifyRequest & { user: AuthenticatedUser },
+    @Param('publicId') publicId: string,
+  ) {
+    return this.commerce.submitStore(request.user, publicId);
   }
 
   @Get('seller/stores')
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, OwnerGuard)
   sellerStores(@Req() request: FastifyRequest & { user: AuthenticatedUser }) {
     return this.commerce.sellerStores(request.user.id);
   }
@@ -74,7 +100,7 @@ export class CommerceController {
   }
 
   @Patch('stores/:publicId/settings')
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, OwnerGuard)
   settings(
     @Req() request: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') publicId: string,
@@ -84,7 +110,7 @@ export class CommerceController {
   }
 
   @Patch('stores/:publicId/vacation')
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, OwnerGuard)
   vacation(
     @Req() request: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') publicId: string,
@@ -100,7 +126,8 @@ export class CommerceController {
     @Param('publicId') publicId: string,
     @Body() input: AddStoreMemberDto,
   ) {
-    return this.commerce.addStoreMember(request.user, publicId, input);
+    // Closed by the owner-only decision (2026-11-03); kept as 410 so old clients get a clear answer.
+    throw new GoneException('Bu imkoniyat endi mavjud emas: Resaller’da faqat do‘kon egasi sotadi');
   }
 
   @Delete('stores/:publicId/members/:username')
@@ -110,11 +137,12 @@ export class CommerceController {
     @Param('publicId') publicId: string,
     @Param('username') username: string,
   ) {
-    return this.commerce.removeStoreMember(request.user, publicId, username);
+    // Closed by the owner-only decision (2026-11-03); kept as 410 so old clients get a clear answer.
+    throw new GoneException('Bu imkoniyat endi mavjud emas: Resaller’da faqat do‘kon egasi sotadi');
   }
 
   @Post('stores/:publicId/listings')
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, OwnerGuard)
   createListing(
     @Req() request: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') publicId: string,
@@ -129,7 +157,7 @@ export class CommerceController {
   }
 
   @Post('listings/:publicId/variants')
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, OwnerGuard)
   createVariant(
     @Req() request: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') publicId: string,
@@ -139,7 +167,7 @@ export class CommerceController {
   }
 
   @Patch('listings/:publicId/variants/:variantId')
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, OwnerGuard)
   updateVariant(
     @Req() request: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') publicId: string,
@@ -155,7 +183,7 @@ export class CommerceController {
   }
 
   @Delete('listings/:publicId/variants/:variantId')
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, OwnerGuard)
   removeVariant(
     @Req() request: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') publicId: string,
@@ -165,7 +193,7 @@ export class CommerceController {
   }
 
   @Patch('listings/:publicId')
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, OwnerGuard)
   updateListing(
     @Req() request: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') publicId: string,
@@ -175,21 +203,21 @@ export class CommerceController {
   }
 
   @Post('listings/:publicId/submit')
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, OwnerGuard)
   submitListing(
     @Req() request: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') publicId: string,
   ) {
     return this.commerce.submitListing(request.user, publicId);
   }
-  @Patch('listings/:publicId/media-order') @UseGuards(SessionGuard) mediaOrder(
+  @Patch('listings/:publicId/media-order') @UseGuards(SessionGuard, OwnerGuard) mediaOrder(
     @Req() request: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') publicId: string,
     @Body() input: MediaOrderDto,
   ) {
     return this.commerce.reorderMedia(request.user, publicId, input.ids);
   }
-  @Post('stores/:publicId/collections') @UseGuards(SessionGuard) collection(
+  @Post('stores/:publicId/collections') @UseGuards(SessionGuard, OwnerGuard) collection(
     @Req() request: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') publicId: string,
     @Body() input: CreateCollectionDto,
@@ -250,7 +278,7 @@ export class CommerceController {
   }
 
   @Get('stores/:publicId/marketing')
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, OwnerGuard)
   marketing(
     @Req() request: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') publicId: string,
@@ -259,7 +287,7 @@ export class CommerceController {
   }
 
   @Post('stores/:publicId/testimonials')
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, OwnerGuard)
   testimonial(
     @Req() request: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') publicId: string,
@@ -269,7 +297,7 @@ export class CommerceController {
   }
 
   @Delete('stores/:publicId/testimonials/:id')
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, OwnerGuard)
   removeTestimonial(
     @Req() request: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') publicId: string,
@@ -279,7 +307,7 @@ export class CommerceController {
   }
 
   @Post('stores/:publicId/coupons')
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, OwnerGuard)
   coupon(
     @Req() request: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') publicId: string,
@@ -289,7 +317,7 @@ export class CommerceController {
   }
 
   @Patch('stores/:publicId/coupons/:id/toggle')
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, OwnerGuard)
   couponToggle(
     @Req() request: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') publicId: string,
@@ -299,7 +327,7 @@ export class CommerceController {
   }
 
   @Post('stores/:publicId/promotions')
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, OwnerGuard)
   promotion(
     @Req() request: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') publicId: string,
@@ -309,7 +337,7 @@ export class CommerceController {
   }
 
   @Get('stores/:publicId/analytics')
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, OwnerGuard)
   analytics(
     @Req() request: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') publicId: string,

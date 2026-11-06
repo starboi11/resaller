@@ -55,7 +55,7 @@ export function ProductActions({
       }),
     });
     if (response.status === 401) window.location.href = '/login';
-    else if (response.ok) { setQuestion(''); setAsking(false); setNotice('Savol sotuvchiga yuborildi.'); }
+    else if (response.ok) { setQuestion(''); setAsking(false); setNotice('Savolingiz Resaller’ga yuborildi.'); }
     else setNotice('Savol yuborilmadi. Qayta urinib ko‘ring.');
   }
   return (
@@ -74,7 +74,7 @@ export function ProductActions({
       >
         Savol berish
       </button>
-      {asking && <form className="question-composer w-full" onSubmit={(event) => { event.preventDefault(); void ask(); }}><label htmlFor="product-question" className="font-black">Sotuvchiga savol</label><textarea id="product-question" value={question} onChange={(event) => setQuestion(event.target.value)} rows={3} maxLength={1000} placeholder="Mahsulot haqida nimani bilmoqchisiz?" /><div className="flex justify-end"><button className="rs-button" type="submit">Yuborish</button></div></form>}
+      {asking && <form className="question-composer w-full" onSubmit={(event) => { event.preventDefault(); void ask(); }}><label htmlFor="product-question" className="font-black">Mahsulot haqida savol</label><textarea id="product-question" value={question} onChange={(event) => setQuestion(event.target.value)} rows={3} maxLength={1000} placeholder="Mahsulot haqida nimani bilmoqchisiz?" /><div className="flex justify-end"><button className="rs-button" type="submit">Yuborish</button></div></form>}
       {notice && <p className="w-full text-sm font-bold" role="status">{notice}</p>}
     </div>
   );

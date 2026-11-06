@@ -6,6 +6,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { randomBytes } from 'node:crypto';
 import { PrismaService } from '../infrastructure/prisma.service.js';
 import type { AuthenticatedUser } from '../auth/session.guard.js';
 import {
@@ -25,6 +26,42 @@ import type {
 } from './operations.dto.js';
 import type { Prisma } from '../generated/prisma/client.js';
 import { couponDiscount } from './coupon-policy.js';
+import { isUniqueViolation, isSerializationFailure, mapSerializationFailure } from '../common/prisma-errors.js';
+import {
+  earningAmount,
+  inventoryVariantId,
+  isMarkupAllowed,
+  markupWindow,
+  resellerUnitPrice,
+  wholesaleUnitPrice,
+} from '../resale/resale-pricing.js';
+import { syncResellerEarning } from '../resale/resale-sync.js';
+import { isOwnerStore } from '../resale/resale-visibility.js';
+
+type StoreParty = { sellerProfile: { userId: string }; members: { userId: string }[] };
+const isStoreParty = (store: StoreParty | null | undefined, userId: string) =>
+  !!store && store.sellerProfile.userId === userId;
+/**
+ * Who acts as "the seller" for an order. A resale order is fulfilled (accepted,
+ * shipped, cancelled, returned) by the supplier store; the reseller store keeps
+ * the buyer relationship (chat, reviews) but cannot drive fulfilment.
+ */
+const orderParties = (
+  order: { store: StoreParty; fulfillmentStore?: StoreParty | null },
+  userId: string,
+) => {
+  const reseller = isStoreParty(order.store, userId);
+  const fulfiller = order.fulfillmentStore ? isStoreParty(order.fulfillmentStore, userId) : reseller;
+  return { reseller, fulfiller, anySeller: reseller || fulfiller,
+    fulfilmentOwnerId: (order.fulfillmentStore ?? order.store).sellerProfile.userId };
+};
+const partyStoreInclude = { include: { sellerProfile: true, members: true } } as const;
+/** OrderItem columns that only the platform may see. */
+const publicOrderItem = <T extends { supplierVariantId?: unknown; supplierUnitPriceMinor?: unknown; resellerMarginMinor?: unknown }>(item: T) => {
+  const { supplierVariantId: _v, supplierUnitPriceMinor: _w, resellerMarginMinor: _m, ...rest } = item;
+  return rest;
+};
+
 
 const serializeCart = (cart: any) => ({
   ...cart,
@@ -40,6 +77,18 @@ const serializeCart = (cart: any) => ({
 @Injectable()
 export class OperationsService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
+
+  /** A resale listing can be bought only while its supplier listing is on sale and the markup is inside the supplier window. */
+  private resaleSourceOpen(listing: {
+    markupBps: number | null;
+    sourceListing: null | { status: string; deletedAt: Date | null; minMarkupBps: number | null; maxMarkupBps: number | null;
+      store: { kind: string; status: string; vacationMode: boolean } };
+  }) {
+    const source = listing.sourceListing;
+    return !!source && source.status === 'ACTIVE' && !source.deletedAt && source.store.kind === 'SUPPLIER'
+      && source.store.status === 'ACTIVE' && !source.store.vacationMode
+      && listing.markupBps !== null && isMarkupAllowed(listing.markupBps, markupWindow(source));
+  }
 
   addresses(userId: string) {
     return this.prisma.savedAddress.findMany({ where: { userId }, orderBy: [{ isDefault: 'desc' }, { updatedAt: 'desc' }] });
@@ -88,19 +137,27 @@ export class OperationsService {
       include: {
         variants: {
           where: { id: input.variantId },
-          include: { inventory: true },
+          include: { inventory: true, sourceVariant: { include: { inventory: true } } },
         },
         store: true,
+        sourceListing: { include: { store: true } },
       },
     });
     if (
       !listing ||
       listing.status !== 'ACTIVE' ||
-      listing.store.status !== 'ACTIVE'
+      listing.deletedAt ||
+      listing.store.status !== 'ACTIVE' ||
+      listing.store.kind !== 'SELLER' ||
+      listing.sourceListingId ||
+      !isOwnerStore(listing.store)
     )
       throw new NotFoundException('Active listing not found');
+    if (listing.sourceListingId && !this.resaleSourceOpen(listing))
+      throw new ConflictException('Mahsulot hozir sotuvda emas');
     const variant = listing.variants[0];
-    if (!variant?.inventory || variant.inventory.available < input.quantity)
+    const inventory = variant?.sourceVariantId ? variant.sourceVariant?.inventory : variant?.inventory;
+    if (!inventory || inventory.available < input.quantity)
       throw new ConflictException('Insufficient stock');
     const cart = await this.prisma.cart.upsert({
       where: { buyerId: userId },
@@ -125,10 +182,11 @@ export class OperationsService {
   async updateCartItem(userId: string, id: string, quantity: number) {
     const item = await this.prisma.cartItem.findFirst({
       where: { id, cart: { buyerId: userId } },
-      include: { variant: { include: { inventory: true } } },
+      include: { variant: { include: { inventory: true, sourceVariant: { include: { inventory: true } } } } },
     });
     if (!item) throw new NotFoundException('Cart item not found');
-    if (!item.variant.inventory || item.variant.inventory.available < quantity)
+    const inventory = item.variant.sourceVariantId ? item.variant.sourceVariant?.inventory : item.variant.inventory;
+    if (!inventory || inventory.available < quantity)
       throw new ConflictException('Insufficient stock');
     await this.prisma.cartItem.update({ where: { id }, data: { quantity } });
     return this.cart(userId);
@@ -155,7 +213,7 @@ export class OperationsService {
         history: { orderBy: { createdAt: 'asc' } },
       },
     });
-    return orders.map((order) => ({
+    return orders.map(({ fulfillmentStoreId: _f, ...order }) => ({
       ...order,
       totalMinor: order.totalMinor.toString(),
       subtotalMinor: order.subtotalMinor.toString(),
@@ -180,6 +238,9 @@ export class OperationsService {
             members: { select: { userId: true } },
           },
         },
+        fulfillmentStore: {
+          select: { sellerProfile: { select: { userId: true } }, members: { select: { userId: true } } },
+        },
         items: true,
         history: { orderBy: { createdAt: 'asc' } },
         dispute: { include: { events: true, decision: true } },
@@ -189,49 +250,57 @@ export class OperationsService {
       },
     });
     if (!order) throw new NotFoundException('Order not found');
-    const canView =
-      order.buyerId === user.id ||
-      order.store.sellerProfile.userId === user.id ||
-      order.store.members.some((member) => member.userId === user.id) ||
-      user.roles.some((role) =>
-        ['SUPER_ADMIN', 'DISPUTE_ADMIN', 'SUPPORT_ADMIN'].includes(role),
-      );
+    const parties = orderParties(order, user.id);
+    const admin = user.roles.some((role) =>
+      ['SUPER_ADMIN', 'DISPUTE_ADMIN', 'SUPPORT_ADMIN'].includes(role),
+    );
+    const canView = order.buyerId === user.id || parties.anySeller || admin;
     if (!canView) throw new ForbiddenException('Order access denied');
+    const { fulfillmentStore: _fulfillmentStore, fulfillmentStoreId, ...rest } = order;
+    // Wholesale price and margin are visible to the platform side only:
+    // the fulfilling supplier, the reseller who earns it, and admins.
+    const seesResale = order.buyerId !== user.id && (parties.anySeller || admin);
     return {
-      ...order,
+      ...rest,
       viewerId: user.id,
       viewerRole: order.buyerId === user.id ? 'BUYER' : 'SELLER',
+      fulfilment: fulfillmentStoreId ? 'SUPPLIER' : 'STORE',
+      canFulfil: order.buyerId !== user.id && parties.fulfiller,
+      // Order chat is between the buyer and the selling store; a supplier that
+      // only ships the order has no access to it.
+      canChat: order.buyerId === user.id || parties.reseller || admin,
       totalMinor: order.totalMinor.toString(),
       subtotalMinor: order.subtotalMinor.toString(),
       discountMinor: order.discountMinor.toString(),
-      items: order.items.map((item) => ({
-        ...item,
-        unitPriceMinor: item.unitPriceMinor.toString(),
-      })),
+      items: order.items.map((item) => {
+        const base = { ...publicOrderItem(item), unitPriceMinor: item.unitPriceMinor.toString() };
+        return seesResale && item.supplierVariantId
+          ? { ...base, supplierUnitPriceMinor: item.supplierUnitPriceMinor!.toString(), resellerMarginMinor: item.resellerMarginMinor!.toString() }
+          : base;
+      }),
     };
   }
 
   async sellerOrders(userId: string) {
+    const mine = { sellerProfile: { userId } };
     const orders = await this.prisma.order.findMany({
-      where: {
-        store: {
-          OR: [
-            { sellerProfile: { userId } },
-            { members: { some: { userId } } },
-          ],
-        },
-      },
+      where: { OR: [{ store: mine }, { fulfillmentStore: mine }] },
       take: 100,
       orderBy: { createdAt: 'desc' },
       include: {
-        store: { select: { publicId: true, username: true, nameUz: true } },
+        store: { select: { publicId: true, username: true, nameUz: true, sellerProfile: { select: { userId: true } }, members: { select: { userId: true } } } },
+        fulfillmentStore: { select: { publicId: true, nameUz: true, sellerProfile: { select: { userId: true } }, members: { select: { userId: true } } } },
         items: {
           select: { quantity: true, unitPriceMinor: true, snapshot: true },
         },
       },
     });
-    return orders.map((order) => ({
+    return orders.map(({ fulfillmentStore, fulfillmentStoreId: _f, store: { sellerProfile: _p, members: _m, ...store }, ...order }) => ({
       ...order,
+      store,
+      fulfilment: fulfillmentStore ? 'SUPPLIER' : 'STORE',
+      // FULFILLER ships the order; RESELLER only follows it and talks to the buyer.
+      myRole: !fulfillmentStore ? 'SELLER' : isStoreParty(fulfillmentStore, userId) ? 'FULFILLER' : 'RESELLER',
       totalMinor: order.totalMinor.toString(),
       subtotalMinor: order.subtotalMinor.toString(),
       discountMinor: order.discountMinor.toString(),
@@ -243,19 +312,15 @@ export class OperationsService {
   }
 
   async checkout(user: AuthenticatedUser, input: CheckoutDto) {
+    return this.checkoutAttempt(user, input, 0);
+  }
+
+  private async checkoutAttempt(user: AuthenticatedUser, input: CheckoutDto, attempt: number): Promise<{ checkoutPublicId: string; orders: { publicId: string; displayId: string; status: string }[] }> {
     const existing = await this.prisma.checkout.findUnique({
       where: { idempotencyKey: input.idempotencyKey },
       include: { orders: true },
     });
-    if (existing)
-      return {
-        checkoutPublicId: existing.publicId,
-        orders: existing.orders.map((o) => ({
-          publicId: o.publicId,
-          displayId: o.displayId,
-          status: o.status,
-        })),
-      };
+    if (existing) return this.replayCheckout(existing, user.id);
     return this.prisma.$transaction(
       async (tx) => {
         const cart = await tx.cart.findUnique({
@@ -271,7 +336,10 @@ export class OperationsService {
                         policies: { orderBy: { version: 'desc' }, take: 1 },
                       },
                     },
-                    variants: { include: { inventory: true } },
+                    variants: { include: { inventory: true, sourceVariant: true } },
+                    sourceListing: {
+                      include: { store: { include: { sellerProfile: { select: { userId: true } } } } },
+                    },
                   },
                 },
               },
@@ -295,16 +363,47 @@ export class OperationsService {
         const orders = [];
         for (const [storeId, items] of byStore) {
           const store = items[0]!.listing.store;
-          let subtotal = 0n;
+          // The cart was validated when each item was added. Everything can
+          // change before checkout, so purchasability is re-checked here,
+          // inside the transaction that reserves the stock.
+          // An item left in a cart from before the owner-only switch is refused here.
+          if (store.status !== 'ACTIVE' || store.kind !== 'SELLER' || !isOwnerStore(store))
+            throw new ConflictException('Store is no longer open for orders');
+          if (store.vacationMode)
+            throw new ConflictException('Store is in vacation mode');
+          // One order is either entirely own stock or entirely fulfilled by one
+          // supplier, so the party that ships it is unambiguous.
+          type Line = {
+            item: (typeof items)[number];
+            variant: (typeof items)[number]['listing']['variants'][number];
+            unitPrice: bigint;
+            stockVariantId: string;
+            resale: { supplierVariantId: string; wholesale: bigint; margin: bigint } | null;
+          };
+          const groups = new Map<string, { fulfillmentStoreId: string | null; supplierOwnerId: string | null; lines: Line[]; subtotal: bigint; margin: bigint }>();
           for (const item of items) {
             const variant = item.listing.variants.find(
               (v) => v.id === item.variantId,
             );
-            if (!variant?.inventory)
-              throw new ConflictException('Variant unavailable');
+            if (item.listing.status !== 'ACTIVE' || item.listing.deletedAt)
+              throw new ConflictException('A product in the cart is no longer on sale');
+            if (!variant) throw new ConflictException('Variant unavailable');
+            let unitPrice = variant.priceOverrideMinor ?? item.listing.priceMinor;
+            let resale: Line['resale'] = null;
+            const source = item.listing.sourceListing;
+            if (item.listing.sourceListingId) {
+              // Resale price is recomputed from the current supplier price; the
+              // listing's own price is only a display cache.
+              if (!source || !variant.sourceVariant || variant.sourceVariant.listingId !== source.id || !this.resaleSourceOpen(item.listing))
+                throw new ConflictException('A product in the cart is no longer on sale');
+              const wholesale = wholesaleUnitPrice(variant.sourceVariant, source);
+              unitPrice = resellerUnitPrice(wholesale, item.listing.markupBps!);
+              resale = { supplierVariantId: variant.sourceVariant.id, wholesale, margin: unitPrice - wholesale };
+            }
+            const stockVariantId = inventoryVariantId(variant);
             const reserved = await tx.inventory.updateMany({
               where: {
-                variantId: item.variantId,
+                variantId: stockVariantId,
                 available: { gte: item.quantity },
               },
               data: {
@@ -315,10 +414,15 @@ export class OperationsService {
             });
             if (reserved.count !== 1)
               throw new ConflictException('Stock changed; review cart');
-            subtotal +=
-              (variant.priceOverrideMinor ?? item.listing.priceMinor) *
-              BigInt(item.quantity);
+            const fulfillmentStoreId = resale ? source!.storeId : null;
+            const key = fulfillmentStoreId ?? 'own';
+            const group = groups.get(key) ?? { fulfillmentStoreId, supplierOwnerId: resale ? source!.store.sellerProfile.userId : null, lines: [], subtotal: 0n, margin: 0n };
+            group.lines.push({ item, variant, unitPrice, stockVariantId, resale });
+            group.subtotal += unitPrice * BigInt(item.quantity);
+            if (resale) group.margin += resale.margin * BigInt(item.quantity);
+            groups.set(key, group);
           }
+          const subtotal = [...groups.values()].reduce((sum, group) => sum + group.subtotal, 0n);
           const now = new Date();
           const requestedCode = input.couponCodes?.[store.publicId]
             ?.trim()
@@ -348,106 +452,175 @@ export class OperationsService {
           } else if (requestedCode) {
             throw new NotFoundException('Coupon not found');
           }
-          const total = subtotal - discount;
-          const snapshot = JSON.parse(
-            JSON.stringify({
-              store: {
-                publicId: store.publicId,
-                username: store.username,
-                nameUz: store.nameUz,
-              },
-              delivery: input.delivery,
-              policy: store.policies[0] ?? null,
-              commercial: {
-                commissionBasisPoints:
-                  PLATFORM_BUSINESS_RULES.commissionBasisPoints,
-                paymentCollection: PLATFORM_BUSINESS_RULES.paymentCollection,
-                escrow: PLATFORM_BUSINESS_RULES.escrow,
-                settlement: PLATFORM_BUSINESS_RULES.settlement,
-              },
-              coupon: coupon
-                ? {
-                    code: coupon.code,
-                    kind: coupon.kind,
-                    discountMinor: discount.toString(),
-                  }
-                : null,
-            }),
-          ) as Prisma.InputJsonValue;
-          const order = await tx.order.create({
-            data: {
-              checkoutId: checkout.id,
-              buyerId: user.id,
-              storeId,
-              displayId: `${store.orderPrefix}-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`,
-              totalMinor: total,
-              subtotalMinor: subtotal,
-              discountMinor: discount,
-              sellerAcceptBy: sellerAcceptBy(now),
-              snapshot,
-              items: {
-                create: items.map((item) => {
-                  const variant = item.listing.variants.find(
-                    (v) => v.id === item.variantId,
-                  )!;
-                  return {
+          const expected = input.expectedTotalMinor?.[store.publicId];
+          if (expected !== undefined && BigInt(expected) !== subtotal - discount)
+            throw new ConflictException('Price changed since the cart was reviewed; confirm the new total');
+          // The store's coupon is charged to its own-stock order first; any
+          // remainder comes out of the reseller margin of the resale orders.
+          let remaining = discount;
+          let redemptionDone = false;
+          const ordered = [...groups.values()].sort((a, b) => Number(a.fulfillmentStoreId !== null) - Number(b.fulfillmentStoreId !== null));
+          for (const [index, group] of ordered.entries()) {
+            const cap = group.fulfillmentStoreId ? group.margin : group.subtotal;
+            // The last group takes whatever is left, so an over-large coupon on
+            // resale items is rejected below rather than silently capped.
+            const share = index === ordered.length - 1 || remaining <= cap ? remaining : cap;
+            remaining -= share;
+            const earning = group.fulfillmentStoreId ? earningAmount(group.margin, share) : null;
+            if (group.fulfillmentStoreId && earning === null)
+              throw new ConflictException('Kupon chegirmasi sotuvchi ustamasidan oshib ketdi');
+            const total = group.subtotal - share;
+            const snapshot = JSON.parse(
+              JSON.stringify({
+                store: {
+                  publicId: store.publicId,
+                  username: store.username,
+                  nameUz: store.nameUz,
+                },
+                delivery: input.delivery,
+                policy: store.policies[0] ?? null,
+                commercial: {
+                  commissionBasisPoints:
+                    PLATFORM_BUSINESS_RULES.commissionBasisPoints,
+                  paymentCollection: PLATFORM_BUSINESS_RULES.paymentCollection,
+                  escrow: PLATFORM_BUSINESS_RULES.escrow,
+                  settlement: PLATFORM_BUSINESS_RULES.settlement,
+                },
+                coupon: coupon && share > 0n
+                  ? {
+                      code: coupon.code,
+                      kind: coupon.kind,
+                      discountMinor: share.toString(),
+                    }
+                  : null,
+              }),
+            ) as Prisma.InputJsonValue;
+            const order = await tx.order.create({
+              data: {
+                checkoutId: checkout.id,
+                buyerId: user.id,
+                storeId,
+                fulfillmentStoreId: group.fulfillmentStoreId,
+                displayId: `${store.orderPrefix}-${Date.now().toString(36).toUpperCase()}-${randomBytes(4).toString('hex').toUpperCase()}`,
+                totalMinor: total,
+                subtotalMinor: group.subtotal,
+                discountMinor: share,
+                sellerAcceptBy: sellerAcceptBy(now),
+                snapshot,
+                items: {
+                  create: group.lines.map(({ item, variant, unitPrice, resale }) => ({
                     variantId: item.variantId,
                     quantity: item.quantity,
-                    unitPriceMinor:
-                      variant.priceOverrideMinor ?? item.listing.priceMinor,
+                    unitPriceMinor: unitPrice,
+                    supplierVariantId: resale?.supplierVariantId ?? null,
+                    supplierUnitPriceMinor: resale?.wholesale ?? null,
+                    resellerMarginMinor: resale?.margin ?? null,
                     snapshot: {
                       listingPublicId: item.listing.publicId,
                       nameUz: item.listing.nameUz,
+                      categoryId: item.listing.categoryId,
                       variantOptions: variant.options,
                       sku: variant.sku,
                     },
-                  };
-                }),
+                  })),
+                },
+                reservations: {
+                  // Stock is held on the variant that owns the Inventory row
+                  // (the supplier variant for resale items), so every existing
+                  // release/finalize path works unchanged.
+                  create: group.lines.map(({ item, stockVariantId }) => ({
+                    variantId: stockVariantId,
+                    quantity: item.quantity,
+                    expiresAt: sellerAcceptBy(now),
+                  })),
+                },
+                history: {
+                  create: { toStatus: 'WAITING_SELLER', actorId: user.id },
+                },
+                conversation: {
+                  create: { members: { create: [{ userId: user.id }] } },
+                },
               },
-              reservations: {
-                create: items.map((item) => ({
-                  variantId: item.variantId,
-                  quantity: item.quantity,
-                  expiresAt: sellerAcceptBy(now),
-                })),
-              },
-              history: {
-                create: { toStatus: 'WAITING_SELLER', actorId: user.id },
-              },
-              conversation: {
-                create: { members: { create: [{ userId: user.id }] } },
-              },
-            },
-          });
-          if (coupon)
-            await tx.couponRedemption.create({
-              data: { couponId: coupon.id, userId: user.id, orderId: order.id },
             });
-          await tx.notification.create({
-            data: {
-              userId: store.sellerProfile.userId,
-              severity: 'ACTION_REQUIRED',
-              type: 'ORDER_ACTION_REQUIRED',
-              payload: {
-                orderPublicId: order.publicId,
-                displayId: order.displayId,
-                sellerAcceptBy: order.sellerAcceptBy.toISOString(),
+            if (coupon && share > 0n && !redemptionDone) {
+              await tx.couponRedemption.create({
+                data: { couponId: coupon.id, userId: user.id, orderId: order.id },
+              });
+              redemptionDone = true;
+            }
+            if (group.fulfillmentStoreId)
+              await tx.resellerEarning.create({
+                data: { storeId, orderId: order.id, amountMinor: earning!, status: 'PENDING' },
+              });
+            await tx.notification.create({
+              data: {
+                userId: group.supplierOwnerId ?? store.sellerProfile.userId,
+                severity: 'ACTION_REQUIRED',
+                type: 'ORDER_ACTION_REQUIRED',
+                payload: {
+                  orderPublicId: order.publicId,
+                  displayId: order.displayId,
+                  sellerAcceptBy: order.sellerAcceptBy.toISOString(),
+                },
               },
-            },
-          });
-          orders.push({
-            publicId: order.publicId,
-            displayId: order.displayId,
-            status: order.status,
-            totalMinor: order.totalMinor.toString(),
-            sellerAcceptBy: order.sellerAcceptBy,
-          });
+            });
+            if (group.fulfillmentStoreId)
+              await tx.notification.create({
+                data: {
+                  userId: store.sellerProfile.userId,
+                  severity: 'INFO',
+                  type: 'RESALE_ORDER_CREATED',
+                  payload: { orderPublicId: order.publicId, displayId: order.displayId, earningMinor: earning!.toString() },
+                },
+              });
+            orders.push({
+              publicId: order.publicId,
+              displayId: order.displayId,
+              status: order.status,
+              totalMinor: order.totalMinor.toString(),
+              sellerAcceptBy: order.sellerAcceptBy,
+            });
+          }
         }
         await tx.cartItem.deleteMany({ where: { cartId: cart.id } });
         return { checkoutPublicId: checkout.publicId, orders };
       },
       { isolationLevel: 'Serializable' },
-    );
+    ).catch(async (error: unknown) => {
+      // Two submissions of the same idempotency key can race past the lookup
+      // above. The loser must replay the winner's checkout, not fail with 500.
+      if (isUniqueViolation(error)) {
+        const raced = await this.prisma.checkout.findUnique({
+          where: { idempotencyKey: input.idempotencyKey },
+          include: { orders: true },
+        });
+        if (raced) return this.replayCheckout(raced, user.id);
+      }
+      // P2034 guarantees the entire transaction was rolled back. Retry only
+      // that failure, retaining the original key and all stock/price checks.
+      // Never retry timeouts or ambiguous transport failures automatically.
+      if (isSerializationFailure(error) && attempt < 2) {
+        await new Promise((resolve) => setTimeout(resolve, 50 * (attempt + 1)));
+        return this.checkoutAttempt(user, input, attempt + 1);
+      }
+      return mapSerializationFailure(error);
+    });
+  }
+
+  private replayCheckout(checkout: {
+    buyerId: string;
+    publicId: string;
+    orders: { publicId: string; displayId: string; status: string }[];
+  }, buyerId: string) {
+    if (checkout.buyerId !== buyerId) throw new ForbiddenException('Checkout access denied');
+    return {
+      checkoutPublicId: checkout.publicId,
+      orders: checkout.orders.map((order) => ({
+        publicId: order.publicId,
+        displayId: order.displayId,
+        status: order.status,
+      })),
+    };
   }
 
   async transition(
@@ -461,17 +634,22 @@ export class OperationsService {
         const order = await tx.order.findUnique({
           where: { publicId },
           include: {
-            store: { include: { sellerProfile: true, members: true } },
+            store: partyStoreInclude,
+            fulfillmentStore: partyStoreInclude,
             reservations: true,
           },
         });
         if (!order) throw new NotFoundException('Order not found');
-        const seller =
-          order.store.sellerProfile.userId === user.id ||
-          order.store.members.some((m) => m.userId === user.id);
+        const parties = orderParties(order, user.id);
+        const seller = parties.fulfiller;
         const buyer = order.buyerId === user.id;
+        if (!seller && !buyer && parties.reseller)
+          throw new ForbiddenException('Bu buyurtmani supplier bajaradi; holatini faqat u o‘zgartiradi');
         if (!seller && !buyer)
           throw new ForbiddenException('Order access denied');
+        // Buyer identity alone must never grant fulfillment privileges.
+        if (buyer && !seller && to !== 'CANCELLED' && to !== 'COMPLETED')
+          throw new ForbiddenException('Only the store owner can fulfill orders');
         if (!canTransitionOrder(order.status as OrderState, to))
           throw new ConflictException('Invalid order transition');
         if (
@@ -503,9 +681,11 @@ export class OperationsService {
             },
           },
         });
-        const recipientId = seller
-          ? order.buyerId
-          : order.store.sellerProfile.userId;
+        await syncResellerEarning(tx, order.id, to);
+        const recipientIds = seller
+          ? [order.buyerId, ...(order.fulfillmentStore ? [order.store.sellerProfile.userId] : [])]
+          : [parties.fulfilmentOwnerId, ...(order.fulfillmentStore ? [order.store.sellerProfile.userId] : [])];
+        for (const recipientId of new Set(recipientIds.filter((id) => id !== user.id)))
         await tx.notification.create({
           data: {
             userId: recipientId,
@@ -559,7 +739,7 @@ export class OperationsService {
         return { publicId, status: to };
       },
       { isolationLevel: 'Serializable' },
-    );
+    ).catch(mapSerializationFailure);
   }
 
   async requestCancellation(
@@ -600,18 +780,18 @@ export class OperationsService {
   }
 
   async requestOrderChange(user: AuthenticatedUser, publicId: string, request: string) {
-    const order = await this.prisma.order.findUnique({ where: { publicId }, include: { store: { include: { sellerProfile: true } } } });
+    const order = await this.prisma.order.findUnique({ where: { publicId }, include: { store: { include: { sellerProfile: true } }, fulfillmentStore: { include: { sellerProfile: true } } } });
     if (!order || order.buyerId !== user.id) throw new NotFoundException('Order not found');
     if (!['WAITING_SELLER','ACCEPTED','PREPARING'].includes(order.status)) throw new ConflictException('Order can no longer be changed');
     const change = await this.prisma.orderChange.create({ data: { orderId: order.id, actorId: user.id, kind: 'BUYER_CHANGE_REQUEST', before: { orderStatus: order.status }, after: { status: 'PENDING', request } } });
-    await this.prisma.notification.create({ data: { userId: order.store.sellerProfile.userId, severity: 'ACTION_REQUIRED', type: 'ORDER_CHANGE_REQUESTED', payload: { orderPublicId: publicId, changeId: change.id, request } } });
+    await this.prisma.notification.create({ data: { userId: (order.fulfillmentStore ?? order.store).sellerProfile.userId, severity: 'ACTION_REQUIRED', type: 'ORDER_CHANGE_REQUESTED', payload: { orderPublicId: publicId, changeId: change.id, request } } });
     return { id: change.id, status: 'PENDING' };
   }
 
   async decideOrderChange(user: AuthenticatedUser, publicId: string, changeId: string, approved: boolean, reason?: string) {
-    const order = await this.prisma.order.findUnique({ where: { publicId }, include: { store: { include: { sellerProfile: true, members: true } } } });
+    const order = await this.prisma.order.findUnique({ where: { publicId }, include: { store: partyStoreInclude, fulfillmentStore: partyStoreInclude } });
     if (!order) throw new NotFoundException('Order not found');
-    const seller=order.store.sellerProfile.userId===user.id||order.store.members.some(member=>member.userId===user.id); if(!seller)throw new ForbiddenException('Only seller can decide');
+    const seller = orderParties(order, user.id).fulfiller; if(!seller)throw new ForbiddenException('Only seller can decide');
     const change=await this.prisma.orderChange.findFirst({where:{id:changeId,orderId:order.id,kind:'BUYER_CHANGE_REQUEST'}}); if(!change)throw new NotFoundException('Change request not found');
     const after=change.after as {status?:string;request?:string}|null; if(after?.status!=='PENDING')throw new ConflictException('Change request already decided');
     await this.prisma.orderChange.update({where:{id:change.id},data:{after:{...after,status:approved?'APPROVED':'REJECTED',reason:reason??null,decidedAt:new Date().toISOString()}}});
@@ -630,7 +810,8 @@ export class OperationsService {
         const order = await tx.order.findUnique({
           where: { publicId },
           include: {
-            store: { include: { sellerProfile: true, members: true } },
+            store: partyStoreInclude,
+            fulfillmentStore: partyStoreInclude,
             reservations: true,
             changes: {
               where: {
@@ -643,9 +824,7 @@ export class OperationsService {
           },
         });
         if (!order) throw new NotFoundException('Order not found');
-        const seller =
-          order.store.sellerProfile.userId === user.id ||
-          order.store.members.some((member) => member.userId === user.id);
+        const seller = orderParties(order, user.id).fulfiller;
         if (!seller)
           throw new ForbiddenException(
             'Only the seller can decide cancellation requests',
@@ -685,6 +864,7 @@ export class OperationsService {
               },
             },
           });
+          await syncResellerEarning(tx, order.id, 'CANCELLED');
           for (const reservation of order.reservations.filter(
             (item) => item.status === 'ACTIVE',
           )) {
@@ -721,7 +901,7 @@ export class OperationsService {
         };
       },
       { isolationLevel: 'Serializable' },
-    );
+    ).catch(mapSerializationFailure);
   }
 
   async requestReturn(
@@ -733,7 +913,7 @@ export class OperationsService {
       async (tx) => {
         const order = await tx.order.findUnique({
           where: { publicId },
-          include: { store: { include: { sellerProfile: true } } },
+          include: { store: { include: { sellerProfile: true } }, fulfillmentStore: { include: { sellerProfile: true } } },
         });
         if (!order || order.buyerId !== user.id)
           throw new NotFoundException('Order not found');
@@ -768,9 +948,10 @@ export class OperationsService {
             },
           },
         });
+        await syncResellerEarning(tx, order.id, 'RETURN_REQUESTED');
         await tx.notification.create({
           data: {
-            userId: order.store.sellerProfile.userId,
+            userId: (order.fulfillmentStore ?? order.store).sellerProfile.userId,
             severity: 'ACTION_REQUIRED',
             type: 'RETURN_REQUESTED',
             payload: { orderPublicId: order.publicId, reason },
@@ -779,18 +960,19 @@ export class OperationsService {
         return { id: change.id, status: 'RETURN_REQUESTED' };
       },
       { isolationLevel: 'Serializable' },
-    );
+    ).catch(mapSerializationFailure);
   }
 
   async decideReturn(user: AuthenticatedUser, publicId: string, approved: boolean, reason?: string) {
     return this.prisma.$transaction(async (tx) => {
-      const order=await tx.order.findUnique({where:{publicId},include:{store:{include:{sellerProfile:true,members:true}},changes:{where:{kind:'RETURN_REQUEST'},orderBy:{createdAt:'desc'},take:1}}});
-      if(!order)throw new NotFoundException('Order not found'); const seller=order.store.sellerProfile.userId===user.id||order.store.members.some(member=>member.userId===user.id);if(!seller)throw new ForbiddenException('Only seller can decide return');if(order.status!=='RETURN_REQUESTED'||!order.changes[0])throw new ConflictException('No pending return request');
+      const order=await tx.order.findUnique({where:{publicId},include:{store:partyStoreInclude,fulfillmentStore:partyStoreInclude,changes:{where:{kind:'RETURN_REQUEST'},orderBy:{createdAt:'desc'},take:1}}});
+      if(!order)throw new NotFoundException('Order not found'); const seller=orderParties(order,user.id).fulfiller;if(!seller)throw new ForbiddenException('Only seller can decide return');if(order.status!=='RETURN_REQUESTED'||!order.changes[0])throw new ConflictException('No pending return request');
       const after=order.changes[0].after as {status?:string;reason?:string}|null;if(after?.status!=='PENDING')throw new ConflictException('Return already decided');
       await tx.orderChange.update({where:{id:order.changes[0].id},data:{after:{...after,status:approved?'APPROVED':'REJECTED',decisionReason:reason??null,decidedAt:new Date().toISOString()}}});
       if(!approved)await tx.order.update({where:{id:order.id},data:{status:'COMPLETED',history:{create:{fromStatus:'RETURN_REQUESTED',toStatus:'COMPLETED',actorId:user.id,reason:reason??'Return rejected'}}}});
+      await syncResellerEarning(tx, order.id, approved ? 'RETURN_APPROVED' : 'COMPLETED');
       await tx.notification.create({data:{userId:order.buyerId,severity:approved?'ACTION_REQUIRED':'INFO',type:'RETURN_DECIDED',payload:{orderPublicId:publicId,approved,reason:reason??null}}});return {status:approved?'RETURN_APPROVED':'COMPLETED'};
-    },{isolationLevel:'Serializable'});
+    },{isolationLevel:'Serializable'}).catch(mapSerializationFailure);
   }
 
   async message(user: AuthenticatedUser, orderPublicId: string, body: string) {
@@ -805,8 +987,7 @@ export class OperationsService {
       throw new NotFoundException('Order conversation not found');
     if (
       order.buyerId !== user.id &&
-      order.store.sellerProfile.userId !== user.id &&
-      !order.store.members.some((m) => m.userId === user.id)
+      order.store.sellerProfile.userId !== user.id
     )
       throw new ForbiddenException();
     return this.prisma.message.create({
@@ -840,8 +1021,7 @@ export class OperationsService {
       throw new NotFoundException('Order conversation not found');
     if (
       order.buyerId !== user.id &&
-      order.store.sellerProfile.userId !== user.id &&
-      !order.store.members.some((m) => m.userId === user.id)
+      order.store.sellerProfile.userId !== user.id
     )
       throw new ForbiddenException();
     return this.prisma.message.findMany({
@@ -865,12 +1045,15 @@ export class OperationsService {
     const store = await this.prisma.store.findUnique({
       where: { publicId: input.storePublicId },
     });
-    if (!store) throw new NotFoundException('Store not found');
+    if (!store || store.kind !== 'SELLER' || !isOwnerStore(store)) throw new NotFoundException('Store not found');
+    // A question may only point at a buyer-visible listing of the same store.
     const listing = input.listingPublicId
-      ? await this.prisma.listing.findUnique({
-          where: { publicId: input.listingPublicId },
+      ? await this.prisma.listing.findFirst({
+          where: { publicId: input.listingPublicId, storeId: store.id, deletedAt: null },
         })
       : null;
+    if (input.listingPublicId && !listing)
+      throw new BadRequestException('Mahsulot bu do‘konga tegishli emas');
     return this.prisma.storeQuestion.create({
       data: {
         storeId: store.id,
@@ -929,14 +1112,14 @@ export class OperationsService {
         const order = await tx.order.findUnique({
           where: { publicId },
           include: {
-            store: { include: { sellerProfile: true, members: true } },
+            store: partyStoreInclude,
+            fulfillmentStore: partyStoreInclude,
             dispute: true,
           },
         });
         if (!order) throw new NotFoundException('Order not found');
-        const seller =
-          order.store.sellerProfile.userId === user.id ||
-          order.store.members.some((member) => member.userId === user.id);
+        const parties = orderParties(order, user.id);
+        const seller = parties.anySeller;
         if (!seller && order.buyerId !== user.id)
           throw new ForbiddenException('Order access denied');
         if (order.dispute)
@@ -982,9 +1165,10 @@ export class OperationsService {
             },
           },
         });
+        await syncResellerEarning(tx, order.id, 'DISPUTED');
         await tx.notification.create({
           data: {
-            userId: seller ? order.buyerId : order.store.sellerProfile.userId,
+            userId: seller ? order.buyerId : parties.fulfilmentOwnerId,
             severity: 'ACTION_REQUIRED',
             type: 'DISPUTE_OPENED',
             payload: { orderPublicId: order.publicId, disputeId: dispute.id },
@@ -993,7 +1177,7 @@ export class OperationsService {
         return { id: dispute.id, status: dispute.status };
       },
       { isolationLevel: 'Serializable' },
-    );
+    ).catch(mapSerializationFailure);
   }
 
   async review(userId: string, orderPublicId: string, input: ReviewDto) {
@@ -1016,14 +1200,20 @@ export class OperationsService {
   async dashboard(userId: string) {
     const stores = await this.prisma.store.findMany({
       where: {
-        OR: [{ sellerProfile: { userId } }, { members: { some: { userId } } }],
+        sellerProfile: { userId },
       },
       select: { id: true },
     });
     const ids = stores.map((s) => s.id);
     const [waiting, lowStock, unreadQuestions] = await Promise.all([
       this.prisma.order.count({
-        where: { storeId: { in: ids }, status: 'WAITING_SELLER' },
+        where: {
+          status: 'WAITING_SELLER',
+          OR: [
+            { storeId: { in: ids }, fulfillmentStoreId: null },
+            { fulfillmentStoreId: { in: ids } },
+          ],
+        },
       }),
       this.prisma.inventory.count({
         where: {

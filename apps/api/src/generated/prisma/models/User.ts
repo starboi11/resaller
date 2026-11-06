@@ -29,6 +29,9 @@ export type UserMinAggregateOutputType = {
   publicId: string | null
   username: string | null
   passwordHash: string | null
+  fullName: string | null
+  phoneEncrypted: string | null
+  phoneHash: string | null
   totpSecretEncrypted: string | null
   totpEnabledAt: Date | null
   accountStatus: string | null
@@ -44,6 +47,9 @@ export type UserMaxAggregateOutputType = {
   publicId: string | null
   username: string | null
   passwordHash: string | null
+  fullName: string | null
+  phoneEncrypted: string | null
+  phoneHash: string | null
   totpSecretEncrypted: string | null
   totpEnabledAt: Date | null
   accountStatus: string | null
@@ -59,6 +65,9 @@ export type UserCountAggregateOutputType = {
   publicId: number
   username: number
   passwordHash: number
+  fullName: number
+  phoneEncrypted: number
+  phoneHash: number
   totpSecretEncrypted: number
   totpEnabledAt: number
   roles: number
@@ -77,6 +86,9 @@ export type UserMinAggregateInputType = {
   publicId?: true
   username?: true
   passwordHash?: true
+  fullName?: true
+  phoneEncrypted?: true
+  phoneHash?: true
   totpSecretEncrypted?: true
   totpEnabledAt?: true
   accountStatus?: true
@@ -92,6 +104,9 @@ export type UserMaxAggregateInputType = {
   publicId?: true
   username?: true
   passwordHash?: true
+  fullName?: true
+  phoneEncrypted?: true
+  phoneHash?: true
   totpSecretEncrypted?: true
   totpEnabledAt?: true
   accountStatus?: true
@@ -107,6 +122,9 @@ export type UserCountAggregateInputType = {
   publicId?: true
   username?: true
   passwordHash?: true
+  fullName?: true
+  phoneEncrypted?: true
+  phoneHash?: true
   totpSecretEncrypted?: true
   totpEnabledAt?: true
   roles?: true
@@ -196,6 +214,9 @@ export type UserGroupByOutputType = {
   publicId: string
   username: string
   passwordHash: string
+  fullName: string | null
+  phoneEncrypted: string | null
+  phoneHash: string | null
   totpSecretEncrypted: string | null
   totpEnabledAt: Date | null
   roles: $Enums.Role[]
@@ -233,6 +254,9 @@ export type UserWhereInput = {
   publicId?: Prisma.StringFilter<"User"> | string
   username?: Prisma.StringFilter<"User"> | string
   passwordHash?: Prisma.StringFilter<"User"> | string
+  fullName?: Prisma.StringNullableFilter<"User"> | string | null
+  phoneEncrypted?: Prisma.StringNullableFilter<"User"> | string | null
+  phoneHash?: Prisma.StringNullableFilter<"User"> | string | null
   totpSecretEncrypted?: Prisma.StringNullableFilter<"User"> | string | null
   totpEnabledAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   roles?: Prisma.EnumRoleNullableListFilter<"User">
@@ -274,6 +298,9 @@ export type UserOrderByWithRelationInput = {
   publicId?: Prisma.SortOrder
   username?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  fullName?: Prisma.SortOrderInput | Prisma.SortOrder
+  phoneEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
+  phoneHash?: Prisma.SortOrderInput | Prisma.SortOrder
   totpSecretEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
   totpEnabledAt?: Prisma.SortOrderInput | Prisma.SortOrder
   roles?: Prisma.SortOrder
@@ -314,10 +341,13 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   publicId?: string
   username?: string
+  phoneHash?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   passwordHash?: Prisma.StringFilter<"User"> | string
+  fullName?: Prisma.StringNullableFilter<"User"> | string | null
+  phoneEncrypted?: Prisma.StringNullableFilter<"User"> | string | null
   totpSecretEncrypted?: Prisma.StringNullableFilter<"User"> | string | null
   totpEnabledAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   roles?: Prisma.EnumRoleNullableListFilter<"User">
@@ -352,13 +382,16 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   uploadedAttachments?: Prisma.AttachmentListRelationFilter
   notificationEndpoints?: Prisma.NotificationEndpointListRelationFilter
   savedAddresses?: Prisma.SavedAddressListRelationFilter
-}, "id" | "publicId" | "username">
+}, "id" | "publicId" | "username" | "phoneHash">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   publicId?: Prisma.SortOrder
   username?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  fullName?: Prisma.SortOrderInput | Prisma.SortOrder
+  phoneEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
+  phoneHash?: Prisma.SortOrderInput | Prisma.SortOrder
   totpSecretEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
   totpEnabledAt?: Prisma.SortOrderInput | Prisma.SortOrder
   roles?: Prisma.SortOrder
@@ -381,6 +414,9 @@ export type UserScalarWhereWithAggregatesInput = {
   publicId?: Prisma.StringWithAggregatesFilter<"User"> | string
   username?: Prisma.StringWithAggregatesFilter<"User"> | string
   passwordHash?: Prisma.StringWithAggregatesFilter<"User"> | string
+  fullName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  phoneEncrypted?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  phoneHash?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   totpSecretEncrypted?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   totpEnabledAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   roles?: Prisma.EnumRoleNullableListFilter<"User">
@@ -397,6 +433,9 @@ export type UserCreateInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -438,6 +477,9 @@ export type UserUncheckedCreateInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -479,6 +521,9 @@ export type UserUpdateInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -520,6 +565,9 @@ export type UserUncheckedUpdateInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -561,6 +609,9 @@ export type UserCreateManyInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -577,6 +628,9 @@ export type UserUpdateManyMutationInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -593,6 +647,9 @@ export type UserUncheckedUpdateManyInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -617,6 +674,9 @@ export type UserCountOrderByAggregateInput = {
   publicId?: Prisma.SortOrder
   username?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  fullName?: Prisma.SortOrder
+  phoneEncrypted?: Prisma.SortOrder
+  phoneHash?: Prisma.SortOrder
   totpSecretEncrypted?: Prisma.SortOrder
   totpEnabledAt?: Prisma.SortOrder
   roles?: Prisma.SortOrder
@@ -633,6 +693,9 @@ export type UserMaxOrderByAggregateInput = {
   publicId?: Prisma.SortOrder
   username?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  fullName?: Prisma.SortOrder
+  phoneEncrypted?: Prisma.SortOrder
+  phoneHash?: Prisma.SortOrder
   totpSecretEncrypted?: Prisma.SortOrder
   totpEnabledAt?: Prisma.SortOrder
   accountStatus?: Prisma.SortOrder
@@ -648,6 +711,9 @@ export type UserMinOrderByAggregateInput = {
   publicId?: Prisma.SortOrder
   username?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  fullName?: Prisma.SortOrder
+  phoneEncrypted?: Prisma.SortOrder
+  phoneHash?: Prisma.SortOrder
   totpSecretEncrypted?: Prisma.SortOrder
   totpEnabledAt?: Prisma.SortOrder
   accountStatus?: Prisma.SortOrder
@@ -1062,6 +1128,9 @@ export type UserCreateWithoutSavedAddressesInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -1102,6 +1171,9 @@ export type UserUncheckedCreateWithoutSavedAddressesInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -1158,6 +1230,9 @@ export type UserUpdateWithoutSavedAddressesInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -1198,6 +1273,9 @@ export type UserUncheckedUpdateWithoutSavedAddressesInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -1238,6 +1316,9 @@ export type UserCreateWithoutSessionsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -1278,6 +1359,9 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -1334,6 +1418,9 @@ export type UserUpdateWithoutSessionsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -1374,6 +1461,9 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -1414,6 +1504,9 @@ export type UserCreateWithoutPasswordResetTokensInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -1454,6 +1547,9 @@ export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -1510,6 +1606,9 @@ export type UserUpdateWithoutPasswordResetTokensInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -1550,6 +1649,9 @@ export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -1590,6 +1692,9 @@ export type UserCreateWithoutTwoFactorChallengesInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -1630,6 +1735,9 @@ export type UserUncheckedCreateWithoutTwoFactorChallengesInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -1686,6 +1794,9 @@ export type UserUpdateWithoutTwoFactorChallengesInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -1726,6 +1837,9 @@ export type UserUncheckedUpdateWithoutTwoFactorChallengesInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -1766,6 +1880,9 @@ export type UserCreateWithoutSellerProfileInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -1806,6 +1923,9 @@ export type UserUncheckedCreateWithoutSellerProfileInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -1862,6 +1982,9 @@ export type UserUpdateWithoutSellerProfileInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -1902,6 +2025,9 @@ export type UserUncheckedUpdateWithoutSellerProfileInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -1942,6 +2068,9 @@ export type UserCreateWithoutStoreMembershipsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -1982,6 +2111,9 @@ export type UserUncheckedCreateWithoutStoreMembershipsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -2038,6 +2170,9 @@ export type UserUpdateWithoutStoreMembershipsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -2078,6 +2213,9 @@ export type UserUncheckedUpdateWithoutStoreMembershipsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -2118,6 +2256,9 @@ export type UserCreateWithoutCheckoutsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -2158,6 +2299,9 @@ export type UserUncheckedCreateWithoutCheckoutsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -2214,6 +2358,9 @@ export type UserUpdateWithoutCheckoutsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -2254,6 +2401,9 @@ export type UserUncheckedUpdateWithoutCheckoutsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -2294,6 +2444,9 @@ export type UserCreateWithoutCartsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -2334,6 +2487,9 @@ export type UserUncheckedCreateWithoutCartsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -2390,6 +2546,9 @@ export type UserUpdateWithoutCartsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -2430,6 +2589,9 @@ export type UserUncheckedUpdateWithoutCartsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -2470,6 +2632,9 @@ export type UserCreateWithoutFavoritesInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -2510,6 +2675,9 @@ export type UserUncheckedCreateWithoutFavoritesInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -2566,6 +2734,9 @@ export type UserUpdateWithoutFavoritesInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -2606,6 +2777,9 @@ export type UserUncheckedUpdateWithoutFavoritesInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -2646,6 +2820,9 @@ export type UserCreateWithoutFollowedStoresInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -2686,6 +2863,9 @@ export type UserUncheckedCreateWithoutFollowedStoresInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -2742,6 +2922,9 @@ export type UserUpdateWithoutFollowedStoresInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -2782,6 +2965,9 @@ export type UserUncheckedUpdateWithoutFollowedStoresInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -2822,6 +3008,9 @@ export type UserCreateWithoutOrdersInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -2862,6 +3051,9 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -2918,6 +3110,9 @@ export type UserUpdateWithoutOrdersInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -2958,6 +3153,9 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -2998,6 +3196,9 @@ export type UserCreateWithoutUploadedAttachmentsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -3038,6 +3239,9 @@ export type UserUncheckedCreateWithoutUploadedAttachmentsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -3094,6 +3298,9 @@ export type UserUpdateWithoutUploadedAttachmentsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -3134,6 +3341,9 @@ export type UserUncheckedUpdateWithoutUploadedAttachmentsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -3174,6 +3384,9 @@ export type UserCreateWithoutQuestionsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -3214,6 +3427,9 @@ export type UserUncheckedCreateWithoutQuestionsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -3270,6 +3486,9 @@ export type UserUpdateWithoutQuestionsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -3310,6 +3529,9 @@ export type UserUncheckedUpdateWithoutQuestionsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -3350,6 +3572,9 @@ export type UserCreateWithoutQuestionReportsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -3390,6 +3615,9 @@ export type UserUncheckedCreateWithoutQuestionReportsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -3446,6 +3674,9 @@ export type UserUpdateWithoutQuestionReportsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -3486,6 +3717,9 @@ export type UserUncheckedUpdateWithoutQuestionReportsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -3526,6 +3760,9 @@ export type UserCreateWithoutModeratedReviewsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -3566,6 +3803,9 @@ export type UserUncheckedCreateWithoutModeratedReviewsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -3622,6 +3862,9 @@ export type UserUpdateWithoutModeratedReviewsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -3662,6 +3905,9 @@ export type UserUncheckedUpdateWithoutModeratedReviewsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -3702,6 +3948,9 @@ export type UserCreateWithoutCouponRedemptionsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -3742,6 +3991,9 @@ export type UserUncheckedCreateWithoutCouponRedemptionsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -3798,6 +4050,9 @@ export type UserUpdateWithoutCouponRedemptionsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -3838,6 +4093,9 @@ export type UserUncheckedUpdateWithoutCouponRedemptionsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -3878,6 +4136,9 @@ export type UserCreateWithoutUploadedDisputeEvidenceInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -3918,6 +4179,9 @@ export type UserUncheckedCreateWithoutUploadedDisputeEvidenceInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -3974,6 +4238,9 @@ export type UserUpdateWithoutUploadedDisputeEvidenceInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -4014,6 +4281,9 @@ export type UserUncheckedUpdateWithoutUploadedDisputeEvidenceInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -4054,6 +4324,9 @@ export type UserCreateWithoutDisputeDecisionsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -4094,6 +4367,9 @@ export type UserUncheckedCreateWithoutDisputeDecisionsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -4150,6 +4426,9 @@ export type UserUpdateWithoutDisputeDecisionsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -4190,6 +4469,9 @@ export type UserUncheckedUpdateWithoutDisputeDecisionsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -4230,6 +4512,9 @@ export type UserCreateWithoutNotificationsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -4270,6 +4555,9 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -4326,6 +4614,9 @@ export type UserUpdateWithoutNotificationsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -4366,6 +4657,9 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -4406,6 +4700,9 @@ export type UserCreateWithoutNotificationEndpointsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -4446,6 +4743,9 @@ export type UserUncheckedCreateWithoutNotificationEndpointsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -4502,6 +4802,9 @@ export type UserUpdateWithoutNotificationEndpointsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -4542,6 +4845,9 @@ export type UserUncheckedUpdateWithoutNotificationEndpointsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -4582,6 +4888,9 @@ export type UserCreateWithoutNotificationPreferencesInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -4622,6 +4931,9 @@ export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -4678,6 +4990,9 @@ export type UserUpdateWithoutNotificationPreferencesInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -4718,6 +5033,9 @@ export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -4758,6 +5076,9 @@ export type UserCreateWithoutLegalAcceptancesInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -4798,6 +5119,9 @@ export type UserUncheckedCreateWithoutLegalAcceptancesInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -4854,6 +5178,9 @@ export type UserUpdateWithoutLegalAcceptancesInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -4894,6 +5221,9 @@ export type UserUncheckedUpdateWithoutLegalAcceptancesInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -4934,6 +5264,9 @@ export type UserCreateWithoutAuditLogsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -4974,6 +5307,9 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -5030,6 +5366,9 @@ export type UserUpdateWithoutAuditLogsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -5070,6 +5409,9 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -5110,6 +5452,9 @@ export type UserCreateWithoutSecurityEventsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -5150,6 +5495,9 @@ export type UserUncheckedCreateWithoutSecurityEventsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -5195,6 +5543,9 @@ export type UserCreateWithoutReviewedSecurityEventsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -5235,6 +5586,9 @@ export type UserUncheckedCreateWithoutReviewedSecurityEventsInput = {
   publicId?: string
   username: string
   passwordHash: string
+  fullName?: string | null
+  phoneEncrypted?: string | null
+  phoneHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
@@ -5291,6 +5645,9 @@ export type UserUpdateWithoutSecurityEventsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -5331,6 +5688,9 @@ export type UserUncheckedUpdateWithoutSecurityEventsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -5382,6 +5742,9 @@ export type UserUpdateWithoutReviewedSecurityEventsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -5422,6 +5785,9 @@ export type UserUncheckedUpdateWithoutReviewedSecurityEventsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
@@ -5700,6 +6066,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   publicId?: boolean
   username?: boolean
   passwordHash?: boolean
+  fullName?: boolean
+  phoneEncrypted?: boolean
+  phoneHash?: boolean
   totpSecretEncrypted?: boolean
   totpEnabledAt?: boolean
   roles?: boolean
@@ -5742,6 +6111,9 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   publicId?: boolean
   username?: boolean
   passwordHash?: boolean
+  fullName?: boolean
+  phoneEncrypted?: boolean
+  phoneHash?: boolean
   totpSecretEncrypted?: boolean
   totpEnabledAt?: boolean
   roles?: boolean
@@ -5758,6 +6130,9 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   publicId?: boolean
   username?: boolean
   passwordHash?: boolean
+  fullName?: boolean
+  phoneEncrypted?: boolean
+  phoneHash?: boolean
   totpSecretEncrypted?: boolean
   totpEnabledAt?: boolean
   roles?: boolean
@@ -5774,6 +6149,9 @@ export type UserSelectScalar = {
   publicId?: boolean
   username?: boolean
   passwordHash?: boolean
+  fullName?: boolean
+  phoneEncrypted?: boolean
+  phoneHash?: boolean
   totpSecretEncrypted?: boolean
   totpEnabledAt?: boolean
   roles?: boolean
@@ -5785,7 +6163,7 @@ export type UserSelectScalar = {
   deletedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "username" | "passwordHash" | "totpSecretEncrypted" | "totpEnabledAt" | "roles" | "accountStatus" | "accountStatusReason" | "accountStatusChangedAt" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "username" | "passwordHash" | "fullName" | "phoneEncrypted" | "phoneHash" | "totpSecretEncrypted" | "totpEnabledAt" | "roles" | "accountStatus" | "accountStatusReason" | "accountStatusChangedAt" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   sellerProfile?: boolean | Prisma.User$sellerProfileArgs<ExtArgs>
@@ -5851,6 +6229,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     publicId: string
     username: string
     passwordHash: string
+    fullName: string | null
+    phoneEncrypted: string | null
+    phoneHash: string | null
     totpSecretEncrypted: string | null
     totpEnabledAt: Date | null
     roles: $Enums.Role[]
@@ -6312,6 +6693,9 @@ export interface UserFieldRefs {
   readonly publicId: Prisma.FieldRef<"User", 'String'>
   readonly username: Prisma.FieldRef<"User", 'String'>
   readonly passwordHash: Prisma.FieldRef<"User", 'String'>
+  readonly fullName: Prisma.FieldRef<"User", 'String'>
+  readonly phoneEncrypted: Prisma.FieldRef<"User", 'String'>
+  readonly phoneHash: Prisma.FieldRef<"User", 'String'>
   readonly totpSecretEncrypted: Prisma.FieldRef<"User", 'String'>
   readonly totpEnabledAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly roles: Prisma.FieldRef<"User", 'Role[]'>

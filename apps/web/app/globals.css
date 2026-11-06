@@ -1,18 +1,20 @@
 @import 'tailwindcss';
 @import './seller-depth.css';
 @import './assistant.css';
+@import './resale.css';
 
 :root {
   color-scheme: light;
-  --brand: #00c897;
-  --brand-strong: #007e62;
-  --brand-soft: #ddfff5;
-  --canvas: #f5f8f7;
+  --brand: #18181b;
+  --brand-strong: #a32031;
+  --brand-soft: #fbecef;
+  --on-brand: #ffffff;
+  --canvas: #f5f5f4;
   --surface: #ffffff;
-  --surface-2: #eff1f7;
-  --text: #171622;
-  --muted: #696777;
-  --line: #dedee8;
+  --surface-2: #eeeeed;
+  --text: #151518;
+  --muted: #67676d;
+  --line: #d8d8d9;
   --success: #08775a;
   --warning: #9a5b00;
   --danger: #b42336;
@@ -26,15 +28,16 @@
 }
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --brand: #00e6af;
-  --brand-strong: #56ffd7;
-  --brand-soft: #073f34;
-  --canvas: #07100f;
-  --surface: #0b1716;
-  --surface-2: #112321;
-  --text: #f4f8f7;
-  --muted: #9badaa;
-  --line: #1c3733;
+  --brand: #f4f4f2;
+  --brand-strong: #ff6b76;
+  --brand-soft: #32171d;
+  --on-brand: #111114;
+  --canvas: #08080a;
+  --surface: #121215;
+  --surface-2: #1b1b20;
+  --text: #f5f5f5;
+  --muted: #a6a6af;
+  --line: #303035;
   --success: #31e2b7;
   --warning: #f5bc68;
   --danger: #ff8290;
@@ -151,7 +154,26 @@ a {
 .rs-brand__mark {
   width: 2.7rem;
   height: 2.7rem;
-  filter: drop-shadow(0 0 8px rgb(0 200 151 / 0.3));
+  overflow: visible;
+  flex: 0 0 auto;
+}
+.rs-brand__bag-light {
+  fill: #f5f2eb;
+}
+.rs-brand__bag-red {
+  fill: #cf2435;
+}
+.rs-brand__bag-seam {
+  fill: none;
+  stroke: #111214;
+  stroke-width: 1.1;
+  stroke-linecap: round;
+}
+:root:not([data-theme='dark']) .rs-brand__bag-light {
+  fill: #202124;
+}
+:root:not([data-theme='dark']) .rs-brand__bag-seam {
+  stroke: #fff;
 }
 .rs-brand__copy {
   display: grid;
@@ -163,6 +185,7 @@ a {
 }
 .rs-brand__copy strong span {
   font-size: 0.75em;
+  color: #e23849;
 }
 .rs-brand__copy small {
   margin-top: 0.3rem;
@@ -428,7 +451,7 @@ a {
 .market-home {
   overflow: hidden;
   background:
-    radial-gradient(circle at 50% 2%, rgb(0 200 151 / 0.12), transparent 32%),
+    radial-gradient(circle at 50% 2%, rgb(200 45 64 / 0.1), transparent 32%),
     var(--canvas);
 }
 .market-hero {
@@ -436,9 +459,9 @@ a {
   min-height: clamp(31rem, 46vw, 43rem);
   margin-top: 1rem;
   overflow: hidden;
-  border: 1px solid #163d34;
+  border: 1px solid #3f3035;
   border-radius: 1.15rem;
-  background: #020706;
+  background: #08080a;
   color: #fff;
   isolation: isolate;
   box-shadow:
@@ -468,7 +491,7 @@ a {
   z-index: 1;
   inset: auto 0 0;
   height: 28%;
-  background: linear-gradient(0deg, #020706, transparent);
+  background: linear-gradient(0deg, #08080a, transparent);
 }
 .market-hero__scene {
   position: absolute;
@@ -893,12 +916,12 @@ a {
   aspect-ratio: 1;
   place-items: center;
   border-radius: 50%;
-  background: #07100f;
-  color: #15e7b4;
+  background: #17171b;
+  color: #ff8b96;
   font-size: 0.9rem;
   font-style: normal;
   font-weight: 900;
-  box-shadow: inset 0 0 0 1px #00c897;
+  box-shadow: inset 0 0 0 1px #b64b59;
 }
 .trusted-stores span {
   display: grid;
@@ -922,7 +945,7 @@ a {
   min-height: 9rem;
   border: 1px solid var(--line);
   border-radius: 0.85rem;
-  background: linear-gradient(120deg, #042219, #0a5c44 55%, #06100e);
+  background: linear-gradient(120deg, #161216, #6e1a29 55%, #111013);
   color: white;
   padding: 1.3rem;
 }
@@ -1415,8 +1438,8 @@ a {
   place-items: center;
   overflow: hidden;
   background:
-    radial-gradient(circle at 55% 45%, rgb(0 200 151 / 0.2), transparent 48%),
-    #07100f;
+    radial-gradient(circle at 55% 45%, rgb(200 45 64 / 0.18), transparent 48%),
+    #101013;
 }
 .product-gallery__fallback.product-art {
   height: auto;
@@ -1444,7 +1467,7 @@ a {
 }
 .store-hero {
   border-bottom: 1px solid var(--line);
-  background: #07100f;
+  background: #101013;
   color: white;
 }
 .store-hero__banner {
@@ -1452,9 +1475,9 @@ a {
   min-height: 13rem;
   place-items: center;
   background:
-    radial-gradient(circle at 32% 40%, rgb(0 200 151 / 0.35), transparent 28%),
-    linear-gradient(125deg, #020706, #09271f 55%, #020706);
-  border-bottom: 1px solid #1c3733;
+    radial-gradient(circle at 32% 40%, rgb(200 45 64 / 0.29), transparent 28%),
+    linear-gradient(125deg, #08080a, #26171c 55%, #08080a);
+  border-bottom: 1px solid #39282d;
   overflow: hidden;
 }
 .store-hero__banner span {
@@ -1480,7 +1503,7 @@ a {
   place-items: center;
   border: 2px solid var(--brand);
   border-radius: 50%;
-  background: #07100f;
+  background: #101013;
   font-size: 1.5rem;
   font-style: normal;
   font-weight: 900;
@@ -1710,7 +1733,7 @@ a {
   pointer-events: none;
   background: radial-gradient(
     circle at 72% 0,
-    rgb(0 200 151 / 0.08),
+    rgb(200 45 64 / 0.08),
     transparent 34%
   );
 }
@@ -1727,8 +1750,8 @@ a {
 :root[data-theme='dark'] .catalog-card,
 :root[data-theme='dark'] .filter-panel,
 :root[data-theme='dark'] .mobile-filter-panel {
-  background: #071412;
-  border-color: #173b34;
+  background: #17171b;
+  border-color: #34343b;
 }
 :root[data-theme='dark'] .catalog-card__image {
   background: linear-gradient(145deg, #f7faf9, #dce4e2);
@@ -1821,7 +1844,7 @@ a {
 .checkout-steps .is-active {
   border-color: var(--brand);
   color: var(--text);
-  box-shadow: 0 10px 32px rgb(0 200 151 / 0.12);
+  box-shadow: 0 10px 32px rgb(200 45 64 / 0.12);
 }
 .checkout-steps .is-active b {
   background: var(--brand);
@@ -1860,7 +1883,7 @@ a {
 .private-chat {
   position: relative;
   background:
-    radial-gradient(circle at 100% 0, rgb(0 200 151 / 0.08), transparent 34%),
+    radial-gradient(circle at 100% 0, rgb(200 45 64 / 0.08), transparent 34%),
     linear-gradient(155deg, var(--surface), var(--surface-2));
 }
 .private-chat form {
@@ -2078,7 +2101,7 @@ a {
   border: 1px solid var(--line);
   border-radius: 1rem;
   background:
-    radial-gradient(circle at 80% 20%, rgb(0 200 151 / 0.15), transparent 35%),
+    radial-gradient(circle at 80% 20%, rgb(200 45 64 / 0.15), transparent 35%),
     var(--surface);
   padding: 1rem;
 }
@@ -2194,7 +2217,7 @@ a {
 }
 .order-card:hover {
   border-color: var(--brand);
-  box-shadow: 0 16px 45px rgb(0 200 151 / 0.1);
+  box-shadow: 0 16px 45px rgb(200 45 64 / 0.1);
 }
 .order-summary,
 .order-timeline,
@@ -2226,7 +2249,7 @@ a {
   overflow: hidden;
   border-radius: 1.1rem;
   background:
-    radial-gradient(circle at 85% 15%, rgb(0 200 151 / 0.18), transparent 32%),
+    radial-gradient(circle at 85% 15%, rgb(200 45 64 / 0.18), transparent 32%),
     var(--surface);
 }
 .collection-grid > a::after {
@@ -2247,7 +2270,7 @@ a {
 }
 .account-grid > section:first-child {
   background:
-    radial-gradient(circle at 90% 10%, rgb(0 200 151 / 0.13), transparent 35%),
+    radial-gradient(circle at 90% 10%, rgb(200 45 64 / 0.13), transparent 35%),
     var(--surface);
 }
 .account-grid h2 {
@@ -2260,7 +2283,7 @@ a {
 .store-testimonials article {
   border-radius: 1.1rem;
   background:
-    radial-gradient(circle at 100% 0, rgb(0 200 151 / 0.13), transparent 42%),
+    radial-gradient(circle at 100% 0, rgb(200 45 64 / 0.13), transparent 42%),
     var(--surface);
 }
 .testimonial-source {
@@ -2295,7 +2318,7 @@ a {
   right: -3.5rem;
   bottom: -4rem;
   border-radius: 50%;
-  background: rgb(0 200 151 / 0.09);
+  background: rgb(200 45 64 / 0.09);
 }
 .seller-queue {
   border-radius: 1.2rem;
@@ -3059,5 +3082,648 @@ a {
     align-items: flex-start;
     flex-direction: column;
     gap: 0.3rem;
+  }
+}
+
+/* Homepage concept: cinematic entry, restrained shopping surfaces. */
+.market-home .market-hero {
+  border-color: rgb(255 255 255 / 0.2);
+  background: #050507;
+}
+.market-home .market-hero::before {
+  background:
+    linear-gradient(
+      90deg,
+      #050507 0%,
+      rgb(5 5 7 / 0.97) 27%,
+      rgb(5 5 7 / 0.73) 48%,
+      transparent 73%
+    ),
+    radial-gradient(circle at 72% 55%, rgb(180 24 45 / 0.22), transparent 34%),
+    linear-gradient(0deg, rgb(0 0 0 / 0.5), transparent 52%);
+}
+.market-home .market-hero__scene {
+  background-image: url('/brand/resaller-handoff-poster.png');
+  background-position: 58% center;
+  filter: none;
+}
+.market-home .market-hero__scene--playing {
+  animation: none;
+  transform: none;
+}
+.market-hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 58% center;
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+.market-hero__video--playing {
+  opacity: 1;
+}
+.market-home .market-hero .market-hero__kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: #ff737d;
+  letter-spacing: 0.2em;
+}
+.market-home .market-hero .market-hero__kicker::before {
+  content: '';
+  width: 1.6rem;
+  height: 1px;
+  background: currentColor;
+}
+.market-home .market-hero .market-hero__lede {
+  max-width: 31rem;
+  margin-top: 1.3rem;
+  color: #d5d5d9;
+  font-size: clamp(0.95rem, 1.15vw, 1.1rem);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+.market-home .market-hero__actions {
+  margin-top: 1.7rem;
+}
+.market-home .market-hero__actions .rs-button {
+  border-radius: 0.95rem;
+  border-color: #fff;
+  background: #f5f5f4;
+  box-shadow:
+    0 12px 30px rgb(0 0 0 / 0.25),
+    inset 0 1px 0 rgb(255 255 255 / 0.35);
+  color: #111114;
+  transform: none;
+}
+.market-home .market-hero__actions .rs-button:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 16px 34px rgb(0 0 0 / 0.3),
+    inset 0 1px 0 rgb(255 255 255 / 0.4);
+}
+.market-home .market-hero__actions .rs-button--ghost {
+  border-color: rgb(255 255 255 / 0.45);
+  background: rgb(8 8 10 / 0.65);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.12);
+  color: #fff;
+}
+.market-home .home-featured .product-card {
+  border-color: var(--line);
+  box-shadow: 0 12px 28px rgb(0 0 0 / 0.14);
+}
+.market-home .home-featured .product-card:hover {
+  box-shadow: 0 18px 36px rgb(0 0 0 / 0.2);
+}
+@media (max-width: 1099px) {
+  .market-home .market-hero::before {
+    background: linear-gradient(
+      90deg,
+      #050507 0%,
+      rgb(5 5 7 / 0.92) 40%,
+      rgb(5 5 7 / 0.1) 90%
+    );
+  }
+  .market-home .market-hero__scene {
+    background-position: 69% center;
+  }
+}
+@media (max-width: 560px) {
+  .market-home .market-hero {
+    min-height: 23rem;
+  }
+  .market-home .market-hero__copy {
+    width: 88%;
+  }
+  .market-home .market-hero__scene {
+    background-position: 76% center;
+  }
+  .market-home .market-hero .market-hero__lede {
+    display: block;
+    max-width: 16rem;
+    margin-top: 0.9rem;
+    font-size: 0.78rem;
+    line-height: 1.45;
+  }
+  .market-home .market-hero__actions {
+    margin-top: 1.2rem;
+  }
+}
+
+/* Monochrome marketplace: red is a restrained signal, not the base surface. */
+.market-home {
+  background:
+    radial-gradient(circle at 70% 0%, rgb(143 25 39 / 0.09), transparent 31%),
+    var(--canvas);
+}
+.market-home .market-hero h1 span {
+  color: #f5f5f5;
+  text-decoration: underline;
+  text-decoration-color: #bf2e3c;
+  text-decoration-thickness: 0.055em;
+  text-underline-offset: 0.13em;
+}
+.market-home .market-hero__stats i {
+  border-color: rgb(255 255 255 / 0.48);
+  background: linear-gradient(145deg, #2b2b2d, #09090b);
+  box-shadow:
+    inset 1px 1px 0 rgb(255 255 255 / 0.16),
+    0 8px 18px rgb(0 0 0 / 0.25);
+}
+.market-home .market-hero__stats > span:nth-child(2) i {
+  border-color: #cf4050;
+  color: #ff8b93;
+}
+.rs-button,
+.sell-link {
+  color: #111114;
+}
+:root:not([data-theme='dark']) .rs-button,
+:root:not([data-theme='dark']) .sell-link {
+  color: #fff;
+}
+.rs-button--ghost,
+:root:not([data-theme='dark']) .rs-button--ghost {
+  color: var(--text);
+}
+:root[data-theme='dark'] .site-header,
+:root[data-theme='dark'] .mobile-nav {
+  background: rgb(10 10 12 / 0.94);
+}
+.ai-assistant__toggle {
+  border-color: color-mix(in srgb, var(--brand-strong) 36%, var(--line));
+  background: #151518;
+  color: var(--text);
+}
+.ai-assistant__toggle span {
+  color: var(--brand-strong);
+}
+.catalog-sort button,
+.locale-switch a.active,
+.pagination a.active,
+.checkout-success__mark,
+.store-hero__actions button:first-of-type {
+  color: var(--on-brand);
+}
+:root[data-theme='dark'] .catalog-card,
+:root[data-theme='dark'] .filter-panel,
+:root[data-theme='dark'] .mobile-filter-panel {
+  border-color: var(--line);
+  background: var(--surface);
+}
+.trusted-stores > a > i,
+.store-line i {
+  background: #1b1b20;
+  color: #f6f6f6;
+  box-shadow: inset 0 0 0 1px #58585e;
+}
+.store-hero__banner {
+  border-color: var(--line);
+  background:
+    radial-gradient(circle at 32% 40%, rgb(172 28 47 / 0.23), transparent 31%),
+    linear-gradient(125deg, #070709, #242126 55%, #070709);
+}
+.product-gallery__fallback {
+  background:
+    radial-gradient(circle at 55% 45%, rgb(173 29 49 / 0.17), transparent 48%),
+    #101013;
+}
+.market-home .product-image-fallback {
+  filter: grayscale(1);
+}
+.catalog-page::before {
+  background: radial-gradient(
+    circle at 72% 0,
+    rgb(145 32 47 / 0.06),
+    transparent 34%
+  );
+}
+.private-chat,
+.product-preview,
+.collection-grid > a,
+.account-grid > section:first-child,
+.store-testimonials article {
+  background:
+    radial-gradient(circle at 90% 8%, rgb(145 32 47 / 0.07), transparent 34%),
+    var(--surface);
+}
+.seller-queue::before {
+  background: rgb(145 32 47 / 0.08);
+}
+.home-banners > div {
+  background:
+    radial-gradient(circle at 88% 12%, rgb(145 32 47 / 0.12), transparent 38%),
+    linear-gradient(135deg, #101013, #242428);
+}
+/* Shared black / off-white / red visual system across buyer and seller routes. */
+:root {
+  --canvas: #f1efeb;
+  --surface: #fbfaf8;
+  --surface-2: #e9e6e2;
+  --line: #d6d1cd;
+}
+:root[data-theme='dark'] {
+  --canvas: #0a0a0d;
+  --surface: #17171b;
+  --surface-2: #212126;
+  --line: #34343b;
+}
+body {
+  background:
+    radial-gradient(
+      circle at 90% 8%,
+      color-mix(in srgb, var(--brand-strong) 5%, transparent),
+      transparent 35%
+    ),
+    var(--canvas);
+}
+.site-header {
+  border-bottom-color: color-mix(in srgb, var(--line) 75%, transparent);
+  box-shadow: 0 9px 30px rgb(0 0 0 / 0.08);
+}
+.header-search {
+  border-radius: 0.8rem;
+  background: color-mix(in srgb, var(--surface-2) 80%, transparent);
+}
+.header-search:focus-within {
+  border-color: var(--brand-strong);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-strong) 14%, transparent);
+}
+.sell-link,
+.rs-button:not(.rs-button--ghost) {
+  background: #c82d40;
+  color: #fff;
+  box-shadow: 0 10px 25px rgb(159 21 42 / 0.18);
+}
+.sell-link:hover,
+.rs-button:not(.rs-button--ghost):hover {
+  background: #ac2033;
+}
+.market-home .market-hero h1 {
+  max-width: 23ch;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2.9rem, 4.25vw, 4.9rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 1.06;
+}
+.market-home .market-hero h1 span {
+  display: block;
+  color: #f5f3f0;
+  text-decoration: none;
+}
+.market-home .market-hero__actions .rs-button:not(.rs-button--ghost) {
+  border-color: #e64457;
+  background: #d93045;
+  color: #fff;
+}
+.market-home .market-hero__actions .rs-button:not(.rs-button--ghost):hover {
+  background: #b82438;
+}
+.market-home .market-hero__stats > span:nth-child(2) i {
+  border-color: #d8495a;
+}
+.market-home .market-hero__stats {
+  align-items: stretch;
+  gap: 0;
+  margin-top: 2.2rem;
+  color: #ada8aa;
+}
+.market-home .market-hero__stats > span {
+  display: grid;
+  align-content: start;
+  gap: 0.28rem;
+  min-width: 0;
+  border-left: 2px solid #aa2c3e;
+  padding: 0.05rem clamp(0.8rem, 1.8vw, 1.5rem);
+}
+.market-home .market-hero__stats > span:first-child {
+  padding-left: 0.9rem;
+}
+.market-home .market-hero__stats b {
+  font-size: clamp(0.9rem, 1.15vw, 1.08rem);
+  font-weight: 800;
+  white-space: nowrap;
+}
+.market-home .market-hero__stats small {
+  color: #b9b5b8;
+  font-size: 0.69rem;
+  line-height: 1.35;
+  white-space: normal;
+}
+.surface,
+.market-card,
+.product-card,
+.catalog-card,
+.filter-panel,
+.private-chat,
+.account-grid > section,
+.seller-metrics article,
+.seller-queue,
+.seller-manage-workspace > section.surface {
+  border: 1px solid var(--line);
+  background-color: var(--surface);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.035);
+}
+.surface:hover,
+.product-card:hover,
+.catalog-card:hover {
+  border-color: color-mix(in srgb, var(--brand-strong) 35%, var(--line));
+}
+.section-heading h2,
+.seller-workspace > h1,
+.seller-manage-workspace h1,
+.page-title {
+  letter-spacing: -0.045em;
+}
+input:not([type='checkbox']):not([type='radio']),
+select,
+textarea {
+  accent-color: var(--brand-strong);
+}
+@media (max-width: 560px) {
+  .market-home .market-hero h1 {
+    font-size: clamp(2.25rem, 9vw, 3.25rem);
+    max-width: 13ch;
+  }
+  .market-home .market-hero h1 span {
+    display: inline;
+  }
+}
+
+/* Reference-matched storefront navigation and category shortcuts. */
+.rs-brand__copy small {
+  margin-top: 0.25rem;
+  color: var(--muted);
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+.header-category {
+  gap: 0.6rem;
+}
+.header-category svg,
+.header-search svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex: 0 0 auto;
+}
+.header-category > span:last-child {
+  margin-left: 0.1rem;
+  font-size: 1.1rem;
+}
+.header-search kbd {
+  display: none;
+}
+.site-header .desktop-nav {
+  gap: 0.55rem;
+}
+.site-header .desktop-nav a {
+  display: flex;
+  width: auto;
+  align-items: center;
+  gap: 0.4rem;
+  padding-inline: 0.5rem;
+  font-size: 0.81rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+.site-header .desktop-nav a svg {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+.header-account {
+  position: relative;
+  display: none;
+}
+.header-account summary {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.45rem;
+  border-radius: 0.7rem;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 700;
+  list-style: none;
+  white-space: nowrap;
+}
+.header-account summary::-webkit-details-marker {
+  display: none;
+}
+.header-account summary svg {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+.header-account summary:hover,
+.header-account[open] summary {
+  background: var(--surface-2);
+}
+.header-account__menu {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  right: 0;
+  z-index: 60;
+  display: grid;
+  width: 13.5rem;
+  gap: 0.2rem;
+  border: 1px solid var(--line);
+  border-radius: 0.85rem;
+  padding: 0.45rem;
+  background: var(--surface);
+  box-shadow: 0 20px 45px rgb(0 0 0 / 0.24);
+}
+.header-account__menu a {
+  border-radius: 0.55rem;
+  padding: 0.6rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+.header-account__menu a:hover {
+  background: var(--brand-soft);
+  color: var(--brand-strong);
+}
+.header-account__menu .icon-button {
+  width: 100%;
+  border-radius: 0.55rem;
+}
+.header-theme-mobile {
+  display: block;
+}
+.category-rail--home {
+  display: flex;
+  gap: 0.55rem;
+  margin-top: 0.3rem;
+  padding-block: 0.75rem 0.15rem;
+  scrollbar-width: thin;
+}
+.category-rail--home a {
+  display: inline-flex;
+  min-height: 2.9rem;
+  min-width: max-content;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  border-radius: 0.7rem;
+  padding: 0.55rem 0.8rem;
+  background: var(--surface);
+  transition:
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+.category-rail--home a:hover {
+  transform: translateY(-2px);
+}
+.category-rail--home a:first-child {
+  border-color: var(--brand-strong);
+  color: var(--brand-strong);
+}
+.category-rail--home svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+.category-rail--home span {
+  font-size: 1rem;
+  line-height: 1;
+}
+.category-rail--home b {
+  font-size: 0.73rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+.market-home .home-featured {
+  padding-top: 0.9rem;
+}
+.market-home .home-featured .product-card {
+  position: relative;
+  border-color: var(--line);
+  border-radius: 0.8rem;
+  box-shadow: 0 12px 28px rgb(0 0 0 / 0.12);
+}
+.market-home .home-featured .product-card__link {
+  display: block;
+  height: 100%;
+}
+.market-home .home-featured .product-card__visual {
+  aspect-ratio: 1.58;
+}
+.market-home .home-featured .product-card__category {
+  position: absolute;
+  left: 0.65rem;
+  top: 0.65rem;
+  z-index: 2;
+  border: 1px solid rgb(255 255 255 / 0.22);
+  border-radius: 999px;
+  background: rgb(10 10 13 / 0.78);
+  color: #fff;
+  padding: 0.25rem 0.55rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  backdrop-filter: blur(8px);
+}
+.market-home .home-featured .product-card__body {
+  min-height: 8.5rem;
+  padding: 0.85rem 3.5rem 0.85rem 0.85rem;
+}
+.market-home .home-featured .product-card h3 {
+  font-size: 0.91rem;
+}
+.market-home .home-featured .store-line {
+  margin-block: 0.45rem 0.6rem;
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+.market-home .home-featured .store-line i {
+  width: 1.2rem;
+}
+.market-home .home-featured .store-line b {
+  display: none;
+}
+.market-home .home-featured .product-card strong {
+  font-size: 1rem;
+}
+.product-card__out {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--danger);
+  font-size: 0.7rem;
+}
+.home-cart {
+  position: absolute;
+  right: 0.7rem;
+  bottom: 0.7rem;
+  z-index: 3;
+}
+.home-cart__button {
+  display: grid;
+  width: 2.65rem;
+  height: 2.65rem;
+  place-items: center;
+  border: 1px solid #f15a6c;
+  border-radius: 0.6rem;
+  background: #ce2d42;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgb(0 0 0 / 0.2);
+}
+.home-cart__button:hover {
+  background: #ae2034;
+}
+.home-cart__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.home-cart__button svg {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+.home-cart__feedback {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 0.5rem);
+  width: max-content;
+  max-width: 12rem;
+  border: 1px solid var(--line);
+  border-radius: 0.55rem;
+  background: var(--surface);
+  padding: 0.45rem 0.6rem;
+  box-shadow: 0 10px 25px rgb(0 0 0 / 0.2);
+  font-size: 0.7rem;
+}
+.home-cart__feedback a {
+  color: var(--brand-strong);
+  text-decoration: underline;
+}
+@media (min-width: 700px) {
+  .header-account {
+    display: block;
+  }
+  .header-theme-mobile {
+    display: none;
+  }
+}
+@media (min-width: 1100px) {
+  .site-header .header-inner {
+    gap: 1rem;
+  }
+  .site-header .header-search {
+    max-width: 40rem;
+  }
+}
+@media (min-width: 700px) and (max-width: 1250px) {
+  .site-header .desktop-nav a > span {
+    display: none;
+  }
+  .header-account summary > span:nth-child(2) {
+    display: none;
+  }
+}
+@media (max-width: 699px) {
+  .rs-brand__copy small {
+    display: none;
   }
 }

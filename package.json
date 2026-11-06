@@ -17,7 +17,9 @@
     "test:sse-load": "node scripts/sse-load-test.mjs",
     "test:clamav": "node scripts/clamav-eicar-test.mjs",
     "security:secrets": "node scripts/secret-scan.mjs",
-    "check": "pnpm --filter @resaller/api db:validate && pnpm security:secrets && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "server:preflight": "node scripts/server-preflight.mjs",
+    "test:deployment": "node --test scripts/deployment-tools.test.mjs",
+    "check": "pnpm --filter @resaller/api db:validate && pnpm security:secrets && pnpm test:deployment && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

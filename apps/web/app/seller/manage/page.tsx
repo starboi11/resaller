@@ -55,6 +55,9 @@ type Store = {
     currency: string;
     salePriceMinor?: string | null;
     videoStorageKey?: string | null;
+    isResale?: boolean;
+    markupBps?: number | null;
+    resale?: { wholesalePriceMinor: string; sourceStatus: string; minMarkupBps: number; maxMarkupBps: number } | null;
     variants: {
       id: string;
       sku: string;
@@ -69,9 +72,26 @@ type Store = {
     }[];
   }[];
 };
+const storeStatusLabel: Record<string, string> = {
+  DRAFT: 'Qoralama — xaridorlarga ko‘rinmaydi',
+  PENDING_REVIEW: 'Eski tekshiruv holati — yordamga murojaat qiling',
+  ACTIVE: 'Faol do‘kon',
+  RESTRICTED: 'Cheklangan do‘kon',
+  BLOCKED: 'Bloklangan do‘kon',
+};
+const listingStatusLabel: Record<string, string> = {
+  DRAFT: 'Qoralama — xaridorlarga ko‘rinmaydi',
+  PENDING_REVIEW: 'Eski tekshiruv holati — yordamga murojaat qiling',
+  ACTIVE: 'Katalogda ko‘rinadi',
+  REJECTED: 'Rad etilgan — tahrirlash kerak',
+  PAUSED: 'To‘xtatilgan — xaridorlarga ko‘rinmaydi',
+  ARCHIVED: 'Arxivda — xaridorlarga ko‘rinmaydi',
+};
 export default function SellerManage() {
   const [stores, setStores] = useState<Store[] | null>(null);
   const [message, setMessage] = useState('');
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [storeError, setStoreError] = useState('');
   const [login, setLogin] = useState(false);
   const [wizardStep, setWizardStep] = useState(1);
@@ -85,16 +105,44 @@ export default function SellerManage() {
   const [draftPreview, setDraftPreview] = useState<Record<string, string>>({});
   const [draftFiles, setDraftFiles] = useState<Record<string, File[]>>({});
   const load = useCallback(async () => {
-    const response = await fetch(`${API}/seller/stores`, {
-      credentials: 'include',
-      cache: 'no-store',
-    });
-    if (response.status === 401) {
-      setLogin(true);
-      return;
+    try {
+      // The server decides who the owner is; no seller application or ID
+      // verification is involved any more (only the owner sells).
+      const statusResponse = await fetch(`${API}/seller/owner-status`, {
+        credentials: 'include',
+        cache: 'no-store',
+      });
+      if (statusResponse.status === 401) {
+        setLogin(true);
+        return;
+      }
+      if (!statusResponse.ok) throw new Error('Owner status unavailable');
+      const status = (await statusResponse.json()) as { isOwner: boolean; store: { publicId: string } | null };
+      if (!status.isOwner || !status.store) {
+        setStores([]);
+        setLoadFailed(false);
+        return;
+      }
+      const response = await fetch(`${API}/seller/stores`, {
+        credentials: 'include',
+        cache: 'no-store',
+      });
+      if (response.status === 401) {
+        setLogin(true);
+        return;
+      }
+      if (!response.ok) throw new Error('Seller data unavailable');
+      const ownerStoreId = status.store.publicId;
+      setStores(((await response.json()) as Store[]).filter((store) => store.publicId === ownerStoreId));
+      setLoadFailed(false);
+    } catch {
+      setLoadFailed(true);
+      setMessage(
+        'Seller ma’lumotlari ochilmadi. Aloqani tekshirib, qayta urining.',
+      );
+    } finally {
+      setLoading(false);
     }
-    if (response.ok) setStores((await response.json()) as Store[]);
-    else setMessage('Seller ma’lumotlari ochilmadi.');
   }, []);
   useEffect(() => {
     void load();
@@ -121,22 +169,29 @@ export default function SellerManage() {
     }
   }, [stores]);
   async function post(path: string, body: unknown, method = 'POST') {
-    const response = await fetch(`${API}/${path}`, {
-      method,
-      credentials: 'include',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-    const payload = (await response.json().catch(() => null)) as {
-      message?: string;
-    } | null;
-    setMessage(
-      response.ok
-        ? 'Muvaffaqiyatli saqlandi.'
-        : (payload?.message ?? 'Saqlanmadi.'),
-    );
-    if (response.ok) await load();
-    return response.ok;
+    try {
+      const response = await fetch(`${API}/${path}`, {
+        method,
+        credentials: 'include',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const payload = (await response.json().catch(() => null)) as {
+        message?: string;
+      } | null;
+      setMessage(
+        response.ok
+          ? 'Muvaffaqiyatli saqlandi.'
+          : (payload?.message ?? 'Saqlanmadi.'),
+      );
+      if (response.ok) await load();
+      return response.ok;
+    } catch {
+      setMessage(
+        'Server bilan aloqa uzildi. Ma’lumot saqlanmadi, qayta urining.',
+      );
+      return false;
+    }
   }
   async function apply() {
     await post('seller/apply', {});
@@ -148,6 +203,8 @@ export default function SellerManage() {
       legalName: data.get('legalName'),
       documentType: data.get('documentType'),
       documentNumber: data.get('documentNumber'),
+      phone: data.get('phone'),
+      residenceAddress: data.get('residenceAddress'),
     });
   }
   async function verificationDocument(file: File) {
@@ -163,6 +220,10 @@ export default function SellerManage() {
         ? 'Verification hujjati xavfsiz yuklandi.'
         : 'Hujjat yuklanmadi. PDF/JPEG/PNG va 5 MB limitni tekshiring.',
     );
+    if (response.ok) await load();
+  }
+  async function submitStore(publicId: string) {
+    await post(`stores/${publicId}/submit`, {});
   }
   async function createStore(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -443,8 +504,8 @@ export default function SellerManage() {
       <main className="shell py-10">
         <StatePanel
           tone="warning"
-          title="Seller boshqaruvi uchun kiring"
-          description="Do‘kon ma’lumotlari faqat vakolatli jamoaga ochiq."
+            title="Do‘kon boshqaruviga kirish"
+            description="Bu bo‘lim faqat do‘kon egasi uchun ochiq."
           action={
             <Link className="rs-button" href="/login">
               Kirish
@@ -457,7 +518,7 @@ export default function SellerManage() {
     <main className="shell py-10 seller-workspace seller-manage-workspace">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="eyebrow">Seller workspace</p>
+            <p className="eyebrow">Do‘kon boshqaruvi</p>
           <h1 className="mt-2 text-3xl font-black">
             Do‘kon va katalog boshqaruvi
           </h1>
@@ -469,12 +530,39 @@ export default function SellerManage() {
           Action Center
         </Link>
       </div>
-      <p
-        className="mt-4 rounded-xl bg-[var(--surface-2)] p-3 text-sm"
-        aria-live="polite"
-      >
-        {message || 'Onboarding, jamoa, sozlama va mahsulotlar bitta joyda.'}
-      </p>
+      {!loadFailed && (
+        <p
+          className="mt-4 rounded-xl bg-[var(--surface-2)] p-3 text-sm"
+          aria-live="polite"
+        >
+          {message || 'Mahsulotlar, buyurtmalar va do‘kon sozlamalarini boshqaring.'}
+        </p>
+      )}
+      {loading && (
+        <StatePanel
+          title="Do‘kon yuklanmoqda"
+          description="Ma’lumotlaringiz tekshirilmoqda."
+        />
+      )}
+      {loadFailed && !loading && (
+        <StatePanel
+          tone="danger"
+          title="Do‘kon ma’lumotlari ochilmadi"
+          description="API yoki internet aloqasini tekshirib, qayta urining. Saqlangan ma’lumotlar o‘chirilmaydi."
+          action={
+            <button
+              className="rs-button"
+              type="button"
+              onClick={() => {
+                setLoading(true);
+                void load();
+              }}
+            >
+              Qayta urinish
+            </button>
+          }
+        />
+      )}
       {(stores?.length ?? 0) > 0 && (
         <nav className="seller-section-nav" aria-label="Seller bo‘limlari">
           <a href="#store">Do‘kon</a>
@@ -482,114 +570,17 @@ export default function SellerManage() {
           <Link href="/seller">Buyurtma va chat</Link>
           <a href="#questions">Savollar</a>
           <a href="#marketing">Marketing va tahlil</a>
-          <a href="#team">Jamoa</a>
           <a href="#settings">Sozlamalar</a>
         </nav>
       )}
-      {stores?.length === 0 && (
-        <section className="mt-7 grid gap-5 lg:grid-cols-3">
-          <div className="surface p-5">
-            <h2 className="font-black">1. Seller arizasi</h2>
-            <p className="muted my-3 text-sm">
-              Seller rolini faollashtirish uchun ariza oching.
-            </p>
-            <button className="rs-button" onClick={() => void apply()}>
-              Ariza boshlash
-            </button>
-          </div>
-          <form className="surface grid gap-3 p-5" onSubmit={verification}>
-            <h2 className="font-black">2. Shaxsni tasdiqlash</h2>
-            <input
-              className="field"
-              name="legalName"
-              required
-              placeholder="Yuridik/to‘liq ism"
-            />
-            <select className="field" name="documentType">
-              <option value="ID_CARD">ID karta</option>
-              <option value="PASSPORT">Pasport</option>
-              <option value="BUSINESS_REGISTRATION">Biznes hujjati</option>
-            </select>
-            <input
-              className="field"
-              name="documentNumber"
-              required
-              placeholder="Hujjat raqami"
-            />
-            <button className="rs-button">Yuborish</button>
-            <label className="cursor-pointer rounded-full border border-[var(--line)] px-4 py-3 text-center text-sm font-bold">
-              Hujjat faylini yuklash
-              <input
-                className="sr-only"
-                type="file"
-                accept="application/pdf,image/jpeg,image/png"
-                onChange={(event) => {
-                  const file = event.target.files?.[0];
-                  if (file) void verificationDocument(file);
-                }}
-              />
-            </label>
-          </form>
-          <form
-            className="surface grid gap-3 p-5"
-            onSubmit={createStore}
-            noValidate
-          >
-            <h2 className="font-black">3. Do‘kon yaratish</h2>
-            <label htmlFor="store-name" className="text-sm font-bold">
-              Do‘kon nomi
-            </label>
-            <input
-              id="store-name"
-              className="field"
-              name="nameUz"
-              required
-              placeholder="Do‘kon nomi"
-            />
-            <label htmlFor="store-username" className="text-sm font-bold">
-              Do‘kon manzili
-            </label>
-            <input
-              id="store-username"
-              className="field"
-              name="username"
-              required
-              pattern="[a-z0-9_]+"
-              placeholder="masalan: xon_store"
-            />
-            <p className="muted text-xs">
-              Do‘kon havolasida ishlatiladi: resaller.uz/store/xon_store
-            </p>
-            <label htmlFor="store-order-prefix" className="text-sm font-bold">
-              Buyurtma kodi
-            </label>
-            <input
-              id="store-order-prefix"
-              className="field"
-              name="orderPrefix"
-              required
-              pattern="[A-Z0-9]+"
-              minLength={2}
-              maxLength={8}
-              placeholder="Masalan: XON"
-              aria-describedby="store-order-prefix-help"
-              onChange={(event) => {
-                event.currentTarget.value =
-                  event.currentTarget.value.toUpperCase();
-                setStoreError('');
-              }}
-            />
-            <p id="store-order-prefix-help" className="muted text-xs">
-              Buyurtma raqami shu kod bilan boshlanadi. Masalan: XON-12345.
-            </p>
-            {storeError && (
-              <p className="text-sm text-[var(--danger)]" role="alert">
-                {storeError}
-              </p>
-            )}
-            <button className="rs-button">Yaratish</button>
-          </form>
-        </section>
+      {stores !== null && stores.length === 0 && !loading && !loadFailed && (
+        // Seller signup is closed (only the owner sells); anyone without a
+        // store just gets a clear answer instead of an application form.
+        <StatePanel
+          title="Bu bo‘lim faqat do‘kon egasi uchun"
+          description="Resaller’da faqat do‘kon egasi sotadi. Xarid qilish uchun katalogga o‘ting."
+          action={<Link className="rs-button" href="/marketplace">Mahsulotlarni ko‘rish</Link>}
+        />
       )}
       {stores?.map((store) => (
         <section
@@ -601,8 +592,27 @@ export default function SellerManage() {
             <div>
               <h2 className="text-2xl font-black">{store.nameUz}</h2>
               <p className="muted">
-                @{store.username} · {store.status}
+                @{store.username} · {storeStatusLabel[store.status] ?? store.status}
               </p>
+              {store.status === 'DRAFT' && (
+                <div className="mt-3 grid gap-2 text-sm">
+                  <p className="muted">
+                    Do‘kon hali ommaga ko‘rinmaydi. Faollashtirgach xaridorlarga ko‘rinadi.
+                  </p>
+                  <button
+                    type="button"
+                    className="rs-button justify-self-start"
+                    onClick={() => void submitStore(store.publicId)}
+                  >
+                    Do‘konni faollashtirish
+                  </button>
+                </div>
+              )}
+              {store.status === 'PENDING_REVIEW' && (
+                <p className="muted mt-3 text-sm">
+                  Bu eski tekshiruv holati. Yordam xizmatiga murojaat qiling.
+                </p>
+              )}
             </div>
             <button
               className="rounded-full border border-[var(--line)] px-4 py-2 font-bold"
@@ -641,7 +651,7 @@ export default function SellerManage() {
                   }}
                 />
               </label>
-              {store.premiumUntil && (
+              {store.premiumUntil && new Date(store.premiumUntil) > new Date() && (
                 <span className="premium-pill">
                   PREMIUM ·{' '}
                   {new Date(store.premiumUntil).toLocaleDateString('uz-UZ')}
@@ -655,6 +665,10 @@ export default function SellerManage() {
             >
               Marketing va analytics
             </Link>
+            <Link className="rs-button" href={`/seller/center/${store.publicId}`}>
+              Seller Center · barcha savdolar
+            </Link>
+            <p className="muted mt-2 text-xs">Premium hozir yopiq beta huquqi: faqat admin muddat belgilaydi. VIP alohida tarif sifatida rejalashtirilgan, lekin narx va afzalliklari tasdiqlanmagan. Pullik obuna va avtomatik to‘lov hali yo‘q; hech bir tarif shaxsni tekshirishni chetlab o‘tmaydi.</p>
           </div>
           <div className="mt-6 grid gap-6 lg:grid-cols-2">
             <form
@@ -976,7 +990,7 @@ export default function SellerManage() {
                       <div>
                         <b>{item.nameUz}</b>
                         <p className="muted text-xs">
-                          {item.status} ·{' '}
+                          {listingStatusLabel[item.status] ?? item.status} ·{' '}
                           {Number(item.priceMinor).toLocaleString('uz-UZ')}{' '}
                           {item.currency}
                         </p>
@@ -1068,11 +1082,14 @@ export default function SellerManage() {
                     </label>
                     <button
                       className="mt-3 text-sm font-black text-[var(--brand-strong)]"
+                      disabled={store.status !== 'ACTIVE'}
                       onClick={() =>
                         void post(`listings/${item.publicId}/submit`, {})
                       }
                     >
-                      Moderatsiyaga yuborish
+                      {store.status === 'ACTIVE'
+                        ? 'Mahsulotni e’lon qilish'
+                        : 'Avval do‘kon faollashsin'}
                     </button>
                     <button
                       className="ml-4 mt-3 text-sm font-black"
@@ -1206,35 +1223,6 @@ export default function SellerManage() {
               />
               <button className="rs-button">Sozlamalarni saqlash</button>
             </form>
-            <div id="team" className="rounded-2xl bg-[var(--surface-2)] p-4">
-              <h3 className="font-black">Jamoa</h3>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {store.members.map((member) => (
-                  <span
-                    className="rounded-full bg-[var(--surface-2)] px-3 py-2 text-sm"
-                    key={member.user.username}
-                  >
-                    @{member.user.username} · {member.role}
-                  </span>
-                ))}
-              </div>
-              <form
-                className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto_auto]"
-                onSubmit={(event) => void addMember(event, store.publicId)}
-              >
-                <input
-                  className="field"
-                  name="username"
-                  required
-                  placeholder="Jamoa username"
-                />
-                <select className="field" name="role">
-                  <option value="STORE_MANAGER">Manager</option>
-                  <option value="ORDER_OPERATOR">Order operator</option>
-                </select>
-                <button className="rs-button">Qo‘shish</button>
-              </form>
-            </div>
           </div>
           <div className="mt-6">
             <h3 id="questions" className="font-black">

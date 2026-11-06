@@ -6,15 +6,27 @@ import { useEffect, useState } from 'react';
 import { adminModules, canAccessModule } from './admin-modules';
 
 const navigation = [
-  { href: '/', label: 'Boshqaruv', icon: 'dashboard' },
-  {
-    href: '/#verification',
-    label: 'Sotuvchini tekshirish',
-    icon: 'verification',
-  },
-  { href: '/#listings', label: 'Mahsulot moderatsiyasi', icon: 'listing' },
+  { href: '/owner', label: 'Boshqaruv', icon: 'dashboard' },
+  { href: '/operations#listings', label: 'Mahsulotlar', icon: 'listing' },
   { href: '/operations', label: 'Operatsion modullar', icon: 'operations' },
 ] as const;
+const ADMIN_ROLES = new Set(['SUPER_ADMIN', 'MODERATOR', 'VERIFICATION_ADMIN', 'DISPUTE_ADMIN', 'SUPPORT_ADMIN', 'SECURITY_ADMIN']);
+
+function BrandMark() {
+  return (
+    <svg className="control-brand__mark" viewBox="0 0 56 56" aria-hidden="true">
+      <path
+        fill="#f5f2eb"
+        fillRule="evenodd"
+        d="M10 15h6v-3C16 5.5 20.4 2 26.4 2c6.3 0 10.7 4.2 10.7 10.4v2.7c0 4.5-2.8 8.7-7.9 11.8l-6.8 4.1c-6.4 3.9-9.4 8.5-9.4 13.1 0 2.3 1 4.3 2.8 5.9H8.4c-3.6 0-5.4-2.2-5-5.7l3.1-24.8C6.9 16.4 8 15 10 15Zm10.5 0h12.4v-2.5c0-4-2.6-6.4-6.3-6.4-3.6 0-6.1 2.4-6.1 6.4V15Z"
+      />
+      <path
+        fill="#cf2435"
+        d="M39.3 15h4.8c2.3 0 3.6 1.3 4.1 3.9l4.5 24.6c.7 4-1 6.5-4.7 6.5H20.1c-3.8-2.5-5.7-5.8-5.7-9.3 0-4.3 3-8.6 9.1-12.3l6.8-4.1c5.8-3.5 8.9-7.7 9-12.3Z"
+      />
+    </svg>
+  );
+}
 
 function NavIcon({ name }: { name: (typeof navigation)[number]['icon'] }) {
   const paths = {
@@ -34,6 +46,12 @@ function NavIcon({ name }: { name: (typeof navigation)[number]['icon'] }) {
       <>
         <rect x="3" y="4" width="18" height="16" rx="2" />
         <path d="M7 9h10M7 13h7M7 17h4" />
+      </>
+    ),
+    payouts: (
+      <>
+        <rect x="2" y="6" width="20" height="13" rx="2" />
+        <path d="M2 10h20M6 15h4" />
       </>
     ),
     operations: (
@@ -70,22 +88,24 @@ export function AdminChrome({ children }: { children: React.ReactNode }) {
     window.addEventListener('hashchange', syncHash);
     const api =
       process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
-    void fetch(`${api}/auth/me`, { credentials: 'include', cache: 'no-store' })
+    const refreshRoles = () => void fetch(`${api}/auth/me`, { credentials: 'include', cache: 'no-store' })
       .then(async (response) =>
         response.ok
           ? ((await response.json()) as { user: { roles: string[] } }).user
               .roles
           : [],
       )
-      .then(setRoles)
+      .then((nextRoles) => setRoles(nextRoles.some((role) => ADMIN_ROLES.has(role)) ? nextRoles : []))
       .catch(() => setRoles([]));
-    return () => window.removeEventListener('hashchange', syncHash);
+    refreshRoles();
+    window.addEventListener('admin-auth-changed', refreshRoles);
+    return () => { window.removeEventListener('hashchange', syncHash); window.removeEventListener('admin-auth-changed', refreshRoles); };
   }, [pathname]);
   return (
     <div className="control-layout">
-      <aside className="control-sidebar" aria-label="Admin navigatsiyasi">
-        <Link className="control-brand" href="/">
-          <span>R</span>
+      {roles.length > 0 && <aside className="control-sidebar" aria-label="Admin navigatsiyasi">
+        <Link className="control-brand" href="/owner">
+          <BrandMark />
           <strong>Resaller.uz</strong>
         </Link>
         <nav>
@@ -93,8 +113,8 @@ export function AdminChrome({ children }: { children: React.ReactNode }) {
             const [itemPath, itemHash] = item.href.split('#');
             const current = itemHash
               ? pathname === itemPath && hash === itemHash
-              : itemPath === '/'
-                ? pathname === '/' && !hash
+              : itemPath === '/owner'
+                ? pathname === '/owner' && !hash
                 : pathname === itemPath || pathname.startsWith(`${itemPath}/`);
             return (
               <Link
@@ -116,10 +136,10 @@ export function AdminChrome({ children }: { children: React.ReactNode }) {
           {adminModules
             .filter(([key]) => canAccessModule(key, roles))
             .map(([key, label]) => (
-              <Link
+              <a
                 key={key}
-              href={`/operations#${key}`}
-              onClick={() => setHash(key)}
+                href={`/operations#${key}`}
+                onClick={() => setHash(key)}
                 aria-current={
                   pathname === '/operations' && hash === key
                     ? 'page'
@@ -133,7 +153,7 @@ export function AdminChrome({ children }: { children: React.ReactNode }) {
                   ›
                 </span>
                 <span>{label}</span>
-              </Link>
+              </a>
             ))}
         </nav>
         <div className="control-sidebar__foot">
@@ -141,18 +161,18 @@ export function AdminChrome({ children }: { children: React.ReactNode }) {
           <strong>Resaller.uz</strong>
           <small>Ishonchli bozor. Katta imkoniyatlar.</small>
         </div>
-      </aside>
+      </aside>}
       <div className="control-stage">
-        <header className="control-topbar">
+        {roles.length > 0 && <header className="control-topbar">
           <p className="control-topbar__title">Resaller boshqaruv markazi</p>
           <div className="control-profile">
-            <span>R</span>
+            <BrandMark />
             <div>
               <strong>Operator paneli</strong>
               <small>Vakolatlar hisobga bog‘langan</small>
             </div>
           </div>
-        </header>
+        </header>}
         <div className="control-content">{children}</div>
       </div>
     </div>

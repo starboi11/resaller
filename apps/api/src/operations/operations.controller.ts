@@ -15,6 +15,7 @@ import {
 import { from, interval, map, Observable, startWith, switchMap } from 'rxjs';
 import type { FastifyRequest } from 'fastify';
 import { type AuthenticatedUser, SessionGuard } from '../auth/session.guard.js';
+import { OwnerGuard } from '../owner/owner-access.js';
 import { OperationsService } from './operations.service.js';
 import {
   AddCartItemDto,
@@ -86,6 +87,7 @@ export class OperationsController {
   ) {
     return this.operations.order(req.user, id);
   }
+  @UseGuards(OwnerGuard)
   @Get('seller/orders') sellerOrders(
     @Req() req: FastifyRequest & { user: AuthenticatedUser },
   ) {
@@ -165,6 +167,7 @@ export class OperationsController {
   ) {
     return this.operations.question(req.user.id, input);
   }
+  @UseGuards(OwnerGuard)
   @Post('questions/:id/answer') answer(
     @Req() req: FastifyRequest & { user: AuthenticatedUser },
     @Param('id') id: string,
@@ -193,6 +196,7 @@ export class OperationsController {
   ) {
     return this.operations.review(req.user.id, id, input);
   }
+  @UseGuards(OwnerGuard)
   @Get('seller/dashboard') dashboard(
     @Req() req: FastifyRequest & { user: AuthenticatedUser },
   ) {

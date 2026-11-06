@@ -1,7 +1,7 @@
 services:
   proxy:
     environment:
-      DOMAIN: '${STAGING_DOMAIN}'
+      DOMAIN: '${STAGING_DOMAIN:?STAGING_DOMAIN is required}'
   web:
     build:
       args:

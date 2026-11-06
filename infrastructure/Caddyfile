@@ -1,3 +1,9 @@
+# Client IP trust (security review 2026-11-03, F1): Caddy is the only trusted
+# hop. With no trusted_proxies, Caddy discards client-supplied X-Forwarded-*
+# values and writes the real peer address, and the APIs (TRUST_PROXY=true)
+# read exactly one hop, the right-most entry. If a CDN or load balancer is ever
+# put in front of Caddy, configure `trusted_proxies` with its exact ranges AND
+# `trusted_proxies_strict`, and raise the APIs' hop count; never trust broadly.
 {$DOMAIN} {
   encode zstd gzip
   header {
@@ -6,8 +12,12 @@
     Referrer-Policy "strict-origin-when-cross-origin"
     X-Frame-Options "DENY"
   }
-  handle /api/* { reverse_proxy api:4000 }
-  handle { reverse_proxy web:3000 }
+  handle /api/* {
+    reverse_proxy api:4000
+  }
+  handle {
+    reverse_proxy web:3000
+  }
 }
 
 admin.{$DOMAIN} {
@@ -18,5 +28,14 @@ admin.{$DOMAIN} {
     Referrer-Policy "strict-origin-when-cross-origin"
     X-Frame-Options "DENY"
   }
-  reverse_proxy admin:3001
+  # Only the secret admin path reaches the admin app; everything else gets a
+  # bare 404 here, so the path cannot be discovered by fuzzing (2026-11-04).
+  # The admin server applies the same rule itself (apps/admin/server.mjs).
+  @admin path {$ADMIN_BASE_PATH}/*
+  handle @admin {
+    reverse_proxy admin:3001
+  }
+  handle {
+    respond "Sahifa topilmadi" 404
+  }
 }

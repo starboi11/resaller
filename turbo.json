@@ -5,6 +5,6 @@
     "dev": { "cache": false, "persistent": true },
     "lint": { "dependsOn": ["^lint"] },
     "typecheck": { "dependsOn": ["^typecheck"] },
-    "test": { "dependsOn": ["^build"], "outputs": ["coverage/**"] }
+    "test": { "dependsOn": ["^build"], "cache": false, "env": ["RUN_DB_TESTS", "RUN_REDIS_TESTS"], "passThroughEnv": ["DATABASE_URL", "REDIS_URL", "REDIS_TEST_URL", "SESSION_SECRET", "DATA_ENCRYPTION_KEY", "CORS_ORIGINS"], "outputs": ["coverage/**"] }
   }
 }

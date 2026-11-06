@@ -7,6 +7,8 @@ try {
 }
 
 const deployedTarget = Boolean(process.env.E2E_WEB_URL);
+const productionBuilds = process.env.E2E_USE_PRODUCTION_BUILDS === 'true';
+const apiCommand = productionBuilds ? 'pnpm --filter @resaller/api start' : 'pnpm --filter @resaller/api dev';
 
 if (
   !process.env.CI &&
@@ -37,34 +39,51 @@ export default defineConfig({
     { name: 'mobile-android', use: { ...devices['Pixel 7'] } },
     { name: 'mobile-iphone', use: { ...devices['iPhone 13'] } },
   ],
-  webServer: deployedTarget ? undefined : [
-    {
-      command:
-        process.env.E2E_USE_CONFIGURED_DATABASE === 'true'
-          ? 'pnpm --filter @resaller/api dev'
-          : 'node scripts/prepare-e2e-database.mjs && pnpm --filter @resaller/api dev',
-      url: 'http://127.0.0.1:4000/api/v1/health/ready',
-      reuseExistingServer: !process.env.CI,
-      timeout: 120_000,
-      env: {
-        ...process.env,
-        DATABASE_URL: process.env.DATABASE_URL,
-        MEDIA_STORAGE_DRIVER: 'local',
-        MEDIA_ROOT: './.e2e-data/media',
-        PRIVATE_MEDIA_ROOT: './.e2e-data/private-media',
-      },
-    },
-    {
-      command: 'pnpm --filter @resaller/web dev',
-      url: 'http://127.0.0.1:3000',
-      reuseExistingServer: !process.env.CI,
-      timeout: 120_000,
-    },
-    {
-      command: 'pnpm --filter @resaller/admin dev',
-      url: 'http://127.0.0.1:3001',
-      reuseExistingServer: !process.env.CI,
-      timeout: 120_000,
-    },
-  ],
+  webServer: deployedTarget
+    ? undefined
+    : [
+        {
+          command:
+            process.env.E2E_USE_CONFIGURED_DATABASE === 'true'
+              ? apiCommand
+              : `node scripts/prepare-e2e-database.mjs && ${apiCommand}`,
+          url: 'http://127.0.0.1:4000/api/v1/health/ready',
+          reuseExistingServer: false,
+          timeout: 120_000,
+          env: {
+            ...process.env,
+            NODE_ENV: 'test',
+            DATABASE_URL: process.env.DATABASE_URL,
+            MEDIA_STORAGE_DRIVER: 'local',
+            MEDIA_ROOT: './.e2e-data/media',
+            PRIVATE_MEDIA_ROOT: './.e2e-data/private-media',
+          },
+        },
+        {
+          command:
+            productionBuilds
+              ? 'pnpm --filter @resaller/web start'
+              : 'pnpm --filter @resaller/web exec next dev --port 3000 --webpack',
+          url: 'http://127.0.0.1:3000',
+          reuseExistingServer: false,
+          timeout: 120_000,
+          env: {
+            NODE_ENV: productionBuilds ? 'production' : 'development',
+            E2E_ALLOW_WEBPACK_EVAL: productionBuilds ? 'false' : 'true',
+          },
+        },
+        {
+          command:
+            productionBuilds
+              ? 'pnpm --filter @resaller/admin start'
+              : 'pnpm --filter @resaller/admin exec next dev --port 3001 --webpack',
+          url: 'http://127.0.0.1:3001/owner',
+          reuseExistingServer: false,
+          timeout: 120_000,
+          env: {
+            NODE_ENV: productionBuilds ? 'production' : 'development',
+            E2E_ALLOW_WEBPACK_EVAL: productionBuilds ? 'false' : 'true',
+          },
+        },
+      ],
 });

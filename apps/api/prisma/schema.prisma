@@ -83,6 +83,24 @@ enum NotificationSeverity {
   INFO
 }
 
+enum StoreKind {
+  SELLER
+  SUPPLIER
+}
+
+enum EarningStatus {
+  PENDING
+  AVAILABLE
+  PAID
+  CANCELLED
+}
+
+enum PayoutStatus {
+  REQUESTED
+  PAID
+  REJECTED
+}
+
 enum TrustBadge {
   NEW
   IDENTITY_VERIFIED
@@ -95,6 +113,12 @@ model User {
   publicId String @unique @default(cuid())
   username String @unique
   passwordHash String
+  // Profile from registration (2026-11-04). The phone is stored encrypted
+  // (AES-GCM, DATA_ENCRYPTION_KEY); phoneHash is an HMAC used only to keep one
+  // account per phone number without decrypting anything.
+  fullName String?
+  phoneEncrypted String?
+  phoneHash String? @unique
   totpSecretEncrypted String?
   totpEnabledAt DateTime? @db.Timestamptz
   roles Role[] @default([BUYER])
@@ -129,6 +153,18 @@ model User {
   uploadedAttachments Attachment[]
   notificationEndpoints NotificationEndpoint[]
   savedAddresses SavedAddress[]
+}
+
+// A first-party browser token is hashed before storage. No IP or user agent is kept.
+model SiteVisit {
+  id String @id @default(uuid()) @db.Uuid
+  day DateTime @db.Date
+  visitorHash String
+  pageViews Int @default(1)
+  firstSeenAt DateTime @default(now()) @db.Timestamptz
+  lastSeenAt DateTime @default(now()) @db.Timestamptz
+  @@unique([day, visitorHash])
+  @@index([day])
 }
 
 model SavedAddress {
@@ -183,7 +219,9 @@ model Session {
   userId String @db.Uuid
   expiresAt DateTime @db.Timestamptz
   revokedAt DateTime? @db.Timestamptz
+  twoFactorVerifiedAt DateTime? @db.Timestamptz
   ipHash String?
+  ipEncrypted String?
   userAgent String?
   createdAt DateTime @default(now()) @db.Timestamptz
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -233,6 +271,10 @@ model SellerVerification {
   legalName String
   documentType String
   documentNumberMasked String
+  documentNumberEncrypted String?
+  phoneEncrypted String?
+  phoneMasked String?
+  residenceAddressEncrypted String?
   documentStorageKey String?
   submittedAt DateTime? @db.Timestamptz
   reviewedAt DateTime? @db.Timestamptz
@@ -253,6 +295,7 @@ model Store {
   descriptionUz String?
   descriptionRu String?
   orderPrefix String @unique
+  kind StoreKind @default(SELLER)
   status StoreStatus @default(DRAFT)
   vacationMode Boolean @default(false)
   logoStorageKey String?
@@ -264,7 +307,10 @@ model Store {
   members StoreMember[]
   policies StorePolicy[]
   listings Listing[]
-  orders Order[]
+  orders Order[] @relation("OrderStore")
+  fulfilledOrders Order[] @relation("OrderFulfillmentStore")
+  resellerEarnings ResellerEarning[]
+  resellerPayouts ResellerPayout[]
   followers StoreFollower[]
   questions StoreQuestion[]
   importedTestimonials ImportedTestimonial[]
@@ -274,6 +320,11 @@ model Store {
   trustEvents TrustEvent[]
   settings StoreSetting?
   collections Collection[]
+  externalOrders ExternalOrder[]
+  customers StoreCustomer[]
+  stockMovements StockMovement[]
+  sellerExpenses SellerExpense[]
+  @@index([kind, status])
   @@index([status, createdAt])
 }
 
@@ -353,9 +404,18 @@ model Listing {
   currency String @default("UZS")
   condition String?
   attributeValues Json @default("{}")
+  // Supplier listings: allowed reseller markup window and suggested retail price.
+  minMarkupBps Int?
+  maxMarkupBps Int?
+  recommendedRetailMinor BigInt?
+  // Reseller listings: the supplier listing this one resells and the chosen markup.
+  sourceListingId String? @db.Uuid
+  markupBps Int?
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @updatedAt @db.Timestamptz
   deletedAt DateTime? @db.Timestamptz
+  sourceListing Listing? @relation("ListingSource", fields: [sourceListingId], references: [id], onDelete: Restrict)
+  resoldListings Listing[] @relation("ListingSource")
   store Store @relation(fields: [storeId], references: [id])
   category Category @relation(fields: [categoryId], references: [id])
   variants ListingVariant[]
@@ -365,6 +425,8 @@ model Listing {
   questions StoreQuestion[]
   collectionItems CollectionItem[]
   @@index([status, categoryId, createdAt])
+  @@unique([storeId, sourceListingId])
+  @@index([sourceListingId])
   @@index([storeId, status])
 }
 
@@ -398,13 +460,19 @@ model ListingVariant {
   sku String
   options Json
   priceOverrideMinor BigInt?
+  sourceVariantId String? @db.Uuid
   listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  sourceVariant ListingVariant? @relation("VariantSource", fields: [sourceVariantId], references: [id], onDelete: Restrict)
+  resoldVariants ListingVariant[] @relation("VariantSource")
   inventory Inventory?
   cartItems CartItem[]
   orderItems OrderItem[]
   reservations StockReservation[]
   media ListingMedia[]
+  externalOrderItems ExternalOrderItem[]
+  stockMovements StockMovement[]
   @@unique([listingId, sku])
+  @@index([sourceVariantId])
 }
 
 model Inventory {
@@ -415,6 +483,112 @@ model Inventory {
   version Int @default(0)
   variant ListingVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
   @@index([available])
+}
+
+// External sales use the same inventory, but never become verified marketplace orders.
+model StoreCustomer {
+  id String @id @default(uuid()) @db.Uuid
+  publicId String @unique @default(cuid())
+  storeId String @db.Uuid
+  name String
+  phoneEncrypted String?
+  phoneHash String?
+  notes String?
+  tags String[] @default([])
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  externalOrders ExternalOrder[]
+  @@unique([storeId, phoneHash])
+  @@index([storeId, createdAt])
+}
+
+model ExternalOrder {
+  id String @id @default(uuid()) @db.Uuid
+  publicId String @unique @default(cuid())
+  storeId String @db.Uuid
+  customerId String? @db.Uuid
+  source String
+  status String @default("NEW")
+  paymentStatus String @default("UNPAID")
+  idempotencyKey String?
+  subtotalMinor BigInt
+  discountMinor BigInt @default(0)
+  deliveryCostMinor BigInt @default(0)
+  totalMinor BigInt
+  costOfGoodsMinor BigInt @default(0)
+  currency String @default("UZS")
+  deliveryAddressEncrypted String?
+  courierName String?
+  trackingNumber String?
+  notes String?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+  store Store @relation(fields: [storeId], references: [id], onDelete: Restrict)
+  customer StoreCustomer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  items ExternalOrderItem[]
+  history ExternalOrderHistory[]
+  stockMovements StockMovement[]
+  @@unique([storeId, idempotencyKey])
+  @@index([storeId, createdAt])
+  @@index([storeId, status, createdAt])
+  @@index([customerId, createdAt])
+}
+
+model ExternalOrderItem {
+  id String @id @default(uuid()) @db.Uuid
+  externalOrderId String @db.Uuid
+  variantId String @db.Uuid
+  quantity Int
+  unitPriceMinor BigInt
+  unitCostMinor BigInt @default(0)
+  snapshot Json
+  order ExternalOrder @relation(fields: [externalOrderId], references: [id], onDelete: Restrict)
+  variant ListingVariant @relation(fields: [variantId], references: [id], onDelete: Restrict)
+  @@index([externalOrderId])
+}
+
+model ExternalOrderHistory {
+  id String @id @default(uuid()) @db.Uuid
+  externalOrderId String @db.Uuid
+  fromStatus String?
+  toStatus String
+  actorId String? @db.Uuid
+  reason String?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  order ExternalOrder @relation(fields: [externalOrderId], references: [id], onDelete: Restrict)
+  @@index([externalOrderId, createdAt])
+}
+
+model StockMovement {
+  id String @id @default(uuid()) @db.Uuid
+  storeId String @db.Uuid
+  variantId String @db.Uuid
+  externalOrderId String? @db.Uuid
+  actorId String? @db.Uuid
+  type String
+  availableDelta Int
+  reservedDelta Int @default(0)
+  reason String?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  store Store @relation(fields: [storeId], references: [id], onDelete: Restrict)
+  variant ListingVariant @relation(fields: [variantId], references: [id], onDelete: Restrict)
+  externalOrder ExternalOrder? @relation(fields: [externalOrderId], references: [id], onDelete: Restrict)
+  @@index([storeId, createdAt])
+  @@index([variantId, createdAt])
+}
+
+model SellerExpense {
+  id String @id @default(uuid()) @db.Uuid
+  publicId String @unique @default(cuid())
+  storeId String @db.Uuid
+  amountMinor BigInt
+  category String
+  note String?
+  occurredAt DateTime @db.Timestamptz
+  createdAt DateTime @default(now()) @db.Timestamptz
+  store Store @relation(fields: [storeId], references: [id], onDelete: Restrict)
+  @@index([storeId, occurredAt])
 }
 
 model ListingMedia {
@@ -491,6 +665,7 @@ model Order {
   checkoutId String @db.Uuid
   buyerId String @db.Uuid
   storeId String @db.Uuid
+  fulfillmentStoreId String? @db.Uuid
   status OrderStatus @default(WAITING_SELLER)
   totalMinor BigInt
   subtotalMinor BigInt
@@ -502,7 +677,9 @@ model Order {
   updatedAt DateTime @updatedAt @db.Timestamptz
   checkout Checkout @relation(fields: [checkoutId], references: [id])
   buyer User @relation("BuyerOrders", fields: [buyerId], references: [id])
-  store Store @relation(fields: [storeId], references: [id])
+  store Store @relation("OrderStore", fields: [storeId], references: [id])
+  fulfillmentStore Store? @relation("OrderFulfillmentStore", fields: [fulfillmentStoreId], references: [id])
+  earning ResellerEarning?
   items OrderItem[]
   history OrderStatusHistory[]
   reservations StockReservation[]
@@ -514,6 +691,7 @@ model Order {
   couponRedemptions CouponRedemption[]
   @@index([storeId, status, sellerAcceptBy])
   @@index([buyerId, createdAt])
+  @@index([fulfillmentStoreId, status, createdAt])
 }
 
 model OrderChange {
@@ -534,6 +712,10 @@ model OrderItem {
   variantId String @db.Uuid
   quantity Int
   unitPriceMinor BigInt
+  // Resale snapshot: supplier variant, wholesale unit price and reseller margin per unit at order time.
+  supplierVariantId String? @db.Uuid
+  supplierUnitPriceMinor BigInt?
+  resellerMarginMinor BigInt?
   snapshot Json
   order Order @relation(fields: [orderId], references: [id], onDelete: Restrict)
   variant ListingVariant @relation(fields: [variantId], references: [id], onDelete: Restrict)
@@ -912,4 +1094,42 @@ model SecurityEvent {
   reviewedBy User? @relation("SecurityReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
   @@index([type, createdAt])
   @@index([reviewedAt, severity, createdAt])
+}
+
+model ResellerEarning {
+  id String @id @default(uuid()) @db.Uuid
+  publicId String @unique @default(cuid())
+  storeId String @db.Uuid
+  orderId String @unique @db.Uuid
+  amountMinor BigInt
+  currency String @default("UZS")
+  status EarningStatus @default(PENDING)
+  availableAt DateTime? @db.Timestamptz
+  payoutId String? @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+  store Store @relation(fields: [storeId], references: [id], onDelete: Restrict)
+  order Order @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  payout ResellerPayout? @relation(fields: [payoutId], references: [id], onDelete: Restrict)
+  @@index([storeId, status, createdAt])
+  @@index([payoutId])
+}
+
+model ResellerPayout {
+  id String @id @default(uuid()) @db.Uuid
+  publicId String @unique @default(cuid())
+  storeId String @db.Uuid
+  amountMinor BigInt
+  currency String @default("UZS")
+  status PayoutStatus @default(REQUESTED)
+  method String
+  reference String?
+  requestedById String? @db.Uuid
+  decidedById String? @db.Uuid
+  decisionReason String?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  decidedAt DateTime? @db.Timestamptz
+  store Store @relation(fields: [storeId], references: [id], onDelete: Restrict)
+  earnings ResellerEarning[]
+  @@index([storeId, status, createdAt])
 }

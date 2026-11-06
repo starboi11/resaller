@@ -20,10 +20,18 @@ export default function LoginPage() {
       method: 'POST',
       credentials: 'include',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        username: data.get('username'),
-        password: data.get('password'),
-      }),
+      // Sign-in needs only username and password; registration also takes
+      // the name and phone used later for delivery.
+      body: JSON.stringify(
+        mode === 'login'
+          ? { username: data.get('username'), password: data.get('password') }
+          : {
+              fullName: data.get('fullName'),
+              phone: data.get('phone'),
+              username: data.get('username'),
+              password: data.get('password'),
+            },
+      ),
     }).catch(() => null);
     if (!response) {
       setMessage('Server bilan ulanib bo‘lmadi. Internetni tekshirib, qayta urinib ko‘ring.');
@@ -36,9 +44,14 @@ export default function LoginPage() {
       return;
     }
     const error = (await response.json().catch(() => null)) as {
-      message?: string;
+      message?: string | string[];
     } | null;
-    setMessage(error?.message ?? 'Kirish amalga oshmadi.');
+    const known: Record<string, string> = {
+      'Invalid username or password': 'Username yoki parol noto‘g‘ri.',
+      'Username is unavailable': 'Bu username band. Boshqasini tanlang.',
+    };
+    const text = Array.isArray(error?.message) ? error.message.join(' ') : error?.message;
+    setMessage((text && (known[text] ?? text)) ?? 'Kirish amalga oshmadi.');
     setBusy(false);
   }
   return (
@@ -54,6 +67,19 @@ export default function LoginPage() {
             : 'Xarid qilish uchun bepul hisob yarating.'}
         </p>
         <form onSubmit={submit} className="surface mt-7 grid gap-5 p-6">
+          {mode === 'register' && (
+            <>
+              <label className="grid gap-2 text-sm font-bold">
+                Ismingiz
+                <input className="field font-normal" name="fullName" minLength={2} maxLength={80} autoComplete="name" required />
+              </label>
+              <label className="grid gap-2 text-sm font-bold">
+                Telefon raqami
+                <input className="field font-normal" name="phone" type="tel" inputMode="tel" autoComplete="tel"
+                  placeholder="+998 90 123 45 67" pattern="[+0-9 ()-]{9,20}" required />
+              </label>
+            </>
+          )}
           <label className="grid gap-2 text-sm font-bold">
             Username
             <input
@@ -77,9 +103,9 @@ export default function LoginPage() {
               }
               required
             />
-            <small className="muted font-normal">
-              Kamida 6 belgi, katta-kichik harf va raqam.
-            </small>
+            {mode === 'register' && (
+              <small className="muted font-normal">Kamida 6 belgi. Raqamlar ham bo‘ladi.</small>
+            )}
           </label>
           {message && (
             <p

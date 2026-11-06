@@ -109,6 +109,33 @@ export const NotificationSeverity = {
 export type NotificationSeverity = (typeof NotificationSeverity)[keyof typeof NotificationSeverity]
 
 
+export const StoreKind = {
+  SELLER: 'SELLER',
+  SUPPLIER: 'SUPPLIER'
+} as const
+
+export type StoreKind = (typeof StoreKind)[keyof typeof StoreKind]
+
+
+export const EarningStatus = {
+  PENDING: 'PENDING',
+  AVAILABLE: 'AVAILABLE',
+  PAID: 'PAID',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type EarningStatus = (typeof EarningStatus)[keyof typeof EarningStatus]
+
+
+export const PayoutStatus = {
+  REQUESTED: 'REQUESTED',
+  PAID: 'PAID',
+  REJECTED: 'REJECTED'
+} as const
+
+export type PayoutStatus = (typeof PayoutStatus)[keyof typeof PayoutStatus]
+
+
 export const TrustBadge = {
   NEW: 'NEW',
   IDENTITY_VERIFIED: 'IDENTITY_VERIFIED',

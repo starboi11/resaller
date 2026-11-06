@@ -90,6 +90,8 @@ export class SellerVerificationDto {
   @IsString() @MinLength(3) @MaxLength(160) legalName!: string;
   @IsIn(['PASSPORT', 'ID_CARD', 'BUSINESS_REGISTRATION']) documentType!: string;
   @IsString() @MinLength(4) @MaxLength(80) documentNumber!: string;
+  @IsString() @Matches(/^\+998\d{9}$/) phone!: string;
+  @IsString() @MinLength(10) @MaxLength(300) residenceAddress!: string;
 }
 
 export class StoreSettingsDto {

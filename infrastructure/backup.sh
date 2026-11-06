@@ -6,9 +6,12 @@ set -eu
 
 backup_dir="${BACKUP_DIR:-/backups}"
 retention_days="${BACKUP_RETENTION_DAYS:-14}"
-mkdir -p "$backup_dir"
+case "$retention_days" in
+  ''|*[!0-9]*|0) echo "BACKUP_RETENTION_DAYS must be a positive integer" >&2; exit 2 ;;
+esac
 umask 077
-stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+mkdir -p "$backup_dir"
+stamp="$(date -u +%Y%m%dT%H%M%SZ)-$$"
 target="$backup_dir/resaller-$stamp.dump.gz.enc"
 temp_dir="$(mktemp -d "$backup_dir/.backup.XXXXXX")"
 trap 'rm -rf "$temp_dir"' EXIT

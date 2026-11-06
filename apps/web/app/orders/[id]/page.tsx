@@ -14,7 +14,11 @@ type Order = {
   sellerAcceptBy: string;
   viewerId: string;
   viewerRole: 'BUYER' | 'SELLER';
-  snapshot?: Record<string, unknown>;
+  // Resale orders are shipped by the supplier; the reseller only follows them.
+  fulfilment?: 'STORE' | 'SUPPLIER';
+  canFulfil?: boolean;
+  canChat?: boolean;
+  snapshot?: Record<string, unknown> & { delivery?: { fullName?: string; phone?: string; region?: string; address?: string } };
   changes?: {
     id: string;
     kind: string;
@@ -40,6 +44,8 @@ type Order = {
     id: string;
     quantity: number;
     unitPriceMinor: string;
+    supplierUnitPriceMinor?: string;
+    resellerMarginMinor?: string;
     snapshot: Record<string, unknown>;
   }[];
   history: {
@@ -78,6 +84,8 @@ export default function OrderDetail({
   } | null>(null);
   const [actionMode, setActionMode] = useState<string | null>(null);
   const [now, setNow] = useState(Date.now());
+  const [transitioning, setTransitioning] = useState(false);
+  const [copied, setCopied] = useState(false);
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(timer);
@@ -87,28 +95,33 @@ export default function OrderDetail({
   }, [params]);
   const load = useCallback(async () => {
     if (!id) return;
-    const [a, b] = await Promise.all([
-      fetch(`${API}/orders/${id}`, {
-        credentials: 'include',
-        cache: 'no-store',
-      }),
-      fetch(`${API}/orders/${id}/messages`, {
-        credentials: 'include',
-        cache: 'no-store',
-      }),
-    ]);
-    if (a.ok) setOrder((await a.json()) as Order);
-    else
+    const a = await fetch(`${API}/orders/${id}`, {
+      credentials: 'include',
+      cache: 'no-store',
+    });
+    if (!a.ok) {
       setError(
         a.status === 401
           ? 'Hisobga kirish kerak.'
           : 'Buyurtma topilmadi yoki ruxsat yo‘q.',
       );
+      return;
+    }
+    const loaded = (await a.json()) as Order;
+    setOrder(loaded);
+    if (loaded.canChat === false) return;
+    const b = await fetch(`${API}/orders/${id}/messages`, {
+      credentials: 'include',
+      cache: 'no-store',
+    });
     if (b.ok) setMessages((await b.json()) as Message[]);
   }, [id]);
   useEffect(() => {
     void load();
-    if (!id) return;
+  }, [load]);
+  useEffect(() => {
+    // The live chat stream opens only for parties allowed to read the chat.
+    if (!id || !order || order.canChat === false) return;
     const stream = new EventSource(`${API}/orders/${id}/messages/stream`, {
       withCredentials: true,
     });
@@ -138,8 +151,9 @@ export default function OrderDetail({
       stream.close();
       clearInterval(fallback);
     };
-  }, [load, order?.viewerId]);
+  }, [id, load, order?.viewerId, order?.canChat]);
   useEffect(() => {
+    if (!order || order.canChat === false) return;
     const read = () => {
       if (document.visibilityState === 'visible' && id) {
         setUnread(0);
@@ -155,7 +169,17 @@ export default function OrderDetail({
       document.removeEventListener('visibilitychange', read);
       window.removeEventListener('focus', read);
     };
-  }, [id]);
+  }, [id, order?.canChat, Boolean(order)]);
+  const acceptExpired =
+    order?.status === 'WAITING_SELLER' && new Date(order.sellerAcceptBy).getTime() <= now;
+  useEffect(() => {
+    // The timeout worker closes the order shortly after the deadline; keep
+    // asking the server until it does instead of guessing the outcome.
+    if (!acceptExpired) return;
+    void load();
+    const timer = window.setInterval(() => void load(), 15_000);
+    return () => window.clearInterval(timer);
+  }, [acceptExpired, load]);
   async function uploadAttachment(messageId: string, file: File) {
     setUploadState('Fayl yuklanmoqda…');
     const upload = new FormData();
@@ -286,16 +310,40 @@ export default function OrderDetail({
     } else setError('Sharh faqat yakunlangan buyurtmaga bir marta yoziladi.');
   }
   async function sellerTransition(to: string) {
-    const response = await fetch(`${API}/orders/${id}/transition`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ to }),
-    });
-    if (response.ok) {
+    if (transitioning) return;
+    setTransitioning(true);
+    setError('');
+    try {
+      const response = await fetch(`${API}/orders/${id}/transition`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ to }),
+      });
+      if (!response.ok) {
+        const body = (await response.json().catch(() => ({}))) as { message?: string | string[] };
+        setError(Array.isArray(body.message) ? body.message.join(', ') : body.message ?? 'Bu holatga o‘tishga ruxsat yo‘q.');
+      }
+    } catch {
+      setError('Aloqa uzildi. Holat tekshirilmoqda…');
+    } finally {
+      // The page always shows the status the server has, never a guessed one.
       await load();
-      setOrder((current) => current ? { ...current, status: to } : current);
-    } else setError('Bu holatga o‘tishga ruxsat yo‘q.');
+      setTransitioning(false);
+    }
+  }
+  async function copyDelivery(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2500);
+    } catch {
+      setError('Nusxalab bo‘lmadi. Matnni qo‘lda belgilab oling.');
+    }
+  }
+  function openChat() {
+    document.getElementById('order-chat')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    window.setTimeout(() => document.getElementById('message')?.focus(), 300);
   }
   async function decideCancellation(approved: boolean) {
     const response = await fetch(`${API}/orders/${id}/cancellation-decision`, {
@@ -391,6 +439,15 @@ export default function OrderDetail({
     SHIPPED: 'DELIVERED',
     DELIVERED: 'COMPLETED',
   };
+  const sellerActs = order?.viewerRole === 'SELLER' && order.canFulfil !== false;
+  const sellerVerb: Record<string, string> = {
+    ACCEPTED: 'Buyurtmani qabul qilish',
+    PREPARING: 'Tayyorlashni boshlash',
+    READY: 'Jo‘natishga tayyor',
+    SHIPPED: 'Jo‘natildi deb belgilash',
+    DELIVERED: 'Yetkazildi deb belgilash',
+    COMPLETED: 'Buyurtmani yakunlash',
+  };
   const pendingCancellation = order.changes?.find(
     (item) =>
       item.kind === 'CANCELLATION_REQUEST' &&
@@ -416,16 +473,80 @@ export default function OrderDetail({
           {orderStatusLabel(order.status)}
         </span>
       </div>
-      {order.status === 'WAITING_SELLER' && (
-        <div className="acceptance-clock mt-5" role="timer">
-          <b>Sotuvchi tasdig‘i uchun qolgan vaqt</b>
-          <strong>
-            {String(Math.floor(remaining / 60000)).padStart(2, '0')}:
-            {String(Math.floor((remaining % 60000) / 1000)).padStart(2, '0')}
-          </strong>
-          <small>60 daqiqada javob bo‘lmasa buyurtma avtomatik yopiladi.</small>
-        </div>
-      )}
+      {(() => {
+        const clock = order.status === 'WAITING_SELLER' && (
+          <div className="acceptance-clock" role="timer">
+            <b>{sellerActs ? 'Qabul qilish uchun qolgan vaqt' : 'Sotuvchi tasdig‘i uchun qolgan vaqt'}</b>
+            {remaining > 0 ? (
+              <strong>
+                {String(Math.floor(remaining / 60000)).padStart(2, '0')}:
+                {String(Math.floor((remaining % 60000) / 1000)).padStart(2, '0')}
+              </strong>
+            ) : (
+              <strong className="text-base">Muddat tugadi. Holat tekshirilmoqda…</strong>
+            )}
+            <small>60 daqiqada javob bo‘lmasa buyurtma avtomatik yopiladi.</small>
+          </div>
+        );
+        const next = sellerNext[order.status];
+        return (
+          <>
+            {sellerActs && (next || clock) ? (
+              // The fulfilling party sees the clock and its one next step first.
+              <section className="surface order-control mt-5 p-4" aria-labelledby="control-title">
+                <h2 id="control-title" className="font-black">Buyurtmani boshqarish</h2>
+                {clock && <div className="mt-3">{clock}</div>}
+                {next && (remaining > 0 || order.status !== 'WAITING_SELLER') && (
+                  <button className="rs-button order-control__primary mt-3" type="button" disabled={transitioning}
+                    onClick={() => void sellerTransition(next)}>
+                    {transitioning ? 'Saqlanmoqda…' : sellerVerb[next] ?? `${orderStatusLabel(next)} holatiga o‘tkazish`}
+                  </button>
+                )}
+              </section>
+            ) : (
+              clock && <div className="mt-5">{clock}</div>
+            )}
+            {order.viewerRole === 'BUYER' && order.status === 'DELIVERED' && (
+              <section className="surface order-control mt-5 p-4" aria-labelledby="receipt-title">
+                <h2 id="receipt-title" className="font-black">Mahsulot yetib keldimi?</h2>
+                <p className="muted mt-2 text-sm">Mahsulotni qo‘lingizga olgan bo‘lsangiz, qabul qilganingizni tasdiqlang. Keyin xaridingiz haqida sharh yozishingiz mumkin.</p>
+                <button className="rs-button mt-3" type="button" disabled={transitioning}
+                  onClick={() => void sellerTransition('COMPLETED')}>
+                  {transitioning ? 'Tasdiqlanmoqda…' : 'Mahsulotni oldim'}
+                </button>
+              </section>
+            )}
+            {order.canChat !== false && (
+              <button className="rs-button rs-button--ghost order-chat-link mt-4" type="button" onClick={openChat}>
+                {order.viewerRole === 'BUYER' ? 'Resaller’ga yozish' : 'Xaridorga yozish'}
+              </button>
+            )}
+          </>
+        );
+      })()}
+      {order.snapshot?.delivery && (() => {
+        const delivery = order.snapshot.delivery;
+        const place = [delivery.region, delivery.address].filter(Boolean).join(', ');
+        const copyText = [delivery.fullName, delivery.phone, place].filter(Boolean).join('\n');
+        return (
+          <section className="surface delivery-card mt-5" aria-labelledby="delivery-title">
+            <h2 id="delivery-title" className="font-black">Yetkazish ma’lumotlari</h2>
+            <dl>
+              <div><dt>Qabul qiluvchi</dt><dd>{delivery.fullName || 'Ism ko‘rsatilmagan'}</dd></div>
+              <div><dt>Telefon</dt><dd>{delivery.phone || 'Telefon ko‘rsatilmagan'}</dd></div>
+              <div><dt>Manzil</dt><dd>{place || 'Manzil ma’lumoti yetishmaydi'}</dd></div>
+            </dl>
+            <div className="delivery-card__actions">
+              {delivery.phone && <a className="rs-button" href={`tel:${delivery.phone.replace(/[^\d+]/g, '')}`}>Qo‘ng‘iroq qilish</a>}
+              {copyText && (
+                <button className="rs-button rs-button--ghost" type="button" onClick={() => void copyDelivery(copyText)}>
+                  {copied ? 'Nusxalandi ✓' : 'Manzilni nusxalash'}
+                </button>
+              )}
+            </div>
+          </section>
+        );
+      })()}
       {error && (
         <p className="mt-4 text-sm text-[var(--danger)]" role="alert">
           {error}
@@ -447,7 +568,9 @@ export default function OrderDetail({
                     )}{' '}
                     × {item.quantity}
                   </span>
-                  <b>{Number(item.unitPriceMinor).toLocaleString('uz-UZ')}</b>
+                  <span className="text-right">
+                    <b>{Number(item.unitPriceMinor).toLocaleString('uz-UZ')} so‘m</b>
+                  </span>
                 </div>
               ))}
             </div>
@@ -518,7 +641,7 @@ export default function OrderDetail({
                     <small className="muted">
                       {new Date(item.createdAt).toLocaleString('uz-UZ')}
                     </small>
-                    {order.viewerRole === 'SELLER' &&
+                    {sellerActs &&
                       item.kind === 'BUYER_CHANGE_REQUEST' &&
                       detail?.status === 'PENDING' && (
                         <div className="mt-3 flex gap-2">
@@ -576,7 +699,7 @@ export default function OrderDetail({
                 Nizo ochish
               </button>
             )}
-            {order.status === 'COMPLETED' && !order.review && (
+            {order.viewerRole === 'BUYER' && order.status === 'COMPLETED' && !order.review && (
               <button
                 className="rounded-full border border-[var(--line)] px-4 py-2 text-sm font-bold"
                 onClick={() => setActionMode('review')}
@@ -585,18 +708,7 @@ export default function OrderDetail({
               </button>
             )}
           </div>
-          {order.viewerRole === 'SELLER' && sellerNext[order.status] && (
-            <section className="surface p-4">
-              <h2 className="font-black">Keyingi ruxsat etilgan amal</h2>
-              <button
-                className="rs-button mt-3"
-                onClick={() => void sellerTransition(sellerNext[order.status]!)}
-              >
-                {orderStatusLabel(sellerNext[order.status]!)} holatiga o‘tkazish
-              </button>
-            </section>
-          )}
-          {order.viewerRole === 'SELLER' && pendingCancellation && (
+          {sellerActs && pendingCancellation && (
             <section className="surface p-4">
               <h2 className="font-black">Xaridorning bekor qilish so‘rovi</h2>
               <p className="muted mt-2 text-sm">
@@ -621,7 +733,7 @@ export default function OrderDetail({
               </div>
             </section>
           )}
-          {order.viewerRole === 'SELLER' &&
+          {sellerActs &&
             order.status === 'RETURN_REQUESTED' && (
               <section className="surface p-4">
                 <h2 className="font-black">Qaytarish so‘rovi</h2>
@@ -715,9 +827,10 @@ export default function OrderDetail({
             </form>
           )}
         </div>
-        <section className="surface private-chat flex min-h-[32rem] flex-col p-5">
+        {order.canChat === false ? null : (
+        <section id="order-chat" className="surface private-chat flex min-h-[32rem] flex-col p-5">
           <h2 className="text-lg font-black">
-            Xususiy chat{' '}
+            {order.viewerRole === 'BUYER' ? 'Resaller bilan yozishma' : 'Xaridor bilan yozishma'}{' '}
             {unread > 0 && (
               <span
                 className="unread-badge"
@@ -835,6 +948,7 @@ export default function OrderDetail({
             <button className="rs-button">Yuborish</button>
           </form>
         </section>
+        )}
       </div>
     </main>
   );

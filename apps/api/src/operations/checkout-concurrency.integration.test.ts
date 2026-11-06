@@ -4,6 +4,11 @@ import { PrismaService } from '../infrastructure/prisma.service.js';
 import { OperationsService } from './operations.service.js';
 
 loadEnvironment({ path: '../../.env' });
+if (process.env.RUN_DB_TESTS === '1' && process.env.DATABASE_URL) {
+  const name = new URL(process.env.DATABASE_URL).pathname.slice(1);
+  if (!name.endsWith('_e2e') && !(process.env.CI && name === 'ci'))
+    throw new Error('Database concurrency tests require an isolated *_e2e database (or CI ci database)');
+}
 const run = process.env.RUN_DB_TESTS === '1' && process.env.DATABASE_URL ? describe : describe.skip;
 
 run('checkout concurrency (PostgreSQL)', () => {
@@ -134,6 +139,7 @@ run('checkout concurrency (PostgreSQL)', () => {
     );
     expect(
       results.filter((result) => result.status === 'fulfilled'),
+      results.filter((result) => result.status === 'rejected').map((result) => String(result.reason)).join('; '),
     ).toHaveLength(1);
     expect(
       results.filter((result) => result.status === 'rejected'),

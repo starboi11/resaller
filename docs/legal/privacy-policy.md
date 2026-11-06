@@ -13,9 +13,10 @@ This policy covers Resaller accounts, marketplace browsing, seller verification,
 
 - Account and authentication: username, password hash, sessions, security events and optional two-factor records.
 - Buyer operations: cart, saved address, order, delivery, cancellation, return, dispute and review records.
-- Seller operations: identity/business verification data, store profile, team permissions, catalog, stock and fulfilment history.
+- Seller operations: identity/business verification data (including encrypted document series/number, Uzbekistan phone and residential address), store profile, team permissions, catalog, stock and fulfilment history. A document number format check does not prove identity; verification requires human document review.
 - Communications: order chat, attachments, Q&A, support tickets and notification endpoints.
-- Technical and safety data: request IDs, timestamps, hashed IP/security signals, device metadata, audit logs and rate-limit events.
+- Technical and safety data: request IDs, timestamps, hashed IP/security signals, device metadata, audit logs and rate-limit events. For seller accounts, the observed sign-in IP is also encrypted and visible only to the superadmin in an audited 30-day login-history view. Browser user-agent describes a claimed device/browser and can be spoofed. IP-based location is approximate and is not a live physical location or residential address. Exact GPS location is not collected by this feature.
+- First-party visit analytics: a random browser cookie valid for up to 30 days is hashed before storage. The database keeps a daily browser hash, page-view count and timestamps for aggregate dashboard statistics; this feature does not store a visitor IP address or browser fingerprint. One browser may represent multiple people and one person may use multiple browsers. Counsel must approve the lawful basis, notice, opt-out/consent requirements and retention period before launch.
 - AI assistant: selected mode, authorized source identifiers, outcome and a one-way prompt hash. The MVP does not store the raw assistant prompt in the audit log and does not send it to an external model provider.
 
 We do not intentionally collect payment card data in the approved MVP because payment collection and settlement are deferred.

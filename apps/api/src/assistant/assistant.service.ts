@@ -13,6 +13,8 @@ import { PrismaService } from '../infrastructure/prisma.service.js';
 import { RedisService } from '../infrastructure/redis.service.js';
 import type { AssistantRequestDto } from './assistant.dto.js';
 import { marketplaceScore } from '../commerce/marketplace-search.js';
+import { buyerVisibleListing, ownerStoreUsername } from '../resale/resale-visibility.js';
+import { resolveOwnerAccess } from '../owner/owner-access.js';
 
 const INJECTION_PATTERNS = [
   /ignore (all|any|the|previous) (instructions|rules)/i,
@@ -42,7 +44,7 @@ export class AssistantService {
       return {
         status: 'REFUSED',
         answer:
-          'Bu so‘rov xavfsizlik qoidalarini chetlab o‘tishga urinayotgandek ko‘rindi. Mahsulot, buyurtma yoki seller formasi bo‘yicha savol bering.',
+          'Bu so‘rov xavfsizlik qoidalarini chetlab o‘tishga urinayotgandek ko‘rindi. Mahsulot yoki o‘zingizning buyurtmangiz bo‘yicha savol bering.',
         sources: [],
       };
     }
@@ -70,8 +72,8 @@ export class AssistantService {
     const listings = await this.prisma.listing.findMany({
       where: {
         status: 'ACTIVE',
-        deletedAt: null,
-        store: { status: 'ACTIVE', vacationMode: false },
+        ...buyerVisibleListing(),
+        store: { kind: 'SELLER', status: 'ACTIVE', vacationMode: false },
       },
       take: 250,
       orderBy: { createdAt: 'desc' },
@@ -91,7 +93,7 @@ export class AssistantService {
             sellerProfile: { select: { trustBadge: true } },
           },
         },
-        variants: { select: { inventory: { select: { available: true } } } },
+        variants: { select: { inventory: { select: { available: true } }, sourceVariant: { select: { inventory: { select: { available: true } } } } } },
       },
     });
     const matches = listings
@@ -117,13 +119,13 @@ export class AssistantService {
         sources: [],
       };
     return {
-      answer: `Siz uchun ${matches.length} ta faol mahsulot topdim. Narx, mavjudlik va seller ishonch belgisini solishtiring.`,
+      answer: `Siz uchun ${matches.length} ta faol mahsulot topdim. Narx, xususiyat va mavjudlikni mahsulot sahifasida tekshiring.`,
       sources: matches.map((listing) => ({
         type: 'PRODUCT',
         id: listing.publicId,
         title: listing.nameUz,
         href: `/product/${listing.publicId}`,
-        detail: `${Number(listing.salePriceMinor ?? listing.priceMinor).toLocaleString('uz-UZ')} ${listing.currency} · ${listing.store.nameUz} · ${listing.variants.reduce((sum, variant) => sum + (variant.inventory?.available ?? 0), 0)} dona · ${listing.store.sellerProfile.trustBadge}`,
+        detail: `${Number(listing.salePriceMinor ?? listing.priceMinor).toLocaleString('uz-UZ')} ${listing.currency} · ${listing.store.nameUz} · ${listing.variants.reduce((sum, variant) => sum + ((variant.inventory ?? variant.sourceVariant?.inventory)?.available ?? 0), 0)} dona`,
       })),
     };
   }
@@ -139,8 +141,8 @@ export class AssistantService {
       where: {
         publicId: { in: selected },
         status: 'ACTIVE',
-        deletedAt: null,
-        store: { status: 'ACTIVE', vacationMode: false },
+        ...buyerVisibleListing(),
+        store: { kind: 'SELLER', status: 'ACTIVE', vacationMode: false },
       },
       select: {
         publicId: true,
@@ -165,7 +167,7 @@ export class AssistantService {
         id: listing.publicId,
         title: listing.nameUz,
         href: `/product/${listing.publicId}`,
-        detail: `${Number(listing.salePriceMinor ?? listing.priceMinor).toLocaleString('uz-UZ')} ${listing.currency} · ${listing.store.nameUz} · ${listing.store.sellerProfile.trustBadge}`,
+        detail: `${Number(listing.salePriceMinor ?? listing.priceMinor).toLocaleString('uz-UZ')} ${listing.currency} · ${listing.store.nameUz}`,
         attributes: listing.attributeValues,
       })),
     };
@@ -177,15 +179,15 @@ export class AssistantService {
     const order = await this.prisma.order.findUnique({
       where: { publicId },
       include: {
-        store: { include: { sellerProfile: true, members: true } },
+        store: { include: { sellerProfile: true } },
         history: { orderBy: { createdAt: 'asc' } },
       },
     });
     if (!order) throw new NotFoundException('Order not found');
     const allowed =
       order.buyerId === user.id ||
-      order.store.sellerProfile.userId === user.id ||
-      order.store.members.some((member) => member.userId === user.id);
+      (order.store.sellerProfile.userId === user.id &&
+        (!ownerStoreUsername() || order.store.username === ownerStoreUsername()));
     if (!allowed) throw new ForbiddenException('Order access denied');
     const guidance: Record<string, string> = {
       WAITING_SELLER: 'Seller buyurtmani 60 daqiqa ichida qabul qilishi kerak.',
@@ -214,8 +216,14 @@ export class AssistantService {
   }
 
   private async sellerHelp(user: AuthenticatedUser, storePublicId?: string) {
+    // Form help is an owner tool: with the owner store configured, only its
+    // owner gets it, and only for that store (there is no team).
+    const owner = ownerStoreUsername();
+    if (owner && !(await resolveOwnerAccess(this.prisma, user.id)))
+      throw new ForbiddenException('Bu bo‘lim faqat do‘kon egasi uchun');
     const store = await this.prisma.store.findFirst({
       where: {
+        ...(owner ? { username: owner } : {}),
         ...(storePublicId ? { publicId: storePublicId } : {}),
         OR: [
           { sellerProfile: { userId: user.id } },

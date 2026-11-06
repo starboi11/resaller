@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import './warm-studio.css';
 import { AdminChrome } from './components/admin-chrome';
 export const metadata: Metadata = {
   title: 'Boshqaruv — Resaller Admin',
   description: 'Resaller moderatsiya va audit markazi',
+  robots: { index: false, follow: false },
 };
 export default function RootLayout({
   children,

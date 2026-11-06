@@ -23,6 +23,9 @@ export class ModerateVerificationDto {
   @IsIn(['APPROVED', 'REJECTED']) status!: 'APPROVED' | 'REJECTED';
   @IsString() @MinLength(3) @MaxLength(500) reason!: string;
 }
+export class ViewSellerPrivateDetailsDto {
+  @IsString() @MinLength(10) @MaxLength(500) reason!: string;
+}
 export class ModerateQuestionReportDto {
   @IsIn(['ACTIONED', 'DISMISSED']) status!: 'ACTIONED' | 'DISMISSED';
   @IsString() @MinLength(3) @MaxLength(500) resolution!: string;

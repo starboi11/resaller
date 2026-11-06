@@ -38,7 +38,7 @@ test('buyer and seller workspaces remain readable at each device width', async (
 test('admin entry and operator workspace render without clipping', async ({
   page,
 }) => {
-  for (const route of ['/', '/operations']) {
+  for (const route of ['/owner', '/operations']) {
     await page.goto(`${ADMIN}${route}`);
     await expect(page.locator('body')).toBeVisible();
     await expect(page.locator('main').first()).toBeVisible();

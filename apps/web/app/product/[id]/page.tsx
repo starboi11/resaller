@@ -6,7 +6,7 @@ import { PurchasePanel } from '../purchase-panel';
 import { demoListings } from '../../lib/demo-catalog';
 
 export const dynamic = 'force-dynamic';
-const api = process.env.NEXT_PUBLIC_API_URL ?? 'http://127.0.0.1:4000/api/v1';
+const api = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
 type Product = {
   publicId: string;
   nameUz: string;
@@ -88,7 +88,7 @@ export default async function ProductPage({
     { cache: 'no-store' },
   ).catch(() => null);
   const fallback =
-    process.env.NODE_ENV === 'development'
+    process.env.NODE_ENV === 'development' && process.env.DEMO_CATALOG_ENABLED === 'true'
       ? demoListings.find((item) => item.publicId === id)
       : undefined;
   if (response?.status === 404 && !fallback) notFound();
@@ -160,16 +160,6 @@ export default async function ProductPage({
           )}
         </section>
         <section className="product-info lg:py-3">
-          <div className="flex flex-wrap gap-2">
-            <span className="rounded-full bg-[var(--brand-soft)] px-3 py-1 text-xs font-black text-[var(--brand-strong)]">
-              {product.store.sellerProfile.trustBadge.replaceAll('_', ' ')}
-            </span>
-            {product.store.sellerProfile.verifiedAt && (
-              <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-black text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200">
-                Shaxs tasdiqlangan
-              </span>
-            )}
-          </div>
           <h1 className="mt-4 text-3xl font-black tracking-tight sm:text-5xl">
             {displayName}
           </h1>
@@ -194,20 +184,8 @@ export default async function ProductPage({
               restricted={restricted}
             />
           </div>
-          <a
-            href={`/store/${product.store.username}`}
-            className="surface seller-summary mt-7 p-5"
-          >
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="font-black">{product.store.nameUz}</p>
-                <p className="muted text-sm">@{product.store.username}</p>
-              </div>
-              <span className="text-sm font-bold text-[var(--brand-strong)]">
-                Do‘kon →
-              </span>
-            </div>
-          </a>
+          {/* One seller: no seller card or trust badges, just who sells it. */}
+          <p className="muted mt-5 text-sm">Sotuvchi: Resaller</p>
           <div className="product-buybar mt-7">
             <div>
               <ProductActions
@@ -232,7 +210,7 @@ export default async function ProductPage({
               </p>
             </div>
             <div className="rounded-2xl bg-[var(--surface-2)] p-4">
-              <b>Qaytarish va do‘kon qoidalari</b>
+              <b>Qaytarish shartlari</b>
               <p className="muted mt-1">
                 {readable(
                   product.store.policies?.[0]?.content,
@@ -257,7 +235,7 @@ export default async function ProductPage({
                   <small className="muted">@{item.author.username}</small>
                   {item.answer ? (
                     <p className="mt-2 rounded-xl bg-[var(--surface-2)] p-3">
-                      <b>Sotuvchi:</b> {item.answer.body}
+                      <b>Resaller:</b> {item.answer.body}
                     </p>
                   ) : (
                     <p className="muted mt-2 text-sm">Hali javob berilmagan</p>

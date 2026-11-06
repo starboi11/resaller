@@ -1,6 +1,8 @@
 # Resaller completion roadmap
 
-Updated: 2026-09-22
+Updated: 2026-10-02
+
+Current deployment evidence and limitations are recorded in `release-audit-2026-10-02.md`; use `SERVER-HANDOFF-2026-10-02.md` for server preparation. Older totals below are historical evidence, not a release approval.
 
 This is the delivery order for closing the approved visual and product contract. A checkbox is complete only when the UI, API authorization, database behavior, error states, and browser evidence all pass.
 
@@ -9,17 +11,17 @@ This is the delivery order for closing the approved visual and product contract.
 The primary release journey is:
 
 ```text
-seller registers → verifies identity → creates store → creates product
-→ admin reviews product → buyer finds and selects product → checkout splits orders
+seller registers → submits identity document → admin verifies seller once
+→ seller activates store → creates and publishes product → buyer finds and selects product → checkout splits orders
 → seller accepts within 60 minutes → seller fulfills order → buyer completes and reviews
 ```
 
-Every screen must answer one primary user question and expose one obvious next action. The approved cinematic black/deep-green, neon-mint and metallic Resaller identity remains the visual reference on desktop and mobile.
+Every screen must answer one primary user question and expose one obvious next action. The latest approved cinematic black, soft-white and red Resaller identity supersedes the older green/mint reference on desktop and mobile.
 
 ### Local acceptance evidence
 
-- [x] The primary release journey passes through the real browser UI on desktop Chromium and a Pixel 7 viewport: seller creates a product and uploads media → moderator approves it → buyer finds it, adds it to cart and checks out → seller accepts within the visible 60-minute window and fulfills it → buyer leaves a verified review.
-- [x] Home/empty-marketplace snapshots and responsive buyer/seller/admin entry checks run on Chromium, Firefox, WebKit, Pixel 7, and iPhone 13. This is technical coverage, not owner visual sign-off.
+- [x] Rerun the revised primary release journey through a real browser against isolated local PostgreSQL. Identity document submission, one admin seller verification, self-service store activation/product publication, checkout, fulfillment and review passed in desktop Chromium, Firefox, WebKit and Android on 2026-09-29. The long iPhone journey remains skipped on Windows; owner/admin iPhone checks passed. Staging still needs its own run.
+- [ ] Approve new home/empty-marketplace visual baselines. The 2026-09-27 full browser run had 130 passes, 7 visual failures and 3 skips: five home snapshots and two empty-marketplace snapshots still expect the earlier green palette, while the current UI uses the later black/white/red direction. Do not silently replace baselines without owner visual review.
 
 ## C — Final UI/UX acceptance
 
@@ -39,7 +41,7 @@ Every screen must answer one primary user question and expose one obvious next a
 - [x] Complete unread chat, reconnect status, attachment progress/retry, location and change-request cards.
 - [x] Complete the seller four-step wizard with autosave, drag/reorder media, variant media and real preview.
 - [x] Connect Store, Products, Orders, Chat, Q&A, Marketing, Analytics, Team and Settings through a consistent seller workspace navigation.
-- [x] Provide task-specific verification/listing queues and role-filtered order, dispute, risk, review, security and audit admin workspaces.
+- [x] Provide seller verification queue, post-publication listing oversight and role-filtered order, dispute, risk, review, security and audit admin workspaces. Individual product approval is no longer required; prohibited products can still be restricted with an audited reason.
 - [x] Reconcile store logo/banner, product video/sale price, collections and premium/subscription scope with the approved specification.
 
 ## AI assistant
@@ -52,7 +54,7 @@ Every screen must answer one primary user question and expose one obvious next a
 
 ## D14–D15 — Security and evidence
 
-- [x] Add complete browser tests for buyer checkout-to-review, seller product-to-fulfillment and admin verification/moderation/dispute flows.
+- [ ] Pass the revised complete browser journey for buyer checkout-to-review, seller onboarding/product-to-fulfillment and admin verification/post-publication restriction/dispute flows against staging. Local changed-feature matrix on 2026-09-29: 29 passed across Chromium/Firefox/WebKit/Android/iPhone, with one intentional long iPhone journey skip on Windows.
 - [ ] Test every actionable control for success, validation, denied permission, expired session, duplicate request and API outage. Core auth and public resilience cases pass; exhaustive per-control coverage remains.
 - [x] Add Chromium, Firefox and WebKit coverage plus representative small Android and iPhone viewports.
 - [ ] Add visual regression baselines for the approved screens and themes.
@@ -63,6 +65,7 @@ Every screen must answer one primary user question and expose one obvious next a
 - [ ] Connect real S3-compatible storage and notification provider credentials.
 - [ ] Deploy staging, apply migrations and run the complete browser suite against it.
 - [ ] Verify HTTPS, firewall, private DB/Redis, monitoring, alerts, off-host backup, restore and rollback.
+- [ ] Fix the production TLS gate before launch: read-only live smoke on 2026-09-27 found that plain HTTP still returned 200 instead of redirecting to HTTPS, and neither web nor admin sent HSTS. Confirm valid origin HTTPS and Cloudflare zone ownership before enabling edge redirect and HSTS.
 - [ ] Publish owner/legal-approved privacy, buyer, seller, prohibited-listing, return and dispute policies.
 - [ ] Approve support and moderation procedures.
 - [ ] Run a closed beta with 20–50 sellers; fix blocking workflow and usability findings.

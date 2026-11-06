@@ -7,9 +7,11 @@ import {
 } from '@playwright/test';
 import pg from 'pg';
 import { orderStatusLabel } from '../apps/web/app/lib/order-status';
+import { enrollAdmin } from './helpers/admin-auth';
+import { testDatabaseUrl } from './helpers/test-database';
 
 const WEB = process.env.E2E_WEB_URL ?? 'http://localhost:3000';
-const ADMIN = process.env.E2E_ADMIN_URL ?? 'http://localhost:3001';
+const ADMIN = `${process.env.E2E_ADMIN_URL ?? 'http://localhost:3001'}/owner`;
 const API = process.env.E2E_API_URL ?? 'http://localhost:4000/api/v1';
 const PASSWORD = 'Resaller-E2E-2026';
 
@@ -101,11 +103,16 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
     testInfo.project.name === 'mobile-iphone' && process.platform === 'win32',
     'The Windows WebKit mobile runner stalls during the long multi-context transaction. iPhone layout and authenticated modules remain covered by the responsive suite.',
   );
+  // Windows WebKit can spend several minutes completing the long multi-context
+  // journey even when every step succeeds; its isolated rerun took 2.9 minutes.
   test.setTimeout(
-    testInfo.project.name === 'mobile-iphone' ? 360_000 : 240_000,
+    testInfo.project.name.includes('webkit') ||
+      testInfo.project.name === 'mobile-iphone'
+      ? 360_000
+      : 240_000,
   );
   const database = new pg.Client({
-    connectionString: process.env.E2E_DATABASE_URL ?? process.env.DATABASE_URL,
+    connectionString: testDatabaseUrl(),
   });
   await database.connect();
   const stamp = `${Date.now()}${testInfo.workerIndex}`;
@@ -136,20 +143,42 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
     contexts.push(sellerContext);
     const sellerPage = await register(sellerContext, WEB, sellerName);
     await createStore(sellerPage, stamp);
+    const verificationForm = sellerPage
+      .getByRole('heading', { name: '2. Shaxsni tasdiqlash' })
+      .locator('..');
+    await verificationForm.getByPlaceholder('Yuridik/to‘liq ism').fill(`Journey Seller ${stamp}`);
+    await verificationForm.getByPlaceholder('Hujjat raqami').fill(`AA${stamp}`);
+    await verificationForm.getByRole('button', { name: 'Ma’lumotni saqlash' }).click();
+    await verificationForm.locator('input[type="file"]').setInputFiles({
+      name: 'verification.pdf',
+      mimeType: 'application/pdf',
+      buffer: Buffer.from('%PDF-1.4\n1 0 obj<</Type/Catalog>>endobj\n%%EOF'),
+    });
+    await expect(sellerPage.getByText('Verification hujjati xavfsiz yuklandi.')).toBeVisible();
+    await expect(verificationForm).toContainText('Hujjat admin tekshiruvida');
 
+    const adminContext = await browser.newContext(contextOptions);
+    contexts.push(adminContext);
+    const adminPage = await register(adminContext, ADMIN, adminName);
+    // Test-only bootstrap: a real operator must already have this role.
     await database.query(
-      `UPDATE "SellerProfile" SET "verifiedAt" = now()
-       WHERE "userId" = (SELECT id FROM "User" WHERE username = $1)`,
-      [sellerName],
+      'UPDATE "User" SET roles = ARRAY[$1, $2, $3]::"Role"[] WHERE username = $4',
+      ['BUYER', 'SUPER_ADMIN', 'VERIFICATION_ADMIN', adminName],
     );
-    await database.query(
-      `UPDATE "Store" SET status = 'ACTIVE'
-       WHERE "sellerProfileId" = (
-         SELECT id FROM "SellerProfile" WHERE "userId" =
-           (SELECT id FROM "User" WHERE username = $1)
-       )`,
-      [sellerName],
-    );
+    await enrollAdmin(adminPage, adminName, PASSWORD);
+    const verificationRow = adminPage.locator('#verification article.queue-row').filter({ hasText: sellerName });
+    await expect(verificationRow).toBeVisible();
+    await verificationRow.getByRole('button', { name: 'Tasdiqlash' }).click();
+    let decision = adminPage.getByRole('dialog', { name: 'Moderatsiya qarori' });
+    await decision.locator('textarea').fill('Hujjat va seller ma’lumotlari tekshirildi.');
+    await decision.getByRole('button', { name: 'Qarorni tasdiqlash' }).click();
+    await expect(verificationRow).toHaveCount(0);
+
+    await sellerPage.reload();
+    const submitStore = sellerPage.getByRole('button', { name: 'Do‘konni faollashtirish' });
+    await expect(submitStore).toBeEnabled();
+    await submitStore.click();
+    await expect(sellerPage.getByText('Faol do‘kon')).toBeVisible();
 
     await sellerPage.reload();
     const wizard = sellerPage.locator('form.product-wizard');
@@ -162,8 +191,15 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
     await wizard.getByPlaceholder('Kategoriya slug').fill('other');
     await wizard.getByRole('button', { name: 'Media bosqichi →' }).click();
     await wizard.getByRole('button', { name: 'Narx va variant →' }).click();
-    await wizard.getByPlaceholder('Narx', { exact: true }).fill('189000');
-    await wizard.getByPlaceholder('Soni').fill('5');
+    // Native number-input fill can stall Windows WebKit. Exercise real keyboard
+    // input instead, with the same form validation and autosave handlers.
+    const priceInput = wizard.getByPlaceholder('Narx', { exact: true });
+    await priceInput.click({ timeout: 15_000 });
+    await priceInput.pressSequentially('189000', { timeout: 15_000 });
+    const quantityInput = wizard.getByPlaceholder('Soni');
+    await quantityInput.click({ timeout: 15_000 });
+    await quantityInput.press('ControlOrMeta+A');
+    await quantityInput.pressSequentially('5', { timeout: 15_000 });
     await wizard.getByPlaceholder('SKU').fill(`SKU-${stamp}`);
     await wizard.getByRole('button', { name: 'Preview →' }).click();
     await wizard
@@ -191,17 +227,10 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
     await sellerPage.reload();
     await expect.poll(() => sellerPage.locator('article').filter({ hasText: productName }).locator('.media-reorder img').first().evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
     await productCard
-      .getByRole('button', { name: 'Moderatsiyaga yuborish' })
+      .getByRole('button', { name: 'Mahsulotni e’lon qilish' })
       .click();
-    await expect(productCard).toContainText('PENDING_REVIEW');
+    await expect(productCard).toContainText('Katalogda ko‘rinadi');
 
-    const adminContext = await browser.newContext(contextOptions);
-    contexts.push(adminContext);
-    const adminPage = await register(adminContext, ADMIN, adminName);
-    await database.query(
-      'UPDATE "User" SET roles = ARRAY[$1, $2]::"Role"[] WHERE username = $3',
-      ['BUYER', 'MODERATOR', adminName],
-    );
     await adminPage.reload();
     const moderationRow = adminPage
       .locator('article.queue-row')
@@ -219,15 +248,7 @@ test('seller → admin → buyer → fulfillment → verified review journey', a
     ).toBeVisible();
     await capture(adminPage, 'admin-operations');
     await adminPage.goto(ADMIN);
-    await moderationRow.getByRole('button', { name: 'Tasdiqlash' }).click();
-    const decision = adminPage.getByRole('dialog', {
-      name: 'Moderatsiya qarori',
-    });
-    await decision
-      .locator('textarea')
-      .fill('Mahsulot ma’lumotlari va rasmi tekshirildi.');
-    await decision.getByRole('button', { name: 'Qarorni tasdiqlash' }).click();
-    await expect(moderationRow).toHaveCount(0);
+    await expect(adminPage.locator('article.queue-row').filter({ hasText: productName })).toBeVisible();
 
     const listing = await database.query<{ publicId: string }>(
       'SELECT "publicId" FROM "Listing" WHERE "nameUz" = $1',

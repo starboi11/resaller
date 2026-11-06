@@ -1,7 +1,8 @@
 import { Body, Controller, Delete, Get, HttpCode, Inject, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { AuthService } from './auth.service.js';
-import { LoginDto, RegisterDto, RequestPasswordResetDto, ResetPasswordDto, VerifyTwoFactorDto } from './auth.dto.js';
+import { LoginDto, RegisterDto,
+  ChangePasswordDto, RequestPasswordResetDto, ResetPasswordDto, VerifyTwoFactorDto } from './auth.dto.js';
 import { type AuthenticatedUser, SessionGuard } from './session.guard.js';
 import { SESSION_COOKIE, SESSION_COOKIE_NAME } from './session-token.service.js';
 
@@ -11,7 +12,7 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() input: RegisterDto, @Req() request: FastifyRequest, @Res({ passthrough: true }) reply: FastifyReply) {
-    const result = await this.auth.register(input.username, input.password, { ip: request.ip, userAgent: request.headers['user-agent'] });
+    const result = await this.auth.register(input.username, input.password, { ip: request.ip, userAgent: request.headers['user-agent'] }, { fullName: input.fullName, phone: input.phone });
     reply.setCookie(SESSION_COOKIE_NAME, result.session.token, { ...SESSION_COOKIE, expires: result.session.expiresAt });
     return { user: result.user };
   }
@@ -42,7 +43,7 @@ export class AuthController {
 
   @Post('password/request-reset')
   @HttpCode(202)
-  requestPasswordReset(@Body() input: RequestPasswordResetDto) { return this.auth.requestPasswordReset(input.username); }
+  requestPasswordReset(@Body() input: RequestPasswordResetDto, @Req() request: FastifyRequest) { return this.auth.requestPasswordReset(input.username, { ip: request.ip }); }
 
   @Post('password/reset')
   resetPassword(@Body() input: ResetPasswordDto) { return this.auth.resetPassword(input.token, input.newPassword); }
@@ -53,6 +54,19 @@ export class AuthController {
     const session = await this.auth.rotateSession(request.cookies?.[SESSION_COOKIE_NAME]);
     reply.setCookie(SESSION_COOKIE_NAME, session.token, { ...SESSION_COOKIE, expires: session.expiresAt });
     return { rotated: true, expiresAt: session.expiresAt };
+  }
+
+  @Get('profile')
+  @UseGuards(SessionGuard)
+  profile(@Req() request: FastifyRequest & { user: AuthenticatedUser }) {
+    return this.auth.profile(request.user.id);
+  }
+
+  @Post('password/change')
+  @HttpCode(200)
+  @UseGuards(SessionGuard)
+  changePassword(@Body() input: ChangePasswordDto, @Req() request: FastifyRequest & { user: AuthenticatedUser; cookies: Record<string, string | undefined> }) {
+    return this.auth.changePassword(request.user.id, request.cookies[SESSION_COOKIE_NAME], input.currentPassword, input.newPassword);
   }
 
   @Get('me')

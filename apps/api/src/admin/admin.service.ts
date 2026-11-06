@@ -5,6 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../infrastructure/prisma.service.js';
+import { EndpointCryptoService } from '../notifications/endpoint-crypto.service.js';
 import type { AuthenticatedUser } from '../auth/session.guard.js';
 import type {
   DecideDisputeDto,
@@ -17,35 +18,41 @@ import type {
   ResolveSecurityEventDto,
   UpdateUserRolesDto,
 } from './admin.dto.js';
+import { syncResellerEarning } from '../resale/resale-sync.js';
 
 @Injectable()
 export class AdminService {
-  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
+  constructor(@Inject(PrismaService) private readonly prisma: PrismaService,
+    @Inject(EndpointCryptoService) private readonly crypto: EndpointCryptoService) {}
+  async sellerLoginHistory(actor: AuthenticatedUser) {
+    const rows = await this.prisma.session.findMany({
+      where: { user: { sellerProfile: { isNot: null } }, createdAt: { gte: new Date(Date.now() - 30 * 86_400_000) } },
+      take: 100,
+      orderBy: { createdAt: 'desc' },
+      select: { id: true, createdAt: true, expiresAt: true, revokedAt: true, ipEncrypted: true, userAgent: true,
+        user: { select: { username: true, publicId: true, sellerProfile: { select: { verifiedAt: true, verification: { select: { legalName: true, phoneMasked: true, documentNumberMasked: true } } } } } } },
+    });
+    await this.prisma.auditLog.create({ data: { actorId: actor.id, action: 'SELLER_LOGIN_HISTORY_VIEWED', targetType: 'Session', targetId: actor.id, metadata: { resultCount: rows.length } } });
+    return rows.map(({ ipEncrypted, ...row }) => ({ ...row, ip: ipEncrypted ? this.crypto.decrypt(ipEncrypted) : null }));
+  }
+  async sellerPrivateDetails(actor: AuthenticatedUser, publicId: string, reason: string) {
+    const seller = await this.prisma.user.findUnique({ where: { publicId }, select: {
+      id: true, username: true, sellerProfile: { select: { verification: { select: {
+        legalName: true, documentType: true, documentNumberEncrypted: true,
+        phoneEncrypted: true, residenceAddressEncrypted: true,
+      } } } },
+    } });
+    if (!seller?.sellerProfile?.verification) throw new NotFoundException('Seller verification not found');
+    await this.prisma.auditLog.create({ data: { actorId: actor.id, action: 'SELLER_PRIVATE_DETAILS_VIEWED', targetType: 'User', targetId: seller.id, reason } });
+    const details = seller.sellerProfile.verification;
+    return { username: seller.username, legalName: details.legalName, documentType: details.documentType,
+      documentNumber: details.documentNumberEncrypted ? this.crypto.decrypt(details.documentNumberEncrypted) : null,
+      phone: details.phoneEncrypted ? this.crypto.decrypt(details.phoneEncrypted) : null,
+      residenceAddress: details.residenceAddressEncrypted ? this.crypto.decrypt(details.residenceAddressEncrypted) : null };
+  }
   async queue() {
-    const [stores, listings, verifications, disputes, securityEvents] =
+    const [verifications, disputes, securityEvents] =
       await Promise.all([
-        this.prisma.store.findMany({
-          where: { status: 'PENDING_REVIEW' },
-          take: 50,
-          orderBy: { createdAt: 'asc' },
-          select: {
-            publicId: true,
-            username: true,
-            nameUz: true,
-            createdAt: true,
-          },
-        }),
-        this.prisma.listing.findMany({
-          where: { status: 'PENDING_REVIEW' },
-          take: 50,
-          orderBy: { createdAt: 'asc' },
-          select: {
-            publicId: true,
-            nameUz: true,
-            store: { select: { username: true } },
-            createdAt: true,
-          },
-        }),
         this.prisma.sellerVerification.findMany({
           where: {
             status: 'PENDING_REVIEW',
@@ -73,8 +80,6 @@ export class AdminService {
         }),
       ]);
     return {
-      stores,
-      listings,
       verifications: verifications.map(
         ({ documentStorageKey, ...verification }) => ({
           ...verification,
@@ -84,6 +89,43 @@ export class AdminService {
       openDisputes: disputes,
       securityEvents24h: securityEvents,
     };
+  }
+  async overview() {
+    const today = new Date();
+    const todayUtc = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+    const thirtyDaysAgo = new Date(todayUtc.getTime() - 29 * 86_400_000);
+    const [visitorsToday, visitors30Days, pageViews30Days, ordersPlaced, ordersCompleted, storesActive, listingsPublished, listingsTotal, recentAudit, recentOrders, recentListings] = await Promise.all([
+      this.prisma.siteVisit.count({ where: { day: todayUtc } }),
+      this.prisma.siteVisit.count({ where: { day: { gte: thirtyDaysAgo } } }),
+      this.prisma.siteVisit.aggregate({ where: { day: { gte: thirtyDaysAgo } }, _sum: { pageViews: true } }),
+      this.prisma.order.count(),
+      this.prisma.order.count({ where: { status: 'COMPLETED' } }),
+      this.prisma.store.count({ where: { status: 'ACTIVE' } }),
+      this.prisma.listing.count({ where: { status: 'ACTIVE' } }),
+      this.prisma.listing.count(),
+      this.prisma.auditLog.findMany({ take: 15, orderBy: { createdAt: 'desc' }, select: { id: true, action: true, targetType: true, reason: true, createdAt: true, actor: { select: { username: true } } } }),
+      this.prisma.order.findMany({ take: 10, orderBy: { createdAt: 'desc' }, select: { publicId: true, displayId: true, status: true, createdAt: true, buyer: { select: { username: true } }, store: { select: { username: true } } } }),
+      this.prisma.listing.findMany({ take: 10, orderBy: { createdAt: 'desc' }, select: { publicId: true, nameUz: true, status: true, createdAt: true, store: { select: { username: true } } } }),
+    ]);
+    return {
+      metrics: { visitorsToday, visitorDays30: visitors30Days, pageViews30: pageViews30Days._sum.pageViews ?? 0, ordersPlaced, ordersCompleted, storesActive, listingsPublished, listingsTotal },
+      recentAudit,
+      recentOrders,
+      recentListings,
+    };
+  }
+  async allListings(page: number) {
+    const pageSize = 50;
+    const [items, total] = await Promise.all([
+      this.prisma.listing.findMany({
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+        select: { publicId: true, nameUz: true, status: true, createdAt: true, store: { select: { username: true, nameUz: true, status: true } } },
+      }),
+      this.prisma.listing.count(),
+    ]);
+    return { items, total, page, pageSize };
   }
   async moderateStore(
     actor: AuthenticatedUser,
@@ -96,10 +138,14 @@ export class AdminService {
         include: { sellerProfile: { select: { verifiedAt: true } } },
       });
       if (!store) throw new NotFoundException('Store not found');
-      if (input.status === 'ACTIVE' && !store.sellerProfile.verifiedAt)
-        throw new ConflictException(
-          'Seller identity must be verified before activation',
-        );
+      if (input.status === 'ACTIVE') {
+        if (!store.sellerProfile.verifiedAt)
+          throw new ConflictException(
+            'Seller identity must be verified before activation',
+          );
+        if (!['PENDING_REVIEW', 'RESTRICTED', 'SUSPENDED'].includes(store.status))
+          throw new ConflictException('Only a restricted store can be restored by an admin');
+      }
       const updated = await tx.store.update({
         where: { id: store.id },
         data: { status: input.status },
@@ -124,8 +170,17 @@ export class AdminService {
     input: ModerateListingDto,
   ) {
     return this.prisma.$transaction(async (tx) => {
-      const listing = await tx.listing.findUnique({ where: { publicId } });
+      const listing = await tx.listing.findUnique({
+        where: { publicId },
+        include: { store: { include: { sellerProfile: { select: { verifiedAt: true } } } } },
+      });
       if (!listing) throw new NotFoundException('Listing not found');
+      if (input.status === 'ACTIVE') {
+        if (!['PENDING_REVIEW', 'RESTRICTED', 'REJECTED'].includes(listing.status))
+          throw new ConflictException('Only a restricted listing can be restored by an admin');
+        if (listing.store.status !== 'ACTIVE' || !listing.store.sellerProfile.verifiedAt)
+          throw new ConflictException('Store must be active before listing approval');
+      }
       const updated = await tx.listing.update({
         where: { id: listing.id },
         data: { status: input.status },
@@ -154,6 +209,13 @@ export class AdminService {
         where: { id },
       });
       if (!verification) throw new NotFoundException('Verification not found');
+      if (
+        input.status === 'APPROVED' &&
+        (verification.status !== 'PENDING_REVIEW' || !verification.documentStorageKey)
+      )
+        throw new ConflictException(
+          'Verification document must be submitted before approval',
+        );
       const reviewedAt = new Date();
       const updated = await tx.sellerVerification.update({
         where: { id },
@@ -169,6 +231,11 @@ export class AdminService {
         await tx.sellerProfile.update({
           where: { id: verification.sellerProfileId },
           data: { verifiedAt: null, trustBadge: 'NEW' },
+        });
+      if (input.status === 'REJECTED')
+        await tx.store.updateMany({
+          where: { sellerProfileId: verification.sellerProfileId, status: 'ACTIVE' },
+          data: { status: 'RESTRICTED' },
         });
       await tx.auditLog.create({
         data: {
@@ -350,6 +417,15 @@ export class AdminService {
           metadata: { outcome: input.outcome },
         },
       });
+      // Resale earnings follow the decision. A seller win releases the margin
+      // only if the goods were actually delivered; otherwise it stays on hold.
+      const delivered = await tx.orderStatusHistory.count({
+        where: { orderId: dispute.orderId, toStatus: { in: ['DELIVERED', 'COMPLETED'] } },
+      });
+      const event = input.outcome === 'BUYER' ? 'DISPUTE_BUYER'
+        : (input.outcome === 'SELLER' || input.outcome === 'NO_ACTION') && delivered ? 'DISPUTE_SELLER'
+        : 'DISPUTE_PARTIAL';
+      await syncResellerEarning(tx, dispute.orderId, event);
       return decision;
     });
   }

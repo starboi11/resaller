@@ -5,10 +5,10 @@ test('buyer can navigate the mobile-first marketplace shell', async ({
 }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toContainText(
-    'Xarid qilish va sotishning yaxshiroq yo‘li',
+    'Har xaridga ishonch. Har sotuvga imkoniyat',
   );
   await page
-    .getByRole('link', { name: 'Mahsulotlarni ko‘rish →', exact: true })
+    .getByRole('link', { name: 'Mahsulotlar katalogi →', exact: true })
     .first()
     .click();
   await expect(page).toHaveURL(/marketplace/);
@@ -30,6 +30,9 @@ test('keyboard focus and theme controls are available', async ({ page }) => {
   await page.reload();
   await page.keyboard.press('Tab');
   await expect(page.locator(':focus')).toBeVisible();
+  if (!test.info().project.name.startsWith('mobile-')) {
+    await page.locator('.header-account summary').click();
+  }
   const theme = page.getByRole('button', { name: /mavzu/i });
   await expect(theme).toBeVisible();
   for (const expected of ['light', 'dark', 'system']) {
@@ -92,13 +95,7 @@ test('account-protected screens provide a safe login path', async ({
 test('public pages have named controls, image alternatives and no horizontal overflow', async ({
   page,
 }) => {
-  for (const route of [
-    '/',
-    '/marketplace',
-    '/product/demo-1',
-    '/categories',
-    '/login',
-  ]) {
+  for (const route of ['/', '/marketplace', '/categories', '/login']) {
     await page.goto(route);
     // The Next.js development toolbar is not part of the product UI and adds
     // icon-only buttons while the test server is running in development mode.

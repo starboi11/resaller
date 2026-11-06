@@ -1,233 +1,174 @@
 'use client';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { StatePanel } from '@resaller/ui';
+
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
-type Session = {
-  id: string;
-  createdAt: string;
-  userAgent?: string | null;
-  current: boolean;
+
+type Profile = { publicId: string; username: string; fullName: string | null; phone: string | null; createdAt: string };
+type Session = { id: string; createdAt: string; userAgent?: string | null; current: boolean };
+
+const formatPhone = (phone: string) =>
+  phone.replace(/^\+998(\d{2})(\d{3})(\d{2})(\d{2})$/, '+998 $1 $2 $3 $4');
+
+const device = (agent?: string | null) => {
+  if (!agent) return 'Noma’lum qurilma';
+  const os = /Android/i.test(agent) ? 'Android' : /iPhone|iPad/i.test(agent) ? 'iPhone' : /Windows/i.test(agent) ? 'Windows' : /Mac OS/i.test(agent) ? 'Mac' : /Linux/i.test(agent) ? 'Linux' : 'Qurilma';
+  const browser = /Edg\//.test(agent) ? 'Edge' : /Chrome\//.test(agent) ? 'Chrome' : /Firefox\//.test(agent) ? 'Firefox' : /Safari\//.test(agent) ? 'Safari' : 'brauzer';
+  return `${os} · ${browser}`;
 };
-type Endpoint = {
-  id: string;
-  channel: string;
-  active: boolean;
-  createdAt: string;
-};
-type Notification = {
-  id: string;
-  type: string;
-  severity: string;
-  createdAt: string;
-  readAt?: string;
-};
+
+// One simple page: who you are, change password, your orders, sign out.
+// Device sessions stay available but folded away.
 export default function Account() {
+  const router = useRouter();
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [sessions, setSessions] = useState<Session[]>([]);
-  const [endpoints, setEndpoints] = useState<Endpoint[]>([]);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [login, setLogin] = useState(false);
-  const [message, setMessage] = useState('');
-  const [loadError, setLoadError] = useState(false);
+  const [state, setState] = useState<'loading' | 'ready' | 'login' | 'offline'>('loading');
+  const [notice, setNotice] = useState('');
+  const [passwordMessage, setPasswordMessage] = useState<{ ok: boolean; text: string } | null>(null);
+  const [busy, setBusy] = useState(false);
+
   const load = useCallback(async () => {
+    setState('loading');
     try {
-      const responses = await Promise.all(
-        ['auth/sessions', 'notifications/endpoints', 'notifications'].map(
-          (path) =>
-            fetch(`${API}/${path}`, {
-              credentials: 'include',
-              cache: 'no-store',
-            }),
-        ),
+      const [profileResponse, sessionsResponse] = await Promise.all(
+        ['auth/profile', 'auth/sessions'].map((path) => fetch(`${API}/${path}`, { credentials: 'include', cache: 'no-store' })),
       );
-      if (responses[0]?.status === 401) {
-        setLogin(true);
+      if (profileResponse!.status === 401) {
+        setState('login');
         return;
       }
-      setLoadError(!responses[0]?.ok);
-      if (responses[0]?.ok)
-        setSessions((await responses[0].json()) as Session[]);
-      if (responses[1]?.ok)
-        setEndpoints((await responses[1].json()) as Endpoint[]);
-      if (responses[2]?.ok)
-        setNotifications((await responses[2].json()) as Notification[]);
+      if (!profileResponse!.ok) throw new Error('profile');
+      setProfile((await profileResponse!.json()) as Profile);
+      setSessions(sessionsResponse!.ok ? ((await sessionsResponse!.json()) as Session[]) : []);
+      setState('ready');
     } catch {
-      setLoadError(true);
+      setState('offline');
     }
   }, []);
   useEffect(() => {
     void load();
   }, [load]);
-  async function addEndpoint(event: FormEvent<HTMLFormElement>) {
+
+  async function changePassword(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(form);
-    const response = await fetch(`${API}/notifications/endpoints`, {
+    if (data.get('newPassword') !== data.get('repeat')) {
+      setPasswordMessage({ ok: false, text: 'Yangi parollar bir xil emas.' });
+      return;
+    }
+    setBusy(true);
+    setPasswordMessage(null);
+    const response = await fetch(`${API}/auth/password/change`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        channel: data.get('channel'),
-        value: data.get('value'),
-      }),
-    });
-    setMessage(
-      response.ok
-        ? 'Xabar kanali xavfsiz saqlandi.'
-        : 'Kanal ma’lumotini tekshiring.',
-    );
-    if (response.ok) {
+      body: JSON.stringify({ currentPassword: data.get('currentPassword'), newPassword: data.get('newPassword') }),
+    }).catch(() => null);
+    setBusy(false);
+    if (response?.ok) {
       form.reset();
-      await load();
+      setPasswordMessage({ ok: true, text: 'Parol o‘zgartirildi. Boshqa qurilmalardan chiqildi.' });
+      void load();
+      return;
     }
+    const body = (await response?.json().catch(() => null)) as { message?: string | string[] } | null;
+    const text = Array.isArray(body?.message) ? body.message.join(' ') : body?.message;
+    setPasswordMessage({ ok: false, text: text ?? 'Server bilan aloqa yo‘q. Qayta urinib ko‘ring.' });
   }
-  async function remove(path: string) {
-    const response = await fetch(`${API}/${path}`, {
-      method: 'DELETE',
-      credentials: 'include',
-    });
-    if (response.ok) await load();
+
+  async function signOut() {
+    await fetch(`${API}/auth/logout`, { method: 'POST', credentials: 'include' }).catch(() => null);
+    router.push('/');
+    router.refresh();
   }
-  if (login)
-    return (
-      <main className="shell py-10">
-        <StatePanel
-          tone="warning"
-          title="Hisobga kirish kerak"
-          description="Bu ma’lumotlar faqat sizga ko‘rinadi."
-          action={
-            <Link className="rs-button" href="/login">
-              Kirish
-            </Link>
-          }
-        />
-      </main>
-    );
+
+  async function signOutOthers() {
+    const response = await fetch(`${API}/auth/sessions/revoke-others`, { method: 'POST', credentials: 'include' }).catch(() => null);
+    setNotice(response?.ok ? 'Boshqa qurilmalardan chiqildi.' : 'Amal bajarilmadi. Qayta urinib ko‘ring.');
+    void load();
+  }
+
   return (
-    <main className="shell py-10 buyer-workspace account-workspace">
+    <main className="shell max-w-3xl py-10">
       <p className="eyebrow">Shaxsiy kabinet</p>
-      <h1 className="mt-2 text-3xl font-black">Hisob va xavfsizlik</h1>
-      <p className="muted mt-2" aria-live="polite">
-        {message || 'Sessiyalar va xabar kanallarini shu yerdan boshqaring.'}
-      </p>
-      {loadError && (
-        <StatePanel
-          tone="danger"
-          title="Hisob ma’lumotlari yuklanmadi"
-          description="Aloqani tekshirib, qayta urinib ko‘ring."
-          action={
-            <button className="rs-button" onClick={() => void load()}>
-              Qayta urinish
-            </button>
-          }
-        />
+      <h1 className="mt-2 text-3xl font-black">Mening hisobim</h1>
+
+      {state === 'loading' && <p className="muted mt-6">Yuklanmoqda…</p>}
+      {state === 'login' && (
+        <div className="mt-6">
+          <StatePanel title="Hisobingizga kiring" description="Buyurtmalar va hisob ma’lumotlarini ko‘rish uchun kiring."
+            action={<Link className="rs-button" href="/login">Kirish</Link>} />
+        </div>
       )}
-      <div className="account-grid mt-8 grid gap-6 lg:grid-cols-2">
-        <section className="surface p-5">
-          <h2 className="text-xl font-black">Faol qurilmalar</h2>
-          <div className="mt-4 grid gap-3">
-            {sessions.map((session) => (
-              <article
-                className="rounded-xl bg-[var(--surface-2)] p-4"
-                key={session.id}
-              >
-                <p className="text-sm font-bold">
-                  {session.current ? 'Joriy qurilma' : 'Boshqa qurilma'} ·
-                  Kirgan vaqti:{' '}
-                  {Number.isNaN(Date.parse(session.createdAt))
-                    ? 'Noma’lum'
-                    : new Date(session.createdAt).toLocaleString('uz-UZ')}
+      {state === 'offline' && (
+        <div className="mt-6">
+          <StatePanel tone="danger" title="Server bilan aloqa yo‘q" description="Internet aloqasini tekshirib, qayta urinib ko‘ring."
+            action={<button className="rs-button" type="button" onClick={() => void load()}>Qayta urinish</button>} />
+        </div>
+      )}
+
+      {state === 'ready' && profile && (
+        <div className="mt-6 grid gap-5">
+          <section className="surface p-6" aria-labelledby="profile-title">
+            <h2 id="profile-title" className="text-xl font-black">Ma’lumotlarim</h2>
+            <dl className="mt-4 grid gap-3">
+              <div><dt className="muted text-sm">Ism</dt><dd className="font-bold">{profile.fullName ?? 'Kiritilmagan'}</dd></div>
+              <div><dt className="muted text-sm">Telefon</dt><dd className="font-bold">{profile.phone ? formatPhone(profile.phone) : 'Kiritilmagan'}</dd></div>
+              <div><dt className="muted text-sm">Username</dt><dd className="font-bold">@{profile.username}</dd></div>
+            </dl>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link className="rs-button" href="/orders">Buyurtmalarim</Link>
+              <Link className="rs-button rs-button--ghost" href="/favorites">Sevimlilar</Link>
+            </div>
+          </section>
+
+          <section className="surface p-6" aria-labelledby="password-title">
+            <h2 id="password-title" className="text-xl font-black">Parolni o‘zgartirish</h2>
+            <form className="mt-4 grid gap-4" onSubmit={changePassword}>
+              <label className="grid gap-2 text-sm font-bold">Joriy parol
+                <input className="field font-normal" name="currentPassword" type="password" autoComplete="current-password" required />
+              </label>
+              <label className="grid gap-2 text-sm font-bold">Yangi parol
+                <input className="field font-normal" name="newPassword" type="password" minLength={6} autoComplete="new-password" required />
+                <small className="muted font-normal">Kamida 6 belgi. Raqamlar ham bo‘ladi.</small>
+              </label>
+              <label className="grid gap-2 text-sm font-bold">Yangi parolni takrorlang
+                <input className="field font-normal" name="repeat" type="password" minLength={6} autoComplete="new-password" required />
+              </label>
+              {passwordMessage && (
+                <p role={passwordMessage.ok ? 'status' : 'alert'} className={passwordMessage.ok ? 'font-bold text-[var(--success)]' : 'font-bold text-[var(--danger)]'}>
+                  {passwordMessage.text}
                 </p>
-                {session.userAgent && (
-                  <p
-                    className="muted mt-1 truncate text-xs"
-                    title={session.userAgent}
-                  >
-                    {session.userAgent}
-                  </p>
-                )}
-                <button
-                  className="mt-2 text-sm font-bold text-[var(--danger)]"
-                  onClick={() => void remove(`auth/sessions/${session.id}`)}
-                >
-                  Sessiyani yopish
-                </button>
-              </article>
-            ))}
-          </div>
-          {!sessions.length && !loadError && (
-            <p className="muted mt-4 text-sm">Faol qurilma topilmadi.</p>
-          )}
-        </section>
-        <section className="surface p-5">
-          <h2 className="text-xl font-black">Email, Telegram va push</h2>
-          <p className="muted mt-2 text-sm">
-            Manzil shifrlangan saqlanadi va qayta ko‘rsatilmaydi.
-          </p>
-          <form className="mt-4 grid gap-3" onSubmit={addEndpoint}>
-            <select className="field" name="channel" aria-label="Xabar kanali">
-              <option value="EMAIL">Email</option>
-              <option value="TELEGRAM">Telegram chat ID</option>
-              <option value="PUSH">Push endpoint</option>
-            </select>
-            <input
-              className="field"
-              name="value"
-              required
-              placeholder="Manzil yoki chat ID"
-            />
-            <button className="rs-button">Kanal qo‘shish</button>
-          </form>
-          <div className="mt-4 grid gap-2">
-            {endpoints.map((endpoint) => (
-              <div
-                className="flex justify-between rounded-xl bg-[var(--surface-2)] p-3"
-                key={endpoint.id}
-              >
-                <span>{endpoint.channel} · ••••••</span>
-                <button
-                  className="text-sm font-bold text-[var(--danger)]"
-                  onClick={() =>
-                    void remove(`notifications/endpoints/${endpoint.id}`)
-                  }
-                >
-                  O‘chirish
-                </button>
-              </div>
-            ))}
-          </div>
-        </section>
-        <section className="surface p-5 lg:col-span-2">
-          <div className="flex justify-between">
-            <h2 className="text-xl font-black">Bildirishnomalar</h2>
-            <button
-              className="text-sm font-bold text-[var(--brand-strong)]"
-              onClick={() =>
-                void fetch(`${API}/notifications/read-all`, {
-                  method: 'POST',
-                  credentials: 'include',
-                }).then(load)
-              }
-            >
-              Barchasini o‘qilgan qilish
-            </button>
-          </div>
-          <div className="mt-4 grid gap-2">
-            {notifications.slice(0, 20).map((item) => (
-              <article
-                className="rounded-xl bg-[var(--surface-2)] p-3"
-                key={item.id}
-              >
-                <b className="text-sm">{item.type}</b>
-                <p className="muted text-xs">
-                  {new Date(item.createdAt).toLocaleString('uz-UZ')} ·{' '}
-                  {item.severity}
-                </p>
-              </article>
-            ))}
-          </div>
-        </section>
-      </div>
+              )}
+              <button className="rs-button" type="submit" disabled={busy}>{busy ? 'Saqlanmoqda…' : 'Parolni saqlash'}</button>
+            </form>
+          </section>
+
+          <details className="surface p-6">
+            <summary className="cursor-pointer text-lg font-black">Faol qurilmalar ({sessions.length})</summary>
+            <ul className="mt-4 grid gap-3">
+              {sessions.map((session) => (
+                <li key={session.id} className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--line)] pb-3">
+                  <span>{device(session.userAgent)}{session.current && <b className="ml-2 text-sm text-[var(--success)]">· shu qurilma</b>}</span>
+                  <span className="muted text-sm">{new Date(session.createdAt).toLocaleDateString('uz-UZ')}</span>
+                </li>
+              ))}
+            </ul>
+            {sessions.length > 1 && (
+              <button className="rs-button rs-button--ghost mt-4" type="button" onClick={() => void signOutOthers()}>Boshqa qurilmalardan chiqish</button>
+            )}
+            {notice && <p role="status" className="muted mt-3 text-sm">{notice}</p>}
+          </details>
+
+          <button className="min-h-11 justify-self-start font-bold text-[var(--danger)] underline" type="button" onClick={() => void signOut()}>
+            Hisobdan chiqish
+          </button>
+        </div>
+      )}
     </main>
   );
 }

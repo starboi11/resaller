@@ -10,7 +10,6 @@ type Query = {
   category?: string;
   minPrice?: string;
   maxPrice?: string;
-  trust?: string;
   sort?: string;
   page?: string;
   lang?: 'uz' | 'ru';
@@ -39,7 +38,7 @@ type Pagination = {
   total: number;
   pages: number;
 };
-const api = process.env.NEXT_PUBLIC_API_URL ?? 'http://127.0.0.1:4000/api/v1';
+const api = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
 const categories = [
   'Elektronika',
   'Moda',
@@ -47,11 +46,6 @@ const categories = [
   'Uy jihozlari',
   'Bolalar',
 ];
-const trusts = [
-  ['TRUSTED', 'Trusted'],
-  ['TOP_SELLER', 'Top Seller'],
-  ['IDENTITY_VERIFIED', 'Verified'],
-] as const;
 const art: Record<string, string> = {
   'demo-1': 'phone',
   'demo-2': 'shoe',
@@ -108,20 +102,6 @@ function FilterFields({ query, ru }: { query: Query; ru: boolean }) {
           />
         </div>
       </fieldset>
-      <fieldset>
-        <legend>{ru ? 'Надёжность продавца' : 'Seller ishonchi'}</legend>
-        {trusts.map(([value, name]) => (
-          <label key={value}>
-            <input
-              type="radio"
-              name="trust"
-              value={value}
-              defaultChecked={query.trust === value}
-            />
-            <span>{name}</span>
-          </label>
-        ))}
-      </fieldset>
       <button className="rs-button">
         {ru ? 'Показать' : 'Natijalarni ko‘rish'}
       </button>
@@ -143,7 +123,6 @@ export default async function Marketplace({
     'category',
     'minPrice',
     'maxPrice',
-    'trust',
     'sort',
     'page',
   ] as const)
@@ -170,7 +149,7 @@ export default async function Marketplace({
       ? { ...pagination, total: result.length }
       : result.pagination;
   } catch {
-    if (process.env.NODE_ENV !== 'development') unavailable = true;
+    if (process.env.NODE_ENV !== 'development' || process.env.DEMO_CATALOG_ENABLED !== 'true') unavailable = true;
     else {
       demoMode = true;
       const text = (query.q ?? '').toLocaleLowerCase('uz');
@@ -208,7 +187,7 @@ export default async function Marketplace({
           <p className="eyebrow">
             {ru ? 'Найдите нужное' : 'Mahsulotlarni kashf eting'}
           </p>
-          <h1>{query.q ? `“${query.q}”` : 'Marketplace'}</h1>
+          <h1>{query.q ? `“${query.q}”` : ru ? 'Товары' : 'Mahsulotlar'}</h1>
           <p>
             {pagination.total} {ru ? 'товаров найдено' : 'ta mahsulot topildi'}
           </p>
@@ -223,7 +202,7 @@ export default async function Marketplace({
         </div>
         <form className="catalog-sort">
           <input type="hidden" name="lang" value={ru ? 'ru' : 'uz'} />
-          {['q', 'category', 'minPrice', 'maxPrice', 'trust'].map((key) => (
+          {['q', 'category', 'minPrice', 'maxPrice'].map((key) => (
             <input
               key={key}
               type="hidden"
@@ -281,7 +260,7 @@ export default async function Marketplace({
             <StatePanel
               tone="danger"
               title={
-                ru ? 'Сервис недоступен' : 'Marketplace vaqtincha ishlamayapti'
+                ru ? 'Сервис недоступен' : 'Mahsulotlarni yuklab bo‘lmadi'
               }
               description={
                 ru ? 'Попробуйте позже.' : 'Keyinroq qayta urinib ko‘ring.'
@@ -346,21 +325,6 @@ export default async function Marketplace({
                             {Number(product.priceMinor).toLocaleString('uz-UZ')}
                           </del>
                         )}
-                        <div className="store-line">
-                          <i>{product.store.nameUz.slice(0, 2)}</i>
-                          <span>
-                            {ru && product.store.nameRu
-                              ? product.store.nameRu
-                              : product.store.nameUz}
-                          </span>
-                          <b>
-                            ✓{' '}
-                            {product.store.sellerProfile.trustBadge.replaceAll(
-                              '_',
-                              ' ',
-                            )}
-                          </b>
-                        </div>
                         <small className={stock ? 'in-stock' : 'out-stock'}>
                           {stock
                             ? ru

@@ -23,6 +23,11 @@ export * from './enums.js';
  */
 export type User = Prisma.UserModel
 /**
+ * Model SiteVisit
+ * 
+ */
+export type SiteVisit = Prisma.SiteVisitModel
+/**
  * Model SavedAddress
  * 
  */
@@ -117,6 +122,36 @@ export type ListingVariant = Prisma.ListingVariantModel
  * 
  */
 export type Inventory = Prisma.InventoryModel
+/**
+ * Model StoreCustomer
+ * 
+ */
+export type StoreCustomer = Prisma.StoreCustomerModel
+/**
+ * Model ExternalOrder
+ * 
+ */
+export type ExternalOrder = Prisma.ExternalOrderModel
+/**
+ * Model ExternalOrderItem
+ * 
+ */
+export type ExternalOrderItem = Prisma.ExternalOrderItemModel
+/**
+ * Model ExternalOrderHistory
+ * 
+ */
+export type ExternalOrderHistory = Prisma.ExternalOrderHistoryModel
+/**
+ * Model StockMovement
+ * 
+ */
+export type StockMovement = Prisma.StockMovementModel
+/**
+ * Model SellerExpense
+ * 
+ */
+export type SellerExpense = Prisma.SellerExpenseModel
 /**
  * Model ListingMedia
  * 
@@ -312,3 +347,13 @@ export type AuditLog = Prisma.AuditLogModel
  * 
  */
 export type SecurityEvent = Prisma.SecurityEventModel
+/**
+ * Model ResellerEarning
+ * 
+ */
+export type ResellerEarning = Prisma.ResellerEarningModel
+/**
+ * Model ResellerPayout
+ * 
+ */
+export type ResellerPayout = Prisma.ResellerPayoutModel

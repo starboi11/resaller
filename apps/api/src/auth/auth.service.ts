@@ -1,10 +1,13 @@
 import {
+  BadRequestException,
   ConflictException,
+  HttpException,
+  HttpStatus,
   Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { createHmac } from 'node:crypto';
+import { createHmac, randomUUID } from 'node:crypto';
 import { PrismaService } from '../infrastructure/prisma.service.js';
 import { RedisService } from '../infrastructure/redis.service.js';
 import { PasswordService } from './password.service.js';
@@ -12,8 +15,27 @@ import { SessionTokenService } from './session-token.service.js';
 import { TotpService } from './totp.service.js';
 import type { AppRole } from './roles.js';
 import { PasswordResetDeliveryService } from './password-reset-delivery.service.js';
+import { EndpointCryptoService } from '../notifications/endpoint-crypto.service.js';
 
 const SESSION_DAYS = 30;
+// Admin accounts (owner decision 2026-11-04): a 16+ character random password,
+// with TOTP optional via ADMIN_TWO_FACTOR_REQUIRED=false. In exchange admin
+// logins get their own tight limit, an audit event, and 12-hour sessions.
+const ADMIN_SESSION_HOURS = 12;
+const ADMIN_LOGIN_PER_ACCOUNT = 5;
+const ADMIN_LOGIN_WINDOW = 900;
+export const adminTwoFactorRequired = (): boolean => process.env.ADMIN_TWO_FACTOR_REQUIRED !== 'false';
+/** Admin passwords: at least 16 characters with upper case, lower case and digits. */
+export const isStrongAdminPassword = (value: string): boolean =>
+  value.length >= 16 && /[a-z]/.test(value) && /[A-Z]/.test(value) && /\d/.test(value);
+// Abuse limits shared with the Go API (same Redis keys and windows).
+const LOGIN_PER_ACCOUNT = 30;
+const LOGIN_ACCOUNT_WINDOW = 900;
+const REGISTER_PER_IP = 10;
+const REGISTER_WINDOW = 3600;
+const RESET_PER_ACCOUNT = 3;
+const RESET_PER_IP = 10;
+const RESET_WINDOW = 900;
 const TWO_FACTOR_MINUTES = 5;
 const PRIVILEGED_ROLES = new Set([
   'MODERATOR',
@@ -41,6 +63,14 @@ const publicUser = (user: {
 
 @Injectable()
 export class AuthService {
+  // A real scrypt hash of a random password: missing and inactive accounts are
+  // verified against it so they cost the same time as a wrong password.
+  private dummyHash: Promise<string> | null = null;
+
+  private keyed(value: string): string {
+    return createHmac('sha256', process.env.SESSION_SECRET ?? 'development-only').update(value).digest('base64url');
+  }
+
   constructor(
     @Inject(PrismaService) private readonly prisma: PrismaService,
     @Inject(PasswordService) private readonly passwords: PasswordService,
@@ -49,17 +79,28 @@ export class AuthService {
     @Inject(RedisService) private readonly redis: RedisService,
     @Inject(PasswordResetDeliveryService)
     private readonly passwordResetDelivery: PasswordResetDeliveryService,
+    @Inject(EndpointCryptoService) private readonly crypto: EndpointCryptoService,
   ) {}
+
+  private phoneHash(phone: string): string {
+    return this.keyed(`phone\0${phone}`);
+  }
 
   async register(
     username: string,
     password: string,
     context: ClientContext = {},
+    profile: { fullName: string; phone: string },
   ) {
+    if (!(await this.redis.fixedWindowLimit(`register:${this.keyed(context.ip ?? 'unknown')}`, REGISTER_PER_IP, REGISTER_WINDOW)))
+      throw new HttpException('Too many accounts created from this network; try again later', HttpStatus.TOO_MANY_REQUESTS);
     const passwordHash = await this.passwords.hash(password);
     try {
+      const phoneHash = this.phoneHash(profile.phone);
+      if (await this.prisma.user.findUnique({ where: { phoneHash }, select: { id: true } }))
+        throw new ConflictException('Bu telefon raqami bilan hisob allaqachon bor');
       const user = await this.prisma.user.create({
-        data: { username, passwordHash },
+        data: { username, passwordHash, fullName: profile.fullName, phoneEncrypted: this.crypto.encrypt(profile.phone), phoneHash },
       });
       return {
         user: publicUser(user),
@@ -71,20 +112,43 @@ export class AuthService {
         error &&
         'code' in error &&
         error.code === 'P2002'
-      )
-        throw new ConflictException('Username is unavailable');
+      ) {
+        const target = 'meta' in error ? JSON.stringify((error as { meta?: unknown }).meta ?? '') : '';
+        throw new ConflictException(target.includes('phoneHash') ? 'Bu telefon raqami bilan hisob allaqachon bor' : 'Username is unavailable');
+      }
       throw error;
     }
   }
 
   async login(username: string, password: string, context: ClientContext = {}) {
+    const attemptKey = createHmac('sha256', process.env.SESSION_SECRET ?? 'development-only')
+      .update(`${username}\0${context.ip ?? 'unknown'}`)
+      .digest('base64url');
+    const allowed = await this.redis.fixedWindowLimit(`login:${attemptKey}`, 10, 300);
+    // The per-account window does not depend on the network address, so
+    // rotating addresses cannot buy more guesses against one account.
+    const accountAllowed = await this.redis.fixedWindowLimit(`login-account:${this.keyed(username)}`, LOGIN_PER_ACCOUNT, LOGIN_ACCOUNT_WINDOW);
+    if (!allowed || !accountAllowed) {
+      await this.prisma.securityEvent.create({
+        data: { userId: null, type: 'LOGIN_RATE_LIMITED', severity: 'WARNING', ipHash: this.ipHash(context.ip), metadata: { attemptedUsername: username } },
+      });
+      throw new UnauthorizedException('Invalid username or password');
+    }
     const user = await this.prisma.user.findUnique({ where: { username } });
-    if (
-      !user ||
-      user.deletedAt ||
-      user.accountStatus !== 'ACTIVE' ||
-      !(await this.passwords.verify(password, user.passwordHash))
-    ) {
+    const usable = Boolean(user && !user.deletedAt && user.accountStatus === 'ACTIVE');
+    this.dummyHash ??= this.passwords.hash(randomUUID());
+    // Always run exactly one scrypt verification, so response time does not
+    // reveal whether the username exists.
+    const privileged = usable && user!.roles.some((role) => PRIVILEGED_ROLES.has(role));
+    // Admin accounts get their own, tighter window on top of the account one.
+    if (privileged && !(await this.redis.fixedWindowLimit(`admin-login:${this.keyed(username)}`, ADMIN_LOGIN_PER_ACCOUNT, ADMIN_LOGIN_WINDOW))) {
+      await this.prisma.securityEvent.create({
+        data: { userId: user!.id, type: 'ADMIN_LOGIN_RATE_LIMITED', severity: 'CRITICAL', ipHash: this.ipHash(context.ip) },
+      });
+      throw new UnauthorizedException('Invalid username or password');
+    }
+    const passwordOk = await this.passwords.verify(password, usable ? user!.passwordHash : await this.dummyHash);
+    if (!user || !usable || !passwordOk) {
       await this.prisma.securityEvent.create({
         data: {
           userId: user?.id ?? null,
@@ -127,8 +191,12 @@ export class AuthService {
         }),
       ]);
     }
-    if (user.roles.some((role) => PRIVILEGED_ROLES.has(role)))
+    if (privileged && adminTwoFactorRequired())
       return this.issueTwoFactorChallenge(user, context);
+    if (privileged)
+      await this.prisma.securityEvent.create({
+        data: { userId: user.id, type: 'ADMIN_LOGIN', severity: 'WARNING', ipHash, metadata: { userAgent: this.safeUserAgent(context.userAgent), twoFactor: false } },
+      });
     return {
       user: publicUser(user),
       session: await this.createSession(user.id, context),
@@ -150,7 +218,8 @@ export class AuthService {
       !challenge ||
       challenge.usedAt ||
       challenge.expiresAt <= now ||
-      challenge.user.deletedAt
+      challenge.user.deletedAt ||
+      challenge.user.accountStatus !== 'ACTIVE'
     )
       throw new UnauthorizedException(
         'Two-factor challenge is invalid or expired',
@@ -220,7 +289,7 @@ export class AuthService {
     });
     return {
       user: publicUser(challenge.user),
-      session: await this.createSession(challenge.userId, context),
+      session: await this.createSession(challenge.userId, context, now),
     };
   }
 
@@ -232,7 +301,12 @@ export class AuthService {
     });
   }
 
-  async requestPasswordReset(username: string) {
+  async requestPasswordReset(username: string, context: ClientContext = {}) {
+    const byIp = await this.redis.fixedWindowLimit(`reset-ip:${this.keyed(context.ip ?? 'unknown')}`, RESET_PER_IP, RESET_WINDOW);
+    const byAccount = await this.redis.fixedWindowLimit(`reset-account:${this.keyed(username)}`, RESET_PER_ACCOUNT, RESET_WINDOW);
+    // Over the limit the caller still gets the same answer, so the limit neither
+    // floods the victim's inbox nor reveals that the account exists.
+    if (!byIp || !byAccount) return { accepted: true };
     const user = await this.prisma.user.findUnique({ where: { username } });
     if (!user || user.deletedAt) return { accepted: true };
     const issued = this.tokens.issue();
@@ -270,6 +344,42 @@ export class AuthService {
     return { accepted: true };
   }
 
+  /** Admin accounts keep a 16+ character mixed password whatever path changes it. */
+  private async assertPasswordPolicy(userId: string, newPassword: string) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { roles: true } });
+    if (user?.roles.some((role) => PRIVILEGED_ROLES.has(role)) && !isStrongAdminPassword(newPassword))
+      throw new BadRequestException('Admin paroli kamida 16 belgi bo‘lsin: katta va kichik harf hamda raqam aralash');
+  }
+
+  /** The signed-in user's own profile (decrypted phone), e.g. to prefill checkout. */
+  async profile(userId: string) {
+    const user = await this.prisma.user.findUniqueOrThrow({ where: { id: userId },
+      select: { publicId: true, username: true, fullName: true, phoneEncrypted: true, createdAt: true } });
+    let phone: string | null = null;
+    if (user.phoneEncrypted) {
+      try { phone = this.crypto.decrypt(user.phoneEncrypted); } catch { phone = null; }
+    }
+    return { publicId: user.publicId, username: user.username, fullName: user.fullName, phone, createdAt: user.createdAt };
+  }
+
+  async changePassword(userId: string, currentToken: string | undefined, currentPassword: string, newPassword: string) {
+    if (!(await this.redis.fixedWindowLimit(`password-change:${userId}`, 5, 900)))
+      throw new HttpException('Juda ko‘p urinish. Birozdan keyin qayta urinib ko‘ring', HttpStatus.TOO_MANY_REQUESTS);
+    const user = await this.prisma.user.findUniqueOrThrow({ where: { id: userId }, select: { passwordHash: true } });
+    if (!(await this.passwords.verify(currentPassword, user.passwordHash)))
+      throw new BadRequestException('Joriy parol noto‘g‘ri');
+    await this.assertPasswordPolicy(userId, newPassword);
+    const passwordHash = await this.passwords.hash(newPassword);
+    const keep = currentToken ? this.tokens.hash(currentToken) : '';
+    await this.prisma.$transaction([
+      this.prisma.user.update({ where: { id: userId }, data: { passwordHash } }),
+      // Every other device is signed out; this one stays signed in.
+      this.prisma.session.updateMany({ where: { userId, revokedAt: null, tokenHash: { not: keep } }, data: { revokedAt: new Date() } }),
+      this.prisma.securityEvent.create({ data: { userId, type: 'PASSWORD_CHANGED', severity: 'WARNING' } }),
+    ]);
+    return { changed: true };
+  }
+
   async resetPassword(token: string, newPassword: string) {
     const tokenHash = this.tokens.hash(token);
     const record = await this.prisma.passwordResetToken.findUnique({
@@ -277,6 +387,7 @@ export class AuthService {
     });
     if (!record || record.usedAt || record.expiresAt <= new Date())
       throw new UnauthorizedException('Reset token is invalid or expired');
+    await this.assertPasswordPolicy(record.userId, newPassword);
     const passwordHash = await this.passwords.hash(newPassword);
     const now = new Date();
     await this.prisma.$transaction(async (tx) => {
@@ -318,6 +429,12 @@ export class AuthService {
       session.expiresAt <= new Date() ||
       session.user.deletedAt ||
       session.user.accountStatus !== 'ACTIVE'
+    )
+      return null;
+    if (
+      session.user.roles.some((role) => PRIVILEGED_ROLES.has(role)) &&
+      adminTwoFactorRequired() &&
+      (!session.twoFactorVerifiedAt || !session.user.totpEnabledAt)
     )
       return null;
     return { id: session.user.id, ...publicUser(session.user) };
@@ -369,7 +486,7 @@ export class AuthService {
     if (!current || current.revokedAt || current.expiresAt <= new Date())
       throw new UnauthorizedException('Authentication required');
     const issued = this.tokens.issue();
-    const expiresAt = new Date(Date.now() + SESSION_DAYS * 86_400_000);
+    const expiresAt = await this.sessionExpiry(current.userId);
     const changed = await this.prisma.session.updateMany({
       where: { id: current.id, tokenHash: oldHash, revokedAt: null },
       data: { tokenHash: issued.tokenHash, expiresAt },
@@ -379,16 +496,26 @@ export class AuthService {
     return { token: issued.token, expiresAt };
   }
 
-  private async createSession(userId: string, context: ClientContext) {
+  /** Admin sessions last 12 hours, everyone else's 30 days. */
+  private async sessionExpiry(userId: string): Promise<Date> {
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { roles: true } });
+    const privileged = Boolean(user?.roles.some((role) => PRIVILEGED_ROLES.has(role)));
+    return new Date(Date.now() + (privileged ? ADMIN_SESSION_HOURS * 3_600_000 : SESSION_DAYS * 86_400_000));
+  }
+
+  private async createSession(userId: string, context: ClientContext, twoFactorVerifiedAt?: Date) {
     const issued = this.tokens.issue();
-    const expiresAt = new Date(Date.now() + SESSION_DAYS * 86_400_000);
+    const expiresAt = await this.sessionExpiry(userId);
+    const seller = await this.prisma.sellerProfile.findUnique({ where: { userId }, select: { id: true } });
     await this.prisma.session.create({
       data: {
         userId,
         tokenHash: issued.tokenHash,
         expiresAt,
         ipHash: this.ipHash(context.ip),
+        ipEncrypted: seller && context.ip ? this.crypto.encrypt(context.ip) : null,
         userAgent: this.safeUserAgent(context.userAgent),
+        twoFactorVerifiedAt: twoFactorVerifiedAt ?? null,
       },
     });
     return { token: issued.token, expiresAt };

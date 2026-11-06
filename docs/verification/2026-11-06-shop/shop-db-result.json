@@ -1,0 +1,24 @@
+{
+  "product": "Test sovg‘a paketi 145266",
+  "displayId": "AUD-MW47KJLF-30B62E26",
+  "status": "COMPLETED",
+  "totalMinor": "49000",
+  "stockBefore": 3,
+  "stockAfter": 2,
+  "reserved": 0,
+  "reservationStatus": "FINALIZED",
+  "rating": 5,
+  "matchingOrders": 1,
+  "savedAddresses": 1,
+  "cartItems": 0,
+  "history": [
+    "WAITING_SELLER",
+    "ACCEPTED",
+    "PREPARING",
+    "READY",
+    "SHIPPED",
+    "DELIVERED",
+    "COMPLETED"
+  ],
+  "mediaFiles": 1
+}

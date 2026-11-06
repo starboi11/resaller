@@ -1,0 +1,193 @@
+{
+  "checks": [
+    {
+      "width": 1440,
+      "path": "/",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "/marketplace",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "/product/cmw3d8lay0002w4twvbbrpvd1",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "/cart",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "/account",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "/orders",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "/favorites",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "/recent",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "/seller/manage",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "pageErrors": []
+    },
+    {
+      "width": 1440,
+      "admin": "listings",
+      "loaded": true
+    },
+    {
+      "width": 1440,
+      "admin": "orders",
+      "loaded": true
+    },
+    {
+      "width": 1440,
+      "admin": "risk-events",
+      "loaded": true
+    },
+    {
+      "width": 1440,
+      "admin": "users",
+      "loaded": true
+    },
+    {
+      "width": 1440,
+      "admin": "reviews",
+      "loaded": true
+    },
+    {
+      "width": 1440,
+      "admin": "security-events",
+      "loaded": true
+    },
+    {
+      "width": 1440,
+      "admin": "disputes",
+      "loaded": true
+    },
+    {
+      "width": 1440,
+      "admin": "question-reports",
+      "loaded": true
+    },
+    {
+      "width": 1440,
+      "admin": "audit",
+      "loaded": true
+    },
+    {
+      "width": 360,
+      "path": "/",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "path": "/marketplace",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "path": "/product/cmw3d8lay0002w4twvbbrpvd1",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "path": "/cart",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "path": "/account",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "path": "/orders",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "path": "/favorites",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "path": "/recent",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "path": "/seller/manage",
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "pageErrors": []
+    },
+    {
+      "width": 360,
+      "admin": "listings",
+      "loaded": true
+    },
+    {
+      "width": 360,
+      "admin": "orders",
+      "loaded": true
+    },
+    {
+      "width": 360,
+      "admin": "risk-events",
+      "loaded": true
+    },
+    {
+      "width": 360,
+      "admin": "users",
+      "loaded": true
+    },
+    {
+      "width": 360,
+      "admin": "reviews",
+      "loaded": true
+    },
+    {
+      "width": 360,
+      "admin": "security-events",
+      "loaded": true
+    },
+    {
+      "width": 360,
+      "admin": "disputes",
+      "loaded": true
+    },
+    {
+      "width": 360,
+      "admin": "question-reports",
+      "loaded": true
+    },
+    {
+      "width": 360,
+      "admin": "audit",
+      "loaded": true
+    }
+  ],
+  "issues": []
+}

@@ -102,6 +102,18 @@ describe('AssistantService', () => {
     ).rejects.toThrow('Order access denied');
   });
 
+  it('rejects a former team member asking for another buyer order', async () => {
+    const { assistant } = service({ order: { findUnique: vi.fn().mockResolvedValue({
+      publicId: 'order-1', buyerId: 'another-buyer', store: {
+        username: 'resaller', sellerProfile: { userId: 'owner' },
+        members: [{ userId: user.id }],
+      },
+    }) } });
+    await expect(assistant.answer(user, {
+      mode: 'ORDER_HELP', message: 'Buyurtma holati', entityIds: ['order-1'],
+    })).rejects.toThrow('Order access denied');
+  });
+
   it('does not compare listings from suspended or vacation stores', async () => {
     const findMany = vi.fn().mockResolvedValue([]);
     const { assistant } = service({ listing: { findMany } });
@@ -111,7 +123,8 @@ describe('AssistantService', () => {
       entityIds: ['product-1', 'product-2'],
     });
     expect(findMany).toHaveBeenCalledWith(expect.objectContaining({
-      where: expect.objectContaining({ store: { status: 'ACTIVE', vacationMode: false } }),
+      // Supplier (wholesale) listings must never reach buyers through the assistant.
+      where: expect.objectContaining({ store: { kind: 'SELLER', status: 'ACTIVE', vacationMode: false } }),
     }));
   });
 });

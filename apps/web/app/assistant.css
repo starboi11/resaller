@@ -8,16 +8,16 @@
   display: flex;
   align-items: center;
   gap: 0.55rem;
-  border: 1px solid color-mix(in srgb, var(--mint) 55%, transparent);
+  border: 1px solid color-mix(in srgb, var(--brand-strong) 55%, transparent);
   border-radius: 999px;
   padding: 0.8rem 1rem;
-  background: #041510;
-  color: #eafff7;
+  background: #18181d;
+  color: #f6f4f2;
   font-weight: 900;
   box-shadow: 0 14px 50px rgba(0, 0, 0, 0.3);
 }
 .ai-assistant__toggle span {
-  color: var(--mint);
+  color: var(--brand-strong);
 }
 .ai-assistant__panel {
   position: absolute;
@@ -26,10 +26,10 @@
   width: min(26rem, calc(100vw - 2rem));
   max-height: min(45rem, calc(100vh - 8rem));
   overflow: auto;
-  border: 1px solid color-mix(in srgb, var(--mint) 30%, var(--line));
+  border: 1px solid color-mix(in srgb, var(--brand-strong) 30%, var(--line));
   border-radius: 1.4rem;
   padding: 1.1rem;
-  background: color-mix(in srgb, var(--surface) 96%, #001a12);
+  background: color-mix(in srgb, var(--surface) 96%, #2a1015);
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
 }
 .ai-assistant__panel header {
@@ -45,7 +45,7 @@
   margin: 0.8rem 0;
   padding: 0.75rem;
   border-radius: 0.75rem;
-  background: color-mix(in srgb, var(--mint) 8%, transparent);
+  background: color-mix(in srgb, var(--brand-strong) 8%, transparent);
   font-size: 0.78rem;
   color: var(--muted);
 }
@@ -82,7 +82,7 @@
   color-scheme: dark;
 }
 :root[data-theme='dark'] .ai-assistant__panel select option {
-  background: #0b1716;
+  background: #121215;
   color: #f4f8f7;
 }
 .ai-assistant__panel textarea {

@@ -32,11 +32,10 @@ export default async function CheckoutSuccess({
         <span className="checkout-success__mark" aria-hidden="true">
           ✓
         </span>
-        <p className="eyebrow mt-5">Buyurtma qabul qilindi</p>
-        <h1 className="mt-2 text-3xl font-black">Hammasi tayyor</h1>
+        <p className="eyebrow mt-5">Buyurtma yuborildi</p>
+        <h1 className="mt-2 text-3xl font-black">Resaller tasdig‘i kutilmoqda</h1>
         <p className="muted mx-auto mt-3 max-w-xl">
-          Har bir sotuvchi buyurtmani 60 daqiqa ichida tasdiqlaydi. Holat
-          o‘zgarsa buyurtma sahifasida ko‘rasiz.
+          Buyurtma holati o‘zgarsa, buyurtma sahifasida ko‘rasiz.
         </p>
         <p className="muted mt-3 text-xs">Checkout: {query.checkout}</p>
         <div className="mt-7 flex flex-wrap justify-center gap-3">

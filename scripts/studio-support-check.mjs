@@ -1,0 +1,37 @@
+import { chromium, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+import { mkdir, writeFile } from 'node:fs/promises';
+const browser=await chromium.launch({channel:'msedge'});
+const results=[];
+await mkdir('artifacts/warm-studio',{recursive:true});
+for (const width of [1440,360]) for (const theme of ['light','dark']) {
+ const context=await browser.newContext({viewport:{width,height:800},reducedMotion:'reduce'});
+ await context.addInitScript(t=>localStorage.setItem('resaller-theme',t),theme);
+ const page=await context.newPage();
+ await page.goto('http://localhost:3100/');
+ const dock=page.locator('.support-dock');
+ expect(await dock.evaluate(el=>getComputedStyle(el).position)).toBe('static');
+ await expect(dock.locator('a.support-telegram')).toHaveAttribute('href','https://t.me/starboiazp');
+ const trigger=page.getByRole('button',{name:'AI yordamchini ochish'});
+ await trigger.click();
+ const dialog=page.getByRole('dialog');
+ await expect(dialog).toBeVisible();
+ await expect(dialog.locator('select')).toHaveCount(0);
+ await expect(dialog.locator('a[href="https://t.me/starboiazp"]')).toBeVisible();
+ const box=await dialog.boundingBox();
+ expect(box.x).toBeGreaterThanOrEqual(0); expect(box.x+box.width).toBeLessThanOrEqual(width);
+ const axe=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa']).analyze();
+ await page.screenshot({path:`artifacts/warm-studio/support-${theme}-${width}.png`});
+ expect(axe.violations).toEqual([]);
+ await page.keyboard.press('Escape');
+ await expect(dialog).not.toBeVisible();
+ await expect(trigger).toBeFocused();
+ await trigger.click();
+ await dialog.getByRole('button',{name:'AI yordamchini yopish'}).click();
+ await expect(dialog).not.toBeVisible();
+ results.push({width,theme,passed:true,checks:['in-flow dock','telegram target','no mode selector','modal bounds','axe','Escape and focus restore','close button']});
+ await context.close();
+}
+await browser.close();
+await writeFile('artifacts/warm-studio/support-results.json',JSON.stringify(results,null,2));
+console.log(JSON.stringify(results));

@@ -1,6 +1,16 @@
 # Phase D implementation status
 
-Updated: 2026-09-22
+Updated: 2026-10-02
+
+See `release-audit-2026-10-02.md` for the latest local Docker/browser/security evidence and unresolved production gates, and `SERVER-HANDOFF-2026-10-02.md` for the 19-migration deployment handoff. Historical statuses below are not a claim that production has been updated.
+
+## 2026-09-29 rule and evidence update
+
+The owner changed the approval contract: admins verify seller identity once; verified sellers activate stores and publish valid listings without per-post approval. Admins retain audited post-publication restriction/restoration. The private `/owner` dashboard now exposes aggregate visit/order counts and recent activity, and `/operations#listings` pages through all seller posts. Local PostgreSQL migration, API suite, build and desktop Chromium commerce journey passed. The older baseline table below is retained for phase context; its manual listing/store approval descriptions and historic browser totals are not the current release gate. See `owner-flow-and-launch-gates.md` and `completion-roadmap.md`.
+
+## 2026-09-27 evidence correction
+
+The table below records the older implementation baseline, not current release approval. Its D15 browser totals and full-journey claim predate discovery that the journey test set seller verification and store activation directly in PostgreSQL. The corrected test now uses document upload, admin identity approval, seller store submission and admin store approval, but it has **not** passed a fresh run because local PostgreSQL/Docker is unavailable. Local code changes are not yet deployed. D16 has a live baseline deployment, but HTTPS redirection/HSTS, R2 media, staging E2E, restore/rollback and legal/beta evidence are outstanding. Use `completion-roadmap.md` and `server-deployment-audit-2026-09-27.md` for current gates; do not interpret the older row labels as production acceptance.
 
 This file records implemented code, not planning completion. A phase is marked partial when its production or full workflow requirements still depend on missing integrations, staging evidence, or owner/legal input.
 

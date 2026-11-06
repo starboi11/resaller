@@ -45,6 +45,7 @@ export type OrderMinAggregateOutputType = {
   checkoutId: string | null
   buyerId: string | null
   storeId: string | null
+  fulfillmentStoreId: string | null
   status: $Enums.OrderStatus | null
   totalMinor: bigint | null
   subtotalMinor: bigint | null
@@ -62,6 +63,7 @@ export type OrderMaxAggregateOutputType = {
   checkoutId: string | null
   buyerId: string | null
   storeId: string | null
+  fulfillmentStoreId: string | null
   status: $Enums.OrderStatus | null
   totalMinor: bigint | null
   subtotalMinor: bigint | null
@@ -79,6 +81,7 @@ export type OrderCountAggregateOutputType = {
   checkoutId: number
   buyerId: number
   storeId: number
+  fulfillmentStoreId: number
   status: number
   totalMinor: number
   subtotalMinor: number
@@ -111,6 +114,7 @@ export type OrderMinAggregateInputType = {
   checkoutId?: true
   buyerId?: true
   storeId?: true
+  fulfillmentStoreId?: true
   status?: true
   totalMinor?: true
   subtotalMinor?: true
@@ -128,6 +132,7 @@ export type OrderMaxAggregateInputType = {
   checkoutId?: true
   buyerId?: true
   storeId?: true
+  fulfillmentStoreId?: true
   status?: true
   totalMinor?: true
   subtotalMinor?: true
@@ -145,6 +150,7 @@ export type OrderCountAggregateInputType = {
   checkoutId?: true
   buyerId?: true
   storeId?: true
+  fulfillmentStoreId?: true
   status?: true
   totalMinor?: true
   subtotalMinor?: true
@@ -250,6 +256,7 @@ export type OrderGroupByOutputType = {
   checkoutId: string
   buyerId: string
   storeId: string
+  fulfillmentStoreId: string | null
   status: $Enums.OrderStatus
   totalMinor: bigint
   subtotalMinor: bigint
@@ -291,6 +298,7 @@ export type OrderWhereInput = {
   checkoutId?: Prisma.UuidFilter<"Order"> | string
   buyerId?: Prisma.UuidFilter<"Order"> | string
   storeId?: Prisma.UuidFilter<"Order"> | string
+  fulfillmentStoreId?: Prisma.UuidNullableFilter<"Order"> | string | null
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFilter<"Order"> | bigint | number
   subtotalMinor?: Prisma.BigIntFilter<"Order"> | bigint | number
@@ -303,6 +311,8 @@ export type OrderWhereInput = {
   checkout?: Prisma.XOR<Prisma.CheckoutScalarRelationFilter, Prisma.CheckoutWhereInput>
   buyer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   store?: Prisma.XOR<Prisma.StoreScalarRelationFilter, Prisma.StoreWhereInput>
+  fulfillmentStore?: Prisma.XOR<Prisma.StoreNullableScalarRelationFilter, Prisma.StoreWhereInput> | null
+  earning?: Prisma.XOR<Prisma.ResellerEarningNullableScalarRelationFilter, Prisma.ResellerEarningWhereInput> | null
   items?: Prisma.OrderItemListRelationFilter
   history?: Prisma.OrderStatusHistoryListRelationFilter
   reservations?: Prisma.StockReservationListRelationFilter
@@ -321,6 +331,7 @@ export type OrderOrderByWithRelationInput = {
   checkoutId?: Prisma.SortOrder
   buyerId?: Prisma.SortOrder
   storeId?: Prisma.SortOrder
+  fulfillmentStoreId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   totalMinor?: Prisma.SortOrder
   subtotalMinor?: Prisma.SortOrder
@@ -333,6 +344,8 @@ export type OrderOrderByWithRelationInput = {
   checkout?: Prisma.CheckoutOrderByWithRelationInput
   buyer?: Prisma.UserOrderByWithRelationInput
   store?: Prisma.StoreOrderByWithRelationInput
+  fulfillmentStore?: Prisma.StoreOrderByWithRelationInput
+  earning?: Prisma.ResellerEarningOrderByWithRelationInput
   items?: Prisma.OrderItemOrderByRelationAggregateInput
   history?: Prisma.OrderStatusHistoryOrderByRelationAggregateInput
   reservations?: Prisma.StockReservationOrderByRelationAggregateInput
@@ -354,6 +367,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   checkoutId?: Prisma.UuidFilter<"Order"> | string
   buyerId?: Prisma.UuidFilter<"Order"> | string
   storeId?: Prisma.UuidFilter<"Order"> | string
+  fulfillmentStoreId?: Prisma.UuidNullableFilter<"Order"> | string | null
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFilter<"Order"> | bigint | number
   subtotalMinor?: Prisma.BigIntFilter<"Order"> | bigint | number
@@ -366,6 +380,8 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   checkout?: Prisma.XOR<Prisma.CheckoutScalarRelationFilter, Prisma.CheckoutWhereInput>
   buyer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   store?: Prisma.XOR<Prisma.StoreScalarRelationFilter, Prisma.StoreWhereInput>
+  fulfillmentStore?: Prisma.XOR<Prisma.StoreNullableScalarRelationFilter, Prisma.StoreWhereInput> | null
+  earning?: Prisma.XOR<Prisma.ResellerEarningNullableScalarRelationFilter, Prisma.ResellerEarningWhereInput> | null
   items?: Prisma.OrderItemListRelationFilter
   history?: Prisma.OrderStatusHistoryListRelationFilter
   reservations?: Prisma.StockReservationListRelationFilter
@@ -384,6 +400,7 @@ export type OrderOrderByWithAggregationInput = {
   checkoutId?: Prisma.SortOrder
   buyerId?: Prisma.SortOrder
   storeId?: Prisma.SortOrder
+  fulfillmentStoreId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   totalMinor?: Prisma.SortOrder
   subtotalMinor?: Prisma.SortOrder
@@ -410,6 +427,7 @@ export type OrderScalarWhereWithAggregatesInput = {
   checkoutId?: Prisma.UuidWithAggregatesFilter<"Order"> | string
   buyerId?: Prisma.UuidWithAggregatesFilter<"Order"> | string
   storeId?: Prisma.UuidWithAggregatesFilter<"Order"> | string
+  fulfillmentStoreId?: Prisma.UuidNullableWithAggregatesFilter<"Order"> | string | null
   status?: Prisma.EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntWithAggregatesFilter<"Order"> | bigint | number
   subtotalMinor?: Prisma.BigIntWithAggregatesFilter<"Order"> | bigint | number
@@ -437,6 +455,8 @@ export type OrderCreateInput = {
   checkout: Prisma.CheckoutCreateNestedOneWithoutOrdersInput
   buyer: Prisma.UserCreateNestedOneWithoutOrdersInput
   store: Prisma.StoreCreateNestedOneWithoutOrdersInput
+  fulfillmentStore?: Prisma.StoreCreateNestedOneWithoutFulfilledOrdersInput
+  earning?: Prisma.ResellerEarningCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   history?: Prisma.OrderStatusHistoryCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutOrderInput
@@ -455,6 +475,7 @@ export type OrderUncheckedCreateInput = {
   checkoutId: string
   buyerId: string
   storeId: string
+  fulfillmentStoreId?: string | null
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
   subtotalMinor: bigint | number
@@ -464,6 +485,7 @@ export type OrderUncheckedCreateInput = {
   sellerAcceptBy: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  earning?: Prisma.ResellerEarningUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   history?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutOrderInput
@@ -491,6 +513,8 @@ export type OrderUpdateInput = {
   checkout?: Prisma.CheckoutUpdateOneRequiredWithoutOrdersNestedInput
   buyer?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   store?: Prisma.StoreUpdateOneRequiredWithoutOrdersNestedInput
+  fulfillmentStore?: Prisma.StoreUpdateOneWithoutFulfilledOrdersNestedInput
+  earning?: Prisma.ResellerEarningUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutOrderNestedInput
@@ -509,6 +533,7 @@ export type OrderUncheckedUpdateInput = {
   checkoutId?: Prisma.StringFieldUpdateOperationsInput | string
   buyerId?: Prisma.StringFieldUpdateOperationsInput | string
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  fulfillmentStoreId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -518,6 +543,7 @@ export type OrderUncheckedUpdateInput = {
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  earning?: Prisma.ResellerEarningUncheckedUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutOrderNestedInput
@@ -536,6 +562,7 @@ export type OrderCreateManyInput = {
   checkoutId: string
   buyerId: string
   storeId: string
+  fulfillmentStoreId?: string | null
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
   subtotalMinor: bigint | number
@@ -569,6 +596,7 @@ export type OrderUncheckedUpdateManyInput = {
   checkoutId?: Prisma.StringFieldUpdateOperationsInput | string
   buyerId?: Prisma.StringFieldUpdateOperationsInput | string
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  fulfillmentStoreId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -597,6 +625,7 @@ export type OrderCountOrderByAggregateInput = {
   checkoutId?: Prisma.SortOrder
   buyerId?: Prisma.SortOrder
   storeId?: Prisma.SortOrder
+  fulfillmentStoreId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalMinor?: Prisma.SortOrder
   subtotalMinor?: Prisma.SortOrder
@@ -621,6 +650,7 @@ export type OrderMaxOrderByAggregateInput = {
   checkoutId?: Prisma.SortOrder
   buyerId?: Prisma.SortOrder
   storeId?: Prisma.SortOrder
+  fulfillmentStoreId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalMinor?: Prisma.SortOrder
   subtotalMinor?: Prisma.SortOrder
@@ -638,6 +668,7 @@ export type OrderMinOrderByAggregateInput = {
   checkoutId?: Prisma.SortOrder
   buyerId?: Prisma.SortOrder
   storeId?: Prisma.SortOrder
+  fulfillmentStoreId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalMinor?: Prisma.SortOrder
   subtotalMinor?: Prisma.SortOrder
@@ -713,10 +744,24 @@ export type OrderCreateNestedManyWithoutStoreInput = {
   connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
 }
 
+export type OrderCreateNestedManyWithoutFulfillmentStoreInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutFulfillmentStoreInput, Prisma.OrderUncheckedCreateWithoutFulfillmentStoreInput> | Prisma.OrderCreateWithoutFulfillmentStoreInput[] | Prisma.OrderUncheckedCreateWithoutFulfillmentStoreInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutFulfillmentStoreInput | Prisma.OrderCreateOrConnectWithoutFulfillmentStoreInput[]
+  createMany?: Prisma.OrderCreateManyFulfillmentStoreInputEnvelope
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+}
+
 export type OrderUncheckedCreateNestedManyWithoutStoreInput = {
   create?: Prisma.XOR<Prisma.OrderCreateWithoutStoreInput, Prisma.OrderUncheckedCreateWithoutStoreInput> | Prisma.OrderCreateWithoutStoreInput[] | Prisma.OrderUncheckedCreateWithoutStoreInput[]
   connectOrCreate?: Prisma.OrderCreateOrConnectWithoutStoreInput | Prisma.OrderCreateOrConnectWithoutStoreInput[]
   createMany?: Prisma.OrderCreateManyStoreInputEnvelope
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+}
+
+export type OrderUncheckedCreateNestedManyWithoutFulfillmentStoreInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutFulfillmentStoreInput, Prisma.OrderUncheckedCreateWithoutFulfillmentStoreInput> | Prisma.OrderCreateWithoutFulfillmentStoreInput[] | Prisma.OrderUncheckedCreateWithoutFulfillmentStoreInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutFulfillmentStoreInput | Prisma.OrderCreateOrConnectWithoutFulfillmentStoreInput[]
+  createMany?: Prisma.OrderCreateManyFulfillmentStoreInputEnvelope
   connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
 }
 
@@ -734,6 +779,20 @@ export type OrderUpdateManyWithoutStoreNestedInput = {
   deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
 }
 
+export type OrderUpdateManyWithoutFulfillmentStoreNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutFulfillmentStoreInput, Prisma.OrderUncheckedCreateWithoutFulfillmentStoreInput> | Prisma.OrderCreateWithoutFulfillmentStoreInput[] | Prisma.OrderUncheckedCreateWithoutFulfillmentStoreInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutFulfillmentStoreInput | Prisma.OrderCreateOrConnectWithoutFulfillmentStoreInput[]
+  upsert?: Prisma.OrderUpsertWithWhereUniqueWithoutFulfillmentStoreInput | Prisma.OrderUpsertWithWhereUniqueWithoutFulfillmentStoreInput[]
+  createMany?: Prisma.OrderCreateManyFulfillmentStoreInputEnvelope
+  set?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  disconnect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  delete?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  update?: Prisma.OrderUpdateWithWhereUniqueWithoutFulfillmentStoreInput | Prisma.OrderUpdateWithWhereUniqueWithoutFulfillmentStoreInput[]
+  updateMany?: Prisma.OrderUpdateManyWithWhereWithoutFulfillmentStoreInput | Prisma.OrderUpdateManyWithWhereWithoutFulfillmentStoreInput[]
+  deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
+}
+
 export type OrderUncheckedUpdateManyWithoutStoreNestedInput = {
   create?: Prisma.XOR<Prisma.OrderCreateWithoutStoreInput, Prisma.OrderUncheckedCreateWithoutStoreInput> | Prisma.OrderCreateWithoutStoreInput[] | Prisma.OrderUncheckedCreateWithoutStoreInput[]
   connectOrCreate?: Prisma.OrderCreateOrConnectWithoutStoreInput | Prisma.OrderCreateOrConnectWithoutStoreInput[]
@@ -745,6 +804,20 @@ export type OrderUncheckedUpdateManyWithoutStoreNestedInput = {
   connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
   update?: Prisma.OrderUpdateWithWhereUniqueWithoutStoreInput | Prisma.OrderUpdateWithWhereUniqueWithoutStoreInput[]
   updateMany?: Prisma.OrderUpdateManyWithWhereWithoutStoreInput | Prisma.OrderUpdateManyWithWhereWithoutStoreInput[]
+  deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
+}
+
+export type OrderUncheckedUpdateManyWithoutFulfillmentStoreNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutFulfillmentStoreInput, Prisma.OrderUncheckedCreateWithoutFulfillmentStoreInput> | Prisma.OrderCreateWithoutFulfillmentStoreInput[] | Prisma.OrderUncheckedCreateWithoutFulfillmentStoreInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutFulfillmentStoreInput | Prisma.OrderCreateOrConnectWithoutFulfillmentStoreInput[]
+  upsert?: Prisma.OrderUpsertWithWhereUniqueWithoutFulfillmentStoreInput | Prisma.OrderUpsertWithWhereUniqueWithoutFulfillmentStoreInput[]
+  createMany?: Prisma.OrderCreateManyFulfillmentStoreInputEnvelope
+  set?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  disconnect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  delete?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  update?: Prisma.OrderUpdateWithWhereUniqueWithoutFulfillmentStoreInput | Prisma.OrderUpdateWithWhereUniqueWithoutFulfillmentStoreInput[]
+  updateMany?: Prisma.OrderUpdateManyWithWhereWithoutFulfillmentStoreInput | Prisma.OrderUpdateManyWithWhereWithoutFulfillmentStoreInput[]
   deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
 }
 
@@ -922,6 +995,20 @@ export type OrderUpdateOneRequiredWithoutPolicySnapshotsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutPolicySnapshotsInput, Prisma.OrderUpdateWithoutPolicySnapshotsInput>, Prisma.OrderUncheckedUpdateWithoutPolicySnapshotsInput>
 }
 
+export type OrderCreateNestedOneWithoutEarningInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutEarningInput, Prisma.OrderUncheckedCreateWithoutEarningInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutEarningInput
+  connect?: Prisma.OrderWhereUniqueInput
+}
+
+export type OrderUpdateOneRequiredWithoutEarningNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutEarningInput, Prisma.OrderUncheckedCreateWithoutEarningInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutEarningInput
+  upsert?: Prisma.OrderUpsertWithoutEarningInput
+  connect?: Prisma.OrderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutEarningInput, Prisma.OrderUpdateWithoutEarningInput>, Prisma.OrderUncheckedUpdateWithoutEarningInput>
+}
+
 export type OrderCreateWithoutBuyerInput = {
   id?: string
   publicId?: string
@@ -937,6 +1024,8 @@ export type OrderCreateWithoutBuyerInput = {
   updatedAt?: Date | string
   checkout: Prisma.CheckoutCreateNestedOneWithoutOrdersInput
   store: Prisma.StoreCreateNestedOneWithoutOrdersInput
+  fulfillmentStore?: Prisma.StoreCreateNestedOneWithoutFulfilledOrdersInput
+  earning?: Prisma.ResellerEarningCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   history?: Prisma.OrderStatusHistoryCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutOrderInput
@@ -954,6 +1043,7 @@ export type OrderUncheckedCreateWithoutBuyerInput = {
   displayId: string
   checkoutId: string
   storeId: string
+  fulfillmentStoreId?: string | null
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
   subtotalMinor: bigint | number
@@ -963,6 +1053,7 @@ export type OrderUncheckedCreateWithoutBuyerInput = {
   sellerAcceptBy: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  earning?: Prisma.ResellerEarningUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   history?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutOrderInput
@@ -1010,6 +1101,7 @@ export type OrderScalarWhereInput = {
   checkoutId?: Prisma.UuidFilter<"Order"> | string
   buyerId?: Prisma.UuidFilter<"Order"> | string
   storeId?: Prisma.UuidFilter<"Order"> | string
+  fulfillmentStoreId?: Prisma.UuidNullableFilter<"Order"> | string | null
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFilter<"Order"> | bigint | number
   subtotalMinor?: Prisma.BigIntFilter<"Order"> | bigint | number
@@ -1036,6 +1128,8 @@ export type OrderCreateWithoutStoreInput = {
   updatedAt?: Date | string
   checkout: Prisma.CheckoutCreateNestedOneWithoutOrdersInput
   buyer: Prisma.UserCreateNestedOneWithoutOrdersInput
+  fulfillmentStore?: Prisma.StoreCreateNestedOneWithoutFulfilledOrdersInput
+  earning?: Prisma.ResellerEarningCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   history?: Prisma.OrderStatusHistoryCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutOrderInput
@@ -1053,6 +1147,7 @@ export type OrderUncheckedCreateWithoutStoreInput = {
   displayId: string
   checkoutId: string
   buyerId: string
+  fulfillmentStoreId?: string | null
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
   subtotalMinor: bigint | number
@@ -1062,6 +1157,7 @@ export type OrderUncheckedCreateWithoutStoreInput = {
   sellerAcceptBy: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  earning?: Prisma.ResellerEarningUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   history?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutOrderInput
@@ -1083,6 +1179,72 @@ export type OrderCreateManyStoreInputEnvelope = {
   skipDuplicates?: boolean
 }
 
+export type OrderCreateWithoutFulfillmentStoreInput = {
+  id?: string
+  publicId?: string
+  displayId: string
+  status?: $Enums.OrderStatus
+  totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
+  currency?: string
+  snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  sellerAcceptBy: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  checkout: Prisma.CheckoutCreateNestedOneWithoutOrdersInput
+  buyer: Prisma.UserCreateNestedOneWithoutOrdersInput
+  store: Prisma.StoreCreateNestedOneWithoutOrdersInput
+  earning?: Prisma.ResellerEarningCreateNestedOneWithoutOrderInput
+  items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
+  history?: Prisma.OrderStatusHistoryCreateNestedManyWithoutOrderInput
+  reservations?: Prisma.StockReservationCreateNestedManyWithoutOrderInput
+  changes?: Prisma.OrderChangeCreateNestedManyWithoutOrderInput
+  conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
+  review?: Prisma.ReviewCreateNestedOneWithoutOrderInput
+  dispute?: Prisma.DisputeCreateNestedOneWithoutOrderInput
+  policySnapshots?: Prisma.PolicySnapshotCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutFulfillmentStoreInput = {
+  id?: string
+  publicId?: string
+  displayId: string
+  checkoutId: string
+  buyerId: string
+  storeId: string
+  status?: $Enums.OrderStatus
+  totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
+  currency?: string
+  snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  sellerAcceptBy: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  earning?: Prisma.ResellerEarningUncheckedCreateNestedOneWithoutOrderInput
+  items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
+  history?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
+  reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutOrderInput
+  changes?: Prisma.OrderChangeUncheckedCreateNestedManyWithoutOrderInput
+  conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
+  review?: Prisma.ReviewUncheckedCreateNestedOneWithoutOrderInput
+  dispute?: Prisma.DisputeUncheckedCreateNestedOneWithoutOrderInput
+  policySnapshots?: Prisma.PolicySnapshotUncheckedCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutFulfillmentStoreInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutFulfillmentStoreInput, Prisma.OrderUncheckedCreateWithoutFulfillmentStoreInput>
+}
+
+export type OrderCreateManyFulfillmentStoreInputEnvelope = {
+  data: Prisma.OrderCreateManyFulfillmentStoreInput | Prisma.OrderCreateManyFulfillmentStoreInput[]
+  skipDuplicates?: boolean
+}
+
 export type OrderUpsertWithWhereUniqueWithoutStoreInput = {
   where: Prisma.OrderWhereUniqueInput
   update: Prisma.XOR<Prisma.OrderUpdateWithoutStoreInput, Prisma.OrderUncheckedUpdateWithoutStoreInput>
@@ -1097,6 +1259,22 @@ export type OrderUpdateWithWhereUniqueWithoutStoreInput = {
 export type OrderUpdateManyWithWhereWithoutStoreInput = {
   where: Prisma.OrderScalarWhereInput
   data: Prisma.XOR<Prisma.OrderUpdateManyMutationInput, Prisma.OrderUncheckedUpdateManyWithoutStoreInput>
+}
+
+export type OrderUpsertWithWhereUniqueWithoutFulfillmentStoreInput = {
+  where: Prisma.OrderWhereUniqueInput
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutFulfillmentStoreInput, Prisma.OrderUncheckedUpdateWithoutFulfillmentStoreInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutFulfillmentStoreInput, Prisma.OrderUncheckedCreateWithoutFulfillmentStoreInput>
+}
+
+export type OrderUpdateWithWhereUniqueWithoutFulfillmentStoreInput = {
+  where: Prisma.OrderWhereUniqueInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutFulfillmentStoreInput, Prisma.OrderUncheckedUpdateWithoutFulfillmentStoreInput>
+}
+
+export type OrderUpdateManyWithWhereWithoutFulfillmentStoreInput = {
+  where: Prisma.OrderScalarWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateManyMutationInput, Prisma.OrderUncheckedUpdateManyWithoutFulfillmentStoreInput>
 }
 
 export type OrderCreateWithoutCheckoutInput = {
@@ -1114,6 +1292,8 @@ export type OrderCreateWithoutCheckoutInput = {
   updatedAt?: Date | string
   buyer: Prisma.UserCreateNestedOneWithoutOrdersInput
   store: Prisma.StoreCreateNestedOneWithoutOrdersInput
+  fulfillmentStore?: Prisma.StoreCreateNestedOneWithoutFulfilledOrdersInput
+  earning?: Prisma.ResellerEarningCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   history?: Prisma.OrderStatusHistoryCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutOrderInput
@@ -1131,6 +1311,7 @@ export type OrderUncheckedCreateWithoutCheckoutInput = {
   displayId: string
   buyerId: string
   storeId: string
+  fulfillmentStoreId?: string | null
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
   subtotalMinor: bigint | number
@@ -1140,6 +1321,7 @@ export type OrderUncheckedCreateWithoutCheckoutInput = {
   sellerAcceptBy: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  earning?: Prisma.ResellerEarningUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   history?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutOrderInput
@@ -1193,6 +1375,8 @@ export type OrderCreateWithoutChangesInput = {
   checkout: Prisma.CheckoutCreateNestedOneWithoutOrdersInput
   buyer: Prisma.UserCreateNestedOneWithoutOrdersInput
   store: Prisma.StoreCreateNestedOneWithoutOrdersInput
+  fulfillmentStore?: Prisma.StoreCreateNestedOneWithoutFulfilledOrdersInput
+  earning?: Prisma.ResellerEarningCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   history?: Prisma.OrderStatusHistoryCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutOrderInput
@@ -1210,6 +1394,7 @@ export type OrderUncheckedCreateWithoutChangesInput = {
   checkoutId: string
   buyerId: string
   storeId: string
+  fulfillmentStoreId?: string | null
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
   subtotalMinor: bigint | number
@@ -1219,6 +1404,7 @@ export type OrderUncheckedCreateWithoutChangesInput = {
   sellerAcceptBy: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  earning?: Prisma.ResellerEarningUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   history?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutOrderInput
@@ -1261,6 +1447,8 @@ export type OrderUpdateWithoutChangesInput = {
   checkout?: Prisma.CheckoutUpdateOneRequiredWithoutOrdersNestedInput
   buyer?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   store?: Prisma.StoreUpdateOneRequiredWithoutOrdersNestedInput
+  fulfillmentStore?: Prisma.StoreUpdateOneWithoutFulfilledOrdersNestedInput
+  earning?: Prisma.ResellerEarningUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutOrderNestedInput
@@ -1278,6 +1466,7 @@ export type OrderUncheckedUpdateWithoutChangesInput = {
   checkoutId?: Prisma.StringFieldUpdateOperationsInput | string
   buyerId?: Prisma.StringFieldUpdateOperationsInput | string
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  fulfillmentStoreId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -1287,6 +1476,7 @@ export type OrderUncheckedUpdateWithoutChangesInput = {
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  earning?: Prisma.ResellerEarningUncheckedUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutOrderNestedInput
@@ -1313,6 +1503,8 @@ export type OrderCreateWithoutItemsInput = {
   checkout: Prisma.CheckoutCreateNestedOneWithoutOrdersInput
   buyer: Prisma.UserCreateNestedOneWithoutOrdersInput
   store: Prisma.StoreCreateNestedOneWithoutOrdersInput
+  fulfillmentStore?: Prisma.StoreCreateNestedOneWithoutFulfilledOrdersInput
+  earning?: Prisma.ResellerEarningCreateNestedOneWithoutOrderInput
   history?: Prisma.OrderStatusHistoryCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutOrderInput
   changes?: Prisma.OrderChangeCreateNestedManyWithoutOrderInput
@@ -1330,6 +1522,7 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   checkoutId: string
   buyerId: string
   storeId: string
+  fulfillmentStoreId?: string | null
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
   subtotalMinor: bigint | number
@@ -1339,6 +1532,7 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   sellerAcceptBy: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  earning?: Prisma.ResellerEarningUncheckedCreateNestedOneWithoutOrderInput
   history?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutOrderInput
   changes?: Prisma.OrderChangeUncheckedCreateNestedManyWithoutOrderInput
@@ -1381,6 +1575,8 @@ export type OrderUpdateWithoutItemsInput = {
   checkout?: Prisma.CheckoutUpdateOneRequiredWithoutOrdersNestedInput
   buyer?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   store?: Prisma.StoreUpdateOneRequiredWithoutOrdersNestedInput
+  fulfillmentStore?: Prisma.StoreUpdateOneWithoutFulfilledOrdersNestedInput
+  earning?: Prisma.ResellerEarningUpdateOneWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutOrderNestedInput
   changes?: Prisma.OrderChangeUpdateManyWithoutOrderNestedInput
@@ -1398,6 +1594,7 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
   checkoutId?: Prisma.StringFieldUpdateOperationsInput | string
   buyerId?: Prisma.StringFieldUpdateOperationsInput | string
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  fulfillmentStoreId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -1407,6 +1604,7 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  earning?: Prisma.ResellerEarningUncheckedUpdateOneWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutOrderNestedInput
   changes?: Prisma.OrderChangeUncheckedUpdateManyWithoutOrderNestedInput
@@ -1433,6 +1631,8 @@ export type OrderCreateWithoutHistoryInput = {
   checkout: Prisma.CheckoutCreateNestedOneWithoutOrdersInput
   buyer: Prisma.UserCreateNestedOneWithoutOrdersInput
   store: Prisma.StoreCreateNestedOneWithoutOrdersInput
+  fulfillmentStore?: Prisma.StoreCreateNestedOneWithoutFulfilledOrdersInput
+  earning?: Prisma.ResellerEarningCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutOrderInput
   changes?: Prisma.OrderChangeCreateNestedManyWithoutOrderInput
@@ -1450,6 +1650,7 @@ export type OrderUncheckedCreateWithoutHistoryInput = {
   checkoutId: string
   buyerId: string
   storeId: string
+  fulfillmentStoreId?: string | null
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
   subtotalMinor: bigint | number
@@ -1459,6 +1660,7 @@ export type OrderUncheckedCreateWithoutHistoryInput = {
   sellerAcceptBy: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  earning?: Prisma.ResellerEarningUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutOrderInput
   changes?: Prisma.OrderChangeUncheckedCreateNestedManyWithoutOrderInput
@@ -1501,6 +1703,8 @@ export type OrderUpdateWithoutHistoryInput = {
   checkout?: Prisma.CheckoutUpdateOneRequiredWithoutOrdersNestedInput
   buyer?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   store?: Prisma.StoreUpdateOneRequiredWithoutOrdersNestedInput
+  fulfillmentStore?: Prisma.StoreUpdateOneWithoutFulfilledOrdersNestedInput
+  earning?: Prisma.ResellerEarningUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutOrderNestedInput
   changes?: Prisma.OrderChangeUpdateManyWithoutOrderNestedInput
@@ -1518,6 +1722,7 @@ export type OrderUncheckedUpdateWithoutHistoryInput = {
   checkoutId?: Prisma.StringFieldUpdateOperationsInput | string
   buyerId?: Prisma.StringFieldUpdateOperationsInput | string
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  fulfillmentStoreId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -1527,6 +1732,7 @@ export type OrderUncheckedUpdateWithoutHistoryInput = {
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  earning?: Prisma.ResellerEarningUncheckedUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutOrderNestedInput
   changes?: Prisma.OrderChangeUncheckedUpdateManyWithoutOrderNestedInput
@@ -1553,6 +1759,8 @@ export type OrderCreateWithoutReservationsInput = {
   checkout: Prisma.CheckoutCreateNestedOneWithoutOrdersInput
   buyer: Prisma.UserCreateNestedOneWithoutOrdersInput
   store: Prisma.StoreCreateNestedOneWithoutOrdersInput
+  fulfillmentStore?: Prisma.StoreCreateNestedOneWithoutFulfilledOrdersInput
+  earning?: Prisma.ResellerEarningCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   history?: Prisma.OrderStatusHistoryCreateNestedManyWithoutOrderInput
   changes?: Prisma.OrderChangeCreateNestedManyWithoutOrderInput
@@ -1570,6 +1778,7 @@ export type OrderUncheckedCreateWithoutReservationsInput = {
   checkoutId: string
   buyerId: string
   storeId: string
+  fulfillmentStoreId?: string | null
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
   subtotalMinor: bigint | number
@@ -1579,6 +1788,7 @@ export type OrderUncheckedCreateWithoutReservationsInput = {
   sellerAcceptBy: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  earning?: Prisma.ResellerEarningUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   history?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
   changes?: Prisma.OrderChangeUncheckedCreateNestedManyWithoutOrderInput
@@ -1621,6 +1831,8 @@ export type OrderUpdateWithoutReservationsInput = {
   checkout?: Prisma.CheckoutUpdateOneRequiredWithoutOrdersNestedInput
   buyer?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   store?: Prisma.StoreUpdateOneRequiredWithoutOrdersNestedInput
+  fulfillmentStore?: Prisma.StoreUpdateOneWithoutFulfilledOrdersNestedInput
+  earning?: Prisma.ResellerEarningUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUpdateManyWithoutOrderNestedInput
   changes?: Prisma.OrderChangeUpdateManyWithoutOrderNestedInput
@@ -1638,6 +1850,7 @@ export type OrderUncheckedUpdateWithoutReservationsInput = {
   checkoutId?: Prisma.StringFieldUpdateOperationsInput | string
   buyerId?: Prisma.StringFieldUpdateOperationsInput | string
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  fulfillmentStoreId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -1647,6 +1860,7 @@ export type OrderUncheckedUpdateWithoutReservationsInput = {
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  earning?: Prisma.ResellerEarningUncheckedUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
   changes?: Prisma.OrderChangeUncheckedUpdateManyWithoutOrderNestedInput
@@ -1673,6 +1887,8 @@ export type OrderCreateWithoutConversationInput = {
   checkout: Prisma.CheckoutCreateNestedOneWithoutOrdersInput
   buyer: Prisma.UserCreateNestedOneWithoutOrdersInput
   store: Prisma.StoreCreateNestedOneWithoutOrdersInput
+  fulfillmentStore?: Prisma.StoreCreateNestedOneWithoutFulfilledOrdersInput
+  earning?: Prisma.ResellerEarningCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   history?: Prisma.OrderStatusHistoryCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutOrderInput
@@ -1690,6 +1906,7 @@ export type OrderUncheckedCreateWithoutConversationInput = {
   checkoutId: string
   buyerId: string
   storeId: string
+  fulfillmentStoreId?: string | null
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
   subtotalMinor: bigint | number
@@ -1699,6 +1916,7 @@ export type OrderUncheckedCreateWithoutConversationInput = {
   sellerAcceptBy: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  earning?: Prisma.ResellerEarningUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   history?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutOrderInput
@@ -1741,6 +1959,8 @@ export type OrderUpdateWithoutConversationInput = {
   checkout?: Prisma.CheckoutUpdateOneRequiredWithoutOrdersNestedInput
   buyer?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   store?: Prisma.StoreUpdateOneRequiredWithoutOrdersNestedInput
+  fulfillmentStore?: Prisma.StoreUpdateOneWithoutFulfilledOrdersNestedInput
+  earning?: Prisma.ResellerEarningUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutOrderNestedInput
@@ -1758,6 +1978,7 @@ export type OrderUncheckedUpdateWithoutConversationInput = {
   checkoutId?: Prisma.StringFieldUpdateOperationsInput | string
   buyerId?: Prisma.StringFieldUpdateOperationsInput | string
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  fulfillmentStoreId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -1767,6 +1988,7 @@ export type OrderUncheckedUpdateWithoutConversationInput = {
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  earning?: Prisma.ResellerEarningUncheckedUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutOrderNestedInput
@@ -1793,6 +2015,8 @@ export type OrderCreateWithoutReviewInput = {
   checkout: Prisma.CheckoutCreateNestedOneWithoutOrdersInput
   buyer: Prisma.UserCreateNestedOneWithoutOrdersInput
   store: Prisma.StoreCreateNestedOneWithoutOrdersInput
+  fulfillmentStore?: Prisma.StoreCreateNestedOneWithoutFulfilledOrdersInput
+  earning?: Prisma.ResellerEarningCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   history?: Prisma.OrderStatusHistoryCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutOrderInput
@@ -1810,6 +2034,7 @@ export type OrderUncheckedCreateWithoutReviewInput = {
   checkoutId: string
   buyerId: string
   storeId: string
+  fulfillmentStoreId?: string | null
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
   subtotalMinor: bigint | number
@@ -1819,6 +2044,7 @@ export type OrderUncheckedCreateWithoutReviewInput = {
   sellerAcceptBy: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  earning?: Prisma.ResellerEarningUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   history?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutOrderInput
@@ -1861,6 +2087,8 @@ export type OrderUpdateWithoutReviewInput = {
   checkout?: Prisma.CheckoutUpdateOneRequiredWithoutOrdersNestedInput
   buyer?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   store?: Prisma.StoreUpdateOneRequiredWithoutOrdersNestedInput
+  fulfillmentStore?: Prisma.StoreUpdateOneWithoutFulfilledOrdersNestedInput
+  earning?: Prisma.ResellerEarningUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutOrderNestedInput
@@ -1878,6 +2106,7 @@ export type OrderUncheckedUpdateWithoutReviewInput = {
   checkoutId?: Prisma.StringFieldUpdateOperationsInput | string
   buyerId?: Prisma.StringFieldUpdateOperationsInput | string
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  fulfillmentStoreId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -1887,6 +2116,7 @@ export type OrderUncheckedUpdateWithoutReviewInput = {
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  earning?: Prisma.ResellerEarningUncheckedUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutOrderNestedInput
@@ -1913,6 +2143,8 @@ export type OrderCreateWithoutCouponRedemptionsInput = {
   checkout: Prisma.CheckoutCreateNestedOneWithoutOrdersInput
   buyer: Prisma.UserCreateNestedOneWithoutOrdersInput
   store: Prisma.StoreCreateNestedOneWithoutOrdersInput
+  fulfillmentStore?: Prisma.StoreCreateNestedOneWithoutFulfilledOrdersInput
+  earning?: Prisma.ResellerEarningCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   history?: Prisma.OrderStatusHistoryCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutOrderInput
@@ -1930,6 +2162,7 @@ export type OrderUncheckedCreateWithoutCouponRedemptionsInput = {
   checkoutId: string
   buyerId: string
   storeId: string
+  fulfillmentStoreId?: string | null
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
   subtotalMinor: bigint | number
@@ -1939,6 +2172,7 @@ export type OrderUncheckedCreateWithoutCouponRedemptionsInput = {
   sellerAcceptBy: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  earning?: Prisma.ResellerEarningUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   history?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutOrderInput
@@ -1981,6 +2215,8 @@ export type OrderUpdateWithoutCouponRedemptionsInput = {
   checkout?: Prisma.CheckoutUpdateOneRequiredWithoutOrdersNestedInput
   buyer?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   store?: Prisma.StoreUpdateOneRequiredWithoutOrdersNestedInput
+  fulfillmentStore?: Prisma.StoreUpdateOneWithoutFulfilledOrdersNestedInput
+  earning?: Prisma.ResellerEarningUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutOrderNestedInput
@@ -1998,6 +2234,7 @@ export type OrderUncheckedUpdateWithoutCouponRedemptionsInput = {
   checkoutId?: Prisma.StringFieldUpdateOperationsInput | string
   buyerId?: Prisma.StringFieldUpdateOperationsInput | string
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  fulfillmentStoreId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -2007,6 +2244,7 @@ export type OrderUncheckedUpdateWithoutCouponRedemptionsInput = {
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  earning?: Prisma.ResellerEarningUncheckedUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutOrderNestedInput
@@ -2033,6 +2271,8 @@ export type OrderCreateWithoutDisputeInput = {
   checkout: Prisma.CheckoutCreateNestedOneWithoutOrdersInput
   buyer: Prisma.UserCreateNestedOneWithoutOrdersInput
   store: Prisma.StoreCreateNestedOneWithoutOrdersInput
+  fulfillmentStore?: Prisma.StoreCreateNestedOneWithoutFulfilledOrdersInput
+  earning?: Prisma.ResellerEarningCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   history?: Prisma.OrderStatusHistoryCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutOrderInput
@@ -2050,6 +2290,7 @@ export type OrderUncheckedCreateWithoutDisputeInput = {
   checkoutId: string
   buyerId: string
   storeId: string
+  fulfillmentStoreId?: string | null
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
   subtotalMinor: bigint | number
@@ -2059,6 +2300,7 @@ export type OrderUncheckedCreateWithoutDisputeInput = {
   sellerAcceptBy: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  earning?: Prisma.ResellerEarningUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   history?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutOrderInput
@@ -2101,6 +2343,8 @@ export type OrderUpdateWithoutDisputeInput = {
   checkout?: Prisma.CheckoutUpdateOneRequiredWithoutOrdersNestedInput
   buyer?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   store?: Prisma.StoreUpdateOneRequiredWithoutOrdersNestedInput
+  fulfillmentStore?: Prisma.StoreUpdateOneWithoutFulfilledOrdersNestedInput
+  earning?: Prisma.ResellerEarningUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutOrderNestedInput
@@ -2118,6 +2362,7 @@ export type OrderUncheckedUpdateWithoutDisputeInput = {
   checkoutId?: Prisma.StringFieldUpdateOperationsInput | string
   buyerId?: Prisma.StringFieldUpdateOperationsInput | string
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  fulfillmentStoreId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -2127,6 +2372,7 @@ export type OrderUncheckedUpdateWithoutDisputeInput = {
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  earning?: Prisma.ResellerEarningUncheckedUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutOrderNestedInput
@@ -2153,6 +2399,8 @@ export type OrderCreateWithoutPolicySnapshotsInput = {
   checkout: Prisma.CheckoutCreateNestedOneWithoutOrdersInput
   buyer: Prisma.UserCreateNestedOneWithoutOrdersInput
   store: Prisma.StoreCreateNestedOneWithoutOrdersInput
+  fulfillmentStore?: Prisma.StoreCreateNestedOneWithoutFulfilledOrdersInput
+  earning?: Prisma.ResellerEarningCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   history?: Prisma.OrderStatusHistoryCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutOrderInput
@@ -2170,6 +2418,7 @@ export type OrderUncheckedCreateWithoutPolicySnapshotsInput = {
   checkoutId: string
   buyerId: string
   storeId: string
+  fulfillmentStoreId?: string | null
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
   subtotalMinor: bigint | number
@@ -2179,6 +2428,7 @@ export type OrderUncheckedCreateWithoutPolicySnapshotsInput = {
   sellerAcceptBy: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  earning?: Prisma.ResellerEarningUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   history?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutOrderInput
@@ -2221,6 +2471,8 @@ export type OrderUpdateWithoutPolicySnapshotsInput = {
   checkout?: Prisma.CheckoutUpdateOneRequiredWithoutOrdersNestedInput
   buyer?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   store?: Prisma.StoreUpdateOneRequiredWithoutOrdersNestedInput
+  fulfillmentStore?: Prisma.StoreUpdateOneWithoutFulfilledOrdersNestedInput
+  earning?: Prisma.ResellerEarningUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutOrderNestedInput
@@ -2238,6 +2490,135 @@ export type OrderUncheckedUpdateWithoutPolicySnapshotsInput = {
   checkoutId?: Prisma.StringFieldUpdateOperationsInput | string
   buyerId?: Prisma.StringFieldUpdateOperationsInput | string
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  fulfillmentStoreId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  earning?: Prisma.ResellerEarningUncheckedUpdateOneWithoutOrderNestedInput
+  items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+  history?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutOrderNestedInput
+  changes?: Prisma.OrderChangeUncheckedUpdateManyWithoutOrderNestedInput
+  conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
+  review?: Prisma.ReviewUncheckedUpdateOneWithoutOrderNestedInput
+  dispute?: Prisma.DisputeUncheckedUpdateOneWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderCreateWithoutEarningInput = {
+  id?: string
+  publicId?: string
+  displayId: string
+  status?: $Enums.OrderStatus
+  totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
+  currency?: string
+  snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  sellerAcceptBy: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  checkout: Prisma.CheckoutCreateNestedOneWithoutOrdersInput
+  buyer: Prisma.UserCreateNestedOneWithoutOrdersInput
+  store: Prisma.StoreCreateNestedOneWithoutOrdersInput
+  fulfillmentStore?: Prisma.StoreCreateNestedOneWithoutFulfilledOrdersInput
+  items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
+  history?: Prisma.OrderStatusHistoryCreateNestedManyWithoutOrderInput
+  reservations?: Prisma.StockReservationCreateNestedManyWithoutOrderInput
+  changes?: Prisma.OrderChangeCreateNestedManyWithoutOrderInput
+  conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
+  review?: Prisma.ReviewCreateNestedOneWithoutOrderInput
+  dispute?: Prisma.DisputeCreateNestedOneWithoutOrderInput
+  policySnapshots?: Prisma.PolicySnapshotCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutEarningInput = {
+  id?: string
+  publicId?: string
+  displayId: string
+  checkoutId: string
+  buyerId: string
+  storeId: string
+  fulfillmentStoreId?: string | null
+  status?: $Enums.OrderStatus
+  totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
+  currency?: string
+  snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  sellerAcceptBy: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
+  history?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
+  reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutOrderInput
+  changes?: Prisma.OrderChangeUncheckedCreateNestedManyWithoutOrderInput
+  conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
+  review?: Prisma.ReviewUncheckedCreateNestedOneWithoutOrderInput
+  dispute?: Prisma.DisputeUncheckedCreateNestedOneWithoutOrderInput
+  policySnapshots?: Prisma.PolicySnapshotUncheckedCreateNestedManyWithoutOrderInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutEarningInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutEarningInput, Prisma.OrderUncheckedCreateWithoutEarningInput>
+}
+
+export type OrderUpsertWithoutEarningInput = {
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutEarningInput, Prisma.OrderUncheckedUpdateWithoutEarningInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutEarningInput, Prisma.OrderUncheckedCreateWithoutEarningInput>
+  where?: Prisma.OrderWhereInput
+}
+
+export type OrderUpdateToOneWithWhereWithoutEarningInput = {
+  where?: Prisma.OrderWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutEarningInput, Prisma.OrderUncheckedUpdateWithoutEarningInput>
+}
+
+export type OrderUpdateWithoutEarningInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  displayId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  checkout?: Prisma.CheckoutUpdateOneRequiredWithoutOrdersNestedInput
+  buyer?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
+  store?: Prisma.StoreUpdateOneRequiredWithoutOrdersNestedInput
+  fulfillmentStore?: Prisma.StoreUpdateOneWithoutFulfilledOrdersNestedInput
+  items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
+  history?: Prisma.OrderStatusHistoryUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.StockReservationUpdateManyWithoutOrderNestedInput
+  changes?: Prisma.OrderChangeUpdateManyWithoutOrderNestedInput
+  conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutOrderNestedInput
+  dispute?: Prisma.DisputeUpdateOneWithoutOrderNestedInput
+  policySnapshots?: Prisma.PolicySnapshotUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutEarningInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  displayId?: Prisma.StringFieldUpdateOperationsInput | string
+  checkoutId?: Prisma.StringFieldUpdateOperationsInput | string
+  buyerId?: Prisma.StringFieldUpdateOperationsInput | string
+  storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  fulfillmentStoreId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -2254,6 +2635,7 @@ export type OrderUncheckedUpdateWithoutPolicySnapshotsInput = {
   conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
   review?: Prisma.ReviewUncheckedUpdateOneWithoutOrderNestedInput
   dispute?: Prisma.DisputeUncheckedUpdateOneWithoutOrderNestedInput
+  policySnapshots?: Prisma.PolicySnapshotUncheckedUpdateManyWithoutOrderNestedInput
   couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutOrderNestedInput
 }
 
@@ -2263,6 +2645,7 @@ export type OrderCreateManyBuyerInput = {
   displayId: string
   checkoutId: string
   storeId: string
+  fulfillmentStoreId?: string | null
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
   subtotalMinor: bigint | number
@@ -2289,6 +2672,8 @@ export type OrderUpdateWithoutBuyerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   checkout?: Prisma.CheckoutUpdateOneRequiredWithoutOrdersNestedInput
   store?: Prisma.StoreUpdateOneRequiredWithoutOrdersNestedInput
+  fulfillmentStore?: Prisma.StoreUpdateOneWithoutFulfilledOrdersNestedInput
+  earning?: Prisma.ResellerEarningUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutOrderNestedInput
@@ -2306,6 +2691,7 @@ export type OrderUncheckedUpdateWithoutBuyerInput = {
   displayId?: Prisma.StringFieldUpdateOperationsInput | string
   checkoutId?: Prisma.StringFieldUpdateOperationsInput | string
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  fulfillmentStoreId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -2315,6 +2701,7 @@ export type OrderUncheckedUpdateWithoutBuyerInput = {
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  earning?: Prisma.ResellerEarningUncheckedUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutOrderNestedInput
@@ -2332,6 +2719,7 @@ export type OrderUncheckedUpdateManyWithoutBuyerInput = {
   displayId?: Prisma.StringFieldUpdateOperationsInput | string
   checkoutId?: Prisma.StringFieldUpdateOperationsInput | string
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  fulfillmentStoreId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -2349,6 +2737,25 @@ export type OrderCreateManyStoreInput = {
   displayId: string
   checkoutId: string
   buyerId: string
+  fulfillmentStoreId?: string | null
+  status?: $Enums.OrderStatus
+  totalMinor: bigint | number
+  subtotalMinor: bigint | number
+  discountMinor?: bigint | number
+  currency?: string
+  snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  sellerAcceptBy: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type OrderCreateManyFulfillmentStoreInput = {
+  id?: string
+  publicId?: string
+  displayId: string
+  checkoutId: string
+  buyerId: string
+  storeId: string
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
   subtotalMinor: bigint | number
@@ -2375,6 +2782,8 @@ export type OrderUpdateWithoutStoreInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   checkout?: Prisma.CheckoutUpdateOneRequiredWithoutOrdersNestedInput
   buyer?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
+  fulfillmentStore?: Prisma.StoreUpdateOneWithoutFulfilledOrdersNestedInput
+  earning?: Prisma.ResellerEarningUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutOrderNestedInput
@@ -2392,6 +2801,7 @@ export type OrderUncheckedUpdateWithoutStoreInput = {
   displayId?: Prisma.StringFieldUpdateOperationsInput | string
   checkoutId?: Prisma.StringFieldUpdateOperationsInput | string
   buyerId?: Prisma.StringFieldUpdateOperationsInput | string
+  fulfillmentStoreId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -2401,6 +2811,7 @@ export type OrderUncheckedUpdateWithoutStoreInput = {
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  earning?: Prisma.ResellerEarningUncheckedUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutOrderNestedInput
@@ -2418,6 +2829,81 @@ export type OrderUncheckedUpdateManyWithoutStoreInput = {
   displayId?: Prisma.StringFieldUpdateOperationsInput | string
   checkoutId?: Prisma.StringFieldUpdateOperationsInput | string
   buyerId?: Prisma.StringFieldUpdateOperationsInput | string
+  fulfillmentStoreId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type OrderUpdateWithoutFulfillmentStoreInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  displayId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  checkout?: Prisma.CheckoutUpdateOneRequiredWithoutOrdersNestedInput
+  buyer?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
+  store?: Prisma.StoreUpdateOneRequiredWithoutOrdersNestedInput
+  earning?: Prisma.ResellerEarningUpdateOneWithoutOrderNestedInput
+  items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
+  history?: Prisma.OrderStatusHistoryUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.StockReservationUpdateManyWithoutOrderNestedInput
+  changes?: Prisma.OrderChangeUpdateManyWithoutOrderNestedInput
+  conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutOrderNestedInput
+  dispute?: Prisma.DisputeUpdateOneWithoutOrderNestedInput
+  policySnapshots?: Prisma.PolicySnapshotUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutFulfillmentStoreInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  displayId?: Prisma.StringFieldUpdateOperationsInput | string
+  checkoutId?: Prisma.StringFieldUpdateOperationsInput | string
+  buyerId?: Prisma.StringFieldUpdateOperationsInput | string
+  storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  discountMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  earning?: Prisma.ResellerEarningUncheckedUpdateOneWithoutOrderNestedInput
+  items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+  history?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutOrderNestedInput
+  changes?: Prisma.OrderChangeUncheckedUpdateManyWithoutOrderNestedInput
+  conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
+  review?: Prisma.ReviewUncheckedUpdateOneWithoutOrderNestedInput
+  dispute?: Prisma.DisputeUncheckedUpdateOneWithoutOrderNestedInput
+  policySnapshots?: Prisma.PolicySnapshotUncheckedUpdateManyWithoutOrderNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateManyWithoutFulfillmentStoreInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  displayId?: Prisma.StringFieldUpdateOperationsInput | string
+  checkoutId?: Prisma.StringFieldUpdateOperationsInput | string
+  buyerId?: Prisma.StringFieldUpdateOperationsInput | string
+  storeId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -2435,6 +2921,7 @@ export type OrderCreateManyCheckoutInput = {
   displayId: string
   buyerId: string
   storeId: string
+  fulfillmentStoreId?: string | null
   status?: $Enums.OrderStatus
   totalMinor: bigint | number
   subtotalMinor: bigint | number
@@ -2461,6 +2948,8 @@ export type OrderUpdateWithoutCheckoutInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   buyer?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   store?: Prisma.StoreUpdateOneRequiredWithoutOrdersNestedInput
+  fulfillmentStore?: Prisma.StoreUpdateOneWithoutFulfilledOrdersNestedInput
+  earning?: Prisma.ResellerEarningUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutOrderNestedInput
@@ -2478,6 +2967,7 @@ export type OrderUncheckedUpdateWithoutCheckoutInput = {
   displayId?: Prisma.StringFieldUpdateOperationsInput | string
   buyerId?: Prisma.StringFieldUpdateOperationsInput | string
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  fulfillmentStoreId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -2487,6 +2977,7 @@ export type OrderUncheckedUpdateWithoutCheckoutInput = {
   sellerAcceptBy?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  earning?: Prisma.ResellerEarningUncheckedUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   history?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
   reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutOrderNestedInput
@@ -2504,6 +2995,7 @@ export type OrderUncheckedUpdateManyWithoutCheckoutInput = {
   displayId?: Prisma.StringFieldUpdateOperationsInput | string
   buyerId?: Prisma.StringFieldUpdateOperationsInput | string
   storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  fulfillmentStoreId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   subtotalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -2598,6 +3090,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   checkoutId?: boolean
   buyerId?: boolean
   storeId?: boolean
+  fulfillmentStoreId?: boolean
   status?: boolean
   totalMinor?: boolean
   subtotalMinor?: boolean
@@ -2610,6 +3103,8 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   checkout?: boolean | Prisma.CheckoutDefaultArgs<ExtArgs>
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   store?: boolean | Prisma.StoreDefaultArgs<ExtArgs>
+  fulfillmentStore?: boolean | Prisma.Order$fulfillmentStoreArgs<ExtArgs>
+  earning?: boolean | Prisma.Order$earningArgs<ExtArgs>
   items?: boolean | Prisma.Order$itemsArgs<ExtArgs>
   history?: boolean | Prisma.Order$historyArgs<ExtArgs>
   reservations?: boolean | Prisma.Order$reservationsArgs<ExtArgs>
@@ -2629,6 +3124,7 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   checkoutId?: boolean
   buyerId?: boolean
   storeId?: boolean
+  fulfillmentStoreId?: boolean
   status?: boolean
   totalMinor?: boolean
   subtotalMinor?: boolean
@@ -2641,6 +3137,7 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   checkout?: boolean | Prisma.CheckoutDefaultArgs<ExtArgs>
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   store?: boolean | Prisma.StoreDefaultArgs<ExtArgs>
+  fulfillmentStore?: boolean | Prisma.Order$fulfillmentStoreArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
 export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -2650,6 +3147,7 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   checkoutId?: boolean
   buyerId?: boolean
   storeId?: boolean
+  fulfillmentStoreId?: boolean
   status?: boolean
   totalMinor?: boolean
   subtotalMinor?: boolean
@@ -2662,6 +3160,7 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   checkout?: boolean | Prisma.CheckoutDefaultArgs<ExtArgs>
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   store?: boolean | Prisma.StoreDefaultArgs<ExtArgs>
+  fulfillmentStore?: boolean | Prisma.Order$fulfillmentStoreArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
 export type OrderSelectScalar = {
@@ -2671,6 +3170,7 @@ export type OrderSelectScalar = {
   checkoutId?: boolean
   buyerId?: boolean
   storeId?: boolean
+  fulfillmentStoreId?: boolean
   status?: boolean
   totalMinor?: boolean
   subtotalMinor?: boolean
@@ -2682,11 +3182,13 @@ export type OrderSelectScalar = {
   updatedAt?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "displayId" | "checkoutId" | "buyerId" | "storeId" | "status" | "totalMinor" | "subtotalMinor" | "discountMinor" | "currency" | "snapshot" | "sellerAcceptBy" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "displayId" | "checkoutId" | "buyerId" | "storeId" | "fulfillmentStoreId" | "status" | "totalMinor" | "subtotalMinor" | "discountMinor" | "currency" | "snapshot" | "sellerAcceptBy" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   checkout?: boolean | Prisma.CheckoutDefaultArgs<ExtArgs>
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   store?: boolean | Prisma.StoreDefaultArgs<ExtArgs>
+  fulfillmentStore?: boolean | Prisma.Order$fulfillmentStoreArgs<ExtArgs>
+  earning?: boolean | Prisma.Order$earningArgs<ExtArgs>
   items?: boolean | Prisma.Order$itemsArgs<ExtArgs>
   history?: boolean | Prisma.Order$historyArgs<ExtArgs>
   reservations?: boolean | Prisma.Order$reservationsArgs<ExtArgs>
@@ -2702,11 +3204,13 @@ export type OrderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   checkout?: boolean | Prisma.CheckoutDefaultArgs<ExtArgs>
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   store?: boolean | Prisma.StoreDefaultArgs<ExtArgs>
+  fulfillmentStore?: boolean | Prisma.Order$fulfillmentStoreArgs<ExtArgs>
 }
 export type OrderIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   checkout?: boolean | Prisma.CheckoutDefaultArgs<ExtArgs>
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   store?: boolean | Prisma.StoreDefaultArgs<ExtArgs>
+  fulfillmentStore?: boolean | Prisma.Order$fulfillmentStoreArgs<ExtArgs>
 }
 
 export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2715,6 +3219,8 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     checkout: Prisma.$CheckoutPayload<ExtArgs>
     buyer: Prisma.$UserPayload<ExtArgs>
     store: Prisma.$StorePayload<ExtArgs>
+    fulfillmentStore: Prisma.$StorePayload<ExtArgs> | null
+    earning: Prisma.$ResellerEarningPayload<ExtArgs> | null
     items: Prisma.$OrderItemPayload<ExtArgs>[]
     history: Prisma.$OrderStatusHistoryPayload<ExtArgs>[]
     reservations: Prisma.$StockReservationPayload<ExtArgs>[]
@@ -2732,6 +3238,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     checkoutId: string
     buyerId: string
     storeId: string
+    fulfillmentStoreId: string | null
     status: $Enums.OrderStatus
     totalMinor: bigint
     subtotalMinor: bigint
@@ -3138,6 +3645,8 @@ export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Ty
   checkout<T extends Prisma.CheckoutDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CheckoutDefaultArgs<ExtArgs>>): Prisma.Prisma__CheckoutClient<runtime.Types.Result.GetResult<Prisma.$CheckoutPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   buyer<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   store<T extends Prisma.StoreDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StoreDefaultArgs<ExtArgs>>): Prisma.Prisma__StoreClient<runtime.Types.Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  fulfillmentStore<T extends Prisma.Order$fulfillmentStoreArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$fulfillmentStoreArgs<ExtArgs>>): Prisma.Prisma__StoreClient<runtime.Types.Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  earning<T extends Prisma.Order$earningArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$earningArgs<ExtArgs>>): Prisma.Prisma__ResellerEarningClient<runtime.Types.Result.GetResult<Prisma.$ResellerEarningPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   items<T extends Prisma.Order$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   history<T extends Prisma.Order$historyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$historyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderStatusHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reservations<T extends Prisma.Order$reservationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$reservationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StockReservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3182,6 +3691,7 @@ export interface OrderFieldRefs {
   readonly checkoutId: Prisma.FieldRef<"Order", 'String'>
   readonly buyerId: Prisma.FieldRef<"Order", 'String'>
   readonly storeId: Prisma.FieldRef<"Order", 'String'>
+  readonly fulfillmentStoreId: Prisma.FieldRef<"Order", 'String'>
   readonly status: Prisma.FieldRef<"Order", 'OrderStatus'>
   readonly totalMinor: Prisma.FieldRef<"Order", 'BigInt'>
   readonly subtotalMinor: Prisma.FieldRef<"Order", 'BigInt'>
@@ -3589,6 +4099,44 @@ export type OrderDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Limit how many Orders to delete.
    */
   limit?: number
+}
+
+/**
+ * Order.fulfillmentStore
+ */
+export type Order$fulfillmentStoreArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Store
+   */
+  select?: Prisma.StoreSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Store
+   */
+  omit?: Prisma.StoreOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StoreInclude<ExtArgs> | null
+  where?: Prisma.StoreWhereInput
+}
+
+/**
+ * Order.earning
+ */
+export type Order$earningArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ResellerEarning
+   */
+  select?: Prisma.ResellerEarningSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ResellerEarning
+   */
+  omit?: Prisma.ResellerEarningOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ResellerEarningInclude<ExtArgs> | null
+  where?: Prisma.ResellerEarningWhereInput
 }
 
 /**

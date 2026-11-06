@@ -34,6 +34,7 @@ export type StoreMinAggregateOutputType = {
   descriptionUz: string | null
   descriptionRu: string | null
   orderPrefix: string | null
+  kind: $Enums.StoreKind | null
   status: $Enums.StoreStatus | null
   vacationMode: boolean | null
   logoStorageKey: string | null
@@ -53,6 +54,7 @@ export type StoreMaxAggregateOutputType = {
   descriptionUz: string | null
   descriptionRu: string | null
   orderPrefix: string | null
+  kind: $Enums.StoreKind | null
   status: $Enums.StoreStatus | null
   vacationMode: boolean | null
   logoStorageKey: string | null
@@ -72,6 +74,7 @@ export type StoreCountAggregateOutputType = {
   descriptionUz: number
   descriptionRu: number
   orderPrefix: number
+  kind: number
   status: number
   vacationMode: number
   logoStorageKey: number
@@ -93,6 +96,7 @@ export type StoreMinAggregateInputType = {
   descriptionUz?: true
   descriptionRu?: true
   orderPrefix?: true
+  kind?: true
   status?: true
   vacationMode?: true
   logoStorageKey?: true
@@ -112,6 +116,7 @@ export type StoreMaxAggregateInputType = {
   descriptionUz?: true
   descriptionRu?: true
   orderPrefix?: true
+  kind?: true
   status?: true
   vacationMode?: true
   logoStorageKey?: true
@@ -131,6 +136,7 @@ export type StoreCountAggregateInputType = {
   descriptionUz?: true
   descriptionRu?: true
   orderPrefix?: true
+  kind?: true
   status?: true
   vacationMode?: true
   logoStorageKey?: true
@@ -223,6 +229,7 @@ export type StoreGroupByOutputType = {
   descriptionUz: string | null
   descriptionRu: string | null
   orderPrefix: string
+  kind: $Enums.StoreKind
   status: $Enums.StoreStatus
   vacationMode: boolean
   logoStorageKey: string | null
@@ -263,6 +270,7 @@ export type StoreWhereInput = {
   descriptionUz?: Prisma.StringNullableFilter<"Store"> | string | null
   descriptionRu?: Prisma.StringNullableFilter<"Store"> | string | null
   orderPrefix?: Prisma.StringFilter<"Store"> | string
+  kind?: Prisma.EnumStoreKindFilter<"Store"> | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFilter<"Store"> | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFilter<"Store"> | boolean
   logoStorageKey?: Prisma.StringNullableFilter<"Store"> | string | null
@@ -275,6 +283,9 @@ export type StoreWhereInput = {
   policies?: Prisma.StorePolicyListRelationFilter
   listings?: Prisma.ListingListRelationFilter
   orders?: Prisma.OrderListRelationFilter
+  fulfilledOrders?: Prisma.OrderListRelationFilter
+  resellerEarnings?: Prisma.ResellerEarningListRelationFilter
+  resellerPayouts?: Prisma.ResellerPayoutListRelationFilter
   followers?: Prisma.StoreFollowerListRelationFilter
   questions?: Prisma.StoreQuestionListRelationFilter
   importedTestimonials?: Prisma.ImportedTestimonialListRelationFilter
@@ -284,6 +295,10 @@ export type StoreWhereInput = {
   trustEvents?: Prisma.TrustEventListRelationFilter
   settings?: Prisma.XOR<Prisma.StoreSettingNullableScalarRelationFilter, Prisma.StoreSettingWhereInput> | null
   collections?: Prisma.CollectionListRelationFilter
+  externalOrders?: Prisma.ExternalOrderListRelationFilter
+  customers?: Prisma.StoreCustomerListRelationFilter
+  stockMovements?: Prisma.StockMovementListRelationFilter
+  sellerExpenses?: Prisma.SellerExpenseListRelationFilter
 }
 
 export type StoreOrderByWithRelationInput = {
@@ -296,6 +311,7 @@ export type StoreOrderByWithRelationInput = {
   descriptionUz?: Prisma.SortOrderInput | Prisma.SortOrder
   descriptionRu?: Prisma.SortOrderInput | Prisma.SortOrder
   orderPrefix?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
   status?: Prisma.SortOrder
   vacationMode?: Prisma.SortOrder
   logoStorageKey?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -308,6 +324,9 @@ export type StoreOrderByWithRelationInput = {
   policies?: Prisma.StorePolicyOrderByRelationAggregateInput
   listings?: Prisma.ListingOrderByRelationAggregateInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
+  fulfilledOrders?: Prisma.OrderOrderByRelationAggregateInput
+  resellerEarnings?: Prisma.ResellerEarningOrderByRelationAggregateInput
+  resellerPayouts?: Prisma.ResellerPayoutOrderByRelationAggregateInput
   followers?: Prisma.StoreFollowerOrderByRelationAggregateInput
   questions?: Prisma.StoreQuestionOrderByRelationAggregateInput
   importedTestimonials?: Prisma.ImportedTestimonialOrderByRelationAggregateInput
@@ -317,6 +336,10 @@ export type StoreOrderByWithRelationInput = {
   trustEvents?: Prisma.TrustEventOrderByRelationAggregateInput
   settings?: Prisma.StoreSettingOrderByWithRelationInput
   collections?: Prisma.CollectionOrderByRelationAggregateInput
+  externalOrders?: Prisma.ExternalOrderOrderByRelationAggregateInput
+  customers?: Prisma.StoreCustomerOrderByRelationAggregateInput
+  stockMovements?: Prisma.StockMovementOrderByRelationAggregateInput
+  sellerExpenses?: Prisma.SellerExpenseOrderByRelationAggregateInput
 }
 
 export type StoreWhereUniqueInput = Prisma.AtLeast<{
@@ -332,6 +355,7 @@ export type StoreWhereUniqueInput = Prisma.AtLeast<{
   nameRu?: Prisma.StringNullableFilter<"Store"> | string | null
   descriptionUz?: Prisma.StringNullableFilter<"Store"> | string | null
   descriptionRu?: Prisma.StringNullableFilter<"Store"> | string | null
+  kind?: Prisma.EnumStoreKindFilter<"Store"> | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFilter<"Store"> | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFilter<"Store"> | boolean
   logoStorageKey?: Prisma.StringNullableFilter<"Store"> | string | null
@@ -344,6 +368,9 @@ export type StoreWhereUniqueInput = Prisma.AtLeast<{
   policies?: Prisma.StorePolicyListRelationFilter
   listings?: Prisma.ListingListRelationFilter
   orders?: Prisma.OrderListRelationFilter
+  fulfilledOrders?: Prisma.OrderListRelationFilter
+  resellerEarnings?: Prisma.ResellerEarningListRelationFilter
+  resellerPayouts?: Prisma.ResellerPayoutListRelationFilter
   followers?: Prisma.StoreFollowerListRelationFilter
   questions?: Prisma.StoreQuestionListRelationFilter
   importedTestimonials?: Prisma.ImportedTestimonialListRelationFilter
@@ -353,6 +380,10 @@ export type StoreWhereUniqueInput = Prisma.AtLeast<{
   trustEvents?: Prisma.TrustEventListRelationFilter
   settings?: Prisma.XOR<Prisma.StoreSettingNullableScalarRelationFilter, Prisma.StoreSettingWhereInput> | null
   collections?: Prisma.CollectionListRelationFilter
+  externalOrders?: Prisma.ExternalOrderListRelationFilter
+  customers?: Prisma.StoreCustomerListRelationFilter
+  stockMovements?: Prisma.StockMovementListRelationFilter
+  sellerExpenses?: Prisma.SellerExpenseListRelationFilter
 }, "id" | "publicId" | "username" | "orderPrefix">
 
 export type StoreOrderByWithAggregationInput = {
@@ -365,6 +396,7 @@ export type StoreOrderByWithAggregationInput = {
   descriptionUz?: Prisma.SortOrderInput | Prisma.SortOrder
   descriptionRu?: Prisma.SortOrderInput | Prisma.SortOrder
   orderPrefix?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
   status?: Prisma.SortOrder
   vacationMode?: Prisma.SortOrder
   logoStorageKey?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -390,6 +422,7 @@ export type StoreScalarWhereWithAggregatesInput = {
   descriptionUz?: Prisma.StringNullableWithAggregatesFilter<"Store"> | string | null
   descriptionRu?: Prisma.StringNullableWithAggregatesFilter<"Store"> | string | null
   orderPrefix?: Prisma.StringWithAggregatesFilter<"Store"> | string
+  kind?: Prisma.EnumStoreKindWithAggregatesFilter<"Store"> | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusWithAggregatesFilter<"Store"> | $Enums.StoreStatus
   vacationMode?: Prisma.BoolWithAggregatesFilter<"Store"> | boolean
   logoStorageKey?: Prisma.StringNullableWithAggregatesFilter<"Store"> | string | null
@@ -408,6 +441,7 @@ export type StoreCreateInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -420,6 +454,9 @@ export type StoreCreateInput = {
   policies?: Prisma.StorePolicyCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialCreateNestedManyWithoutStoreInput
@@ -429,6 +466,10 @@ export type StoreCreateInput = {
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateInput = {
@@ -441,6 +482,7 @@ export type StoreUncheckedCreateInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -452,6 +494,9 @@ export type StoreUncheckedCreateInput = {
   policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingUncheckedCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedCreateNestedManyWithoutStoreInput
@@ -461,6 +506,10 @@ export type StoreUncheckedCreateInput = {
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderUncheckedCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerUncheckedCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUpdateInput = {
@@ -472,6 +521,7 @@ export type StoreUpdateInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -484,6 +534,9 @@ export type StoreUpdateInput = {
   policies?: Prisma.StorePolicyUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUpdateManyWithoutStoreNestedInput
@@ -493,6 +546,10 @@ export type StoreUpdateInput = {
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateInput = {
@@ -505,6 +562,7 @@ export type StoreUncheckedUpdateInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -516,6 +574,9 @@ export type StoreUncheckedUpdateInput = {
   policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUncheckedUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUncheckedUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedUpdateManyWithoutStoreNestedInput
@@ -525,6 +586,10 @@ export type StoreUncheckedUpdateInput = {
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUncheckedUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUncheckedUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateManyInput = {
@@ -537,6 +602,7 @@ export type StoreCreateManyInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -555,6 +621,7 @@ export type StoreUpdateManyMutationInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -574,6 +641,7 @@ export type StoreUncheckedUpdateManyInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -603,6 +671,7 @@ export type StoreCountOrderByAggregateInput = {
   descriptionUz?: Prisma.SortOrder
   descriptionRu?: Prisma.SortOrder
   orderPrefix?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
   status?: Prisma.SortOrder
   vacationMode?: Prisma.SortOrder
   logoStorageKey?: Prisma.SortOrder
@@ -622,6 +691,7 @@ export type StoreMaxOrderByAggregateInput = {
   descriptionUz?: Prisma.SortOrder
   descriptionRu?: Prisma.SortOrder
   orderPrefix?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
   status?: Prisma.SortOrder
   vacationMode?: Prisma.SortOrder
   logoStorageKey?: Prisma.SortOrder
@@ -641,6 +711,7 @@ export type StoreMinOrderByAggregateInput = {
   descriptionUz?: Prisma.SortOrder
   descriptionRu?: Prisma.SortOrder
   orderPrefix?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
   status?: Prisma.SortOrder
   vacationMode?: Prisma.SortOrder
   logoStorageKey?: Prisma.SortOrder
@@ -653,6 +724,11 @@ export type StoreMinOrderByAggregateInput = {
 export type StoreScalarRelationFilter = {
   is?: Prisma.StoreWhereInput
   isNot?: Prisma.StoreWhereInput
+}
+
+export type StoreNullableScalarRelationFilter = {
+  is?: Prisma.StoreWhereInput | null
+  isNot?: Prisma.StoreWhereInput | null
 }
 
 export type StoreCreateNestedManyWithoutSellerProfileInput = {
@@ -695,6 +771,10 @@ export type StoreUncheckedUpdateManyWithoutSellerProfileNestedInput = {
   update?: Prisma.StoreUpdateWithWhereUniqueWithoutSellerProfileInput | Prisma.StoreUpdateWithWhereUniqueWithoutSellerProfileInput[]
   updateMany?: Prisma.StoreUpdateManyWithWhereWithoutSellerProfileInput | Prisma.StoreUpdateManyWithWhereWithoutSellerProfileInput[]
   deleteMany?: Prisma.StoreScalarWhereInput | Prisma.StoreScalarWhereInput[]
+}
+
+export type EnumStoreKindFieldUpdateOperationsInput = {
+  set?: $Enums.StoreKind
 }
 
 export type EnumStoreStatusFieldUpdateOperationsInput = {
@@ -771,6 +851,62 @@ export type StoreUpdateOneRequiredWithoutCollectionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.StoreUpdateToOneWithWhereWithoutCollectionsInput, Prisma.StoreUpdateWithoutCollectionsInput>, Prisma.StoreUncheckedUpdateWithoutCollectionsInput>
 }
 
+export type StoreCreateNestedOneWithoutCustomersInput = {
+  create?: Prisma.XOR<Prisma.StoreCreateWithoutCustomersInput, Prisma.StoreUncheckedCreateWithoutCustomersInput>
+  connectOrCreate?: Prisma.StoreCreateOrConnectWithoutCustomersInput
+  connect?: Prisma.StoreWhereUniqueInput
+}
+
+export type StoreUpdateOneRequiredWithoutCustomersNestedInput = {
+  create?: Prisma.XOR<Prisma.StoreCreateWithoutCustomersInput, Prisma.StoreUncheckedCreateWithoutCustomersInput>
+  connectOrCreate?: Prisma.StoreCreateOrConnectWithoutCustomersInput
+  upsert?: Prisma.StoreUpsertWithoutCustomersInput
+  connect?: Prisma.StoreWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StoreUpdateToOneWithWhereWithoutCustomersInput, Prisma.StoreUpdateWithoutCustomersInput>, Prisma.StoreUncheckedUpdateWithoutCustomersInput>
+}
+
+export type StoreCreateNestedOneWithoutExternalOrdersInput = {
+  create?: Prisma.XOR<Prisma.StoreCreateWithoutExternalOrdersInput, Prisma.StoreUncheckedCreateWithoutExternalOrdersInput>
+  connectOrCreate?: Prisma.StoreCreateOrConnectWithoutExternalOrdersInput
+  connect?: Prisma.StoreWhereUniqueInput
+}
+
+export type StoreUpdateOneRequiredWithoutExternalOrdersNestedInput = {
+  create?: Prisma.XOR<Prisma.StoreCreateWithoutExternalOrdersInput, Prisma.StoreUncheckedCreateWithoutExternalOrdersInput>
+  connectOrCreate?: Prisma.StoreCreateOrConnectWithoutExternalOrdersInput
+  upsert?: Prisma.StoreUpsertWithoutExternalOrdersInput
+  connect?: Prisma.StoreWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StoreUpdateToOneWithWhereWithoutExternalOrdersInput, Prisma.StoreUpdateWithoutExternalOrdersInput>, Prisma.StoreUncheckedUpdateWithoutExternalOrdersInput>
+}
+
+export type StoreCreateNestedOneWithoutStockMovementsInput = {
+  create?: Prisma.XOR<Prisma.StoreCreateWithoutStockMovementsInput, Prisma.StoreUncheckedCreateWithoutStockMovementsInput>
+  connectOrCreate?: Prisma.StoreCreateOrConnectWithoutStockMovementsInput
+  connect?: Prisma.StoreWhereUniqueInput
+}
+
+export type StoreUpdateOneRequiredWithoutStockMovementsNestedInput = {
+  create?: Prisma.XOR<Prisma.StoreCreateWithoutStockMovementsInput, Prisma.StoreUncheckedCreateWithoutStockMovementsInput>
+  connectOrCreate?: Prisma.StoreCreateOrConnectWithoutStockMovementsInput
+  upsert?: Prisma.StoreUpsertWithoutStockMovementsInput
+  connect?: Prisma.StoreWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StoreUpdateToOneWithWhereWithoutStockMovementsInput, Prisma.StoreUpdateWithoutStockMovementsInput>, Prisma.StoreUncheckedUpdateWithoutStockMovementsInput>
+}
+
+export type StoreCreateNestedOneWithoutSellerExpensesInput = {
+  create?: Prisma.XOR<Prisma.StoreCreateWithoutSellerExpensesInput, Prisma.StoreUncheckedCreateWithoutSellerExpensesInput>
+  connectOrCreate?: Prisma.StoreCreateOrConnectWithoutSellerExpensesInput
+  connect?: Prisma.StoreWhereUniqueInput
+}
+
+export type StoreUpdateOneRequiredWithoutSellerExpensesNestedInput = {
+  create?: Prisma.XOR<Prisma.StoreCreateWithoutSellerExpensesInput, Prisma.StoreUncheckedCreateWithoutSellerExpensesInput>
+  connectOrCreate?: Prisma.StoreCreateOrConnectWithoutSellerExpensesInput
+  upsert?: Prisma.StoreUpsertWithoutSellerExpensesInput
+  connect?: Prisma.StoreWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StoreUpdateToOneWithWhereWithoutSellerExpensesInput, Prisma.StoreUpdateWithoutSellerExpensesInput>, Prisma.StoreUncheckedUpdateWithoutSellerExpensesInput>
+}
+
 export type StoreCreateNestedOneWithoutFollowersInput = {
   create?: Prisma.XOR<Prisma.StoreCreateWithoutFollowersInput, Prisma.StoreUncheckedCreateWithoutFollowersInput>
   connectOrCreate?: Prisma.StoreCreateOrConnectWithoutFollowersInput
@@ -791,12 +927,28 @@ export type StoreCreateNestedOneWithoutOrdersInput = {
   connect?: Prisma.StoreWhereUniqueInput
 }
 
+export type StoreCreateNestedOneWithoutFulfilledOrdersInput = {
+  create?: Prisma.XOR<Prisma.StoreCreateWithoutFulfilledOrdersInput, Prisma.StoreUncheckedCreateWithoutFulfilledOrdersInput>
+  connectOrCreate?: Prisma.StoreCreateOrConnectWithoutFulfilledOrdersInput
+  connect?: Prisma.StoreWhereUniqueInput
+}
+
 export type StoreUpdateOneRequiredWithoutOrdersNestedInput = {
   create?: Prisma.XOR<Prisma.StoreCreateWithoutOrdersInput, Prisma.StoreUncheckedCreateWithoutOrdersInput>
   connectOrCreate?: Prisma.StoreCreateOrConnectWithoutOrdersInput
   upsert?: Prisma.StoreUpsertWithoutOrdersInput
   connect?: Prisma.StoreWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.StoreUpdateToOneWithWhereWithoutOrdersInput, Prisma.StoreUpdateWithoutOrdersInput>, Prisma.StoreUncheckedUpdateWithoutOrdersInput>
+}
+
+export type StoreUpdateOneWithoutFulfilledOrdersNestedInput = {
+  create?: Prisma.XOR<Prisma.StoreCreateWithoutFulfilledOrdersInput, Prisma.StoreUncheckedCreateWithoutFulfilledOrdersInput>
+  connectOrCreate?: Prisma.StoreCreateOrConnectWithoutFulfilledOrdersInput
+  upsert?: Prisma.StoreUpsertWithoutFulfilledOrdersInput
+  disconnect?: Prisma.StoreWhereInput | boolean
+  delete?: Prisma.StoreWhereInput | boolean
+  connect?: Prisma.StoreWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StoreUpdateToOneWithWhereWithoutFulfilledOrdersInput, Prisma.StoreUpdateWithoutFulfilledOrdersInput>, Prisma.StoreUncheckedUpdateWithoutFulfilledOrdersInput>
 }
 
 export type StoreCreateNestedOneWithoutQuestionsInput = {
@@ -883,6 +1035,34 @@ export type StoreUpdateOneRequiredWithoutPromotionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.StoreUpdateToOneWithWhereWithoutPromotionsInput, Prisma.StoreUpdateWithoutPromotionsInput>, Prisma.StoreUncheckedUpdateWithoutPromotionsInput>
 }
 
+export type StoreCreateNestedOneWithoutResellerEarningsInput = {
+  create?: Prisma.XOR<Prisma.StoreCreateWithoutResellerEarningsInput, Prisma.StoreUncheckedCreateWithoutResellerEarningsInput>
+  connectOrCreate?: Prisma.StoreCreateOrConnectWithoutResellerEarningsInput
+  connect?: Prisma.StoreWhereUniqueInput
+}
+
+export type StoreUpdateOneRequiredWithoutResellerEarningsNestedInput = {
+  create?: Prisma.XOR<Prisma.StoreCreateWithoutResellerEarningsInput, Prisma.StoreUncheckedCreateWithoutResellerEarningsInput>
+  connectOrCreate?: Prisma.StoreCreateOrConnectWithoutResellerEarningsInput
+  upsert?: Prisma.StoreUpsertWithoutResellerEarningsInput
+  connect?: Prisma.StoreWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StoreUpdateToOneWithWhereWithoutResellerEarningsInput, Prisma.StoreUpdateWithoutResellerEarningsInput>, Prisma.StoreUncheckedUpdateWithoutResellerEarningsInput>
+}
+
+export type StoreCreateNestedOneWithoutResellerPayoutsInput = {
+  create?: Prisma.XOR<Prisma.StoreCreateWithoutResellerPayoutsInput, Prisma.StoreUncheckedCreateWithoutResellerPayoutsInput>
+  connectOrCreate?: Prisma.StoreCreateOrConnectWithoutResellerPayoutsInput
+  connect?: Prisma.StoreWhereUniqueInput
+}
+
+export type StoreUpdateOneRequiredWithoutResellerPayoutsNestedInput = {
+  create?: Prisma.XOR<Prisma.StoreCreateWithoutResellerPayoutsInput, Prisma.StoreUncheckedCreateWithoutResellerPayoutsInput>
+  connectOrCreate?: Prisma.StoreCreateOrConnectWithoutResellerPayoutsInput
+  upsert?: Prisma.StoreUpsertWithoutResellerPayoutsInput
+  connect?: Prisma.StoreWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StoreUpdateToOneWithWhereWithoutResellerPayoutsInput, Prisma.StoreUpdateWithoutResellerPayoutsInput>, Prisma.StoreUncheckedUpdateWithoutResellerPayoutsInput>
+}
+
 export type StoreCreateWithoutSellerProfileInput = {
   id?: string
   publicId?: string
@@ -892,6 +1072,7 @@ export type StoreCreateWithoutSellerProfileInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -903,6 +1084,9 @@ export type StoreCreateWithoutSellerProfileInput = {
   policies?: Prisma.StorePolicyCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialCreateNestedManyWithoutStoreInput
@@ -912,6 +1096,10 @@ export type StoreCreateWithoutSellerProfileInput = {
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutSellerProfileInput = {
@@ -923,6 +1111,7 @@ export type StoreUncheckedCreateWithoutSellerProfileInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -934,6 +1123,9 @@ export type StoreUncheckedCreateWithoutSellerProfileInput = {
   policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingUncheckedCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedCreateNestedManyWithoutStoreInput
@@ -943,6 +1135,10 @@ export type StoreUncheckedCreateWithoutSellerProfileInput = {
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderUncheckedCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerUncheckedCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutSellerProfileInput = {
@@ -984,6 +1180,7 @@ export type StoreScalarWhereInput = {
   descriptionUz?: Prisma.StringNullableFilter<"Store"> | string | null
   descriptionRu?: Prisma.StringNullableFilter<"Store"> | string | null
   orderPrefix?: Prisma.StringFilter<"Store"> | string
+  kind?: Prisma.EnumStoreKindFilter<"Store"> | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFilter<"Store"> | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFilter<"Store"> | boolean
   logoStorageKey?: Prisma.StringNullableFilter<"Store"> | string | null
@@ -1002,6 +1199,7 @@ export type StoreCreateWithoutSettingsInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -1014,6 +1212,9 @@ export type StoreCreateWithoutSettingsInput = {
   policies?: Prisma.StorePolicyCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialCreateNestedManyWithoutStoreInput
@@ -1022,6 +1223,10 @@ export type StoreCreateWithoutSettingsInput = {
   metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutSettingsInput = {
@@ -1034,6 +1239,7 @@ export type StoreUncheckedCreateWithoutSettingsInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -1045,6 +1251,9 @@ export type StoreUncheckedCreateWithoutSettingsInput = {
   policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingUncheckedCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedCreateNestedManyWithoutStoreInput
@@ -1053,6 +1262,10 @@ export type StoreUncheckedCreateWithoutSettingsInput = {
   metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderUncheckedCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerUncheckedCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutSettingsInput = {
@@ -1080,6 +1293,7 @@ export type StoreUpdateWithoutSettingsInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1092,6 +1306,9 @@ export type StoreUpdateWithoutSettingsInput = {
   policies?: Prisma.StorePolicyUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUpdateManyWithoutStoreNestedInput
@@ -1100,6 +1317,10 @@ export type StoreUpdateWithoutSettingsInput = {
   metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutSettingsInput = {
@@ -1112,6 +1333,7 @@ export type StoreUncheckedUpdateWithoutSettingsInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1123,6 +1345,9 @@ export type StoreUncheckedUpdateWithoutSettingsInput = {
   policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUncheckedUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUncheckedUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedUpdateManyWithoutStoreNestedInput
@@ -1131,6 +1356,10 @@ export type StoreUncheckedUpdateWithoutSettingsInput = {
   metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUncheckedUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUncheckedUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateWithoutMembersInput = {
@@ -1142,6 +1371,7 @@ export type StoreCreateWithoutMembersInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -1153,6 +1383,9 @@ export type StoreCreateWithoutMembersInput = {
   policies?: Prisma.StorePolicyCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialCreateNestedManyWithoutStoreInput
@@ -1162,6 +1395,10 @@ export type StoreCreateWithoutMembersInput = {
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutMembersInput = {
@@ -1174,6 +1411,7 @@ export type StoreUncheckedCreateWithoutMembersInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -1184,6 +1422,9 @@ export type StoreUncheckedCreateWithoutMembersInput = {
   policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingUncheckedCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedCreateNestedManyWithoutStoreInput
@@ -1193,6 +1434,10 @@ export type StoreUncheckedCreateWithoutMembersInput = {
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderUncheckedCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerUncheckedCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutMembersInput = {
@@ -1220,6 +1465,7 @@ export type StoreUpdateWithoutMembersInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1231,6 +1477,9 @@ export type StoreUpdateWithoutMembersInput = {
   policies?: Prisma.StorePolicyUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUpdateManyWithoutStoreNestedInput
@@ -1240,6 +1489,10 @@ export type StoreUpdateWithoutMembersInput = {
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutMembersInput = {
@@ -1252,6 +1505,7 @@ export type StoreUncheckedUpdateWithoutMembersInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1262,6 +1516,9 @@ export type StoreUncheckedUpdateWithoutMembersInput = {
   policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUncheckedUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUncheckedUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedUpdateManyWithoutStoreNestedInput
@@ -1271,6 +1528,10 @@ export type StoreUncheckedUpdateWithoutMembersInput = {
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUncheckedUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUncheckedUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateWithoutPoliciesInput = {
@@ -1282,6 +1543,7 @@ export type StoreCreateWithoutPoliciesInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -1293,6 +1555,9 @@ export type StoreCreateWithoutPoliciesInput = {
   members?: Prisma.StoreMemberCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialCreateNestedManyWithoutStoreInput
@@ -1302,6 +1567,10 @@ export type StoreCreateWithoutPoliciesInput = {
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutPoliciesInput = {
@@ -1314,6 +1583,7 @@ export type StoreUncheckedCreateWithoutPoliciesInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -1324,6 +1594,9 @@ export type StoreUncheckedCreateWithoutPoliciesInput = {
   members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingUncheckedCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedCreateNestedManyWithoutStoreInput
@@ -1333,6 +1606,10 @@ export type StoreUncheckedCreateWithoutPoliciesInput = {
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderUncheckedCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerUncheckedCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutPoliciesInput = {
@@ -1360,6 +1637,7 @@ export type StoreUpdateWithoutPoliciesInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1371,6 +1649,9 @@ export type StoreUpdateWithoutPoliciesInput = {
   members?: Prisma.StoreMemberUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUpdateManyWithoutStoreNestedInput
@@ -1380,6 +1661,10 @@ export type StoreUpdateWithoutPoliciesInput = {
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutPoliciesInput = {
@@ -1392,6 +1677,7 @@ export type StoreUncheckedUpdateWithoutPoliciesInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1402,6 +1688,9 @@ export type StoreUncheckedUpdateWithoutPoliciesInput = {
   members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUncheckedUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUncheckedUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedUpdateManyWithoutStoreNestedInput
@@ -1411,6 +1700,10 @@ export type StoreUncheckedUpdateWithoutPoliciesInput = {
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUncheckedUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUncheckedUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateWithoutListingsInput = {
@@ -1422,6 +1715,7 @@ export type StoreCreateWithoutListingsInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -1433,6 +1727,9 @@ export type StoreCreateWithoutListingsInput = {
   members?: Prisma.StoreMemberCreateNestedManyWithoutStoreInput
   policies?: Prisma.StorePolicyCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialCreateNestedManyWithoutStoreInput
@@ -1442,6 +1739,10 @@ export type StoreCreateWithoutListingsInput = {
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutListingsInput = {
@@ -1454,6 +1755,7 @@ export type StoreUncheckedCreateWithoutListingsInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -1464,6 +1766,9 @@ export type StoreUncheckedCreateWithoutListingsInput = {
   members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
   policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedCreateNestedManyWithoutStoreInput
@@ -1473,6 +1778,10 @@ export type StoreUncheckedCreateWithoutListingsInput = {
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderUncheckedCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerUncheckedCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutListingsInput = {
@@ -1500,6 +1809,7 @@ export type StoreUpdateWithoutListingsInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1511,6 +1821,9 @@ export type StoreUpdateWithoutListingsInput = {
   members?: Prisma.StoreMemberUpdateManyWithoutStoreNestedInput
   policies?: Prisma.StorePolicyUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUpdateManyWithoutStoreNestedInput
@@ -1520,6 +1833,10 @@ export type StoreUpdateWithoutListingsInput = {
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutListingsInput = {
@@ -1532,6 +1849,7 @@ export type StoreUncheckedUpdateWithoutListingsInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1542,6 +1860,9 @@ export type StoreUncheckedUpdateWithoutListingsInput = {
   members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
   policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUncheckedUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedUpdateManyWithoutStoreNestedInput
@@ -1551,6 +1872,10 @@ export type StoreUncheckedUpdateWithoutListingsInput = {
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUncheckedUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUncheckedUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateWithoutCollectionsInput = {
@@ -1562,6 +1887,7 @@ export type StoreCreateWithoutCollectionsInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -1574,6 +1900,9 @@ export type StoreCreateWithoutCollectionsInput = {
   policies?: Prisma.StorePolicyCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialCreateNestedManyWithoutStoreInput
@@ -1582,6 +1911,10 @@ export type StoreCreateWithoutCollectionsInput = {
   metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutCollectionsInput = {
@@ -1594,6 +1927,7 @@ export type StoreUncheckedCreateWithoutCollectionsInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -1605,6 +1939,9 @@ export type StoreUncheckedCreateWithoutCollectionsInput = {
   policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingUncheckedCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedCreateNestedManyWithoutStoreInput
@@ -1613,6 +1950,10 @@ export type StoreUncheckedCreateWithoutCollectionsInput = {
   metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderUncheckedCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerUncheckedCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutCollectionsInput = {
@@ -1640,6 +1981,7 @@ export type StoreUpdateWithoutCollectionsInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1652,6 +1994,9 @@ export type StoreUpdateWithoutCollectionsInput = {
   policies?: Prisma.StorePolicyUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUpdateManyWithoutStoreNestedInput
@@ -1660,6 +2005,10 @@ export type StoreUpdateWithoutCollectionsInput = {
   metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutCollectionsInput = {
@@ -1672,6 +2021,7 @@ export type StoreUncheckedUpdateWithoutCollectionsInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1683,6 +2033,9 @@ export type StoreUncheckedUpdateWithoutCollectionsInput = {
   policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUncheckedUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUncheckedUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedUpdateManyWithoutStoreNestedInput
@@ -1691,9 +2044,13 @@ export type StoreUncheckedUpdateWithoutCollectionsInput = {
   metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUncheckedUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUncheckedUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedUpdateManyWithoutStoreNestedInput
 }
 
-export type StoreCreateWithoutFollowersInput = {
+export type StoreCreateWithoutCustomersInput = {
   id?: string
   publicId?: string
   username: string
@@ -1702,6 +2059,7 @@ export type StoreCreateWithoutFollowersInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -1714,6 +2072,10 @@ export type StoreCreateWithoutFollowersInput = {
   policies?: Prisma.StorePolicyCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutCreateNestedManyWithoutStoreInput
+  followers?: Prisma.StoreFollowerCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialCreateNestedManyWithoutStoreInput
   coupons?: Prisma.CouponCreateNestedManyWithoutStoreInput
@@ -1722,6 +2084,697 @@ export type StoreCreateWithoutFollowersInput = {
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseCreateNestedManyWithoutStoreInput
+}
+
+export type StoreUncheckedCreateWithoutCustomersInput = {
+  id?: string
+  publicId?: string
+  sellerProfileId: string
+  username: string
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz?: string | null
+  descriptionRu?: string | null
+  orderPrefix: string
+  kind?: $Enums.StoreKind
+  status?: $Enums.StoreStatus
+  vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
+  policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
+  listings?: Prisma.ListingUncheckedCreateNestedManyWithoutStoreInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedCreateNestedManyWithoutStoreInput
+  followers?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutStoreInput
+  questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutStoreInput
+  importedTestimonials?: Prisma.ImportedTestimonialUncheckedCreateNestedManyWithoutStoreInput
+  coupons?: Prisma.CouponUncheckedCreateNestedManyWithoutStoreInput
+  promotions?: Prisma.PromotionUncheckedCreateNestedManyWithoutStoreInput
+  metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
+  trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
+  settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderUncheckedCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedCreateNestedManyWithoutStoreInput
+}
+
+export type StoreCreateOrConnectWithoutCustomersInput = {
+  where: Prisma.StoreWhereUniqueInput
+  create: Prisma.XOR<Prisma.StoreCreateWithoutCustomersInput, Prisma.StoreUncheckedCreateWithoutCustomersInput>
+}
+
+export type StoreUpsertWithoutCustomersInput = {
+  update: Prisma.XOR<Prisma.StoreUpdateWithoutCustomersInput, Prisma.StoreUncheckedUpdateWithoutCustomersInput>
+  create: Prisma.XOR<Prisma.StoreCreateWithoutCustomersInput, Prisma.StoreUncheckedCreateWithoutCustomersInput>
+  where?: Prisma.StoreWhereInput
+}
+
+export type StoreUpdateToOneWithWhereWithoutCustomersInput = {
+  where?: Prisma.StoreWhereInput
+  data: Prisma.XOR<Prisma.StoreUpdateWithoutCustomersInput, Prisma.StoreUncheckedUpdateWithoutCustomersInput>
+}
+
+export type StoreUpdateWithoutCustomersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
+  status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
+  vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUpdateOneRequiredWithoutStoresNestedInput
+  members?: Prisma.StoreMemberUpdateManyWithoutStoreNestedInput
+  policies?: Prisma.StorePolicyUpdateManyWithoutStoreNestedInput
+  listings?: Prisma.ListingUpdateManyWithoutStoreNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUpdateManyWithoutStoreNestedInput
+  followers?: Prisma.StoreFollowerUpdateManyWithoutStoreNestedInput
+  questions?: Prisma.StoreQuestionUpdateManyWithoutStoreNestedInput
+  importedTestimonials?: Prisma.ImportedTestimonialUpdateManyWithoutStoreNestedInput
+  coupons?: Prisma.CouponUpdateManyWithoutStoreNestedInput
+  promotions?: Prisma.PromotionUpdateManyWithoutStoreNestedInput
+  metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
+  trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
+  settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUpdateManyWithoutStoreNestedInput
+}
+
+export type StoreUncheckedUpdateWithoutCustomersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  sellerProfileId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
+  status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
+  vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
+  policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
+  listings?: Prisma.ListingUncheckedUpdateManyWithoutStoreNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUncheckedUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedUpdateManyWithoutStoreNestedInput
+  followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
+  questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
+  importedTestimonials?: Prisma.ImportedTestimonialUncheckedUpdateManyWithoutStoreNestedInput
+  coupons?: Prisma.CouponUncheckedUpdateManyWithoutStoreNestedInput
+  promotions?: Prisma.PromotionUncheckedUpdateManyWithoutStoreNestedInput
+  metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
+  trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
+  settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUncheckedUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedUpdateManyWithoutStoreNestedInput
+}
+
+export type StoreCreateWithoutExternalOrdersInput = {
+  id?: string
+  publicId?: string
+  username: string
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz?: string | null
+  descriptionRu?: string | null
+  orderPrefix: string
+  kind?: $Enums.StoreKind
+  status?: $Enums.StoreStatus
+  vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile: Prisma.SellerProfileCreateNestedOneWithoutStoresInput
+  members?: Prisma.StoreMemberCreateNestedManyWithoutStoreInput
+  policies?: Prisma.StorePolicyCreateNestedManyWithoutStoreInput
+  listings?: Prisma.ListingCreateNestedManyWithoutStoreInput
+  orders?: Prisma.OrderCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutCreateNestedManyWithoutStoreInput
+  followers?: Prisma.StoreFollowerCreateNestedManyWithoutStoreInput
+  questions?: Prisma.StoreQuestionCreateNestedManyWithoutStoreInput
+  importedTestimonials?: Prisma.ImportedTestimonialCreateNestedManyWithoutStoreInput
+  coupons?: Prisma.CouponCreateNestedManyWithoutStoreInput
+  promotions?: Prisma.PromotionCreateNestedManyWithoutStoreInput
+  metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
+  trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
+  settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseCreateNestedManyWithoutStoreInput
+}
+
+export type StoreUncheckedCreateWithoutExternalOrdersInput = {
+  id?: string
+  publicId?: string
+  sellerProfileId: string
+  username: string
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz?: string | null
+  descriptionRu?: string | null
+  orderPrefix: string
+  kind?: $Enums.StoreKind
+  status?: $Enums.StoreStatus
+  vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
+  policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
+  listings?: Prisma.ListingUncheckedCreateNestedManyWithoutStoreInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedCreateNestedManyWithoutStoreInput
+  followers?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutStoreInput
+  questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutStoreInput
+  importedTestimonials?: Prisma.ImportedTestimonialUncheckedCreateNestedManyWithoutStoreInput
+  coupons?: Prisma.CouponUncheckedCreateNestedManyWithoutStoreInput
+  promotions?: Prisma.PromotionUncheckedCreateNestedManyWithoutStoreInput
+  metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
+  trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
+  settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerUncheckedCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedCreateNestedManyWithoutStoreInput
+}
+
+export type StoreCreateOrConnectWithoutExternalOrdersInput = {
+  where: Prisma.StoreWhereUniqueInput
+  create: Prisma.XOR<Prisma.StoreCreateWithoutExternalOrdersInput, Prisma.StoreUncheckedCreateWithoutExternalOrdersInput>
+}
+
+export type StoreUpsertWithoutExternalOrdersInput = {
+  update: Prisma.XOR<Prisma.StoreUpdateWithoutExternalOrdersInput, Prisma.StoreUncheckedUpdateWithoutExternalOrdersInput>
+  create: Prisma.XOR<Prisma.StoreCreateWithoutExternalOrdersInput, Prisma.StoreUncheckedCreateWithoutExternalOrdersInput>
+  where?: Prisma.StoreWhereInput
+}
+
+export type StoreUpdateToOneWithWhereWithoutExternalOrdersInput = {
+  where?: Prisma.StoreWhereInput
+  data: Prisma.XOR<Prisma.StoreUpdateWithoutExternalOrdersInput, Prisma.StoreUncheckedUpdateWithoutExternalOrdersInput>
+}
+
+export type StoreUpdateWithoutExternalOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
+  status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
+  vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUpdateOneRequiredWithoutStoresNestedInput
+  members?: Prisma.StoreMemberUpdateManyWithoutStoreNestedInput
+  policies?: Prisma.StorePolicyUpdateManyWithoutStoreNestedInput
+  listings?: Prisma.ListingUpdateManyWithoutStoreNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUpdateManyWithoutStoreNestedInput
+  followers?: Prisma.StoreFollowerUpdateManyWithoutStoreNestedInput
+  questions?: Prisma.StoreQuestionUpdateManyWithoutStoreNestedInput
+  importedTestimonials?: Prisma.ImportedTestimonialUpdateManyWithoutStoreNestedInput
+  coupons?: Prisma.CouponUpdateManyWithoutStoreNestedInput
+  promotions?: Prisma.PromotionUpdateManyWithoutStoreNestedInput
+  metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
+  trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
+  settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUpdateManyWithoutStoreNestedInput
+}
+
+export type StoreUncheckedUpdateWithoutExternalOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  sellerProfileId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
+  status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
+  vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
+  policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
+  listings?: Prisma.ListingUncheckedUpdateManyWithoutStoreNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUncheckedUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedUpdateManyWithoutStoreNestedInput
+  followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
+  questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
+  importedTestimonials?: Prisma.ImportedTestimonialUncheckedUpdateManyWithoutStoreNestedInput
+  coupons?: Prisma.CouponUncheckedUpdateManyWithoutStoreNestedInput
+  promotions?: Prisma.PromotionUncheckedUpdateManyWithoutStoreNestedInput
+  metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
+  trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
+  settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUncheckedUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedUpdateManyWithoutStoreNestedInput
+}
+
+export type StoreCreateWithoutStockMovementsInput = {
+  id?: string
+  publicId?: string
+  username: string
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz?: string | null
+  descriptionRu?: string | null
+  orderPrefix: string
+  kind?: $Enums.StoreKind
+  status?: $Enums.StoreStatus
+  vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile: Prisma.SellerProfileCreateNestedOneWithoutStoresInput
+  members?: Prisma.StoreMemberCreateNestedManyWithoutStoreInput
+  policies?: Prisma.StorePolicyCreateNestedManyWithoutStoreInput
+  listings?: Prisma.ListingCreateNestedManyWithoutStoreInput
+  orders?: Prisma.OrderCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutCreateNestedManyWithoutStoreInput
+  followers?: Prisma.StoreFollowerCreateNestedManyWithoutStoreInput
+  questions?: Prisma.StoreQuestionCreateNestedManyWithoutStoreInput
+  importedTestimonials?: Prisma.ImportedTestimonialCreateNestedManyWithoutStoreInput
+  coupons?: Prisma.CouponCreateNestedManyWithoutStoreInput
+  promotions?: Prisma.PromotionCreateNestedManyWithoutStoreInput
+  metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
+  trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
+  settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseCreateNestedManyWithoutStoreInput
+}
+
+export type StoreUncheckedCreateWithoutStockMovementsInput = {
+  id?: string
+  publicId?: string
+  sellerProfileId: string
+  username: string
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz?: string | null
+  descriptionRu?: string | null
+  orderPrefix: string
+  kind?: $Enums.StoreKind
+  status?: $Enums.StoreStatus
+  vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
+  policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
+  listings?: Prisma.ListingUncheckedCreateNestedManyWithoutStoreInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedCreateNestedManyWithoutStoreInput
+  followers?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutStoreInput
+  questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutStoreInput
+  importedTestimonials?: Prisma.ImportedTestimonialUncheckedCreateNestedManyWithoutStoreInput
+  coupons?: Prisma.CouponUncheckedCreateNestedManyWithoutStoreInput
+  promotions?: Prisma.PromotionUncheckedCreateNestedManyWithoutStoreInput
+  metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
+  trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
+  settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderUncheckedCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerUncheckedCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedCreateNestedManyWithoutStoreInput
+}
+
+export type StoreCreateOrConnectWithoutStockMovementsInput = {
+  where: Prisma.StoreWhereUniqueInput
+  create: Prisma.XOR<Prisma.StoreCreateWithoutStockMovementsInput, Prisma.StoreUncheckedCreateWithoutStockMovementsInput>
+}
+
+export type StoreUpsertWithoutStockMovementsInput = {
+  update: Prisma.XOR<Prisma.StoreUpdateWithoutStockMovementsInput, Prisma.StoreUncheckedUpdateWithoutStockMovementsInput>
+  create: Prisma.XOR<Prisma.StoreCreateWithoutStockMovementsInput, Prisma.StoreUncheckedCreateWithoutStockMovementsInput>
+  where?: Prisma.StoreWhereInput
+}
+
+export type StoreUpdateToOneWithWhereWithoutStockMovementsInput = {
+  where?: Prisma.StoreWhereInput
+  data: Prisma.XOR<Prisma.StoreUpdateWithoutStockMovementsInput, Prisma.StoreUncheckedUpdateWithoutStockMovementsInput>
+}
+
+export type StoreUpdateWithoutStockMovementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
+  status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
+  vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUpdateOneRequiredWithoutStoresNestedInput
+  members?: Prisma.StoreMemberUpdateManyWithoutStoreNestedInput
+  policies?: Prisma.StorePolicyUpdateManyWithoutStoreNestedInput
+  listings?: Prisma.ListingUpdateManyWithoutStoreNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUpdateManyWithoutStoreNestedInput
+  followers?: Prisma.StoreFollowerUpdateManyWithoutStoreNestedInput
+  questions?: Prisma.StoreQuestionUpdateManyWithoutStoreNestedInput
+  importedTestimonials?: Prisma.ImportedTestimonialUpdateManyWithoutStoreNestedInput
+  coupons?: Prisma.CouponUpdateManyWithoutStoreNestedInput
+  promotions?: Prisma.PromotionUpdateManyWithoutStoreNestedInput
+  metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
+  trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
+  settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUpdateManyWithoutStoreNestedInput
+}
+
+export type StoreUncheckedUpdateWithoutStockMovementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  sellerProfileId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
+  status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
+  vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
+  policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
+  listings?: Prisma.ListingUncheckedUpdateManyWithoutStoreNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUncheckedUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedUpdateManyWithoutStoreNestedInput
+  followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
+  questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
+  importedTestimonials?: Prisma.ImportedTestimonialUncheckedUpdateManyWithoutStoreNestedInput
+  coupons?: Prisma.CouponUncheckedUpdateManyWithoutStoreNestedInput
+  promotions?: Prisma.PromotionUncheckedUpdateManyWithoutStoreNestedInput
+  metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
+  trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
+  settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUncheckedUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUncheckedUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedUpdateManyWithoutStoreNestedInput
+}
+
+export type StoreCreateWithoutSellerExpensesInput = {
+  id?: string
+  publicId?: string
+  username: string
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz?: string | null
+  descriptionRu?: string | null
+  orderPrefix: string
+  kind?: $Enums.StoreKind
+  status?: $Enums.StoreStatus
+  vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile: Prisma.SellerProfileCreateNestedOneWithoutStoresInput
+  members?: Prisma.StoreMemberCreateNestedManyWithoutStoreInput
+  policies?: Prisma.StorePolicyCreateNestedManyWithoutStoreInput
+  listings?: Prisma.ListingCreateNestedManyWithoutStoreInput
+  orders?: Prisma.OrderCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutCreateNestedManyWithoutStoreInput
+  followers?: Prisma.StoreFollowerCreateNestedManyWithoutStoreInput
+  questions?: Prisma.StoreQuestionCreateNestedManyWithoutStoreInput
+  importedTestimonials?: Prisma.ImportedTestimonialCreateNestedManyWithoutStoreInput
+  coupons?: Prisma.CouponCreateNestedManyWithoutStoreInput
+  promotions?: Prisma.PromotionCreateNestedManyWithoutStoreInput
+  metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
+  trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
+  settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutStoreInput
+}
+
+export type StoreUncheckedCreateWithoutSellerExpensesInput = {
+  id?: string
+  publicId?: string
+  sellerProfileId: string
+  username: string
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz?: string | null
+  descriptionRu?: string | null
+  orderPrefix: string
+  kind?: $Enums.StoreKind
+  status?: $Enums.StoreStatus
+  vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
+  policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
+  listings?: Prisma.ListingUncheckedCreateNestedManyWithoutStoreInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedCreateNestedManyWithoutStoreInput
+  followers?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutStoreInput
+  questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutStoreInput
+  importedTestimonials?: Prisma.ImportedTestimonialUncheckedCreateNestedManyWithoutStoreInput
+  coupons?: Prisma.CouponUncheckedCreateNestedManyWithoutStoreInput
+  promotions?: Prisma.PromotionUncheckedCreateNestedManyWithoutStoreInput
+  metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
+  trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
+  settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderUncheckedCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerUncheckedCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutStoreInput
+}
+
+export type StoreCreateOrConnectWithoutSellerExpensesInput = {
+  where: Prisma.StoreWhereUniqueInput
+  create: Prisma.XOR<Prisma.StoreCreateWithoutSellerExpensesInput, Prisma.StoreUncheckedCreateWithoutSellerExpensesInput>
+}
+
+export type StoreUpsertWithoutSellerExpensesInput = {
+  update: Prisma.XOR<Prisma.StoreUpdateWithoutSellerExpensesInput, Prisma.StoreUncheckedUpdateWithoutSellerExpensesInput>
+  create: Prisma.XOR<Prisma.StoreCreateWithoutSellerExpensesInput, Prisma.StoreUncheckedCreateWithoutSellerExpensesInput>
+  where?: Prisma.StoreWhereInput
+}
+
+export type StoreUpdateToOneWithWhereWithoutSellerExpensesInput = {
+  where?: Prisma.StoreWhereInput
+  data: Prisma.XOR<Prisma.StoreUpdateWithoutSellerExpensesInput, Prisma.StoreUncheckedUpdateWithoutSellerExpensesInput>
+}
+
+export type StoreUpdateWithoutSellerExpensesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
+  status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
+  vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUpdateOneRequiredWithoutStoresNestedInput
+  members?: Prisma.StoreMemberUpdateManyWithoutStoreNestedInput
+  policies?: Prisma.StorePolicyUpdateManyWithoutStoreNestedInput
+  listings?: Prisma.ListingUpdateManyWithoutStoreNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUpdateManyWithoutStoreNestedInput
+  followers?: Prisma.StoreFollowerUpdateManyWithoutStoreNestedInput
+  questions?: Prisma.StoreQuestionUpdateManyWithoutStoreNestedInput
+  importedTestimonials?: Prisma.ImportedTestimonialUpdateManyWithoutStoreNestedInput
+  coupons?: Prisma.CouponUpdateManyWithoutStoreNestedInput
+  promotions?: Prisma.PromotionUpdateManyWithoutStoreNestedInput
+  metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
+  trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
+  settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutStoreNestedInput
+}
+
+export type StoreUncheckedUpdateWithoutSellerExpensesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  sellerProfileId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
+  status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
+  vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
+  policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
+  listings?: Prisma.ListingUncheckedUpdateManyWithoutStoreNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUncheckedUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedUpdateManyWithoutStoreNestedInput
+  followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
+  questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
+  importedTestimonials?: Prisma.ImportedTestimonialUncheckedUpdateManyWithoutStoreNestedInput
+  coupons?: Prisma.CouponUncheckedUpdateManyWithoutStoreNestedInput
+  promotions?: Prisma.PromotionUncheckedUpdateManyWithoutStoreNestedInput
+  metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
+  trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
+  settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUncheckedUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUncheckedUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutStoreNestedInput
+}
+
+export type StoreCreateWithoutFollowersInput = {
+  id?: string
+  publicId?: string
+  username: string
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz?: string | null
+  descriptionRu?: string | null
+  orderPrefix: string
+  kind?: $Enums.StoreKind
+  status?: $Enums.StoreStatus
+  vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile: Prisma.SellerProfileCreateNestedOneWithoutStoresInput
+  members?: Prisma.StoreMemberCreateNestedManyWithoutStoreInput
+  policies?: Prisma.StorePolicyCreateNestedManyWithoutStoreInput
+  listings?: Prisma.ListingCreateNestedManyWithoutStoreInput
+  orders?: Prisma.OrderCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutCreateNestedManyWithoutStoreInput
+  questions?: Prisma.StoreQuestionCreateNestedManyWithoutStoreInput
+  importedTestimonials?: Prisma.ImportedTestimonialCreateNestedManyWithoutStoreInput
+  coupons?: Prisma.CouponCreateNestedManyWithoutStoreInput
+  promotions?: Prisma.PromotionCreateNestedManyWithoutStoreInput
+  metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
+  trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
+  settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutFollowersInput = {
@@ -1734,6 +2787,7 @@ export type StoreUncheckedCreateWithoutFollowersInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -1745,6 +2799,9 @@ export type StoreUncheckedCreateWithoutFollowersInput = {
   policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingUncheckedCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedCreateNestedManyWithoutStoreInput
   coupons?: Prisma.CouponUncheckedCreateNestedManyWithoutStoreInput
@@ -1753,6 +2810,10 @@ export type StoreUncheckedCreateWithoutFollowersInput = {
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderUncheckedCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerUncheckedCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutFollowersInput = {
@@ -1780,6 +2841,7 @@ export type StoreUpdateWithoutFollowersInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1792,6 +2854,9 @@ export type StoreUpdateWithoutFollowersInput = {
   policies?: Prisma.StorePolicyUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUpdateManyWithoutStoreNestedInput
   coupons?: Prisma.CouponUpdateManyWithoutStoreNestedInput
@@ -1800,6 +2865,10 @@ export type StoreUpdateWithoutFollowersInput = {
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutFollowersInput = {
@@ -1812,6 +2881,7 @@ export type StoreUncheckedUpdateWithoutFollowersInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1823,6 +2893,9 @@ export type StoreUncheckedUpdateWithoutFollowersInput = {
   policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUncheckedUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUncheckedUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedUpdateManyWithoutStoreNestedInput
   coupons?: Prisma.CouponUncheckedUpdateManyWithoutStoreNestedInput
@@ -1831,6 +2904,10 @@ export type StoreUncheckedUpdateWithoutFollowersInput = {
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUncheckedUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUncheckedUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateWithoutOrdersInput = {
@@ -1842,6 +2919,7 @@ export type StoreCreateWithoutOrdersInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -1853,6 +2931,9 @@ export type StoreCreateWithoutOrdersInput = {
   members?: Prisma.StoreMemberCreateNestedManyWithoutStoreInput
   policies?: Prisma.StorePolicyCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialCreateNestedManyWithoutStoreInput
@@ -1862,6 +2943,10 @@ export type StoreCreateWithoutOrdersInput = {
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutOrdersInput = {
@@ -1874,6 +2959,7 @@ export type StoreUncheckedCreateWithoutOrdersInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -1884,6 +2970,9 @@ export type StoreUncheckedCreateWithoutOrdersInput = {
   members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
   policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingUncheckedCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedCreateNestedManyWithoutStoreInput
@@ -1893,11 +2982,98 @@ export type StoreUncheckedCreateWithoutOrdersInput = {
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderUncheckedCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerUncheckedCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutOrdersInput = {
   where: Prisma.StoreWhereUniqueInput
   create: Prisma.XOR<Prisma.StoreCreateWithoutOrdersInput, Prisma.StoreUncheckedCreateWithoutOrdersInput>
+}
+
+export type StoreCreateWithoutFulfilledOrdersInput = {
+  id?: string
+  publicId?: string
+  username: string
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz?: string | null
+  descriptionRu?: string | null
+  orderPrefix: string
+  kind?: $Enums.StoreKind
+  status?: $Enums.StoreStatus
+  vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile: Prisma.SellerProfileCreateNestedOneWithoutStoresInput
+  members?: Prisma.StoreMemberCreateNestedManyWithoutStoreInput
+  policies?: Prisma.StorePolicyCreateNestedManyWithoutStoreInput
+  listings?: Prisma.ListingCreateNestedManyWithoutStoreInput
+  orders?: Prisma.OrderCreateNestedManyWithoutStoreInput
+  resellerEarnings?: Prisma.ResellerEarningCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutCreateNestedManyWithoutStoreInput
+  followers?: Prisma.StoreFollowerCreateNestedManyWithoutStoreInput
+  questions?: Prisma.StoreQuestionCreateNestedManyWithoutStoreInput
+  importedTestimonials?: Prisma.ImportedTestimonialCreateNestedManyWithoutStoreInput
+  coupons?: Prisma.CouponCreateNestedManyWithoutStoreInput
+  promotions?: Prisma.PromotionCreateNestedManyWithoutStoreInput
+  metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
+  trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
+  settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseCreateNestedManyWithoutStoreInput
+}
+
+export type StoreUncheckedCreateWithoutFulfilledOrdersInput = {
+  id?: string
+  publicId?: string
+  sellerProfileId: string
+  username: string
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz?: string | null
+  descriptionRu?: string | null
+  orderPrefix: string
+  kind?: $Enums.StoreKind
+  status?: $Enums.StoreStatus
+  vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
+  policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
+  listings?: Prisma.ListingUncheckedCreateNestedManyWithoutStoreInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutStoreInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedCreateNestedManyWithoutStoreInput
+  followers?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutStoreInput
+  questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutStoreInput
+  importedTestimonials?: Prisma.ImportedTestimonialUncheckedCreateNestedManyWithoutStoreInput
+  coupons?: Prisma.CouponUncheckedCreateNestedManyWithoutStoreInput
+  promotions?: Prisma.PromotionUncheckedCreateNestedManyWithoutStoreInput
+  metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
+  trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
+  settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderUncheckedCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerUncheckedCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedCreateNestedManyWithoutStoreInput
+}
+
+export type StoreCreateOrConnectWithoutFulfilledOrdersInput = {
+  where: Prisma.StoreWhereUniqueInput
+  create: Prisma.XOR<Prisma.StoreCreateWithoutFulfilledOrdersInput, Prisma.StoreUncheckedCreateWithoutFulfilledOrdersInput>
 }
 
 export type StoreUpsertWithoutOrdersInput = {
@@ -1920,6 +3096,7 @@ export type StoreUpdateWithoutOrdersInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1931,6 +3108,9 @@ export type StoreUpdateWithoutOrdersInput = {
   members?: Prisma.StoreMemberUpdateManyWithoutStoreNestedInput
   policies?: Prisma.StorePolicyUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUpdateManyWithoutStoreNestedInput
@@ -1940,6 +3120,10 @@ export type StoreUpdateWithoutOrdersInput = {
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutOrdersInput = {
@@ -1952,6 +3136,7 @@ export type StoreUncheckedUpdateWithoutOrdersInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1962,6 +3147,9 @@ export type StoreUncheckedUpdateWithoutOrdersInput = {
   members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
   policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUncheckedUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUncheckedUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedUpdateManyWithoutStoreNestedInput
@@ -1971,6 +3159,99 @@ export type StoreUncheckedUpdateWithoutOrdersInput = {
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUncheckedUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUncheckedUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedUpdateManyWithoutStoreNestedInput
+}
+
+export type StoreUpsertWithoutFulfilledOrdersInput = {
+  update: Prisma.XOR<Prisma.StoreUpdateWithoutFulfilledOrdersInput, Prisma.StoreUncheckedUpdateWithoutFulfilledOrdersInput>
+  create: Prisma.XOR<Prisma.StoreCreateWithoutFulfilledOrdersInput, Prisma.StoreUncheckedCreateWithoutFulfilledOrdersInput>
+  where?: Prisma.StoreWhereInput
+}
+
+export type StoreUpdateToOneWithWhereWithoutFulfilledOrdersInput = {
+  where?: Prisma.StoreWhereInput
+  data: Prisma.XOR<Prisma.StoreUpdateWithoutFulfilledOrdersInput, Prisma.StoreUncheckedUpdateWithoutFulfilledOrdersInput>
+}
+
+export type StoreUpdateWithoutFulfilledOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
+  status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
+  vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUpdateOneRequiredWithoutStoresNestedInput
+  members?: Prisma.StoreMemberUpdateManyWithoutStoreNestedInput
+  policies?: Prisma.StorePolicyUpdateManyWithoutStoreNestedInput
+  listings?: Prisma.ListingUpdateManyWithoutStoreNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUpdateManyWithoutStoreNestedInput
+  followers?: Prisma.StoreFollowerUpdateManyWithoutStoreNestedInput
+  questions?: Prisma.StoreQuestionUpdateManyWithoutStoreNestedInput
+  importedTestimonials?: Prisma.ImportedTestimonialUpdateManyWithoutStoreNestedInput
+  coupons?: Prisma.CouponUpdateManyWithoutStoreNestedInput
+  promotions?: Prisma.PromotionUpdateManyWithoutStoreNestedInput
+  metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
+  trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
+  settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUpdateManyWithoutStoreNestedInput
+}
+
+export type StoreUncheckedUpdateWithoutFulfilledOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  sellerProfileId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
+  status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
+  vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
+  policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
+  listings?: Prisma.ListingUncheckedUpdateManyWithoutStoreNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedUpdateManyWithoutStoreNestedInput
+  followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
+  questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
+  importedTestimonials?: Prisma.ImportedTestimonialUncheckedUpdateManyWithoutStoreNestedInput
+  coupons?: Prisma.CouponUncheckedUpdateManyWithoutStoreNestedInput
+  promotions?: Prisma.PromotionUncheckedUpdateManyWithoutStoreNestedInput
+  metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
+  trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
+  settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUncheckedUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUncheckedUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateWithoutQuestionsInput = {
@@ -1982,6 +3263,7 @@ export type StoreCreateWithoutQuestionsInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -1994,6 +3276,9 @@ export type StoreCreateWithoutQuestionsInput = {
   policies?: Prisma.StorePolicyCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialCreateNestedManyWithoutStoreInput
   coupons?: Prisma.CouponCreateNestedManyWithoutStoreInput
@@ -2002,6 +3287,10 @@ export type StoreCreateWithoutQuestionsInput = {
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutQuestionsInput = {
@@ -2014,6 +3303,7 @@ export type StoreUncheckedCreateWithoutQuestionsInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -2025,6 +3315,9 @@ export type StoreUncheckedCreateWithoutQuestionsInput = {
   policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingUncheckedCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedCreateNestedManyWithoutStoreInput
   coupons?: Prisma.CouponUncheckedCreateNestedManyWithoutStoreInput
@@ -2033,6 +3326,10 @@ export type StoreUncheckedCreateWithoutQuestionsInput = {
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderUncheckedCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerUncheckedCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutQuestionsInput = {
@@ -2060,6 +3357,7 @@ export type StoreUpdateWithoutQuestionsInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2072,6 +3370,9 @@ export type StoreUpdateWithoutQuestionsInput = {
   policies?: Prisma.StorePolicyUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUpdateManyWithoutStoreNestedInput
   coupons?: Prisma.CouponUpdateManyWithoutStoreNestedInput
@@ -2080,6 +3381,10 @@ export type StoreUpdateWithoutQuestionsInput = {
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutQuestionsInput = {
@@ -2092,6 +3397,7 @@ export type StoreUncheckedUpdateWithoutQuestionsInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2103,6 +3409,9 @@ export type StoreUncheckedUpdateWithoutQuestionsInput = {
   policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUncheckedUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUncheckedUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedUpdateManyWithoutStoreNestedInput
   coupons?: Prisma.CouponUncheckedUpdateManyWithoutStoreNestedInput
@@ -2111,6 +3420,10 @@ export type StoreUncheckedUpdateWithoutQuestionsInput = {
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUncheckedUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUncheckedUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateWithoutImportedTestimonialsInput = {
@@ -2122,6 +3435,7 @@ export type StoreCreateWithoutImportedTestimonialsInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -2134,6 +3448,9 @@ export type StoreCreateWithoutImportedTestimonialsInput = {
   policies?: Prisma.StorePolicyCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionCreateNestedManyWithoutStoreInput
   coupons?: Prisma.CouponCreateNestedManyWithoutStoreInput
@@ -2142,6 +3459,10 @@ export type StoreCreateWithoutImportedTestimonialsInput = {
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutImportedTestimonialsInput = {
@@ -2154,6 +3475,7 @@ export type StoreUncheckedCreateWithoutImportedTestimonialsInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -2165,6 +3487,9 @@ export type StoreUncheckedCreateWithoutImportedTestimonialsInput = {
   policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingUncheckedCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutStoreInput
   coupons?: Prisma.CouponUncheckedCreateNestedManyWithoutStoreInput
@@ -2173,6 +3498,10 @@ export type StoreUncheckedCreateWithoutImportedTestimonialsInput = {
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderUncheckedCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerUncheckedCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutImportedTestimonialsInput = {
@@ -2200,6 +3529,7 @@ export type StoreUpdateWithoutImportedTestimonialsInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2212,6 +3542,9 @@ export type StoreUpdateWithoutImportedTestimonialsInput = {
   policies?: Prisma.StorePolicyUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUpdateManyWithoutStoreNestedInput
   coupons?: Prisma.CouponUpdateManyWithoutStoreNestedInput
@@ -2220,6 +3553,10 @@ export type StoreUpdateWithoutImportedTestimonialsInput = {
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutImportedTestimonialsInput = {
@@ -2232,6 +3569,7 @@ export type StoreUncheckedUpdateWithoutImportedTestimonialsInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2243,6 +3581,9 @@ export type StoreUncheckedUpdateWithoutImportedTestimonialsInput = {
   policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUncheckedUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUncheckedUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
   coupons?: Prisma.CouponUncheckedUpdateManyWithoutStoreNestedInput
@@ -2251,6 +3592,10 @@ export type StoreUncheckedUpdateWithoutImportedTestimonialsInput = {
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUncheckedUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUncheckedUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateWithoutMetricsInput = {
@@ -2262,6 +3607,7 @@ export type StoreCreateWithoutMetricsInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -2274,6 +3620,9 @@ export type StoreCreateWithoutMetricsInput = {
   policies?: Prisma.StorePolicyCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialCreateNestedManyWithoutStoreInput
@@ -2282,6 +3631,10 @@ export type StoreCreateWithoutMetricsInput = {
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutMetricsInput = {
@@ -2294,6 +3647,7 @@ export type StoreUncheckedCreateWithoutMetricsInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -2305,6 +3659,9 @@ export type StoreUncheckedCreateWithoutMetricsInput = {
   policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingUncheckedCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedCreateNestedManyWithoutStoreInput
@@ -2313,6 +3670,10 @@ export type StoreUncheckedCreateWithoutMetricsInput = {
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderUncheckedCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerUncheckedCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutMetricsInput = {
@@ -2340,6 +3701,7 @@ export type StoreUpdateWithoutMetricsInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2352,6 +3714,9 @@ export type StoreUpdateWithoutMetricsInput = {
   policies?: Prisma.StorePolicyUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUpdateManyWithoutStoreNestedInput
@@ -2360,6 +3725,10 @@ export type StoreUpdateWithoutMetricsInput = {
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutMetricsInput = {
@@ -2372,6 +3741,7 @@ export type StoreUncheckedUpdateWithoutMetricsInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2383,6 +3753,9 @@ export type StoreUncheckedUpdateWithoutMetricsInput = {
   policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUncheckedUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUncheckedUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedUpdateManyWithoutStoreNestedInput
@@ -2391,6 +3764,10 @@ export type StoreUncheckedUpdateWithoutMetricsInput = {
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUncheckedUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUncheckedUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateWithoutTrustEventsInput = {
@@ -2402,6 +3779,7 @@ export type StoreCreateWithoutTrustEventsInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -2414,6 +3792,9 @@ export type StoreCreateWithoutTrustEventsInput = {
   policies?: Prisma.StorePolicyCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialCreateNestedManyWithoutStoreInput
@@ -2422,6 +3803,10 @@ export type StoreCreateWithoutTrustEventsInput = {
   metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutTrustEventsInput = {
@@ -2434,6 +3819,7 @@ export type StoreUncheckedCreateWithoutTrustEventsInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -2445,6 +3831,9 @@ export type StoreUncheckedCreateWithoutTrustEventsInput = {
   policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingUncheckedCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedCreateNestedManyWithoutStoreInput
@@ -2453,6 +3842,10 @@ export type StoreUncheckedCreateWithoutTrustEventsInput = {
   metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderUncheckedCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerUncheckedCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutTrustEventsInput = {
@@ -2480,6 +3873,7 @@ export type StoreUpdateWithoutTrustEventsInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2492,6 +3886,9 @@ export type StoreUpdateWithoutTrustEventsInput = {
   policies?: Prisma.StorePolicyUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUpdateManyWithoutStoreNestedInput
@@ -2500,6 +3897,10 @@ export type StoreUpdateWithoutTrustEventsInput = {
   metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutTrustEventsInput = {
@@ -2512,6 +3913,7 @@ export type StoreUncheckedUpdateWithoutTrustEventsInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2523,6 +3925,9 @@ export type StoreUncheckedUpdateWithoutTrustEventsInput = {
   policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUncheckedUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUncheckedUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedUpdateManyWithoutStoreNestedInput
@@ -2531,6 +3936,10 @@ export type StoreUncheckedUpdateWithoutTrustEventsInput = {
   metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUncheckedUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUncheckedUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateWithoutCouponsInput = {
@@ -2542,6 +3951,7 @@ export type StoreCreateWithoutCouponsInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -2554,6 +3964,9 @@ export type StoreCreateWithoutCouponsInput = {
   policies?: Prisma.StorePolicyCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialCreateNestedManyWithoutStoreInput
@@ -2562,6 +3975,10 @@ export type StoreCreateWithoutCouponsInput = {
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutCouponsInput = {
@@ -2574,6 +3991,7 @@ export type StoreUncheckedCreateWithoutCouponsInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -2585,6 +4003,9 @@ export type StoreUncheckedCreateWithoutCouponsInput = {
   policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingUncheckedCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedCreateNestedManyWithoutStoreInput
@@ -2593,6 +4014,10 @@ export type StoreUncheckedCreateWithoutCouponsInput = {
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderUncheckedCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerUncheckedCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutCouponsInput = {
@@ -2620,6 +4045,7 @@ export type StoreUpdateWithoutCouponsInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2632,6 +4058,9 @@ export type StoreUpdateWithoutCouponsInput = {
   policies?: Prisma.StorePolicyUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUpdateManyWithoutStoreNestedInput
@@ -2640,6 +4069,10 @@ export type StoreUpdateWithoutCouponsInput = {
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutCouponsInput = {
@@ -2652,6 +4085,7 @@ export type StoreUncheckedUpdateWithoutCouponsInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2663,6 +4097,9 @@ export type StoreUncheckedUpdateWithoutCouponsInput = {
   policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUncheckedUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUncheckedUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedUpdateManyWithoutStoreNestedInput
@@ -2671,6 +4108,10 @@ export type StoreUncheckedUpdateWithoutCouponsInput = {
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUncheckedUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUncheckedUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateWithoutPromotionsInput = {
@@ -2682,6 +4123,7 @@ export type StoreCreateWithoutPromotionsInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -2694,6 +4136,9 @@ export type StoreCreateWithoutPromotionsInput = {
   policies?: Prisma.StorePolicyCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialCreateNestedManyWithoutStoreInput
@@ -2702,6 +4147,10 @@ export type StoreCreateWithoutPromotionsInput = {
   trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseCreateNestedManyWithoutStoreInput
 }
 
 export type StoreUncheckedCreateWithoutPromotionsInput = {
@@ -2714,6 +4163,7 @@ export type StoreUncheckedCreateWithoutPromotionsInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -2725,6 +4175,9 @@ export type StoreUncheckedCreateWithoutPromotionsInput = {
   policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
   listings?: Prisma.ListingUncheckedCreateNestedManyWithoutStoreInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedCreateNestedManyWithoutStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedCreateNestedManyWithoutStoreInput
   followers?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutStoreInput
   questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutStoreInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedCreateNestedManyWithoutStoreInput
@@ -2733,6 +4186,10 @@ export type StoreUncheckedCreateWithoutPromotionsInput = {
   trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
   settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
   collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderUncheckedCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerUncheckedCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedCreateNestedManyWithoutStoreInput
 }
 
 export type StoreCreateOrConnectWithoutPromotionsInput = {
@@ -2760,6 +4217,7 @@ export type StoreUpdateWithoutPromotionsInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2772,6 +4230,9 @@ export type StoreUpdateWithoutPromotionsInput = {
   policies?: Prisma.StorePolicyUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUpdateManyWithoutStoreNestedInput
@@ -2780,6 +4241,10 @@ export type StoreUpdateWithoutPromotionsInput = {
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutPromotionsInput = {
@@ -2792,6 +4257,7 @@ export type StoreUncheckedUpdateWithoutPromotionsInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2803,6 +4269,9 @@ export type StoreUncheckedUpdateWithoutPromotionsInput = {
   policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUncheckedUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUncheckedUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedUpdateManyWithoutStoreNestedInput
@@ -2811,6 +4280,354 @@ export type StoreUncheckedUpdateWithoutPromotionsInput = {
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUncheckedUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUncheckedUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedUpdateManyWithoutStoreNestedInput
+}
+
+export type StoreCreateWithoutResellerEarningsInput = {
+  id?: string
+  publicId?: string
+  username: string
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz?: string | null
+  descriptionRu?: string | null
+  orderPrefix: string
+  kind?: $Enums.StoreKind
+  status?: $Enums.StoreStatus
+  vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile: Prisma.SellerProfileCreateNestedOneWithoutStoresInput
+  members?: Prisma.StoreMemberCreateNestedManyWithoutStoreInput
+  policies?: Prisma.StorePolicyCreateNestedManyWithoutStoreInput
+  listings?: Prisma.ListingCreateNestedManyWithoutStoreInput
+  orders?: Prisma.OrderCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderCreateNestedManyWithoutFulfillmentStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutCreateNestedManyWithoutStoreInput
+  followers?: Prisma.StoreFollowerCreateNestedManyWithoutStoreInput
+  questions?: Prisma.StoreQuestionCreateNestedManyWithoutStoreInput
+  importedTestimonials?: Prisma.ImportedTestimonialCreateNestedManyWithoutStoreInput
+  coupons?: Prisma.CouponCreateNestedManyWithoutStoreInput
+  promotions?: Prisma.PromotionCreateNestedManyWithoutStoreInput
+  metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
+  trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
+  settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseCreateNestedManyWithoutStoreInput
+}
+
+export type StoreUncheckedCreateWithoutResellerEarningsInput = {
+  id?: string
+  publicId?: string
+  sellerProfileId: string
+  username: string
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz?: string | null
+  descriptionRu?: string | null
+  orderPrefix: string
+  kind?: $Enums.StoreKind
+  status?: $Enums.StoreStatus
+  vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
+  policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
+  listings?: Prisma.ListingUncheckedCreateNestedManyWithoutStoreInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutFulfillmentStoreInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedCreateNestedManyWithoutStoreInput
+  followers?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutStoreInput
+  questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutStoreInput
+  importedTestimonials?: Prisma.ImportedTestimonialUncheckedCreateNestedManyWithoutStoreInput
+  coupons?: Prisma.CouponUncheckedCreateNestedManyWithoutStoreInput
+  promotions?: Prisma.PromotionUncheckedCreateNestedManyWithoutStoreInput
+  metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
+  trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
+  settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderUncheckedCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerUncheckedCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedCreateNestedManyWithoutStoreInput
+}
+
+export type StoreCreateOrConnectWithoutResellerEarningsInput = {
+  where: Prisma.StoreWhereUniqueInput
+  create: Prisma.XOR<Prisma.StoreCreateWithoutResellerEarningsInput, Prisma.StoreUncheckedCreateWithoutResellerEarningsInput>
+}
+
+export type StoreUpsertWithoutResellerEarningsInput = {
+  update: Prisma.XOR<Prisma.StoreUpdateWithoutResellerEarningsInput, Prisma.StoreUncheckedUpdateWithoutResellerEarningsInput>
+  create: Prisma.XOR<Prisma.StoreCreateWithoutResellerEarningsInput, Prisma.StoreUncheckedCreateWithoutResellerEarningsInput>
+  where?: Prisma.StoreWhereInput
+}
+
+export type StoreUpdateToOneWithWhereWithoutResellerEarningsInput = {
+  where?: Prisma.StoreWhereInput
+  data: Prisma.XOR<Prisma.StoreUpdateWithoutResellerEarningsInput, Prisma.StoreUncheckedUpdateWithoutResellerEarningsInput>
+}
+
+export type StoreUpdateWithoutResellerEarningsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
+  status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
+  vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUpdateOneRequiredWithoutStoresNestedInput
+  members?: Prisma.StoreMemberUpdateManyWithoutStoreNestedInput
+  policies?: Prisma.StorePolicyUpdateManyWithoutStoreNestedInput
+  listings?: Prisma.ListingUpdateManyWithoutStoreNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUpdateManyWithoutStoreNestedInput
+  followers?: Prisma.StoreFollowerUpdateManyWithoutStoreNestedInput
+  questions?: Prisma.StoreQuestionUpdateManyWithoutStoreNestedInput
+  importedTestimonials?: Prisma.ImportedTestimonialUpdateManyWithoutStoreNestedInput
+  coupons?: Prisma.CouponUpdateManyWithoutStoreNestedInput
+  promotions?: Prisma.PromotionUpdateManyWithoutStoreNestedInput
+  metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
+  trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
+  settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUpdateManyWithoutStoreNestedInput
+}
+
+export type StoreUncheckedUpdateWithoutResellerEarningsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  sellerProfileId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
+  status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
+  vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
+  policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
+  listings?: Prisma.ListingUncheckedUpdateManyWithoutStoreNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUncheckedUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedUpdateManyWithoutStoreNestedInput
+  followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
+  questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
+  importedTestimonials?: Prisma.ImportedTestimonialUncheckedUpdateManyWithoutStoreNestedInput
+  coupons?: Prisma.CouponUncheckedUpdateManyWithoutStoreNestedInput
+  promotions?: Prisma.PromotionUncheckedUpdateManyWithoutStoreNestedInput
+  metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
+  trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
+  settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUncheckedUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUncheckedUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedUpdateManyWithoutStoreNestedInput
+}
+
+export type StoreCreateWithoutResellerPayoutsInput = {
+  id?: string
+  publicId?: string
+  username: string
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz?: string | null
+  descriptionRu?: string | null
+  orderPrefix: string
+  kind?: $Enums.StoreKind
+  status?: $Enums.StoreStatus
+  vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile: Prisma.SellerProfileCreateNestedOneWithoutStoresInput
+  members?: Prisma.StoreMemberCreateNestedManyWithoutStoreInput
+  policies?: Prisma.StorePolicyCreateNestedManyWithoutStoreInput
+  listings?: Prisma.ListingCreateNestedManyWithoutStoreInput
+  orders?: Prisma.OrderCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningCreateNestedManyWithoutStoreInput
+  followers?: Prisma.StoreFollowerCreateNestedManyWithoutStoreInput
+  questions?: Prisma.StoreQuestionCreateNestedManyWithoutStoreInput
+  importedTestimonials?: Prisma.ImportedTestimonialCreateNestedManyWithoutStoreInput
+  coupons?: Prisma.CouponCreateNestedManyWithoutStoreInput
+  promotions?: Prisma.PromotionCreateNestedManyWithoutStoreInput
+  metrics?: Prisma.SellerMetricCreateNestedManyWithoutStoreInput
+  trustEvents?: Prisma.TrustEventCreateNestedManyWithoutStoreInput
+  settings?: Prisma.StoreSettingCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseCreateNestedManyWithoutStoreInput
+}
+
+export type StoreUncheckedCreateWithoutResellerPayoutsInput = {
+  id?: string
+  publicId?: string
+  sellerProfileId: string
+  username: string
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz?: string | null
+  descriptionRu?: string | null
+  orderPrefix: string
+  kind?: $Enums.StoreKind
+  status?: $Enums.StoreStatus
+  vacationMode?: boolean
+  logoStorageKey?: string | null
+  bannerStorageKey?: string | null
+  premiumUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
+  policies?: Prisma.StorePolicyUncheckedCreateNestedManyWithoutStoreInput
+  listings?: Prisma.ListingUncheckedCreateNestedManyWithoutStoreInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutStoreInput
+  fulfilledOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutFulfillmentStoreInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedCreateNestedManyWithoutStoreInput
+  followers?: Prisma.StoreFollowerUncheckedCreateNestedManyWithoutStoreInput
+  questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutStoreInput
+  importedTestimonials?: Prisma.ImportedTestimonialUncheckedCreateNestedManyWithoutStoreInput
+  coupons?: Prisma.CouponUncheckedCreateNestedManyWithoutStoreInput
+  promotions?: Prisma.PromotionUncheckedCreateNestedManyWithoutStoreInput
+  metrics?: Prisma.SellerMetricUncheckedCreateNestedManyWithoutStoreInput
+  trustEvents?: Prisma.TrustEventUncheckedCreateNestedManyWithoutStoreInput
+  settings?: Prisma.StoreSettingUncheckedCreateNestedOneWithoutStoreInput
+  collections?: Prisma.CollectionUncheckedCreateNestedManyWithoutStoreInput
+  externalOrders?: Prisma.ExternalOrderUncheckedCreateNestedManyWithoutStoreInput
+  customers?: Prisma.StoreCustomerUncheckedCreateNestedManyWithoutStoreInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutStoreInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedCreateNestedManyWithoutStoreInput
+}
+
+export type StoreCreateOrConnectWithoutResellerPayoutsInput = {
+  where: Prisma.StoreWhereUniqueInput
+  create: Prisma.XOR<Prisma.StoreCreateWithoutResellerPayoutsInput, Prisma.StoreUncheckedCreateWithoutResellerPayoutsInput>
+}
+
+export type StoreUpsertWithoutResellerPayoutsInput = {
+  update: Prisma.XOR<Prisma.StoreUpdateWithoutResellerPayoutsInput, Prisma.StoreUncheckedUpdateWithoutResellerPayoutsInput>
+  create: Prisma.XOR<Prisma.StoreCreateWithoutResellerPayoutsInput, Prisma.StoreUncheckedCreateWithoutResellerPayoutsInput>
+  where?: Prisma.StoreWhereInput
+}
+
+export type StoreUpdateToOneWithWhereWithoutResellerPayoutsInput = {
+  where?: Prisma.StoreWhereInput
+  data: Prisma.XOR<Prisma.StoreUpdateWithoutResellerPayoutsInput, Prisma.StoreUncheckedUpdateWithoutResellerPayoutsInput>
+}
+
+export type StoreUpdateWithoutResellerPayoutsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
+  status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
+  vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUpdateOneRequiredWithoutStoresNestedInput
+  members?: Prisma.StoreMemberUpdateManyWithoutStoreNestedInput
+  policies?: Prisma.StorePolicyUpdateManyWithoutStoreNestedInput
+  listings?: Prisma.ListingUpdateManyWithoutStoreNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUpdateManyWithoutStoreNestedInput
+  followers?: Prisma.StoreFollowerUpdateManyWithoutStoreNestedInput
+  questions?: Prisma.StoreQuestionUpdateManyWithoutStoreNestedInput
+  importedTestimonials?: Prisma.ImportedTestimonialUpdateManyWithoutStoreNestedInput
+  coupons?: Prisma.CouponUpdateManyWithoutStoreNestedInput
+  promotions?: Prisma.PromotionUpdateManyWithoutStoreNestedInput
+  metrics?: Prisma.SellerMetricUpdateManyWithoutStoreNestedInput
+  trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
+  settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUpdateManyWithoutStoreNestedInput
+}
+
+export type StoreUncheckedUpdateWithoutResellerPayoutsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  sellerProfileId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
+  status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
+  vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premiumUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
+  policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
+  listings?: Prisma.ListingUncheckedUpdateManyWithoutStoreNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUncheckedUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedUpdateManyWithoutStoreNestedInput
+  followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
+  questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
+  importedTestimonials?: Prisma.ImportedTestimonialUncheckedUpdateManyWithoutStoreNestedInput
+  coupons?: Prisma.CouponUncheckedUpdateManyWithoutStoreNestedInput
+  promotions?: Prisma.PromotionUncheckedUpdateManyWithoutStoreNestedInput
+  metrics?: Prisma.SellerMetricUncheckedUpdateManyWithoutStoreNestedInput
+  trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
+  settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
+  collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUncheckedUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUncheckedUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreCreateManySellerProfileInput = {
@@ -2822,6 +4639,7 @@ export type StoreCreateManySellerProfileInput = {
   descriptionUz?: string | null
   descriptionRu?: string | null
   orderPrefix: string
+  kind?: $Enums.StoreKind
   status?: $Enums.StoreStatus
   vacationMode?: boolean
   logoStorageKey?: string | null
@@ -2840,6 +4658,7 @@ export type StoreUpdateWithoutSellerProfileInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2851,6 +4670,9 @@ export type StoreUpdateWithoutSellerProfileInput = {
   policies?: Prisma.StorePolicyUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUpdateManyWithoutStoreNestedInput
@@ -2860,6 +4682,10 @@ export type StoreUpdateWithoutSellerProfileInput = {
   trustEvents?: Prisma.TrustEventUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutSellerProfileInput = {
@@ -2871,6 +4697,7 @@ export type StoreUncheckedUpdateWithoutSellerProfileInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2882,6 +4709,9 @@ export type StoreUncheckedUpdateWithoutSellerProfileInput = {
   policies?: Prisma.StorePolicyUncheckedUpdateManyWithoutStoreNestedInput
   listings?: Prisma.ListingUncheckedUpdateManyWithoutStoreNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutStoreNestedInput
+  fulfilledOrders?: Prisma.OrderUncheckedUpdateManyWithoutFulfillmentStoreNestedInput
+  resellerEarnings?: Prisma.ResellerEarningUncheckedUpdateManyWithoutStoreNestedInput
+  resellerPayouts?: Prisma.ResellerPayoutUncheckedUpdateManyWithoutStoreNestedInput
   followers?: Prisma.StoreFollowerUncheckedUpdateManyWithoutStoreNestedInput
   questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutStoreNestedInput
   importedTestimonials?: Prisma.ImportedTestimonialUncheckedUpdateManyWithoutStoreNestedInput
@@ -2891,6 +4721,10 @@ export type StoreUncheckedUpdateWithoutSellerProfileInput = {
   trustEvents?: Prisma.TrustEventUncheckedUpdateManyWithoutStoreNestedInput
   settings?: Prisma.StoreSettingUncheckedUpdateOneWithoutStoreNestedInput
   collections?: Prisma.CollectionUncheckedUpdateManyWithoutStoreNestedInput
+  externalOrders?: Prisma.ExternalOrderUncheckedUpdateManyWithoutStoreNestedInput
+  customers?: Prisma.StoreCustomerUncheckedUpdateManyWithoutStoreNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutStoreNestedInput
+  sellerExpenses?: Prisma.SellerExpenseUncheckedUpdateManyWithoutStoreNestedInput
 }
 
 export type StoreUncheckedUpdateManyWithoutSellerProfileInput = {
@@ -2902,6 +4736,7 @@ export type StoreUncheckedUpdateManyWithoutSellerProfileInput = {
   descriptionUz?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderPrefix?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStoreKindFieldUpdateOperationsInput | $Enums.StoreKind
   status?: Prisma.EnumStoreStatusFieldUpdateOperationsInput | $Enums.StoreStatus
   vacationMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   logoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2921,6 +4756,9 @@ export type StoreCountOutputType = {
   policies: number
   listings: number
   orders: number
+  fulfilledOrders: number
+  resellerEarnings: number
+  resellerPayouts: number
   followers: number
   questions: number
   importedTestimonials: number
@@ -2929,6 +4767,10 @@ export type StoreCountOutputType = {
   metrics: number
   trustEvents: number
   collections: number
+  externalOrders: number
+  customers: number
+  stockMovements: number
+  sellerExpenses: number
 }
 
 export type StoreCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2936,6 +4778,9 @@ export type StoreCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   policies?: boolean | StoreCountOutputTypeCountPoliciesArgs
   listings?: boolean | StoreCountOutputTypeCountListingsArgs
   orders?: boolean | StoreCountOutputTypeCountOrdersArgs
+  fulfilledOrders?: boolean | StoreCountOutputTypeCountFulfilledOrdersArgs
+  resellerEarnings?: boolean | StoreCountOutputTypeCountResellerEarningsArgs
+  resellerPayouts?: boolean | StoreCountOutputTypeCountResellerPayoutsArgs
   followers?: boolean | StoreCountOutputTypeCountFollowersArgs
   questions?: boolean | StoreCountOutputTypeCountQuestionsArgs
   importedTestimonials?: boolean | StoreCountOutputTypeCountImportedTestimonialsArgs
@@ -2944,6 +4789,10 @@ export type StoreCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   metrics?: boolean | StoreCountOutputTypeCountMetricsArgs
   trustEvents?: boolean | StoreCountOutputTypeCountTrustEventsArgs
   collections?: boolean | StoreCountOutputTypeCountCollectionsArgs
+  externalOrders?: boolean | StoreCountOutputTypeCountExternalOrdersArgs
+  customers?: boolean | StoreCountOutputTypeCountCustomersArgs
+  stockMovements?: boolean | StoreCountOutputTypeCountStockMovementsArgs
+  sellerExpenses?: boolean | StoreCountOutputTypeCountSellerExpensesArgs
 }
 
 /**
@@ -2982,6 +4831,27 @@ export type StoreCountOutputTypeCountListingsArgs<ExtArgs extends runtime.Types.
  */
 export type StoreCountOutputTypeCountOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.OrderWhereInput
+}
+
+/**
+ * StoreCountOutputType without action
+ */
+export type StoreCountOutputTypeCountFulfilledOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderWhereInput
+}
+
+/**
+ * StoreCountOutputType without action
+ */
+export type StoreCountOutputTypeCountResellerEarningsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ResellerEarningWhereInput
+}
+
+/**
+ * StoreCountOutputType without action
+ */
+export type StoreCountOutputTypeCountResellerPayoutsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ResellerPayoutWhereInput
 }
 
 /**
@@ -3040,6 +4910,34 @@ export type StoreCountOutputTypeCountCollectionsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.CollectionWhereInput
 }
 
+/**
+ * StoreCountOutputType without action
+ */
+export type StoreCountOutputTypeCountExternalOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExternalOrderWhereInput
+}
+
+/**
+ * StoreCountOutputType without action
+ */
+export type StoreCountOutputTypeCountCustomersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StoreCustomerWhereInput
+}
+
+/**
+ * StoreCountOutputType without action
+ */
+export type StoreCountOutputTypeCountStockMovementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StockMovementWhereInput
+}
+
+/**
+ * StoreCountOutputType without action
+ */
+export type StoreCountOutputTypeCountSellerExpensesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SellerExpenseWhereInput
+}
+
 
 export type StoreSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3051,6 +4949,7 @@ export type StoreSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   descriptionUz?: boolean
   descriptionRu?: boolean
   orderPrefix?: boolean
+  kind?: boolean
   status?: boolean
   vacationMode?: boolean
   logoStorageKey?: boolean
@@ -3063,6 +4962,9 @@ export type StoreSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   policies?: boolean | Prisma.Store$policiesArgs<ExtArgs>
   listings?: boolean | Prisma.Store$listingsArgs<ExtArgs>
   orders?: boolean | Prisma.Store$ordersArgs<ExtArgs>
+  fulfilledOrders?: boolean | Prisma.Store$fulfilledOrdersArgs<ExtArgs>
+  resellerEarnings?: boolean | Prisma.Store$resellerEarningsArgs<ExtArgs>
+  resellerPayouts?: boolean | Prisma.Store$resellerPayoutsArgs<ExtArgs>
   followers?: boolean | Prisma.Store$followersArgs<ExtArgs>
   questions?: boolean | Prisma.Store$questionsArgs<ExtArgs>
   importedTestimonials?: boolean | Prisma.Store$importedTestimonialsArgs<ExtArgs>
@@ -3072,6 +4974,10 @@ export type StoreSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   trustEvents?: boolean | Prisma.Store$trustEventsArgs<ExtArgs>
   settings?: boolean | Prisma.Store$settingsArgs<ExtArgs>
   collections?: boolean | Prisma.Store$collectionsArgs<ExtArgs>
+  externalOrders?: boolean | Prisma.Store$externalOrdersArgs<ExtArgs>
+  customers?: boolean | Prisma.Store$customersArgs<ExtArgs>
+  stockMovements?: boolean | Prisma.Store$stockMovementsArgs<ExtArgs>
+  sellerExpenses?: boolean | Prisma.Store$sellerExpensesArgs<ExtArgs>
   _count?: boolean | Prisma.StoreCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["store"]>
 
@@ -3085,6 +4991,7 @@ export type StoreSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   descriptionUz?: boolean
   descriptionRu?: boolean
   orderPrefix?: boolean
+  kind?: boolean
   status?: boolean
   vacationMode?: boolean
   logoStorageKey?: boolean
@@ -3105,6 +5012,7 @@ export type StoreSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   descriptionUz?: boolean
   descriptionRu?: boolean
   orderPrefix?: boolean
+  kind?: boolean
   status?: boolean
   vacationMode?: boolean
   logoStorageKey?: boolean
@@ -3125,6 +5033,7 @@ export type StoreSelectScalar = {
   descriptionUz?: boolean
   descriptionRu?: boolean
   orderPrefix?: boolean
+  kind?: boolean
   status?: boolean
   vacationMode?: boolean
   logoStorageKey?: boolean
@@ -3134,13 +5043,16 @@ export type StoreSelectScalar = {
   updatedAt?: boolean
 }
 
-export type StoreOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "sellerProfileId" | "username" | "nameUz" | "nameRu" | "descriptionUz" | "descriptionRu" | "orderPrefix" | "status" | "vacationMode" | "logoStorageKey" | "bannerStorageKey" | "premiumUntil" | "createdAt" | "updatedAt", ExtArgs["result"]["store"]>
+export type StoreOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "sellerProfileId" | "username" | "nameUz" | "nameRu" | "descriptionUz" | "descriptionRu" | "orderPrefix" | "kind" | "status" | "vacationMode" | "logoStorageKey" | "bannerStorageKey" | "premiumUntil" | "createdAt" | "updatedAt", ExtArgs["result"]["store"]>
 export type StoreInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sellerProfile?: boolean | Prisma.SellerProfileDefaultArgs<ExtArgs>
   members?: boolean | Prisma.Store$membersArgs<ExtArgs>
   policies?: boolean | Prisma.Store$policiesArgs<ExtArgs>
   listings?: boolean | Prisma.Store$listingsArgs<ExtArgs>
   orders?: boolean | Prisma.Store$ordersArgs<ExtArgs>
+  fulfilledOrders?: boolean | Prisma.Store$fulfilledOrdersArgs<ExtArgs>
+  resellerEarnings?: boolean | Prisma.Store$resellerEarningsArgs<ExtArgs>
+  resellerPayouts?: boolean | Prisma.Store$resellerPayoutsArgs<ExtArgs>
   followers?: boolean | Prisma.Store$followersArgs<ExtArgs>
   questions?: boolean | Prisma.Store$questionsArgs<ExtArgs>
   importedTestimonials?: boolean | Prisma.Store$importedTestimonialsArgs<ExtArgs>
@@ -3150,6 +5062,10 @@ export type StoreInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   trustEvents?: boolean | Prisma.Store$trustEventsArgs<ExtArgs>
   settings?: boolean | Prisma.Store$settingsArgs<ExtArgs>
   collections?: boolean | Prisma.Store$collectionsArgs<ExtArgs>
+  externalOrders?: boolean | Prisma.Store$externalOrdersArgs<ExtArgs>
+  customers?: boolean | Prisma.Store$customersArgs<ExtArgs>
+  stockMovements?: boolean | Prisma.Store$stockMovementsArgs<ExtArgs>
+  sellerExpenses?: boolean | Prisma.Store$sellerExpensesArgs<ExtArgs>
   _count?: boolean | Prisma.StoreCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StoreIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3167,6 +5083,9 @@ export type $StorePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     policies: Prisma.$StorePolicyPayload<ExtArgs>[]
     listings: Prisma.$ListingPayload<ExtArgs>[]
     orders: Prisma.$OrderPayload<ExtArgs>[]
+    fulfilledOrders: Prisma.$OrderPayload<ExtArgs>[]
+    resellerEarnings: Prisma.$ResellerEarningPayload<ExtArgs>[]
+    resellerPayouts: Prisma.$ResellerPayoutPayload<ExtArgs>[]
     followers: Prisma.$StoreFollowerPayload<ExtArgs>[]
     questions: Prisma.$StoreQuestionPayload<ExtArgs>[]
     importedTestimonials: Prisma.$ImportedTestimonialPayload<ExtArgs>[]
@@ -3176,6 +5095,10 @@ export type $StorePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     trustEvents: Prisma.$TrustEventPayload<ExtArgs>[]
     settings: Prisma.$StoreSettingPayload<ExtArgs> | null
     collections: Prisma.$CollectionPayload<ExtArgs>[]
+    externalOrders: Prisma.$ExternalOrderPayload<ExtArgs>[]
+    customers: Prisma.$StoreCustomerPayload<ExtArgs>[]
+    stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
+    sellerExpenses: Prisma.$SellerExpensePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3187,6 +5110,7 @@ export type $StorePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     descriptionUz: string | null
     descriptionRu: string | null
     orderPrefix: string
+    kind: $Enums.StoreKind
     status: $Enums.StoreStatus
     vacationMode: boolean
     logoStorageKey: string | null
@@ -3593,6 +5517,9 @@ export interface Prisma__StoreClient<T, Null = never, ExtArgs extends runtime.Ty
   policies<T extends Prisma.Store$policiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$policiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StorePolicyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   listings<T extends Prisma.Store$listingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$listingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ListingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orders<T extends Prisma.Store$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  fulfilledOrders<T extends Prisma.Store$fulfilledOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$fulfilledOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  resellerEarnings<T extends Prisma.Store$resellerEarningsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$resellerEarningsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ResellerEarningPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  resellerPayouts<T extends Prisma.Store$resellerPayoutsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$resellerPayoutsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ResellerPayoutPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   followers<T extends Prisma.Store$followersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$followersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StoreFollowerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   questions<T extends Prisma.Store$questionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$questionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StoreQuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   importedTestimonials<T extends Prisma.Store$importedTestimonialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$importedTestimonialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ImportedTestimonialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3602,6 +5529,10 @@ export interface Prisma__StoreClient<T, Null = never, ExtArgs extends runtime.Ty
   trustEvents<T extends Prisma.Store$trustEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$trustEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TrustEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   settings<T extends Prisma.Store$settingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$settingsArgs<ExtArgs>>): Prisma.Prisma__StoreSettingClient<runtime.Types.Result.GetResult<Prisma.$StoreSettingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   collections<T extends Prisma.Store$collectionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$collectionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CollectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  externalOrders<T extends Prisma.Store$externalOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$externalOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExternalOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  customers<T extends Prisma.Store$customersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$customersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StoreCustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  stockMovements<T extends Prisma.Store$stockMovementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sellerExpenses<T extends Prisma.Store$sellerExpensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$sellerExpensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SellerExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3640,6 +5571,7 @@ export interface StoreFieldRefs {
   readonly descriptionUz: Prisma.FieldRef<"Store", 'String'>
   readonly descriptionRu: Prisma.FieldRef<"Store", 'String'>
   readonly orderPrefix: Prisma.FieldRef<"Store", 'String'>
+  readonly kind: Prisma.FieldRef<"Store", 'StoreKind'>
   readonly status: Prisma.FieldRef<"Store", 'StoreStatus'>
   readonly vacationMode: Prisma.FieldRef<"Store", 'Boolean'>
   readonly logoStorageKey: Prisma.FieldRef<"Store", 'String'>
@@ -4144,6 +6076,78 @@ export type Store$ordersArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 }
 
 /**
+ * Store.fulfilledOrders
+ */
+export type Store$fulfilledOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Order
+   */
+  select?: Prisma.OrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Order
+   */
+  omit?: Prisma.OrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderInclude<ExtArgs> | null
+  where?: Prisma.OrderWhereInput
+  orderBy?: Prisma.OrderOrderByWithRelationInput | Prisma.OrderOrderByWithRelationInput[]
+  cursor?: Prisma.OrderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
+}
+
+/**
+ * Store.resellerEarnings
+ */
+export type Store$resellerEarningsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ResellerEarning
+   */
+  select?: Prisma.ResellerEarningSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ResellerEarning
+   */
+  omit?: Prisma.ResellerEarningOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ResellerEarningInclude<ExtArgs> | null
+  where?: Prisma.ResellerEarningWhereInput
+  orderBy?: Prisma.ResellerEarningOrderByWithRelationInput | Prisma.ResellerEarningOrderByWithRelationInput[]
+  cursor?: Prisma.ResellerEarningWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ResellerEarningScalarFieldEnum | Prisma.ResellerEarningScalarFieldEnum[]
+}
+
+/**
+ * Store.resellerPayouts
+ */
+export type Store$resellerPayoutsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ResellerPayout
+   */
+  select?: Prisma.ResellerPayoutSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ResellerPayout
+   */
+  omit?: Prisma.ResellerPayoutOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ResellerPayoutInclude<ExtArgs> | null
+  where?: Prisma.ResellerPayoutWhereInput
+  orderBy?: Prisma.ResellerPayoutOrderByWithRelationInput | Prisma.ResellerPayoutOrderByWithRelationInput[]
+  cursor?: Prisma.ResellerPayoutWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ResellerPayoutScalarFieldEnum | Prisma.ResellerPayoutScalarFieldEnum[]
+}
+
+/**
  * Store.followers
  */
 export type Store$followersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4352,6 +6356,102 @@ export type Store$collectionsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.CollectionScalarFieldEnum | Prisma.CollectionScalarFieldEnum[]
+}
+
+/**
+ * Store.externalOrders
+ */
+export type Store$externalOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExternalOrder
+   */
+  select?: Prisma.ExternalOrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExternalOrder
+   */
+  omit?: Prisma.ExternalOrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExternalOrderInclude<ExtArgs> | null
+  where?: Prisma.ExternalOrderWhereInput
+  orderBy?: Prisma.ExternalOrderOrderByWithRelationInput | Prisma.ExternalOrderOrderByWithRelationInput[]
+  cursor?: Prisma.ExternalOrderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExternalOrderScalarFieldEnum | Prisma.ExternalOrderScalarFieldEnum[]
+}
+
+/**
+ * Store.customers
+ */
+export type Store$customersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StoreCustomer
+   */
+  select?: Prisma.StoreCustomerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StoreCustomer
+   */
+  omit?: Prisma.StoreCustomerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StoreCustomerInclude<ExtArgs> | null
+  where?: Prisma.StoreCustomerWhereInput
+  orderBy?: Prisma.StoreCustomerOrderByWithRelationInput | Prisma.StoreCustomerOrderByWithRelationInput[]
+  cursor?: Prisma.StoreCustomerWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StoreCustomerScalarFieldEnum | Prisma.StoreCustomerScalarFieldEnum[]
+}
+
+/**
+ * Store.stockMovements
+ */
+export type Store$stockMovementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StockMovement
+   */
+  select?: Prisma.StockMovementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StockMovement
+   */
+  omit?: Prisma.StockMovementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StockMovementInclude<ExtArgs> | null
+  where?: Prisma.StockMovementWhereInput
+  orderBy?: Prisma.StockMovementOrderByWithRelationInput | Prisma.StockMovementOrderByWithRelationInput[]
+  cursor?: Prisma.StockMovementWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StockMovementScalarFieldEnum | Prisma.StockMovementScalarFieldEnum[]
+}
+
+/**
+ * Store.sellerExpenses
+ */
+export type Store$sellerExpensesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SellerExpense
+   */
+  select?: Prisma.SellerExpenseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SellerExpense
+   */
+  omit?: Prisma.SellerExpenseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SellerExpenseInclude<ExtArgs> | null
+  where?: Prisma.SellerExpenseWhereInput
+  orderBy?: Prisma.SellerExpenseOrderByWithRelationInput | Prisma.SellerExpenseOrderByWithRelationInput[]
+  cursor?: Prisma.SellerExpenseWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SellerExpenseScalarFieldEnum | Prisma.SellerExpenseScalarFieldEnum[]
 }
 
 /**

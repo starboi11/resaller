@@ -1,11 +1,13 @@
 import { expect, test } from '@playwright/test';
 
-const ADMIN = process.env.E2E_ADMIN_URL ?? 'http://localhost:3001';
+const ADMIN = `${process.env.E2E_ADMIN_URL ?? 'http://localhost:3001'}/owner`;
 const API = process.env.E2E_API_URL ?? 'http://localhost:4000/api/v1';
 import pg from 'pg';
+import { enrollAdmin } from './helpers/admin-auth';
+import { testDatabaseUrl } from './helpers/test-database';
 
-test('authenticated moderator can use the admin control center', async ({ page }, testInfo) => {
-  const database = new pg.Client({ connectionString: process.env.E2E_DATABASE_URL ?? process.env.DATABASE_URL });
+test('authenticated superadmin can use the private owner control center', async ({ page }, testInfo) => {
+  const database = new pg.Client({ connectionString: testDatabaseUrl() });
   await database.connect();
   const username = `admin_e2e_${testInfo.project.name.replace(/\W/g, '').slice(0, 6)}_${Date.now()}`.slice(0, 32);
   try {
@@ -15,10 +17,14 @@ test('authenticated moderator can use the admin control center', async ({ page }
       return response.ok;
     }, { username, api: API });
     expect(registered).toBe(true);
-    await database.query('UPDATE "User" SET roles = ARRAY[$1, $2]::"Role"[] WHERE username = $3', ['BUYER', 'MODERATOR', username]);
-    await page.reload();
-    await expect(page.getByRole('heading', { name: 'Admin boshqaruvi' })).toBeVisible();
-    await expect(page.getByText('Moderatsiya navbati yangilandi.')).toBeVisible();
+    await database.query('UPDATE "User" SET roles = ARRAY[$1, $2]::"Role"[] WHERE username = $3', ['BUYER', 'SUPER_ADMIN', username]);
+    const denied = await page.request.get(`${API}/admin/overview`);
+    expect(denied.status()).toBe(401);
+    await enrollAdmin(page, username, 'Resaller-Admin-E2E-2026');
+    await expect(page.getByRole('heading', { name: 'Superadmin boshqaruvi' })).toBeVisible();
+    await expect(page.getByText('Kuzatuv ma’lumotlari yangilandi.')).toBeVisible();
+    await expect(page.getByText('Berilgan buyurtmalar')).toBeVisible();
+    await expect(page.getByText('Bugungi noyob brauzerlar')).toBeVisible();
     const verificationLink = page.getByRole('link', { name: 'Sotuvchini tekshirish' });
     await verificationLink.click();
     await expect(verificationLink).toHaveAttribute('aria-current', 'page');
@@ -27,7 +33,7 @@ test('authenticated moderator can use the admin control center', async ({ page }
     await expect(page.getByRole('heading', { name: 'Operatsion modullar' })).toBeVisible();
     await expect(page.getByRole('button', { name: /Sharhlar/ })).toBeVisible();
     await expect(page.getByRole('button', { name: /Q&A reportlar/ })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Xavfsizlik/ })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /Xavfsizlik/ })).toBeVisible();
   } finally {
     await database.query('DELETE FROM "User" WHERE username = $1', [username]);
     await database.end();

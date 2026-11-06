@@ -13,13 +13,20 @@ export class RedisService implements OnModuleDestroy {
   async fixedWindowLimit(key: string, limit: number, ttlSeconds: number): Promise<boolean> {
     await this.ready();
     const namespaced = `resaller:limit:${key}`;
-    const count = await this.client.incr(namespaced);
-    if (count === 1) await this.client.expire(namespaced, ttlSeconds);
+    // Increment and expiry are atomic, so a disconnect cannot leave a permanent limit.
+    const count = await this.client.eval(
+      "local count=redis.call('INCR',KEYS[1]); if count==1 then redis.call('EXPIRE',KEYS[1],ARGV[1]) end; return count",
+      1, namespaced, ttlSeconds,
+    ) as number;
     return count <= limit;
   }
   async enqueueNotificationJob(id: string, payload: string, runAt = Date.now()): Promise<void> {
     await this.ready();
-    await this.client.multi().hset('resaller:notify:jobs', id, payload).zadd('resaller:notify:scheduled', runAt, id).exec();
+    // Discovery runs repeatedly. Preserve retry delays and active leases.
+    await this.client.eval(
+      "if redis.call('ZSCORE',KEYS[1],ARGV[1]) or redis.call('ZSCORE',KEYS[2],ARGV[1]) then return 0 end; redis.call('HSET',KEYS[3],ARGV[1],ARGV[2]); redis.call('ZADD',KEYS[1],ARGV[3],ARGV[1]); return 1",
+      3, 'resaller:notify:scheduled', 'resaller:notify:processing', 'resaller:notify:jobs', id, payload, runAt,
+    );
   }
   async claimNotificationJob(now = Date.now()): Promise<{ id: string; payload: string } | null> {
     await this.ready();

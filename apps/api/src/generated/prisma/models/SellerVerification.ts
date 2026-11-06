@@ -31,6 +31,10 @@ export type SellerVerificationMinAggregateOutputType = {
   legalName: string | null
   documentType: string | null
   documentNumberMasked: string | null
+  documentNumberEncrypted: string | null
+  phoneEncrypted: string | null
+  phoneMasked: string | null
+  residenceAddressEncrypted: string | null
   documentStorageKey: string | null
   submittedAt: Date | null
   reviewedAt: Date | null
@@ -46,6 +50,10 @@ export type SellerVerificationMaxAggregateOutputType = {
   legalName: string | null
   documentType: string | null
   documentNumberMasked: string | null
+  documentNumberEncrypted: string | null
+  phoneEncrypted: string | null
+  phoneMasked: string | null
+  residenceAddressEncrypted: string | null
   documentStorageKey: string | null
   submittedAt: Date | null
   reviewedAt: Date | null
@@ -61,6 +69,10 @@ export type SellerVerificationCountAggregateOutputType = {
   legalName: number
   documentType: number
   documentNumberMasked: number
+  documentNumberEncrypted: number
+  phoneEncrypted: number
+  phoneMasked: number
+  residenceAddressEncrypted: number
   documentStorageKey: number
   submittedAt: number
   reviewedAt: number
@@ -78,6 +90,10 @@ export type SellerVerificationMinAggregateInputType = {
   legalName?: true
   documentType?: true
   documentNumberMasked?: true
+  documentNumberEncrypted?: true
+  phoneEncrypted?: true
+  phoneMasked?: true
+  residenceAddressEncrypted?: true
   documentStorageKey?: true
   submittedAt?: true
   reviewedAt?: true
@@ -93,6 +109,10 @@ export type SellerVerificationMaxAggregateInputType = {
   legalName?: true
   documentType?: true
   documentNumberMasked?: true
+  documentNumberEncrypted?: true
+  phoneEncrypted?: true
+  phoneMasked?: true
+  residenceAddressEncrypted?: true
   documentStorageKey?: true
   submittedAt?: true
   reviewedAt?: true
@@ -108,6 +128,10 @@ export type SellerVerificationCountAggregateInputType = {
   legalName?: true
   documentType?: true
   documentNumberMasked?: true
+  documentNumberEncrypted?: true
+  phoneEncrypted?: true
+  phoneMasked?: true
+  residenceAddressEncrypted?: true
   documentStorageKey?: true
   submittedAt?: true
   reviewedAt?: true
@@ -196,6 +220,10 @@ export type SellerVerificationGroupByOutputType = {
   legalName: string
   documentType: string
   documentNumberMasked: string
+  documentNumberEncrypted: string | null
+  phoneEncrypted: string | null
+  phoneMasked: string | null
+  residenceAddressEncrypted: string | null
   documentStorageKey: string | null
   submittedAt: Date | null
   reviewedAt: Date | null
@@ -232,6 +260,10 @@ export type SellerVerificationWhereInput = {
   legalName?: Prisma.StringFilter<"SellerVerification"> | string
   documentType?: Prisma.StringFilter<"SellerVerification"> | string
   documentNumberMasked?: Prisma.StringFilter<"SellerVerification"> | string
+  documentNumberEncrypted?: Prisma.StringNullableFilter<"SellerVerification"> | string | null
+  phoneEncrypted?: Prisma.StringNullableFilter<"SellerVerification"> | string | null
+  phoneMasked?: Prisma.StringNullableFilter<"SellerVerification"> | string | null
+  residenceAddressEncrypted?: Prisma.StringNullableFilter<"SellerVerification"> | string | null
   documentStorageKey?: Prisma.StringNullableFilter<"SellerVerification"> | string | null
   submittedAt?: Prisma.DateTimeNullableFilter<"SellerVerification"> | Date | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"SellerVerification"> | Date | string | null
@@ -248,6 +280,10 @@ export type SellerVerificationOrderByWithRelationInput = {
   legalName?: Prisma.SortOrder
   documentType?: Prisma.SortOrder
   documentNumberMasked?: Prisma.SortOrder
+  documentNumberEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
+  phoneEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
+  phoneMasked?: Prisma.SortOrderInput | Prisma.SortOrder
+  residenceAddressEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
   documentStorageKey?: Prisma.SortOrderInput | Prisma.SortOrder
   submittedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -267,6 +303,10 @@ export type SellerVerificationWhereUniqueInput = Prisma.AtLeast<{
   legalName?: Prisma.StringFilter<"SellerVerification"> | string
   documentType?: Prisma.StringFilter<"SellerVerification"> | string
   documentNumberMasked?: Prisma.StringFilter<"SellerVerification"> | string
+  documentNumberEncrypted?: Prisma.StringNullableFilter<"SellerVerification"> | string | null
+  phoneEncrypted?: Prisma.StringNullableFilter<"SellerVerification"> | string | null
+  phoneMasked?: Prisma.StringNullableFilter<"SellerVerification"> | string | null
+  residenceAddressEncrypted?: Prisma.StringNullableFilter<"SellerVerification"> | string | null
   documentStorageKey?: Prisma.StringNullableFilter<"SellerVerification"> | string | null
   submittedAt?: Prisma.DateTimeNullableFilter<"SellerVerification"> | Date | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"SellerVerification"> | Date | string | null
@@ -283,6 +323,10 @@ export type SellerVerificationOrderByWithAggregationInput = {
   legalName?: Prisma.SortOrder
   documentType?: Prisma.SortOrder
   documentNumberMasked?: Prisma.SortOrder
+  documentNumberEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
+  phoneEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
+  phoneMasked?: Prisma.SortOrderInput | Prisma.SortOrder
+  residenceAddressEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
   documentStorageKey?: Prisma.SortOrderInput | Prisma.SortOrder
   submittedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -304,6 +348,10 @@ export type SellerVerificationScalarWhereWithAggregatesInput = {
   legalName?: Prisma.StringWithAggregatesFilter<"SellerVerification"> | string
   documentType?: Prisma.StringWithAggregatesFilter<"SellerVerification"> | string
   documentNumberMasked?: Prisma.StringWithAggregatesFilter<"SellerVerification"> | string
+  documentNumberEncrypted?: Prisma.StringNullableWithAggregatesFilter<"SellerVerification"> | string | null
+  phoneEncrypted?: Prisma.StringNullableWithAggregatesFilter<"SellerVerification"> | string | null
+  phoneMasked?: Prisma.StringNullableWithAggregatesFilter<"SellerVerification"> | string | null
+  residenceAddressEncrypted?: Prisma.StringNullableWithAggregatesFilter<"SellerVerification"> | string | null
   documentStorageKey?: Prisma.StringNullableWithAggregatesFilter<"SellerVerification"> | string | null
   submittedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SellerVerification"> | Date | string | null
   reviewedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SellerVerification"> | Date | string | null
@@ -318,6 +366,10 @@ export type SellerVerificationCreateInput = {
   legalName: string
   documentType: string
   documentNumberMasked: string
+  documentNumberEncrypted?: string | null
+  phoneEncrypted?: string | null
+  phoneMasked?: string | null
+  residenceAddressEncrypted?: string | null
   documentStorageKey?: string | null
   submittedAt?: Date | string | null
   reviewedAt?: Date | string | null
@@ -334,6 +386,10 @@ export type SellerVerificationUncheckedCreateInput = {
   legalName: string
   documentType: string
   documentNumberMasked: string
+  documentNumberEncrypted?: string | null
+  phoneEncrypted?: string | null
+  phoneMasked?: string | null
+  residenceAddressEncrypted?: string | null
   documentStorageKey?: string | null
   submittedAt?: Date | string | null
   reviewedAt?: Date | string | null
@@ -348,6 +404,10 @@ export type SellerVerificationUpdateInput = {
   legalName?: Prisma.StringFieldUpdateOperationsInput | string
   documentType?: Prisma.StringFieldUpdateOperationsInput | string
   documentNumberMasked?: Prisma.StringFieldUpdateOperationsInput | string
+  documentNumberEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneMasked?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  residenceAddressEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -364,6 +424,10 @@ export type SellerVerificationUncheckedUpdateInput = {
   legalName?: Prisma.StringFieldUpdateOperationsInput | string
   documentType?: Prisma.StringFieldUpdateOperationsInput | string
   documentNumberMasked?: Prisma.StringFieldUpdateOperationsInput | string
+  documentNumberEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneMasked?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  residenceAddressEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -379,6 +443,10 @@ export type SellerVerificationCreateManyInput = {
   legalName: string
   documentType: string
   documentNumberMasked: string
+  documentNumberEncrypted?: string | null
+  phoneEncrypted?: string | null
+  phoneMasked?: string | null
+  residenceAddressEncrypted?: string | null
   documentStorageKey?: string | null
   submittedAt?: Date | string | null
   reviewedAt?: Date | string | null
@@ -393,6 +461,10 @@ export type SellerVerificationUpdateManyMutationInput = {
   legalName?: Prisma.StringFieldUpdateOperationsInput | string
   documentType?: Prisma.StringFieldUpdateOperationsInput | string
   documentNumberMasked?: Prisma.StringFieldUpdateOperationsInput | string
+  documentNumberEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneMasked?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  residenceAddressEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -408,6 +480,10 @@ export type SellerVerificationUncheckedUpdateManyInput = {
   legalName?: Prisma.StringFieldUpdateOperationsInput | string
   documentType?: Prisma.StringFieldUpdateOperationsInput | string
   documentNumberMasked?: Prisma.StringFieldUpdateOperationsInput | string
+  documentNumberEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneMasked?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  residenceAddressEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -428,6 +504,10 @@ export type SellerVerificationCountOrderByAggregateInput = {
   legalName?: Prisma.SortOrder
   documentType?: Prisma.SortOrder
   documentNumberMasked?: Prisma.SortOrder
+  documentNumberEncrypted?: Prisma.SortOrder
+  phoneEncrypted?: Prisma.SortOrder
+  phoneMasked?: Prisma.SortOrder
+  residenceAddressEncrypted?: Prisma.SortOrder
   documentStorageKey?: Prisma.SortOrder
   submittedAt?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrder
@@ -443,6 +523,10 @@ export type SellerVerificationMaxOrderByAggregateInput = {
   legalName?: Prisma.SortOrder
   documentType?: Prisma.SortOrder
   documentNumberMasked?: Prisma.SortOrder
+  documentNumberEncrypted?: Prisma.SortOrder
+  phoneEncrypted?: Prisma.SortOrder
+  phoneMasked?: Prisma.SortOrder
+  residenceAddressEncrypted?: Prisma.SortOrder
   documentStorageKey?: Prisma.SortOrder
   submittedAt?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrder
@@ -458,6 +542,10 @@ export type SellerVerificationMinOrderByAggregateInput = {
   legalName?: Prisma.SortOrder
   documentType?: Prisma.SortOrder
   documentNumberMasked?: Prisma.SortOrder
+  documentNumberEncrypted?: Prisma.SortOrder
+  phoneEncrypted?: Prisma.SortOrder
+  phoneMasked?: Prisma.SortOrder
+  residenceAddressEncrypted?: Prisma.SortOrder
   documentStorageKey?: Prisma.SortOrder
   submittedAt?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrder
@@ -504,6 +592,10 @@ export type SellerVerificationCreateWithoutSellerProfileInput = {
   legalName: string
   documentType: string
   documentNumberMasked: string
+  documentNumberEncrypted?: string | null
+  phoneEncrypted?: string | null
+  phoneMasked?: string | null
+  residenceAddressEncrypted?: string | null
   documentStorageKey?: string | null
   submittedAt?: Date | string | null
   reviewedAt?: Date | string | null
@@ -518,6 +610,10 @@ export type SellerVerificationUncheckedCreateWithoutSellerProfileInput = {
   legalName: string
   documentType: string
   documentNumberMasked: string
+  documentNumberEncrypted?: string | null
+  phoneEncrypted?: string | null
+  phoneMasked?: string | null
+  residenceAddressEncrypted?: string | null
   documentStorageKey?: string | null
   submittedAt?: Date | string | null
   reviewedAt?: Date | string | null
@@ -548,6 +644,10 @@ export type SellerVerificationUpdateWithoutSellerProfileInput = {
   legalName?: Prisma.StringFieldUpdateOperationsInput | string
   documentType?: Prisma.StringFieldUpdateOperationsInput | string
   documentNumberMasked?: Prisma.StringFieldUpdateOperationsInput | string
+  documentNumberEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneMasked?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  residenceAddressEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -562,6 +662,10 @@ export type SellerVerificationUncheckedUpdateWithoutSellerProfileInput = {
   legalName?: Prisma.StringFieldUpdateOperationsInput | string
   documentType?: Prisma.StringFieldUpdateOperationsInput | string
   documentNumberMasked?: Prisma.StringFieldUpdateOperationsInput | string
+  documentNumberEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneMasked?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  residenceAddressEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -579,6 +683,10 @@ export type SellerVerificationSelect<ExtArgs extends runtime.Types.Extensions.In
   legalName?: boolean
   documentType?: boolean
   documentNumberMasked?: boolean
+  documentNumberEncrypted?: boolean
+  phoneEncrypted?: boolean
+  phoneMasked?: boolean
+  residenceAddressEncrypted?: boolean
   documentStorageKey?: boolean
   submittedAt?: boolean
   reviewedAt?: boolean
@@ -595,6 +703,10 @@ export type SellerVerificationSelectCreateManyAndReturn<ExtArgs extends runtime.
   legalName?: boolean
   documentType?: boolean
   documentNumberMasked?: boolean
+  documentNumberEncrypted?: boolean
+  phoneEncrypted?: boolean
+  phoneMasked?: boolean
+  residenceAddressEncrypted?: boolean
   documentStorageKey?: boolean
   submittedAt?: boolean
   reviewedAt?: boolean
@@ -611,6 +723,10 @@ export type SellerVerificationSelectUpdateManyAndReturn<ExtArgs extends runtime.
   legalName?: boolean
   documentType?: boolean
   documentNumberMasked?: boolean
+  documentNumberEncrypted?: boolean
+  phoneEncrypted?: boolean
+  phoneMasked?: boolean
+  residenceAddressEncrypted?: boolean
   documentStorageKey?: boolean
   submittedAt?: boolean
   reviewedAt?: boolean
@@ -627,6 +743,10 @@ export type SellerVerificationSelectScalar = {
   legalName?: boolean
   documentType?: boolean
   documentNumberMasked?: boolean
+  documentNumberEncrypted?: boolean
+  phoneEncrypted?: boolean
+  phoneMasked?: boolean
+  residenceAddressEncrypted?: boolean
   documentStorageKey?: boolean
   submittedAt?: boolean
   reviewedAt?: boolean
@@ -635,7 +755,7 @@ export type SellerVerificationSelectScalar = {
   updatedAt?: boolean
 }
 
-export type SellerVerificationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sellerProfileId" | "status" | "legalName" | "documentType" | "documentNumberMasked" | "documentStorageKey" | "submittedAt" | "reviewedAt" | "reviewReason" | "createdAt" | "updatedAt", ExtArgs["result"]["sellerVerification"]>
+export type SellerVerificationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sellerProfileId" | "status" | "legalName" | "documentType" | "documentNumberMasked" | "documentNumberEncrypted" | "phoneEncrypted" | "phoneMasked" | "residenceAddressEncrypted" | "documentStorageKey" | "submittedAt" | "reviewedAt" | "reviewReason" | "createdAt" | "updatedAt", ExtArgs["result"]["sellerVerification"]>
 export type SellerVerificationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sellerProfile?: boolean | Prisma.SellerProfileDefaultArgs<ExtArgs>
 }
@@ -658,6 +778,10 @@ export type $SellerVerificationPayload<ExtArgs extends runtime.Types.Extensions.
     legalName: string
     documentType: string
     documentNumberMasked: string
+    documentNumberEncrypted: string | null
+    phoneEncrypted: string | null
+    phoneMasked: string | null
+    residenceAddressEncrypted: string | null
     documentStorageKey: string | null
     submittedAt: Date | null
     reviewedAt: Date | null
@@ -1094,6 +1218,10 @@ export interface SellerVerificationFieldRefs {
   readonly legalName: Prisma.FieldRef<"SellerVerification", 'String'>
   readonly documentType: Prisma.FieldRef<"SellerVerification", 'String'>
   readonly documentNumberMasked: Prisma.FieldRef<"SellerVerification", 'String'>
+  readonly documentNumberEncrypted: Prisma.FieldRef<"SellerVerification", 'String'>
+  readonly phoneEncrypted: Prisma.FieldRef<"SellerVerification", 'String'>
+  readonly phoneMasked: Prisma.FieldRef<"SellerVerification", 'String'>
+  readonly residenceAddressEncrypted: Prisma.FieldRef<"SellerVerification", 'String'>
   readonly documentStorageKey: Prisma.FieldRef<"SellerVerification", 'String'>
   readonly submittedAt: Prisma.FieldRef<"SellerVerification", 'DateTime'>
   readonly reviewedAt: Prisma.FieldRef<"SellerVerification", 'DateTime'>

@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1.7
 FROM node:24-alpine AS build
 WORKDIR /app
+ENV COREPACK_HOME=/opt/corepack
 RUN corepack enable
 COPY . .
 RUN --mount=type=cache,id=resaller-pnpm,target=/root/.local/share/pnpm/store,sharing=locked \
@@ -8,6 +9,7 @@ RUN --mount=type=cache,id=resaller-pnpm,target=/root/.local/share/pnpm/store,sha
     DATABASE_URL=postgresql://build:build@localhost:5432/build pnpm --filter @resaller/api db:generate && \
     pnpm --filter @resaller/api build
 ENV NODE_ENV=production
+ENV MEDIA_ROOT=/app/data/media PRIVATE_MEDIA_ROOT=/app/data/private-media
 RUN addgroup -S resaller && adduser -S resaller -G resaller && \
     mkdir -p /app/data/media /app/data/private-media && \
     chown -R resaller:resaller /app/data

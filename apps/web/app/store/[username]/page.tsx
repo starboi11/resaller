@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation';
 import { demoStores } from '../../lib/demo-catalog';
-import { StoreActions } from '../store-actions';
 import { StoreCatalog } from '../store-catalog';
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
 type Store = {
@@ -53,7 +52,7 @@ export default async function StorePage({
     { cache: 'no-store' },
   ).catch(() => null);
   const fallback =
-    process.env.NODE_ENV === 'development'
+    process.env.NODE_ENV === 'development' && process.env.DEMO_CATALOG_ENABLED === 'true'
       ? demoStores[username as keyof typeof demoStores]
       : undefined;
   if (response?.status === 404 && !fallback) notFound();
@@ -90,21 +89,14 @@ export default async function StorePage({
                 )}
               </i>
               <div>
-                <p className="eyebrow">@{store.username}</p>
+                <p className="eyebrow">Resaller haqida</p>
                 <h1 className="mt-2 text-4xl font-black">{store.nameUz}</h1>
-                {store.premiumUntil &&
-                  new Date(store.premiumUntil) > new Date() && (
-                    <span className="premium-pill">PREMIUM</span>
-                  )}
                 <p className="muted mt-3 max-w-2xl">
-                  {store.descriptionUz ?? 'Mahalliy sotuvchi do‘koni.'}
+                  {store.descriptionUz ?? 'Resaller — mahsulotlarni o‘zimiz tanlaymiz, saqlaymiz va yetkazamiz.'}
                 </p>
               </div>
             </div>
-            <StoreActions
-              publicId={store.publicId}
-              trustBadge={store.sellerProfile.trustBadge}
-            />
+            <a className="rs-button" href="/marketplace">Mahsulotlarni ko‘rish</a>
           </div>
           <div className="store-stats">
             <span>
@@ -128,10 +120,6 @@ export default async function StorePage({
             <span>
               <b>{store.importedTestimonials?.length ?? 0}</b> manbasi
               ko‘rsatilgan fikr
-            </span>
-            <span>
-              <b>{store.sellerProfile.verifiedAt ? 'Ha' : 'Yo‘q'}</b> shaxs
-              tasdig‘i
             </span>
           </div>
           {store.vacationMode && (

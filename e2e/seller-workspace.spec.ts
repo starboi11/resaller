@@ -31,6 +31,12 @@ test('seller can start onboarding and create a draft store', async ({
     page.getByRole('heading', { name: `E2E Store ${stamp}` }),
   ).toBeVisible();
   await expect(
+    page.getByRole('heading', { name: '2. Shaxsni tasdiqlash' }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('button', { name: 'Do‘konni faollashtirish' }),
+  ).toBeDisabled();
+  await expect(
     page.getByRole('link', { name: 'Marketing va analytics' }),
   ).toBeVisible();
   const sectionNav = page.getByRole('navigation', {

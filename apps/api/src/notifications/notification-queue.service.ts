@@ -12,6 +12,7 @@ export class NotificationQueueService implements OnModuleInit, OnModuleDestroy {
   private timer?: NodeJS.Timeout;
   private running = false;
   private lastRunAt?: string;
+  private dispatchCursor: string | undefined;
 
   constructor(
     @Inject(PrismaService) private readonly prisma: PrismaService,
@@ -47,10 +48,10 @@ export class NotificationQueueService implements OnModuleInit, OnModuleDestroy {
 
   private async dispatch(): Promise<void> {
     const notifications = await this.prisma.notification.findMany({
-      where: { createdAt: { gte: new Date(Date.now() - 7 * 24 * 60 * 60_000) }, user: { notificationEndpoints: { some: { active: true } } } },
+      where: { ...(this.dispatchCursor ? { id: { gt: this.dispatchCursor } } : {}), createdAt: { gte: new Date(Date.now() - 7 * 24 * 60 * 60_000) }, user: { notificationEndpoints: { some: { active: true } } } },
       include: { user: { include: { notificationEndpoints: { where: { active: true } }, notificationPreferences: true } } },
       take: 100,
-      orderBy: { createdAt: 'asc' },
+      orderBy: { id: 'asc' },
     });
     for (const notification of notifications) {
       for (const endpoint of notification.user.notificationEndpoints) {
@@ -65,6 +66,9 @@ export class NotificationQueueService implements OnModuleInit, OnModuleDestroy {
         if (delivery.status === 'QUEUED') await this.redis.enqueueNotificationJob(delivery.id, JSON.stringify({ deliveryId: delivery.id }));
       }
     }
+    // Advance beyond delivered rows; otherwise the first 100 permanently hide
+    // later notifications. Cycle back to discover new endpoints/preferences.
+    this.dispatchCursor = notifications.length === 100 ? notifications.at(-1)!.id : undefined;
   }
 
   private async workOne(): Promise<boolean> {

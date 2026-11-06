@@ -1,21 +1,32 @@
 import {
   Inject,
   Injectable,
+  Logger,
   OnModuleDestroy,
   OnModuleInit,
 } from '@nestjs/common';
 import { PrismaService } from '../infrastructure/prisma.service.js';
+import { syncResellerEarning } from '../resale/resale-sync.js';
 
 @Injectable()
 export class OrderTimeoutService implements OnModuleInit, OnModuleDestroy {
   private timer?: NodeJS.Timeout;
+  private readonly logger = new Logger(OrderTimeoutService.name);
+  private running = false;
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
   onModuleInit(): void {
-    this.timer = setInterval(() => void this.expireDueOrders(), 30_000);
+    this.timer = setInterval(() => void this.tick(), 30_000);
     this.timer.unref();
   }
   onModuleDestroy(): void {
     if (this.timer) clearInterval(this.timer);
+  }
+  private async tick(): Promise<void> {
+    if (this.running) return;
+    this.running = true;
+    try { await this.expireDueOrders(); }
+    catch { this.logger.error('Order timeout worker failed; will retry on the next tick'); }
+    finally { this.running = false; }
   }
   async expireDueOrders(now = new Date()): Promise<number> {
     const due = await this.prisma.order.findMany({
@@ -61,6 +72,7 @@ export class OrderTimeoutService implements OnModuleInit, OnModuleDestroy {
               reason: 'Seller acceptance window expired',
             },
           });
+          await syncResellerEarning(tx, candidate.id, 'TIMEOUT');
           return true;
         },
         { isolationLevel: 'Serializable' },

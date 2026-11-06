@@ -1,10 +1,14 @@
 # syntax=docker/dockerfile:1.7
 FROM node:24-alpine AS build
 WORKDIR /app
+ENV COREPACK_HOME=/opt/corepack
 RUN corepack enable
 COPY . .
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+# Secret admin path, baked into the build (see scripts/generate-admin-path.mjs).
+ARG ADMIN_BASE_PATH
+ENV ADMIN_BASE_PATH=$ADMIN_BASE_PATH ADMIN_REQUIRE_BASE_PATH=true
 RUN --mount=type=cache,id=resaller-pnpm,target=/root/.local/share/pnpm/store,sharing=locked \
     pnpm install --frozen-lockfile --fetch-timeout=600000 && pnpm --filter @resaller/admin build
 ENV NODE_ENV=production

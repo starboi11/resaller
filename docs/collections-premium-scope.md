@@ -21,3 +21,7 @@ The MVP does not collect subscription payments, auto-renew, issue invoices or
 perform settlement. Public self-service purchase is deferred until the owner
 approves provider cost, tax/legal treatment, refunds and billing terms. Expired
 entitlements fall back to the standard experience without deleting seller data.
+
+The discussed VIP tier is separate from this implemented Premium entitlement.
+Its price, benefits, eligibility, term and billing rules are not yet approved;
+the UI must not describe VIP as purchasable or automatically active.

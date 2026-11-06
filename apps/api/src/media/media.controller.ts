@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { type AuthenticatedUser, SessionGuard } from '../auth/session.guard.js';
+import { OwnerGuard } from '../owner/owner-access.js';
 import { RequireRoles } from '../auth/roles.js';
 import { RolesGuard } from '../auth/roles.guard.js';
 import { MediaService } from './media.service.js';
@@ -19,7 +20,7 @@ import { MediaService } from './media.service.js';
 export class MediaController {
   constructor(@Inject(MediaService) private readonly media: MediaService) {}
   @Post('listings/:publicId/images')
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, OwnerGuard)
   async upload(
     @Req() request: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') publicId: string,
@@ -27,6 +28,8 @@ export class MediaController {
     const file = await request.file();
     if (!file)
       throw new UnsupportedMediaTypeException('Image file is required');
+    const bytes = await file.toBuffer();
+    // Fields after the file are only available once its stream has been consumed.
     const variantField = file.fields.variantId;
     const variantId =
       variantField && !Array.isArray(variantField) && 'value' in variantField
@@ -35,7 +38,7 @@ export class MediaController {
     return this.media.uploadListingImage(
       request.user.id,
       publicId,
-      await file.toBuffer(),
+      bytes,
       variantId,
     );
   }
@@ -55,7 +58,7 @@ export class MediaController {
     );
   }
   @Post('stores/:publicId/:kind')
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, OwnerGuard)
   async uploadStoreAsset(
     @Req() request: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') publicId: string,
@@ -70,11 +73,11 @@ export class MediaController {
       await file.toBuffer(),
     );
   }
-  @Post('listings/:publicId/video') @UseGuards(SessionGuard) async uploadVideo(
+  @Post('listings/:publicId/video') @UseGuards(SessionGuard, OwnerGuard) async uploadVideo(
     @Req() request: FastifyRequest & { user: AuthenticatedUser },
     @Param('publicId') publicId: string,
   ) {
-    const file = await request.file();
+    const file = await request.file({ limits: { fileSize: 50 * 1024 * 1024 } });
     if (!file) throw new UnsupportedMediaTypeException('Video required');
     return this.media.uploadListingVideo(
       request.user.id,

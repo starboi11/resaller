@@ -1,0 +1,78 @@
+[
+  {
+    "test": "real-browser-registration-profile",
+    "passed": true
+  },
+  {
+    "path": "/cart/items",
+    "status": 201
+  },
+  {
+    "path": "/checkout",
+    "status": 201
+  },
+  {
+    "path": "/checkout",
+    "status": 201
+  },
+  {
+    "path": "/auth/login",
+    "status": 200
+  },
+  {
+    "path": "/seller/owner-status",
+    "status": 200
+  },
+  {
+    "path": "/orders/cmw473csg0002m4twcnju3wfo/transition",
+    "status": 201
+  },
+  {
+    "path": "/orders/cmw473csg0002m4twcnju3wfo/transition",
+    "status": 201
+  },
+  {
+    "path": "/orders/cmw473csg0002m4twcnju3wfo/transition",
+    "status": 201
+  },
+  {
+    "path": "/orders/cmw473csg0002m4twcnju3wfo/transition",
+    "status": 201
+  },
+  {
+    "path": "/orders/cmw473csg0002m4twcnju3wfo/transition",
+    "status": 201
+  },
+  {
+    "path": "/orders/cmw473csg0002m4twcnju3wfo/transition",
+    "status": 201
+  },
+  {
+    "path": "/orders/cmw473csg0002m4twcnju3wfo/review",
+    "status": 201
+  },
+  {
+    "path": "/auth/login",
+    "status": 200
+  },
+  {
+    "test": "real-admin-users",
+    "passed": true
+  },
+  {
+    "test": "admin-failed-decision-retains-reason",
+    "passed": true
+  },
+  {
+    "test": "admin-real-status-decision",
+    "passed": true
+  },
+  {
+    "test": "admin-outage-message",
+    "passed": true
+  },
+  {
+    "test": "admin-expired-session-clears-rows",
+    "passed": true
+  }
+]

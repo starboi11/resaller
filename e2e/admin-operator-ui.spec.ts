@@ -25,6 +25,8 @@ test('admin operator can inspect and resolve risk, security and dispute records'
       reviewed.add(path);
       return route.fulfill({ json: { ok: true } });
     }
+    if (path.endsWith('/listings'))
+      return route.fulfill({ json: { items: [], total: 0, page: 1, pageSize: 50 } });
     if (path.endsWith('/risk-events'))
       return route.fulfill({
         json: [
@@ -118,6 +120,11 @@ test('verification queue uses a reasoned confirmation dialog', async ({
   page,
 }) => {
   let decisionBody: Record<string, unknown> | null = null;
+  await page.route('**/api/v1/auth/me', (route) => route.fulfill({ json: { user: { username: 'owner', roles: ['SUPER_ADMIN'] } } }));
+  await page.route('**/api/v1/admin/overview', (route) => route.fulfill({ json: {
+    metrics: { visitorsToday: 2, visitorDays30: 4, pageViews30: 7, ordersPlaced: 1, ordersCompleted: 0, storesActive: 1, listingsPublished: 1, listingsTotal: 2 },
+    recentAudit: [], recentOrders: [], recentListings: [],
+  } }));
   await page.route('**/api/v1/admin/queue', (route) =>
     route.fulfill({
       json: {
@@ -146,11 +153,42 @@ test('verification queue uses a reasoned confirmation dialog', async ({
     },
   );
 
-  await page.goto(ADMIN);
+  await page.goto(`${ADMIN}/owner`);
   await expect(page.getByText('Test Seller LLC')).toBeVisible();
   await page.getByRole('button', { name: 'Tasdiqlash' }).click();
   const dialog = page.getByRole('dialog', { name: 'Moderatsiya qarori' });
   await dialog.getByRole('textbox').fill('Hujjat va rekvizitlar mos keldi');
   await dialog.getByRole('button', { name: 'Qarorni tasdiqlash' }).click();
   await expect.poll(() => decisionBody?.status).toBe('APPROVED');
+});
+
+test('owner sees all seller posts and can restrict after publication', async ({ page }) => {
+  let restriction: Record<string, unknown> | null = null;
+  await page.route('**/api/v1/auth/me', (route) => route.fulfill({ json: { user: { roles: ['SUPER_ADMIN'] } } }));
+  await page.route('**/api/v1/admin/**', (route) => {
+    const url = new URL(route.request().url());
+    if (route.request().method() === 'PATCH') {
+      restriction = route.request().postDataJSON() as Record<string, unknown>;
+      return route.fulfill({ json: { publicId: 'post-1', status: 'RESTRICTED' } });
+    }
+    if (url.pathname.endsWith('/listings')) {
+      const pageNumber = Number(url.searchParams.get('page') ?? 1);
+      return route.fulfill({ json: {
+        items: pageNumber === 1
+          ? [{ publicId: 'post-1', nameUz: 'Faol mahsulot', status: 'ACTIVE', store: { username: 'seller-one', nameUz: 'Store', status: 'ACTIVE' } }]
+          : [{ publicId: 'post-2', nameUz: 'Draft mahsulot', status: 'DRAFT', store: { username: 'seller-two', nameUz: 'Store 2', status: 'ACTIVE' } }],
+        total: 2, page: pageNumber, pageSize: 1,
+      } });
+    }
+    return route.fulfill({ json: [] });
+  });
+  await page.goto(`${ADMIN}/operations#listings`);
+  await expect(page.getByRole('heading', { name: 'Seller postlari (2)' })).toBeVisible();
+  await expect(page.getByText('Faol mahsulot')).toBeVisible();
+  await page.getByRole('button', { name: 'Yana postlarni yuklash' }).click();
+  await expect(page.getByText('Draft mahsulot')).toBeVisible();
+  await page.getByRole('button', { name: 'Cheklash' }).click();
+  await page.getByPlaceholder('Kamida 10 belgili asos').fill('Siyosatga zid mahsulot');
+  await page.getByRole('button', { name: 'Tasdiqlash' }).click();
+  await expect.poll(() => restriction?.status).toBe('RESTRICTED');
 });

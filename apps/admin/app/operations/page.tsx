@@ -1,7 +1,17 @@
 'use client';
 import Link from 'next/link';
-import { useCallback, useEffect, useState } from 'react';
-import { adminModules, canAccessModule, type AdminModule } from '../components/admin-modules';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
+import {
+  adminModules,
+  canAccessModule,
+  type AdminModule,
+} from '../components/admin-modules';
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
 type Row = Record<string, unknown> & {
   id?: string;
@@ -19,6 +29,8 @@ type Row = Record<string, unknown> & {
   signal?: string;
   score?: number;
   roles?: string[];
+  nameUz?: string;
+  store?: { username: string; nameUz: string; status: string };
 };
 export default function AdminOperations() {
   const [data, setData] = useState<Record<string, Row[]>>({});
@@ -27,62 +39,146 @@ export default function AdminOperations() {
   const [selected, setSelected] = useState<Row | null>(null);
   const [decision, setDecision] = useState<Row | null>(null);
   const [roles, setRoles] = useState<string[]>([]);
+  const [listingTotal, setListingTotal] = useState(0);
+  const [listingPage, setListingPage] = useState(1);
   const [roleTarget, setRoleTarget] = useState<Row | null>(null);
+  const [busy, setBusy] = useState(false);
+  const mutationPending = useRef(false);
+  const pagePending = useRef(false);
+  const [loadingPage, setLoadingPage] = useState(false);
   const load = useCallback(async () => {
-    const identity = await fetch(`${API}/auth/me`, {
-      credentials: 'include',
-      cache: 'no-store',
-    });
-    const currentRoles = identity.ok
-      ? ((await identity.json()) as { user: { roles: string[] } }).user.roles
-      : [];
-    setRoles(currentRoles);
-    const available = adminModules.filter(([key]) => canAccessModule(key, currentRoles));
-    const requested = window.location.hash.slice(1) as AdminModule;
-    if (available.length) {
-      if (available.some(([key]) => key === requested)) setActive(requested);
-      else if (!available.some(([key]) => key === active)) setActive(available[0]![0]);
+    try {
+      const identity = await fetch(`${API}/auth/me`, {
+        credentials: 'include',
+        cache: 'no-store',
+      });
+      if (identity.status === 401 || identity.status === 403) {
+        setRoles([]);
+        setData({});
+        setSelected(null);
+        setMessage('Sessiya tugagan yoki admin vakolati yo‘q. Qayta kiring.');
+        return false;
+      }
+      if (!identity.ok) throw new Error('Identity unavailable');
+      const currentRoles = identity.ok
+        ? ((await identity.json()) as { user: { roles: string[] } }).user.roles
+        : [];
+      setRoles(currentRoles);
+      const available = adminModules.filter(([key]) =>
+        canAccessModule(key, currentRoles),
+      );
+      const requested = window.location.hash.slice(1) as AdminModule;
+      if (available.length) {
+        if (available.some(([key]) => key === requested)) setActive(requested);
+        else setActive(available[0]![0]);
+      }
+      const entries = await Promise.all(
+        available.map(async ([key]) => {
+          const response = await fetch(`${API}/admin/${key}`, {
+            credentials: 'include',
+            cache: 'no-store',
+          });
+          if (!response.ok) throw new Error('Module unavailable');
+          if (key === 'listings' && response.ok) {
+            const result = (await response.json()) as {
+              items: Row[];
+              total: number;
+            };
+            setListingTotal(result.total);
+            setListingPage(1);
+            return [key, result.items] as const;
+          }
+          return [
+            key,
+            response.ok ? ((await response.json()) as Row[]) : [],
+          ] as const;
+        }),
+      );
+      setData(Object.fromEntries(entries));
+      setMessage(
+        available.length
+          ? 'Vakolatingiz bor modullar yangilandi.'
+          : 'Bu hisobda admin vakolati yo‘q.',
+      );
+      return true;
+    } catch {
+      setMessage(
+        'Modullarni yuklab bo‘lmadi. Aloqani tekshiring va yangilash tugmasini bosing.',
+      );
+      return false;
     }
-    const entries = await Promise.all(
-      available.map(async ([key]) => {
-        const response = await fetch(`${API}/admin/${key}`, {
-          credentials: 'include',
-          cache: 'no-store',
-        });
-        return [
-          key,
-          response.ok ? ((await response.json()) as Row[]) : [],
-        ] as const;
-      }),
-    );
-    setData(Object.fromEntries(entries));
-    setMessage('Vakolatingiz bor modullar yangilandi.');
-  }, [active]);
+  }, []);
+  async function loadMoreListings() {
+    if (pagePending.current) return;
+    pagePending.current = true;
+    setLoadingPage(true);
+    try {
+      const next = listingPage + 1;
+      const response = await fetch(`${API}/admin/listings?page=${next}`, {
+        credentials: 'include',
+        cache: 'no-store',
+      });
+      if (!response.ok) throw new Error('Page unavailable');
+      const result = (await response.json()) as { items: Row[]; total: number };
+      setData((current) => ({
+        ...current,
+        listings: [...(current.listings ?? []), ...result.items],
+      }));
+      setListingTotal(result.total);
+      setListingPage(next);
+    } catch {
+      setMessage(
+        'Keyingi mahsulotlarni yuklab bo‘lmadi. Hozirgi ro‘yxat saqlanib turibdi.',
+      );
+    } finally {
+      pagePending.current = false;
+      setLoadingPage(false);
+    }
+  }
   useEffect(() => {
     void load();
   }, [load]);
   useEffect(() => {
     const syncModule = () => {
       const requested = window.location.hash.slice(1) as AdminModule;
-      if (adminModules.some(([key]) => key === requested) && canAccessModule(requested, roles))
+      if (
+        adminModules.some(([key]) => key === requested) &&
+        canAccessModule(requested, roles)
+      )
         setActive(requested);
     };
     window.addEventListener('hashchange', syncModule);
     return () => window.removeEventListener('hashchange', syncModule);
   }, [roles]);
   async function patch(path: string, body: unknown) {
-    const response = await fetch(`${API}/admin/${path}`, {
-      method: 'PATCH',
-      credentials: 'include',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-    setMessage(
-      response.ok
-        ? 'Qaror saqlandi va auditga yozildi.'
-        : 'Qaror saqlanmadi yoki ruxsat yetarli emas.',
-    );
-    if (response.ok) await load();
+    if (mutationPending.current) return false;
+    mutationPending.current = true;
+    setBusy(true);
+    try {
+      const response = await fetch(`${API}/admin/${path}`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (!response.ok) {
+        setMessage(
+          'Qaror saqlanmadi yoki ruxsat yetarli emas. Kiritilgan asosni tekshiring.',
+        );
+        return false;
+      }
+      await load();
+      setMessage('Qaror saqlandi va auditga yozildi.');
+      return true;
+    } catch {
+      setMessage(
+        'Javob olinmadi. Qayta tasdiqlashdan oldin yangilab, amal natijasini tekshiring.',
+      );
+      return false;
+    } finally {
+      mutationPending.current = false;
+      setBusy(false);
+    }
   }
   async function act(row: Row, reason: string) {
     if (!reason || reason.trim().length < 10) return;
@@ -90,6 +186,14 @@ export default function AdminOperations() {
     if (active === 'users')
       return patch(`users/${id}/status`, {
         status: row.accountStatus === 'SUSPENDED' ? 'ACTIVE' : 'SUSPENDED',
+        reason,
+      });
+    if (
+      active === 'listings' &&
+      ['ACTIVE', 'RESTRICTED'].includes(row.status ?? '')
+    )
+      return patch(`listings/${id}/status`, {
+        status: row.status === 'ACTIVE' ? 'RESTRICTED' : 'ACTIVE',
         reason,
       });
     if (active === 'reviews')
@@ -110,7 +214,9 @@ export default function AdminOperations() {
       });
   }
   const rows = data[active] ?? [];
-  const visibleModules = adminModules.filter(([key]) => canAccessModule(key, roles));
+  const visibleModules = adminModules.filter(([key]) =>
+    canAccessModule(key, roles),
+  );
   return (
     <main className="admin-shell mx-auto max-w-7xl p-5 sm:p-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
@@ -118,8 +224,11 @@ export default function AdminOperations() {
           <p className="eyebrow">Control Center</p>
           <h1 className="mt-2 text-3xl font-black">Operatsion modullar</h1>
         </div>
-        <Link className="rs-button" href="/">
-          Moderatsiya navbati
+        <button className="rs-button" type="button" onClick={() => void load()}>
+          Yangilash
+        </button>
+        <Link className="rs-button" href="/owner">
+          Superadmin boshqaruvi
         </Link>
       </div>
       <p
@@ -135,8 +244,11 @@ export default function AdminOperations() {
         {visibleModules.map(([key, label]) => (
           <button
             key={key}
-            onClick={() => { window.location.hash = key; setActive(key); }}
-            className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold ${active === key ? 'bg-emerald-500 text-slate-950' : 'border border-white/10 bg-white/5'}`}
+            onClick={() => {
+              window.location.hash = key;
+              setActive(key);
+            }}
+            className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold ${active === key ? 'bg-rose-600 text-white' : 'border border-white/10 bg-white/5'}`}
           >
             {label} ({data[key]?.length ?? 0})
           </button>
@@ -145,7 +257,8 @@ export default function AdminOperations() {
       <div className="mt-8 flex flex-wrap items-end justify-between gap-2">
         <div>
           <h2 className="text-xl font-black sm:text-2xl">
-            {adminModules.find(([key]) => key === active)?.[1]} ({rows.length})
+            {adminModules.find(([key]) => key === active)?.[1]} (
+            {active === 'listings' ? listingTotal : rows.length})
           </h2>
           <p className="mt-1 text-sm text-slate-400">
             Har bir yozuvning tafsilotini ko‘rib, keyingi amalni tanlang.
@@ -168,7 +281,8 @@ export default function AdminOperations() {
               <div>
                 <strong className="operator-card__title">
                   {String(
-                    row.displayId ??
+                    row.nameUz ??
+                      row.displayId ??
                       row.username ??
                       row.signal ??
                       row.type ??
@@ -179,7 +293,10 @@ export default function AdminOperations() {
                 </strong>
                 <p className="mt-1 text-sm text-slate-400">
                   {String(
-                    row.accountStatus ??
+                    (active === 'listings'
+                      ? `@${row.store?.username ?? 'unknown'} · ${row.status ?? ''}`
+                      : undefined) ??
+                      row.accountStatus ??
                       row.severity ??
                       row.body ??
                       row.reason ??
@@ -192,6 +309,8 @@ export default function AdminOperations() {
               </div>
               {active !== 'audit' &&
                 active !== 'orders' &&
+                (active !== 'listings' ||
+                  ['ACTIVE', 'RESTRICTED'].includes(row.status ?? '')) &&
                 !(
                   (active === 'security-events' || active === 'risk-events') &&
                   row.reviewedAt
@@ -200,22 +319,26 @@ export default function AdminOperations() {
                     className="rs-button"
                     onClick={() => setDecision(row)}
                   >
-                    {active === 'users'
-                      ? row.accountStatus === 'SUSPENDED'
-                        ? 'Faollashtirish'
-                        : 'To‘xtatish'
-                      : active === 'reviews'
-                        ? 'Ko‘rinishni almashtirish'
-                        : active === 'security-events'
-                          ? 'Hal qilish'
-                          : active === 'disputes'
-                            ? 'Qaror chiqarish'
-                            : 'Moderatsiya'}
+                    {active === 'listings'
+                      ? row.status === 'ACTIVE'
+                        ? 'Cheklash'
+                        : 'Qayta faollashtirish'
+                      : active === 'users'
+                        ? row.accountStatus === 'SUSPENDED'
+                          ? 'Faollashtirish'
+                          : 'To‘xtatish'
+                        : active === 'reviews'
+                          ? 'Ko‘rinishni almashtirish'
+                          : active === 'security-events'
+                            ? 'Hal qilish'
+                            : active === 'disputes'
+                              ? 'Qaror chiqarish'
+                              : 'Moderatsiya'}
                   </button>
                 )}
             </div>
             <button
-              className="mt-3 text-sm font-bold text-emerald-300"
+              className="mt-3 text-sm font-bold text-rose-300"
               onClick={() => setSelected(row)}
             >
               Tafsilotlarni ko‘rish
@@ -231,17 +354,22 @@ export default function AdminOperations() {
           </article>
         ))}
       </section>
+      {active === 'listings' && rows.length < listingTotal && (
+        <button
+          className="rs-button mt-5"
+          disabled={loadingPage}
+          onClick={() => void loadMoreListings()}
+        >
+          {loadingPage ? 'Yuklanmoqda…' : 'Yana mahsulotlarni yuklash'}
+        </button>
+      )}
       {selected && (
-        <div
-          className="admin-dialog-backdrop"
-          role="presentation"
-          onClick={() => setSelected(null)}
+        <AdminModal
+          label="Yozuv tafsilotlari"
+          onClose={() => setSelected(null)}
         >
           <section
             className="admin-dialog"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Yozuv tafsilotlari"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="flex justify-between">
@@ -257,23 +385,23 @@ export default function AdminOperations() {
             </div>
             <OperatorDetail row={selected} module={active} />
           </section>
-        </div>
+        </AdminModal>
       )}
       {decision && (
-        <div className="admin-dialog-backdrop" role="presentation">
+        <AdminModal
+          label="Qarorni tasdiqlash"
+          locked={busy}
+          onClose={() => setDecision(null)}
+        >
           <form
             className="admin-dialog"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Qarorni tasdiqlash"
             onSubmit={async (event) => {
               event.preventDefault();
               const reason = String(
                 new FormData(event.currentTarget).get('reason') ?? '',
               ).trim();
               if (reason.length >= 10) {
-                await act(decision, reason);
-                setDecision(null);
+                if (await act(decision, reason)) setDecision(null);
               }
             }}
           >
@@ -284,38 +412,49 @@ export default function AdminOperations() {
             <textarea
               className="mt-4 w-full rounded-xl border border-white/10 bg-slate-950 p-3"
               name="reason"
+              aria-label="Qaror sababi"
               minLength={10}
               required
               rows={4}
               placeholder="Kamida 10 belgili asos"
             />
             <div className="mt-4 flex gap-2">
-              <button className="rs-button">Tasdiqlash</button>
-              <button type="button" onClick={() => setDecision(null)}>
+              <button className="rs-button" disabled={busy}>
+                {busy ? 'Saqlanmoqda…' : 'Tasdiqlash'}
+              </button>
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => setDecision(null)}
+              >
                 Bekor
               </button>
             </div>
           </form>
-        </div>
+        </AdminModal>
       )}
       {roleTarget && (
-        <div className="admin-dialog-backdrop" role="presentation">
+        <AdminModal
+          label="Admin rollarini boshqarish"
+          locked={busy}
+          onClose={() => setRoleTarget(null)}
+        >
           <form
             className="admin-dialog"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Admin rollarini boshqarish"
             onSubmit={async (event) => {
               event.preventDefault();
               const data = new FormData(event.currentTarget);
               const selectedRoles = data.getAll('roles').map(String);
               const reason = String(data.get('reason') ?? '').trim();
               if (selectedRoles.length && reason.length >= 5) {
-                await patch(`users/${String(roleTarget.publicId)}/roles`, {
-                  roles: selectedRoles,
-                  reason,
-                });
-                setRoleTarget(null);
+                const saved = await patch(
+                  `users/${String(roleTarget.publicId)}/roles`,
+                  {
+                    roles: selectedRoles,
+                    reason,
+                  },
+                );
+                if (saved) setRoleTarget(null);
               }
             }}
           >
@@ -349,21 +488,91 @@ export default function AdminOperations() {
             <textarea
               className="mt-4 w-full rounded-xl border border-white/10 bg-slate-950 p-3"
               name="reason"
+              aria-label="Rol o‘zgarishi sababi"
               minLength={5}
               required
               rows={3}
               placeholder="Rol o‘zgarishi sababi"
             />
             <div className="mt-4 flex gap-2">
-              <button className="rs-button">Saqlash</button>
-              <button type="button" onClick={() => setRoleTarget(null)}>
+              <button className="rs-button" disabled={busy}>
+                {busy ? 'Saqlanmoqda…' : 'Saqlash'}
+              </button>
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => setRoleTarget(null)}
+              >
                 Bekor
               </button>
             </div>
           </form>
-        </div>
+        </AdminModal>
       )}
     </main>
+  );
+}
+
+function AdminModal({
+  label,
+  locked = false,
+  onClose,
+  children,
+}: {
+  label: string;
+  locked?: boolean;
+  onClose: () => void;
+  children: ReactNode;
+}) {
+  const ref = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    const dialog = ref.current;
+    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    dialog?.showModal();
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      dialog?.close();
+      document.body.style.overflow = previous;
+      if (opener?.isConnected) queueMicrotask(() => opener.focus());
+    };
+  }, []);
+  return (
+    <dialog
+      ref={ref}
+      className="admin-native-dialog"
+      aria-label={label}
+      onKeyDown={(event) => {
+        if (event.key !== 'Tab') return;
+        const elements = [
+          ...event.currentTarget.querySelectorAll<HTMLElement>(
+            'button:not(:disabled), input:not(:disabled), textarea:not(:disabled), select:not(:disabled), a[href], [tabindex="0"]',
+          ),
+        ].filter((element) => element.getClientRects().length > 0);
+        const first = elements[0];
+        const last = elements.at(-1);
+        if (!first || !last) {
+          event.preventDefault();
+          return;
+        }
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }}
+      onCancel={(event) => {
+        event.preventDefault();
+        if (!locked) onClose();
+      }}
+      onClick={(event) => {
+        if (event.target === event.currentTarget && !locked) onClose();
+      }}
+    >
+      {children}
+    </dialog>
   );
 }
 

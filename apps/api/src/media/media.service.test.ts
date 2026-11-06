@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
 import { PrismaService } from '../infrastructure/prisma.service.js';
 import { MalwareScannerService } from './malware-scanner.service.js';
@@ -19,7 +19,7 @@ function fixture(ownerId = 'owner') {
   });
   const get = vi.fn().mockResolvedValue(Buffer.from('image-data'));
   const service = new MediaService(
-    { listingMedia: { findFirst } } as unknown as PrismaService,
+    { listingMedia: { findFirst }, listing: { findFirst: vi.fn().mockResolvedValue(null) } } as unknown as PrismaService,
     { get } as unknown as MediaStorageService,
     {} as MalwareScannerService,
   );
@@ -27,14 +27,12 @@ function fixture(ownerId = 'owner') {
 }
 
 describe('draft listing media authorization', () => {
-  it('returns media to the owning seller and store member', async () => {
+  it('returns media to the owning seller only', async () => {
     const { service, get } = fixture();
     expect(await service.listingImageForOwner('owner', 'listing', storageKey)).toMatchObject({
       mimeType: 'image/webp',
     });
-    expect(await service.listingImageForOwner('team-member', 'listing', storageKey)).toMatchObject({
-      mimeType: 'image/webp',
-    });
+    await expect(service.listingImageForOwner('team-member', 'listing', storageKey)).rejects.toBeInstanceOf(NotFoundException);
     expect(get).toHaveBeenCalledWith(storageKey);
   });
 
@@ -48,5 +46,27 @@ describe('draft listing media authorization', () => {
     const { service, findFirst } = fixture();
     await expect(service.listingImageForOwner('owner', 'listing', '../other')).rejects.toBeInstanceOf(NotFoundException);
     expect(findFirst).not.toHaveBeenCalled();
+  });
+});
+
+describe('verification document upload', () => {
+  it('does not replace an already approved identity document', async () => {
+    const putPrivate = vi.fn();
+    const service = new MediaService(
+      {
+        sellerVerification: {
+          findFirst: vi.fn().mockResolvedValue({
+            status: 'APPROVED',
+            sellerProfile: { verifiedAt: new Date() },
+          }),
+        },
+      } as unknown as PrismaService,
+      { putPrivate } as unknown as MediaStorageService,
+      { assertClean: vi.fn() } as unknown as MalwareScannerService,
+    );
+    await expect(
+      service.uploadVerificationDocument('seller', Buffer.from('%PDF-1.4\n%%EOF')),
+    ).rejects.toBeInstanceOf(ConflictException);
+    expect(putPrivate).not.toHaveBeenCalled();
   });
 });

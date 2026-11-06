@@ -1,0 +1,12 @@
+{
+  "name": "Test sovg‘a paketi 145266",
+  "listing": "cmw47ix4s0003m4twiajts5er",
+  "price": 49000,
+  "initialStock": 3,
+  "order": "cmw47kjlg0007m4twedfte1th",
+  "buyer": "shop_3222995",
+  "displayId": "AUD-MW47KJLF-30B62E26",
+  "result": "PASS",
+  "path": "owner UI wizard/upload/publish → catalog → product/image → buyer UI cart/checkout → owner UI fulfillment → two-way realtime chat → buyer receipt → review → public review",
+  "buyerFulfillmentDenied": 403
+}

@@ -1,73 +1,38 @@
 import { describe, expect, it } from 'vitest';
 import { parseApiEnvironment } from './index.js';
 
-const base = {
-  DATABASE_URL: 'postgresql://localhost/resaller',
-  REDIS_URL: 'redis://localhost:6379',
-  SESSION_SECRET: 'a-secure-session-secret-with-32-characters',
-  CORS_ORIGINS: 'https://resaller.uz',
-};
-
-describe('R2 environment', () => {
-  it('requires separate public and private buckets', () => {
-    expect(() =>
-      parseApiEnvironment({
-        ...base,
-        MEDIA_STORAGE_DRIVER: 's3',
-        S3_ENDPOINT: 'https://account.r2.cloudflarestorage.com',
-        S3_BUCKET: 'resaller-media',
-        S3_ACCESS_KEY_ID: 'access-key',
-        S3_SECRET_ACCESS_KEY: 'secret-key',
-      }),
-    ).toThrow(/S3_PRIVATE_BUCKET/);
+const base = { DATABASE_URL: 'postgresql://local:test@localhost/resaller_e2e', REDIS_URL: 'redis://localhost:6379', SESSION_SECRET: 'local-test-session-secret-at-least-32-characters', CORS_ORIGINS: 'http://localhost:3000' };
+describe('deployment environment', () => {
+  it('keeps local development usable', () => expect(parseApiEnvironment(base).MEDIA_STORAGE_DRIVER).toBe('local'));
+  it('rejects direct production startup without encryption, storage and recovery configuration', () => {
+    expect(() => parseApiEnvironment({ ...base, NODE_ENV: 'production' })).toThrow();
   });
-
-  it('accepts a complete private R2 configuration', () => {
-    const environment = parseApiEnvironment({
-      ...base,
-      MEDIA_STORAGE_DRIVER: 's3',
-      S3_ENDPOINT: 'https://account.r2.cloudflarestorage.com',
-      S3_BUCKET: 'resaller-media',
-      S3_PRIVATE_BUCKET: 'resaller-private-media',
-      S3_ACCESS_KEY_ID: 'access-key',
-      S3_SECRET_ACCESS_KEY: 'secret-key',
-      S3_FORCE_PATH_STYLE: 'false',
-    });
-    expect(environment.S3_PRIVATE_BUCKET).toBe('resaller-private-media');
-    expect(environment.S3_FORCE_PATH_STYLE).toBe(false);
+  it('rejects wildcard or empty CORS origins', () => {
+    for (const CORS_ORIGINS of ['', '*']) expect(() => parseApiEnvironment({ ...base, CORS_ORIGINS })).toThrow();
+  });
+  it('accepts configured production and separates private media', () => {
+    const configured = { ...base, NODE_ENV: 'production', CORS_ORIGINS: 'https://resaller.uz,https://admin.resaller.uz',
+      DATA_ENCRYPTION_KEY: 'test-only-independent-encryption-key-at-least-32', METRICS_TOKEN: 'test-only-metrics-token-at-least-32-characters',
+      MEDIA_STORAGE_DRIVER: 's3', PUBLIC_WEB_URL: 'https://resaller.uz', S3_ENDPOINT: 'https://storage.example.com',
+      S3_BUCKET: 'media', S3_PRIVATE_BUCKET: 'private', S3_ACCESS_KEY_ID: 'test-only', S3_SECRET_ACCESS_KEY: 'test-only',
+      EMAIL_WEBHOOK_URL: 'https://mail.example.com/send', EMAIL_WEBHOOK_TOKEN: 'test-only', OWNER_STORE_USERNAME: 'resaller' };
+    expect(parseApiEnvironment(configured).NODE_ENV).toBe('production');
+    expect(() => parseApiEnvironment({ ...configured, S3_PRIVATE_BUCKET: 'media' })).toThrow();
+    // Only the owner sells: production must name the one store buyers may see.
+    expect(() => parseApiEnvironment({ ...configured, OWNER_STORE_USERNAME: '' })).toThrow(/OWNER_STORE_USERNAME/);
+    expect(() => parseApiEnvironment({ ...configured, OWNER_STORE_USERNAME: 'Bad Name!' })).toThrow();
   });
 });
 
-describe('Telegram support environment', () => {
-  it('requires the complete protected webhook configuration when enabled', () => {
-    expect(() =>
-      parseApiEnvironment({
-        ...base,
-        TELEGRAM_SUPPORT_ENABLED: 'true',
-        TELEGRAM_BOT_TOKEN: 'bot-token',
-      }),
-    ).toThrow(/TELEGRAM_WEBHOOK_SECRET/);
+describe('the documented local onboarding path', () => {
+  it('accepts .env.example values, whose optional secrets are blank', () => {
+    expect(() => parseApiEnvironment({ ...base, MEDIA_STORAGE_DRIVER: 'local',
+      S3_ENDPOINT: '', S3_BUCKET: '', S3_PRIVATE_BUCKET: '', S3_ACCESS_KEY_ID: '', S3_SECRET_ACCESS_KEY: '',
+      EMAIL_WEBHOOK_URL: '', EMAIL_WEBHOOK_TOKEN: '', METRICS_TOKEN: '', PUSH_WEBHOOK_URL: '' })).not.toThrow();
   });
 
-  it('allows a token to remain configured while Telegram support is deferred', () => {
-    const environment = parseApiEnvironment({
-      ...base,
-      TELEGRAM_BOT_TOKEN: 'bot-token',
-    });
-    expect(environment.TELEGRAM_SUPPORT_ENABLED).toBe(false);
-  });
-
-  it('accepts a complete Telegram support configuration', () => {
-    const environment = parseApiEnvironment({
-      ...base,
-      TELEGRAM_SUPPORT_ENABLED: 'true',
-      TELEGRAM_BOT_TOKEN: 'bot-token',
-      TELEGRAM_WEBHOOK_SECRET: 'a-telegram-webhook-secret-with-32-characters',
-      TELEGRAM_SUPPORT_CHAT_ID: '-1001234567890',
-      TELEGRAM_SUPPORT_OPERATOR_NAME: 'Ziyodxon',
-      TELEGRAM_WEBHOOK_URL: 'https://api.resaller.uz/api/v1/support/telegram/webhook',
-    });
-    expect(environment.TELEGRAM_SUPPORT_CHAT_ID).toBe('-1001234567890');
-    expect(environment.TELEGRAM_SUPPORT_OPERATOR_NAME).toBe('Ziyodxon');
+  it('still demands S3 credentials once the S3 driver is selected', () => {
+    expect(() => parseApiEnvironment({ ...base, MEDIA_STORAGE_DRIVER: 's3',
+      S3_ENDPOINT: '', S3_BUCKET: '', S3_ACCESS_KEY_ID: '', S3_SECRET_ACCESS_KEY: '' })).toThrow();
   });
 });

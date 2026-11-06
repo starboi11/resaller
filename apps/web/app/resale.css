@@ -1,0 +1,663 @@
+/* Reseller pages: supplier catalogue, markup sheet, earnings ledger (docs/design/DESIGN.md). */
+.resale-page {
+  max-width: 72rem;
+}
+.resale-back {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  color: var(--muted);
+  font-size: var(--type-support);
+  font-weight: 700;
+}
+.resale-back::before {
+  content: '‹';
+  margin-right: 0.35rem;
+}
+.resale-head {
+  margin: 0.25rem 0 1.5rem;
+  max-width: 44rem;
+}
+.resale-head h1 {
+  font-size: var(--type-page);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+.resale-head__note {
+  margin-top: 0.5rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* 1 — three-step guide: a real sequence, so numbered. */
+.resale-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin: 0.85rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 1rem;
+  font-weight: 700;
+}
+.resale-steps li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.resale-steps span {
+  display: inline-grid;
+  width: 24px;
+  height: 24px;
+  flex: none;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--brand-soft);
+  color: var(--text);
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+@media (max-width: 560px) {
+  .resale-steps {
+    flex-direction: column;
+  }
+}
+
+/* 3 — filters and loading states */
+.resale-filters {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 16rem);
+  margin-bottom: 0.75rem;
+}
+.resale-filters .field {
+  min-height: 48px;
+  font-size: 1rem;
+}
+@media (max-width: 560px) {
+  .resale-filters {
+    grid-template-columns: 1fr;
+  }
+}
+.resale-refreshing {
+  margin: 0 0 0.75rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.resale-more {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+.resale-more-error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  color: var(--danger);
+  font-weight: 700;
+}
+.resale-wide {
+  width: 100%;
+  min-height: 48px;
+}
+
+/* Catalogue cards */
+.resale-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15.5rem), 1fr));
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.resale-card-skeleton {
+  display: block;
+  height: 22rem;
+  border-radius: 1.25rem;
+}
+.resale-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 1.25rem;
+  background: var(--surface);
+}
+.resale-card__media {
+  display: grid;
+  aspect-ratio: 4 / 3;
+  place-items: center;
+  background: var(--surface-2);
+}
+.resale-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.resale-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+.resale-card__body h2 {
+  font-size: var(--type-card);
+  font-weight: 800;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.resale-card__body .rs-button {
+  width: 100%;
+  min-height: 48px;
+  margin-top: auto;
+}
+.resale-card__prices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  margin: 0;
+}
+.resale-card__prices dt {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.resale-card__prices dd {
+  margin: 0;
+  font-weight: 800;
+}
+.resale-stock {
+  color: var(--text);
+  font-size: 0.875rem;
+}
+.resale-stock--out {
+  color: var(--danger);
+  font-weight: 700;
+}
+/* 2 — status is carried by the word as well as the colour. */
+.resale-status {
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.875rem;
+  font-weight: 800;
+}
+.resale-status--on {
+  background: color-mix(in srgb, var(--success) 10%, var(--surface));
+  color: var(--success);
+}
+.resale-status--off {
+  background: color-mix(in srgb, var(--warning) 10%, var(--surface));
+  color: var(--warning);
+}
+.resale-card__alert {
+  color: var(--warning);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+/* Messages */
+.resale-toast {
+  margin: 0 0 1rem;
+  border-left: 4px solid var(--success);
+  border-radius: 0.6rem;
+  background: color-mix(in srgb, var(--success) 10%, var(--surface));
+  padding: 0.75rem 1rem;
+  font-weight: 700;
+}
+.resale-error {
+  color: var(--danger);
+  font-weight: 700;
+}
+.resale-warning,
+.resale-note {
+  border-left: 4px solid var(--warning);
+  border-radius: 0.6rem;
+  background: color-mix(in srgb, var(--warning) 10%, var(--surface));
+  padding: 0.75rem 1rem;
+  font-size: var(--type-body);
+}
+.resale-link-danger {
+  min-height: 44px;
+  margin-top: 1rem;
+  border: 0;
+  background: none;
+  color: var(--danger);
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* 5 — markup sheet: header and action bar stay visible, the middle scrolls.
+   Bottom sheet on phones, centred dialog on wide screens. */
+.resale-sheet[open] {
+  display: flex;
+  flex-direction: column;
+}
+.resale-sheet {
+  width: min(100%, 34rem);
+  max-width: 100%;
+  max-height: 92dvh;
+  margin: auto auto 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 1.5rem 1.5rem 0 0;
+  background: var(--surface);
+  color: var(--text);
+  padding: 0;
+}
+.resale-sheet::backdrop {
+  background: rgb(0 0 0 / 0.45);
+}
+@media (min-width: 640px) {
+  .resale-sheet {
+    margin: auto;
+    border-radius: 1.5rem;
+  }
+}
+.resale-sheet__top {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1rem 0.5rem;
+}
+.resale-sheet__top h2 {
+  font-size: var(--type-section);
+  font-weight: 900;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+.resale-sheet__close {
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: none;
+  color: var(--text);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+.resale-sheet__body {
+  display: grid;
+  flex: 1;
+  gap: 1rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.5rem 1rem 1rem;
+}
+.resale-sheet__note {
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.resale-sheet__footer {
+  display: grid;
+  gap: 0.5rem;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom, 0px));
+}
+.resale-sheet__footer .resale-link-danger {
+  justify-self: start;
+}
+/* 6 — in-sheet removal confirmation */
+.resale-confirm {
+  display: grid;
+  gap: 0.5rem;
+}
+.resale-danger {
+  background: var(--danger);
+  color: #fff;
+}
+.resale-danger:hover {
+  background: color-mix(in srgb, var(--danger) 85%, #000);
+}
+
+/* 4 — profit readout: the one loud element in the sheet. */
+.markup {
+  display: grid;
+  gap: 0.4rem;
+}
+.markup__label {
+  font-size: 1.125rem;
+}
+.markup input[type='range'] {
+  width: 100%;
+  min-height: 44px;
+  accent-color: var(--brand-strong);
+}
+.markup__scale {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.profit {
+  display: grid;
+  gap: 0.5rem;
+  border-radius: 16px;
+  background: var(--surface-2);
+  padding: 16px;
+}
+.profit__row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  color: var(--muted);
+}
+.profit__row--price {
+  color: var(--text);
+  font-size: 1.125rem;
+}
+.profit__gain {
+  display: grid;
+  gap: 0.15rem;
+  border-top: 1px dashed var(--line);
+  padding-top: 0.6rem;
+  font-weight: 700;
+}
+.profit__gain strong {
+  color: var(--success);
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.profit__hint {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.resale-variants summary {
+  min-height: 44px;
+  cursor: pointer;
+  font-weight: 700;
+  line-height: 44px;
+}
+.resale-variants ul {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.resale-variants li {
+  display: grid;
+  gap: 0.15rem;
+  border-bottom: 1px solid var(--line);
+  padding: 0.75rem 0;
+  overflow-wrap: anywhere;
+}
+.resale-variants__gain {
+  color: var(--success);
+  font-weight: 700;
+}
+
+/* 7 — earnings ledger */
+.ledger {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  border: 1px solid var(--line);
+  border-radius: 1.5rem;
+  background: var(--surface);
+  padding: 1.5rem;
+}
+@media (max-width: 720px) {
+  .ledger {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+}
+.ledger-skeleton {
+  display: block;
+  height: 10rem;
+  grid-column: 1 / -1;
+}
+.ledger__main h2 {
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+.ledger__amount {
+  display: block;
+  margin: 0.35rem 0;
+  color: var(--success);
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.ledger__next {
+  font-size: 1rem;
+  font-weight: 700;
+}
+.ledger__rest {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+}
+.ledger__rest div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.6rem;
+}
+.ledger__rest dt {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.ledger__rest dd {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 8 — payout form */
+.payout-form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 1.25rem;
+  background: var(--surface);
+  padding: 1.25rem;
+}
+.payout-form h2,
+.resale-section-title {
+  font-size: var(--type-section);
+  font-weight: 900;
+}
+.resale-section-title {
+  margin-bottom: 0.5rem;
+}
+.payout-form__methods {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.payout-form__methods label {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 0.9rem;
+  padding: 0 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.payout-form__methods label:has(input:checked) {
+  border-color: var(--brand-strong);
+  background: var(--brand-soft);
+}
+.payout-form__fields {
+  display: grid;
+  gap: 0.75rem;
+}
+.payout-form__fields label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 700;
+}
+.payout-form__fields .field {
+  min-height: 48px;
+  font-size: 1rem;
+}
+.payout-form__hint {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+/* 9 — sales and payout history: stacked so long values never squeeze. */
+.earning-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.earning {
+  display: grid;
+  gap: 0.2rem;
+  border-bottom: 1px solid var(--line);
+  padding: 16px 0;
+}
+.earning__order {
+  font-size: 1rem;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+.earning__meta {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.earning__state {
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+.earning__amount {
+  font-size: 1.125rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.earning__wrap {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+.earning--ok .earning__state {
+  color: var(--success);
+}
+.earning--wait .earning__state {
+  color: var(--warning);
+}
+.earning--off .earning__state,
+.earning--off .earning__amount {
+  color: var(--muted);
+}
+
+/* Seller Center additions */
+.seller-resale-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.order-tag {
+  display: inline-block;
+  margin-left: 0.4rem;
+  border-radius: 999px;
+  background: var(--brand-soft);
+  color: var(--brand-strong);
+  padding: 0.1rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  vertical-align: middle;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resale-sheet,
+  .resale-card {
+    transition: none;
+  }
+}
+
+/* Order page (DESIGN-2): control block, delivery card, resale price split. */
+.order-control {
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+.order-control .acceptance-clock {
+  margin: 0;
+}
+.order-control__primary {
+  min-height: 48px;
+}
+@media (max-width: 640px) {
+  .order-control__primary,
+  .order-chat-link {
+    width: 100%;
+  }
+}
+.order-chat-link {
+  min-height: 48px;
+}
+.delivery-card {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+}
+.delivery-card dl {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+.delivery-card dt {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.delivery-card dd {
+  margin: 0;
+  color: var(--text);
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+.delivery-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.delivery-card__actions .rs-button {
+  min-height: 44px;
+}
+@media (max-width: 640px) {
+  .delivery-card__actions {
+    flex-direction: column;
+  }
+  .delivery-card__actions .rs-button {
+    width: 100%;
+  }
+}
+.order-item-split {
+  display: grid;
+  gap: 0.1rem;
+  margin-top: 0.2rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+.order-item-split__gain {
+  color: var(--success);
+  font-weight: 700;
+}

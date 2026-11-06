@@ -12,6 +12,8 @@ import { TrustModule } from './trust/trust.module.js';
 import { MetricsController } from './health/metrics.controller.js';
 import { SupportModule } from './support/support.module.js';
 import { AssistantModule } from './assistant/assistant.module.js';
+import { AnalyticsController } from './analytics/analytics.controller.js';
+import { SellerCenterModule } from './seller-center/seller-center.module.js';
 
 @Module({
   imports: [
@@ -25,7 +27,8 @@ import { AssistantModule } from './assistant/assistant.module.js';
     TrustModule,
     SupportModule,
     AssistantModule,
+    SellerCenterModule,
   ],
-  controllers: [HealthController, MetricsController, PlatformController],
+  controllers: [HealthController, MetricsController, PlatformController, AnalyticsController],
 })
 export class AppModule {}

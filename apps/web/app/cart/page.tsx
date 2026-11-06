@@ -30,26 +30,42 @@ type Address = {
 export default function CartPage() {
   const [cart, setCart] = useState<Cart | null>(null);
   const [message, setMessage] = useState('');
+  const [loadError, setLoadError] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [unauthorized, setUnauthorized] = useState(false);
   const [busy, setBusy] = useState(false);
   const [addresses, setAddresses] = useState<Address[]>([]);
+  // Name and phone from registration prefill the delivery form.
+  const [profile, setProfile] = useState<{ fullName: string | null; phone: string | null } | null>(null);
+  useEffect(() => {
+    fetch(`${API}/auth/profile`, { credentials: 'include', cache: 'no-store' })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((body: { fullName: string | null; phone: string | null } | null) => setProfile(body))
+      .catch(() => setProfile(null));
+  }, []);
   const load = useCallback(async () => {
-    const response = await fetch(`${API}/cart`, {
-      credentials: 'include',
-      cache: 'no-store',
-    });
-    if (response.status === 401) {
-      setUnauthorized(true);
-      return;
-    }
-    if (response.ok) {
-      setCart((await response.json()) as Cart);
-      const saved = await fetch(`${API}/addresses`, {
+    try {
+      const response = await fetch(`${API}/cart`, {
         credentials: 'include',
         cache: 'no-store',
       });
-      if (saved.ok) setAddresses((await saved.json()) as Address[]);
-    } else setMessage('Savatni ochib bo‘lmadi.');
+      if (response.status === 401) {
+        setUnauthorized(true);
+        return;
+      }
+      if (!response.ok) throw new Error('Cart unavailable');
+      setCart((await response.json()) as Cart);
+      setLoadError(false);
+      const saved = await fetch(`${API}/addresses`, {
+        credentials: 'include',
+        cache: 'no-store',
+      }).catch(() => null);
+      if (saved?.ok) setAddresses((await saved.json()) as Address[]);
+    } catch {
+      setLoadError(true);
+    } finally {
+      setLoading(false);
+    }
   }, []);
   useEffect(() => {
     void load();
@@ -99,16 +115,14 @@ export default function CartPage() {
           region: data.get('region'),
           address: data.get('address'),
         },
+        // One seller, one coupon field. The API still keys coupons by store.
         couponCodes: Object.fromEntries(
           Array.from(
             new Set(
               cart?.items.map((item) => item.listing.store.publicId) ?? [],
             ),
           )
-            .map((storeId) => [
-              storeId,
-              String(data.get(`coupon-${storeId}`) ?? '').trim(),
-            ])
+            .map((storeId) => [storeId, String(data.get('coupon') ?? '').trim()])
             .filter(([, code]) => code),
         ),
         saveAddress: data.get('saveAddress') === 'on',
@@ -166,6 +180,35 @@ export default function CartPage() {
           <span>Tasdiqlash</span>
         </li>
       </ol>
+      {loading && (
+        <div className="mt-8">
+          <StatePanel
+            title="Savat yuklanmoqda"
+            description="Mahsulotlaringiz tekshirilmoqda."
+          />
+        </div>
+      )}
+      {loadError && !loading && (
+        <div className="mt-8">
+          <StatePanel
+            tone="danger"
+            title="Savatni ochib bo‘lmadi"
+            description="Aloqani tekshirib, qayta urinib ko‘ring. Savatingiz o‘chirilgani yo‘q."
+            action={
+              <button
+                className="rs-button"
+                type="button"
+                onClick={() => {
+                  setLoading(true);
+                  void load();
+                }}
+              >
+                Qayta urinish
+              </button>
+            }
+          />
+        </div>
+      )}
       {message && (
         <p
           className="mt-4 rounded-xl bg-red-100 p-3 text-sm text-red-800"
@@ -203,184 +246,180 @@ export default function CartPage() {
           />
         </div>
       )}
-      <div className="buyer-layout mt-8 grid gap-6 lg:grid-cols-[1.2fr_.8fr]">
-        <section className="cart-items grid gap-3">
-          {cart?.items.map((item) => (
-            <article
-              className="surface cart-line flex items-center justify-between gap-4 p-5"
-              key={item.id}
-            >
-              <div>
-                <p className="cart-store">{item.listing.store.nameUz}</p>
-                <Link
-                  className="font-black"
-                  href={`/product/${item.listing.publicId}`}
-                >
-                  {item.listing.nameUz}
-                </Link>
-                <p className="muted mt-1 text-sm">
-                  {Number(item.listing.priceMinor).toLocaleString('uz-UZ')}{' '}
-                  {item.listing.currency}
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  className="icon-button"
-                  disabled={busy}
-                  onClick={() => void quantity(item, item.quantity - 1)}
-                  aria-label="Kamaytirish"
-                >
-                  −
-                </button>
-                <strong>{item.quantity}</strong>
-                <button
-                  className="icon-button"
-                  disabled={busy}
-                  onClick={() => void quantity(item, item.quantity + 1)}
-                  aria-label="Ko‘paytirish"
-                >
-                  +
-                </button>
-                <button
-                  className="ml-2 text-sm font-bold text-[var(--danger)]"
-                  disabled={busy}
-                  onClick={() => void remove(item.id)}
-                >
-                  O‘chirish
-                </button>
-              </div>
-            </article>
-          ))}
-        </section>
-        {Boolean(cart?.items.length) && (
-          <form className="surface checkout-card h-fit p-5" onSubmit={checkout}>
-            <h2 className="text-xl font-black">Yetkazib berish</h2>
-            <p className="muted mt-2 text-sm">
-              To‘lovni sotuvchi bilan platformadan tashqarida kelishasiz.
-            </p>
-            <div className="mt-5 grid gap-3">
-              {addresses.length > 0 && (
-                <label className="checkout-field">
-                  <span>Saqlangan manzil</span>
-                  <select
-                    className="field"
-                    defaultValue=""
-                    onChange={(event) => {
-                      const selected = addresses.find(
-                        (item) => item.publicId === event.target.value,
-                      );
-                      const form = event.currentTarget.form;
-                      if (!selected || !form) return;
-                      for (const key of [
-                        'fullName',
-                        'phone',
-                        'region',
-                        'address',
-                      ] as const) {
-                        const field = form.elements.namedItem(key) as
-                          HTMLInputElement | HTMLTextAreaElement | null;
-                        if (field) field.value = selected[key];
-                      }
-                    }}
+      {Boolean(cart?.items.length) && (
+        <div className="buyer-layout mt-8 grid gap-6 lg:grid-cols-[1.2fr_.8fr]">
+          <section className="cart-items grid gap-3">
+            {cart?.items.map((item) => (
+              <article
+                className="surface cart-line flex items-center justify-between gap-4 p-5"
+                key={item.id}
+              >
+                <div>
+                  <Link
+                    className="font-black"
+                    href={`/product/${item.listing.publicId}`}
                   >
-                    <option value="">Yangi manzil</option>
-                    {addresses.map((item) => (
-                      <option key={item.publicId} value={item.publicId}>
-                        {item.label} · {item.region}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              )}
-              <label className="checkout-field">
-                <span>Ism va familiya</span>
-                <input
-                  className="field"
-                  name="fullName"
-                  required
-                  minLength={3}
-                  placeholder="Ism va familiya"
-                />
-              </label>
-              <label className="checkout-save">
-                <input type="checkbox" name="saveAddress" />{' '}
-                <span>Bu manzilni keyingi xarid uchun saqlash</span>
-              </label>
-              <label className="checkout-field">
-                <span>Manzil nomi</span>
-                <input
-                  className="field"
-                  name="addressLabel"
-                  maxLength={40}
-                  placeholder="Masalan: Uy"
-                />
-              </label>
-              <label className="checkout-field">
-                <span>Telefon raqam</span>
-                <input
-                  className="field"
-                  name="phone"
-                  type="tel"
-                  autoComplete="tel"
-                  required
-                  minLength={7}
-                  placeholder="Telefon"
-                />
-              </label>
-              <label className="checkout-field">
-                <span>Viloyat yoki shahar</span>
-                <input
-                  className="field"
-                  name="region"
-                  autoComplete="address-level1"
-                  required
-                  minLength={2}
-                  placeholder="Viloyat / shahar"
-                />
-              </label>
-              <label className="checkout-field">
-                <span>To‘liq manzil</span>
-                <textarea
-                  className="field min-h-24"
-                  name="address"
-                  autoComplete="street-address"
-                  required
-                  minLength={5}
-                  placeholder="To‘liq manzil"
-                />
-              </label>
-              {Array.from(
-                new Map(
-                  cart?.items.map((item) => [
-                    item.listing.store.publicId,
-                    item.listing.store.nameUz,
-                  ]) ?? [],
-                ),
-              ).map(([storeId, name]) => (
-                <label className="checkout-field" key={storeId}>
-                  <span>{name} kuponi</span>
+                    {item.listing.nameUz}
+                  </Link>
+                  <p className="muted mt-1 text-sm">
+                    {Number(item.listing.priceMinor).toLocaleString('uz-UZ')}{' '}
+                    {item.listing.currency}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    className="icon-button"
+                    disabled={busy}
+                    onClick={() => void quantity(item, item.quantity - 1)}
+                    aria-label="Kamaytirish"
+                  >
+                    −
+                  </button>
+                  <strong>{item.quantity}</strong>
+                  <button
+                    className="icon-button"
+                    disabled={busy}
+                    onClick={() => void quantity(item, item.quantity + 1)}
+                    aria-label="Ko‘paytirish"
+                  >
+                    +
+                  </button>
+                  <button
+                    className="ml-2 text-sm font-bold text-[var(--danger)]"
+                    disabled={busy}
+                    onClick={() => void remove(item.id)}
+                  >
+                    O‘chirish
+                  </button>
+                </div>
+              </article>
+            ))}
+          </section>
+          {Boolean(cart?.items.length) && (
+            <form
+              className="surface checkout-card h-fit p-5"
+              onSubmit={checkout}
+            >
+              <h2 className="text-xl font-black">Yetkazib berish</h2>
+              <p className="muted mt-2 text-sm">
+                To‘lovni sotuvchi bilan platformadan tashqarida kelishasiz.
+              </p>
+              <div className="mt-5 grid gap-3">
+                {addresses.length > 0 && (
+                  <label className="checkout-field">
+                    <span>Saqlangan manzil</span>
+                    <select
+                      className="field"
+                      defaultValue=""
+                      onChange={(event) => {
+                        const selected = addresses.find(
+                          (item) => item.publicId === event.target.value,
+                        );
+                        const form = event.currentTarget.form;
+                        if (!selected || !form) return;
+                        for (const key of [
+                          'fullName',
+                          'phone',
+                          'region',
+                          'address',
+                        ] as const) {
+                          const field = form.elements.namedItem(key) as
+                            HTMLInputElement | HTMLTextAreaElement | null;
+                          if (field) field.value = selected[key];
+                        }
+                      }}
+                    >
+                      <option value="">Yangi manzil</option>
+                      {addresses.map((item) => (
+                        <option key={item.publicId} value={item.publicId}>
+                          {item.label} · {item.region}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                )}
+                <label className="checkout-field">
+                  <span>Ism va familiya</span>
                   <input
                     className="field"
-                    name={`coupon-${storeId}`}
-                    placeholder={`${name} kupon kodi`}
+                    name="fullName"
+                    key={`name-${profile?.fullName ?? ''}`}
+                    defaultValue={profile?.fullName ?? ''}
+                    autoComplete="name"
+                    required
+                    minLength={3}
+                    placeholder="Ism va familiya"
                   />
                 </label>
-              ))}
-            </div>
-            <div className="my-5 flex justify-between border-t border-[var(--line)] pt-4">
-              <span>Jami</span>
-              <strong>{total.toLocaleString('uz-UZ')} UZS</strong>
-            </div>
-            <button className="rs-button w-full" disabled={busy}>
-              {busy ? 'Yaratilmoqda…' : 'Buyurtma berish'}
-            </button>
-            <p className="checkout-assurance">
-              Har bir do‘kon uchun alohida buyurtma yaratiladi. Seller 60 daqiqa
-              ichida tasdiqlaydi.
-            </p>
-          </form>
-        )}
-      </div>
+                <label className="checkout-save">
+                  <input type="checkbox" name="saveAddress" />{' '}
+                  <span>Bu manzilni keyingi xarid uchun saqlash</span>
+                </label>
+                <label className="checkout-field">
+                  <span>Manzil nomi</span>
+                  <input
+                    className="field"
+                    name="addressLabel"
+                    maxLength={40}
+                    placeholder="Masalan: Uy"
+                  />
+                </label>
+                <label className="checkout-field">
+                  <span>Telefon raqam</span>
+                  <input
+                    className="field"
+                    name="phone"
+                    key={`phone-${profile?.phone ?? ''}`}
+                    defaultValue={profile?.phone ?? ''}
+                    type="tel"
+                    autoComplete="tel"
+                    required
+                    minLength={7}
+                    placeholder="Telefon"
+                  />
+                </label>
+                <label className="checkout-field">
+                  <span>Viloyat yoki shahar</span>
+                  <input
+                    className="field"
+                    name="region"
+                    autoComplete="address-level1"
+                    required
+                    minLength={2}
+                    placeholder="Viloyat / shahar"
+                  />
+                </label>
+                <label className="checkout-field">
+                  <span>To‘liq manzil</span>
+                  <textarea
+                    className="field min-h-24"
+                    name="address"
+                    autoComplete="street-address"
+                    required
+                    minLength={5}
+                    placeholder="To‘liq manzil"
+                  />
+                </label>
+                <label className="checkout-field">
+                  <span>Kupon kodi</span>
+                  <input className="field" name="coupon" autoComplete="off" placeholder="Agar bo‘lsa, kupon kodini kiriting" />
+                </label>
+              </div>
+              <div className="my-5 flex justify-between border-t border-[var(--line)] pt-4">
+                <span>Jami</span>
+                <strong>{total.toLocaleString('uz-UZ')} UZS</strong>
+              </div>
+              <button className="rs-button w-full" disabled={busy}>
+                {busy ? 'Yaratilmoqda…' : 'Buyurtma berish'}
+              </button>
+              <p className="checkout-assurance">
+                Buyurtmangiz Resaller’ga yuboriladi. Tasdiqlash holatini
+                buyurtma sahifasida kuzating.
+              </p>
+            </form>
+          )}
+        </div>
+      )}
     </main>
   );
 }

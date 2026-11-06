@@ -1,7 +1,8 @@
-import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
+import { sourceFiles } from './source-files.mjs';
 
-const files = execFileSync('git', ['ls-files', '--cached', '--others', '--exclude-standard', '-z'], { encoding: 'utf8' }).split('\0').filter(Boolean);
+// Works in the source ZIP too, without a .git directory or Git executable.
+const files = sourceFiles();
 const rules = [
   ['private key', /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/u],
   ['AWS access key', /\bAKIA[0-9A-Z]{16}\b/u],
@@ -24,4 +25,4 @@ if (findings.length) {
   console.error(`Secret scan failed:\n${findings.join('\n')}`);
   process.exit(1);
 }
-console.log(`Secret scan passed (${files.length} tracked and untracked candidate files).`);
+console.log(`Secret scan passed (${files.length} release source files).`);

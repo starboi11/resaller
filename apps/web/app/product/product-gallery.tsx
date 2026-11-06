@@ -5,7 +5,7 @@ import { useState } from 'react';
 export function ProductGallery({ name, media, selectedVariant }: { name: string; media: { storageKey: string; thumbnailStorageKey?: string | null; variantId?: string | null }[]; selectedVariant?: string }) {
   const [active, setActive] = useState(0);
   const [zoom, setZoom] = useState(false);
-  const api = process.env.NEXT_PUBLIC_API_URL ?? 'http://127.0.0.1:4000/api/v1';
+  const api = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
   const visible = media.filter((item) => !item.variantId || !selectedVariant || item.variantId === selectedVariant);
   const gallery = visible.length ? visible : media;
   const current = gallery[Math.min(active, gallery.length - 1)];

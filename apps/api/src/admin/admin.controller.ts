@@ -5,6 +5,8 @@ import {
   Inject,
   Param,
   Patch,
+  Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -23,6 +25,7 @@ import {
   ModerateVerificationDto,
   ResolveSecurityEventDto,
   UpdateUserRolesDto,
+  ViewSellerPrivateDetailsDto,
 } from './admin.dto.js';
 
 @Controller('admin')
@@ -32,6 +35,25 @@ export class AdminController {
   constructor(@Inject(AdminService) private readonly admin: AdminService) {}
   @Get('queue') queue() {
     return this.admin.queue();
+  }
+  @Get('overview') @RequireRoles('SUPER_ADMIN') overview() {
+    return this.admin.overview();
+  }
+  @Get('seller-login-history') @RequireRoles('SUPER_ADMIN') sellerLoginHistory(
+    @Req() req: FastifyRequest & { user: AuthenticatedUser },
+  ) {
+    return this.admin.sellerLoginHistory(req.user);
+  }
+  @Post('sellers/:publicId/private-details') @RequireRoles('SUPER_ADMIN') sellerPrivateDetails(
+    @Req() req: FastifyRequest & { user: AuthenticatedUser },
+    @Param('publicId') id: string,
+    @Body() input: ViewSellerPrivateDetailsDto,
+  ) {
+    return this.admin.sellerPrivateDetails(req.user, id, input.reason);
+  }
+  @Get('listings') @RequireRoles('SUPER_ADMIN', 'MODERATOR') listings(@Query('page') rawPage?: string) {
+    const page = Number(rawPage ?? 1);
+    return this.admin.allListings(Number.isSafeInteger(page) && page > 0 ? Math.min(page, 10_000) : 1);
   }
   @Patch('stores/:publicId/status') store(
     @Req() req: FastifyRequest & { user: AuthenticatedUser },

@@ -23,6 +23,9 @@ export class CheckoutDto {
   @IsString() @MinLength(8) @MaxLength(100) idempotencyKey!: string;
   @IsObject() delivery!: Record<string, unknown>;
   @IsOptional() @IsObject() couponCodes?: Record<string, string>;
+  // Per-store total the buyer was shown, keyed by store publicId. When present
+  // checkout refuses to charge a different amount after a price change.
+  @IsOptional() @IsObject() expectedTotalMinor?: Record<string, string>;
   @IsOptional() @IsBoolean() saveAddress?: boolean;
   @IsOptional() @IsString() @MaxLength(40) addressLabel?: string;
 }

@@ -17,3 +17,4 @@ coverage/
 docs/
 .git/
 work
+.local-audit/

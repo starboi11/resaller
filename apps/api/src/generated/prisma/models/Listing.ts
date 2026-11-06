@@ -29,11 +29,19 @@ export type AggregateListing = {
 export type ListingAvgAggregateOutputType = {
   priceMinor: number | null
   salePriceMinor: number | null
+  minMarkupBps: number | null
+  maxMarkupBps: number | null
+  recommendedRetailMinor: number | null
+  markupBps: number | null
 }
 
 export type ListingSumAggregateOutputType = {
   priceMinor: bigint | null
   salePriceMinor: bigint | null
+  minMarkupBps: number | null
+  maxMarkupBps: number | null
+  recommendedRetailMinor: bigint | null
+  markupBps: number | null
 }
 
 export type ListingMinAggregateOutputType = {
@@ -52,6 +60,11 @@ export type ListingMinAggregateOutputType = {
   videoStorageKey: string | null
   currency: string | null
   condition: string | null
+  minMarkupBps: number | null
+  maxMarkupBps: number | null
+  recommendedRetailMinor: bigint | null
+  sourceListingId: string | null
+  markupBps: number | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -73,6 +86,11 @@ export type ListingMaxAggregateOutputType = {
   videoStorageKey: string | null
   currency: string | null
   condition: string | null
+  minMarkupBps: number | null
+  maxMarkupBps: number | null
+  recommendedRetailMinor: bigint | null
+  sourceListingId: string | null
+  markupBps: number | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -95,6 +113,11 @@ export type ListingCountAggregateOutputType = {
   currency: number
   condition: number
   attributeValues: number
+  minMarkupBps: number
+  maxMarkupBps: number
+  recommendedRetailMinor: number
+  sourceListingId: number
+  markupBps: number
   createdAt: number
   updatedAt: number
   deletedAt: number
@@ -105,11 +128,19 @@ export type ListingCountAggregateOutputType = {
 export type ListingAvgAggregateInputType = {
   priceMinor?: true
   salePriceMinor?: true
+  minMarkupBps?: true
+  maxMarkupBps?: true
+  recommendedRetailMinor?: true
+  markupBps?: true
 }
 
 export type ListingSumAggregateInputType = {
   priceMinor?: true
   salePriceMinor?: true
+  minMarkupBps?: true
+  maxMarkupBps?: true
+  recommendedRetailMinor?: true
+  markupBps?: true
 }
 
 export type ListingMinAggregateInputType = {
@@ -128,6 +159,11 @@ export type ListingMinAggregateInputType = {
   videoStorageKey?: true
   currency?: true
   condition?: true
+  minMarkupBps?: true
+  maxMarkupBps?: true
+  recommendedRetailMinor?: true
+  sourceListingId?: true
+  markupBps?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -149,6 +185,11 @@ export type ListingMaxAggregateInputType = {
   videoStorageKey?: true
   currency?: true
   condition?: true
+  minMarkupBps?: true
+  maxMarkupBps?: true
+  recommendedRetailMinor?: true
+  sourceListingId?: true
+  markupBps?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -171,6 +212,11 @@ export type ListingCountAggregateInputType = {
   currency?: true
   condition?: true
   attributeValues?: true
+  minMarkupBps?: true
+  maxMarkupBps?: true
+  recommendedRetailMinor?: true
+  sourceListingId?: true
+  markupBps?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -280,6 +326,11 @@ export type ListingGroupByOutputType = {
   currency: string
   condition: string | null
   attributeValues: runtime.JsonValue
+  minMarkupBps: number | null
+  maxMarkupBps: number | null
+  recommendedRetailMinor: bigint | null
+  sourceListingId: string | null
+  markupBps: number | null
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
@@ -325,9 +376,16 @@ export type ListingWhereInput = {
   currency?: Prisma.StringFilter<"Listing"> | string
   condition?: Prisma.StringNullableFilter<"Listing"> | string | null
   attributeValues?: Prisma.JsonFilter<"Listing">
+  minMarkupBps?: Prisma.IntNullableFilter<"Listing"> | number | null
+  maxMarkupBps?: Prisma.IntNullableFilter<"Listing"> | number | null
+  recommendedRetailMinor?: Prisma.BigIntNullableFilter<"Listing"> | bigint | number | null
+  sourceListingId?: Prisma.UuidNullableFilter<"Listing"> | string | null
+  markupBps?: Prisma.IntNullableFilter<"Listing"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Listing"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Listing"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
+  sourceListing?: Prisma.XOR<Prisma.ListingNullableScalarRelationFilter, Prisma.ListingWhereInput> | null
+  resoldListings?: Prisma.ListingListRelationFilter
   store?: Prisma.XOR<Prisma.StoreScalarRelationFilter, Prisma.StoreWhereInput>
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   variants?: Prisma.ListingVariantListRelationFilter
@@ -355,9 +413,16 @@ export type ListingOrderByWithRelationInput = {
   currency?: Prisma.SortOrder
   condition?: Prisma.SortOrderInput | Prisma.SortOrder
   attributeValues?: Prisma.SortOrder
+  minMarkupBps?: Prisma.SortOrderInput | Prisma.SortOrder
+  maxMarkupBps?: Prisma.SortOrderInput | Prisma.SortOrder
+  recommendedRetailMinor?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceListingId?: Prisma.SortOrderInput | Prisma.SortOrder
+  markupBps?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceListing?: Prisma.ListingOrderByWithRelationInput
+  resoldListings?: Prisma.ListingOrderByRelationAggregateInput
   store?: Prisma.StoreOrderByWithRelationInput
   category?: Prisma.CategoryOrderByWithRelationInput
   variants?: Prisma.ListingVariantOrderByRelationAggregateInput
@@ -371,6 +436,7 @@ export type ListingOrderByWithRelationInput = {
 export type ListingWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   publicId?: string
+  storeId_sourceListingId?: Prisma.ListingStoreIdSourceListingIdCompoundUniqueInput
   AND?: Prisma.ListingWhereInput | Prisma.ListingWhereInput[]
   OR?: Prisma.ListingWhereInput[]
   NOT?: Prisma.ListingWhereInput | Prisma.ListingWhereInput[]
@@ -388,9 +454,16 @@ export type ListingWhereUniqueInput = Prisma.AtLeast<{
   currency?: Prisma.StringFilter<"Listing"> | string
   condition?: Prisma.StringNullableFilter<"Listing"> | string | null
   attributeValues?: Prisma.JsonFilter<"Listing">
+  minMarkupBps?: Prisma.IntNullableFilter<"Listing"> | number | null
+  maxMarkupBps?: Prisma.IntNullableFilter<"Listing"> | number | null
+  recommendedRetailMinor?: Prisma.BigIntNullableFilter<"Listing"> | bigint | number | null
+  sourceListingId?: Prisma.UuidNullableFilter<"Listing"> | string | null
+  markupBps?: Prisma.IntNullableFilter<"Listing"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Listing"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Listing"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
+  sourceListing?: Prisma.XOR<Prisma.ListingNullableScalarRelationFilter, Prisma.ListingWhereInput> | null
+  resoldListings?: Prisma.ListingListRelationFilter
   store?: Prisma.XOR<Prisma.StoreScalarRelationFilter, Prisma.StoreWhereInput>
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   variants?: Prisma.ListingVariantListRelationFilter
@@ -399,7 +472,7 @@ export type ListingWhereUniqueInput = Prisma.AtLeast<{
   favorites?: Prisma.FavoriteListRelationFilter
   questions?: Prisma.StoreQuestionListRelationFilter
   collectionItems?: Prisma.CollectionItemListRelationFilter
-}, "id" | "publicId">
+}, "id" | "publicId" | "storeId_sourceListingId">
 
 export type ListingOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -418,6 +491,11 @@ export type ListingOrderByWithAggregationInput = {
   currency?: Prisma.SortOrder
   condition?: Prisma.SortOrderInput | Prisma.SortOrder
   attributeValues?: Prisma.SortOrder
+  minMarkupBps?: Prisma.SortOrderInput | Prisma.SortOrder
+  maxMarkupBps?: Prisma.SortOrderInput | Prisma.SortOrder
+  recommendedRetailMinor?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceListingId?: Prisma.SortOrderInput | Prisma.SortOrder
+  markupBps?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -448,6 +526,11 @@ export type ListingScalarWhereWithAggregatesInput = {
   currency?: Prisma.StringWithAggregatesFilter<"Listing"> | string
   condition?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
   attributeValues?: Prisma.JsonWithAggregatesFilter<"Listing">
+  minMarkupBps?: Prisma.IntNullableWithAggregatesFilter<"Listing"> | number | null
+  maxMarkupBps?: Prisma.IntNullableWithAggregatesFilter<"Listing"> | number | null
+  recommendedRetailMinor?: Prisma.BigIntNullableWithAggregatesFilter<"Listing"> | bigint | number | null
+  sourceListingId?: Prisma.UuidNullableWithAggregatesFilter<"Listing"> | string | null
+  markupBps?: Prisma.IntNullableWithAggregatesFilter<"Listing"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Listing"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Listing"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Listing"> | Date | string | null
@@ -468,9 +551,15 @@ export type ListingCreateInput = {
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  markupBps?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  sourceListing?: Prisma.ListingCreateNestedOneWithoutResoldListingsInput
+  resoldListings?: Prisma.ListingCreateNestedManyWithoutSourceListingInput
   store: Prisma.StoreCreateNestedOneWithoutListingsInput
   category: Prisma.CategoryCreateNestedOneWithoutListingsInput
   variants?: Prisma.ListingVariantCreateNestedManyWithoutListingInput
@@ -498,9 +587,15 @@ export type ListingUncheckedCreateInput = {
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  sourceListingId?: string | null
+  markupBps?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  resoldListings?: Prisma.ListingUncheckedCreateNestedManyWithoutSourceListingInput
   variants?: Prisma.ListingVariantUncheckedCreateNestedManyWithoutListingInput
   media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutListingInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutListingInput
@@ -524,9 +619,15 @@ export type ListingUpdateInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceListing?: Prisma.ListingUpdateOneWithoutResoldListingsNestedInput
+  resoldListings?: Prisma.ListingUpdateManyWithoutSourceListingNestedInput
   store?: Prisma.StoreUpdateOneRequiredWithoutListingsNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutListingsNestedInput
   variants?: Prisma.ListingVariantUpdateManyWithoutListingNestedInput
@@ -554,9 +655,15 @@ export type ListingUncheckedUpdateInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceListingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resoldListings?: Prisma.ListingUncheckedUpdateManyWithoutSourceListingNestedInput
   variants?: Prisma.ListingVariantUncheckedUpdateManyWithoutListingNestedInput
   media?: Prisma.ListingMediaUncheckedUpdateManyWithoutListingNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutListingNestedInput
@@ -582,6 +689,11 @@ export type ListingCreateManyInput = {
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  sourceListingId?: string | null
+  markupBps?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -602,6 +714,10 @@ export type ListingUpdateManyMutationInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -624,6 +740,11 @@ export type ListingUncheckedUpdateManyInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceListingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -637,6 +758,16 @@ export type ListingListRelationFilter = {
 
 export type ListingOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type ListingNullableScalarRelationFilter = {
+  is?: Prisma.ListingWhereInput | null
+  isNot?: Prisma.ListingWhereInput | null
+}
+
+export type ListingStoreIdSourceListingIdCompoundUniqueInput = {
+  storeId: string
+  sourceListingId: string
 }
 
 export type ListingCountOrderByAggregateInput = {
@@ -656,6 +787,11 @@ export type ListingCountOrderByAggregateInput = {
   currency?: Prisma.SortOrder
   condition?: Prisma.SortOrder
   attributeValues?: Prisma.SortOrder
+  minMarkupBps?: Prisma.SortOrder
+  maxMarkupBps?: Prisma.SortOrder
+  recommendedRetailMinor?: Prisma.SortOrder
+  sourceListingId?: Prisma.SortOrder
+  markupBps?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -664,6 +800,10 @@ export type ListingCountOrderByAggregateInput = {
 export type ListingAvgOrderByAggregateInput = {
   priceMinor?: Prisma.SortOrder
   salePriceMinor?: Prisma.SortOrder
+  minMarkupBps?: Prisma.SortOrder
+  maxMarkupBps?: Prisma.SortOrder
+  recommendedRetailMinor?: Prisma.SortOrder
+  markupBps?: Prisma.SortOrder
 }
 
 export type ListingMaxOrderByAggregateInput = {
@@ -682,6 +822,11 @@ export type ListingMaxOrderByAggregateInput = {
   videoStorageKey?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   condition?: Prisma.SortOrder
+  minMarkupBps?: Prisma.SortOrder
+  maxMarkupBps?: Prisma.SortOrder
+  recommendedRetailMinor?: Prisma.SortOrder
+  sourceListingId?: Prisma.SortOrder
+  markupBps?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -703,6 +848,11 @@ export type ListingMinOrderByAggregateInput = {
   videoStorageKey?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   condition?: Prisma.SortOrder
+  minMarkupBps?: Prisma.SortOrder
+  maxMarkupBps?: Prisma.SortOrder
+  recommendedRetailMinor?: Prisma.SortOrder
+  sourceListingId?: Prisma.SortOrder
+  markupBps?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -711,16 +861,15 @@ export type ListingMinOrderByAggregateInput = {
 export type ListingSumOrderByAggregateInput = {
   priceMinor?: Prisma.SortOrder
   salePriceMinor?: Prisma.SortOrder
+  minMarkupBps?: Prisma.SortOrder
+  maxMarkupBps?: Prisma.SortOrder
+  recommendedRetailMinor?: Prisma.SortOrder
+  markupBps?: Prisma.SortOrder
 }
 
 export type ListingScalarRelationFilter = {
   is?: Prisma.ListingWhereInput
   isNot?: Prisma.ListingWhereInput
-}
-
-export type ListingNullableScalarRelationFilter = {
-  is?: Prisma.ListingWhereInput | null
-  isNot?: Prisma.ListingWhereInput | null
 }
 
 export type ListingCreateNestedManyWithoutStoreInput = {
@@ -807,6 +956,26 @@ export type ListingUncheckedUpdateManyWithoutCategoryNestedInput = {
   deleteMany?: Prisma.ListingScalarWhereInput | Prisma.ListingScalarWhereInput[]
 }
 
+export type ListingCreateNestedOneWithoutResoldListingsInput = {
+  create?: Prisma.XOR<Prisma.ListingCreateWithoutResoldListingsInput, Prisma.ListingUncheckedCreateWithoutResoldListingsInput>
+  connectOrCreate?: Prisma.ListingCreateOrConnectWithoutResoldListingsInput
+  connect?: Prisma.ListingWhereUniqueInput
+}
+
+export type ListingCreateNestedManyWithoutSourceListingInput = {
+  create?: Prisma.XOR<Prisma.ListingCreateWithoutSourceListingInput, Prisma.ListingUncheckedCreateWithoutSourceListingInput> | Prisma.ListingCreateWithoutSourceListingInput[] | Prisma.ListingUncheckedCreateWithoutSourceListingInput[]
+  connectOrCreate?: Prisma.ListingCreateOrConnectWithoutSourceListingInput | Prisma.ListingCreateOrConnectWithoutSourceListingInput[]
+  createMany?: Prisma.ListingCreateManySourceListingInputEnvelope
+  connect?: Prisma.ListingWhereUniqueInput | Prisma.ListingWhereUniqueInput[]
+}
+
+export type ListingUncheckedCreateNestedManyWithoutSourceListingInput = {
+  create?: Prisma.XOR<Prisma.ListingCreateWithoutSourceListingInput, Prisma.ListingUncheckedCreateWithoutSourceListingInput> | Prisma.ListingCreateWithoutSourceListingInput[] | Prisma.ListingUncheckedCreateWithoutSourceListingInput[]
+  connectOrCreate?: Prisma.ListingCreateOrConnectWithoutSourceListingInput | Prisma.ListingCreateOrConnectWithoutSourceListingInput[]
+  createMany?: Prisma.ListingCreateManySourceListingInputEnvelope
+  connect?: Prisma.ListingWhereUniqueInput | Prisma.ListingWhereUniqueInput[]
+}
+
 export type EnumListingTypeFieldUpdateOperationsInput = {
   set?: $Enums.ListingType
 }
@@ -829,6 +998,52 @@ export type NullableBigIntFieldUpdateOperationsInput = {
   decrement?: bigint | number
   multiply?: bigint | number
   divide?: bigint | number
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type ListingUpdateOneWithoutResoldListingsNestedInput = {
+  create?: Prisma.XOR<Prisma.ListingCreateWithoutResoldListingsInput, Prisma.ListingUncheckedCreateWithoutResoldListingsInput>
+  connectOrCreate?: Prisma.ListingCreateOrConnectWithoutResoldListingsInput
+  upsert?: Prisma.ListingUpsertWithoutResoldListingsInput
+  disconnect?: Prisma.ListingWhereInput | boolean
+  delete?: Prisma.ListingWhereInput | boolean
+  connect?: Prisma.ListingWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ListingUpdateToOneWithWhereWithoutResoldListingsInput, Prisma.ListingUpdateWithoutResoldListingsInput>, Prisma.ListingUncheckedUpdateWithoutResoldListingsInput>
+}
+
+export type ListingUpdateManyWithoutSourceListingNestedInput = {
+  create?: Prisma.XOR<Prisma.ListingCreateWithoutSourceListingInput, Prisma.ListingUncheckedCreateWithoutSourceListingInput> | Prisma.ListingCreateWithoutSourceListingInput[] | Prisma.ListingUncheckedCreateWithoutSourceListingInput[]
+  connectOrCreate?: Prisma.ListingCreateOrConnectWithoutSourceListingInput | Prisma.ListingCreateOrConnectWithoutSourceListingInput[]
+  upsert?: Prisma.ListingUpsertWithWhereUniqueWithoutSourceListingInput | Prisma.ListingUpsertWithWhereUniqueWithoutSourceListingInput[]
+  createMany?: Prisma.ListingCreateManySourceListingInputEnvelope
+  set?: Prisma.ListingWhereUniqueInput | Prisma.ListingWhereUniqueInput[]
+  disconnect?: Prisma.ListingWhereUniqueInput | Prisma.ListingWhereUniqueInput[]
+  delete?: Prisma.ListingWhereUniqueInput | Prisma.ListingWhereUniqueInput[]
+  connect?: Prisma.ListingWhereUniqueInput | Prisma.ListingWhereUniqueInput[]
+  update?: Prisma.ListingUpdateWithWhereUniqueWithoutSourceListingInput | Prisma.ListingUpdateWithWhereUniqueWithoutSourceListingInput[]
+  updateMany?: Prisma.ListingUpdateManyWithWhereWithoutSourceListingInput | Prisma.ListingUpdateManyWithWhereWithoutSourceListingInput[]
+  deleteMany?: Prisma.ListingScalarWhereInput | Prisma.ListingScalarWhereInput[]
+}
+
+export type ListingUncheckedUpdateManyWithoutSourceListingNestedInput = {
+  create?: Prisma.XOR<Prisma.ListingCreateWithoutSourceListingInput, Prisma.ListingUncheckedCreateWithoutSourceListingInput> | Prisma.ListingCreateWithoutSourceListingInput[] | Prisma.ListingUncheckedCreateWithoutSourceListingInput[]
+  connectOrCreate?: Prisma.ListingCreateOrConnectWithoutSourceListingInput | Prisma.ListingCreateOrConnectWithoutSourceListingInput[]
+  upsert?: Prisma.ListingUpsertWithWhereUniqueWithoutSourceListingInput | Prisma.ListingUpsertWithWhereUniqueWithoutSourceListingInput[]
+  createMany?: Prisma.ListingCreateManySourceListingInputEnvelope
+  set?: Prisma.ListingWhereUniqueInput | Prisma.ListingWhereUniqueInput[]
+  disconnect?: Prisma.ListingWhereUniqueInput | Prisma.ListingWhereUniqueInput[]
+  delete?: Prisma.ListingWhereUniqueInput | Prisma.ListingWhereUniqueInput[]
+  connect?: Prisma.ListingWhereUniqueInput | Prisma.ListingWhereUniqueInput[]
+  update?: Prisma.ListingUpdateWithWhereUniqueWithoutSourceListingInput | Prisma.ListingUpdateWithWhereUniqueWithoutSourceListingInput[]
+  updateMany?: Prisma.ListingUpdateManyWithWhereWithoutSourceListingInput | Prisma.ListingUpdateManyWithWhereWithoutSourceListingInput[]
+  deleteMany?: Prisma.ListingScalarWhereInput | Prisma.ListingScalarWhereInput[]
 }
 
 export type ListingCreateNestedOneWithoutCollectionItemsInput = {
@@ -932,9 +1147,15 @@ export type ListingCreateWithoutStoreInput = {
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  markupBps?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  sourceListing?: Prisma.ListingCreateNestedOneWithoutResoldListingsInput
+  resoldListings?: Prisma.ListingCreateNestedManyWithoutSourceListingInput
   category: Prisma.CategoryCreateNestedOneWithoutListingsInput
   variants?: Prisma.ListingVariantCreateNestedManyWithoutListingInput
   media?: Prisma.ListingMediaCreateNestedManyWithoutListingInput
@@ -960,9 +1181,15 @@ export type ListingUncheckedCreateWithoutStoreInput = {
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  sourceListingId?: string | null
+  markupBps?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  resoldListings?: Prisma.ListingUncheckedCreateNestedManyWithoutSourceListingInput
   variants?: Prisma.ListingVariantUncheckedCreateNestedManyWithoutListingInput
   media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutListingInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutListingInput
@@ -1017,6 +1244,11 @@ export type ListingScalarWhereInput = {
   currency?: Prisma.StringFilter<"Listing"> | string
   condition?: Prisma.StringNullableFilter<"Listing"> | string | null
   attributeValues?: Prisma.JsonFilter<"Listing">
+  minMarkupBps?: Prisma.IntNullableFilter<"Listing"> | number | null
+  maxMarkupBps?: Prisma.IntNullableFilter<"Listing"> | number | null
+  recommendedRetailMinor?: Prisma.BigIntNullableFilter<"Listing"> | bigint | number | null
+  sourceListingId?: Prisma.UuidNullableFilter<"Listing"> | string | null
+  markupBps?: Prisma.IntNullableFilter<"Listing"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Listing"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Listing"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
@@ -1037,9 +1269,15 @@ export type ListingCreateWithoutCategoryInput = {
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  markupBps?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  sourceListing?: Prisma.ListingCreateNestedOneWithoutResoldListingsInput
+  resoldListings?: Prisma.ListingCreateNestedManyWithoutSourceListingInput
   store: Prisma.StoreCreateNestedOneWithoutListingsInput
   variants?: Prisma.ListingVariantCreateNestedManyWithoutListingInput
   media?: Prisma.ListingMediaCreateNestedManyWithoutListingInput
@@ -1065,9 +1303,15 @@ export type ListingUncheckedCreateWithoutCategoryInput = {
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  sourceListingId?: string | null
+  markupBps?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  resoldListings?: Prisma.ListingUncheckedCreateNestedManyWithoutSourceListingInput
   variants?: Prisma.ListingVariantUncheckedCreateNestedManyWithoutListingInput
   media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutListingInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutListingInput
@@ -1102,6 +1346,246 @@ export type ListingUpdateManyWithWhereWithoutCategoryInput = {
   data: Prisma.XOR<Prisma.ListingUpdateManyMutationInput, Prisma.ListingUncheckedUpdateManyWithoutCategoryInput>
 }
 
+export type ListingCreateWithoutResoldListingsInput = {
+  id?: string
+  publicId?: string
+  type?: $Enums.ListingType
+  status?: $Enums.ListingStatus
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz: string
+  descriptionRu?: string | null
+  priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
+  currency?: string
+  condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  markupBps?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  sourceListing?: Prisma.ListingCreateNestedOneWithoutResoldListingsInput
+  store: Prisma.StoreCreateNestedOneWithoutListingsInput
+  category: Prisma.CategoryCreateNestedOneWithoutListingsInput
+  variants?: Prisma.ListingVariantCreateNestedManyWithoutListingInput
+  media?: Prisma.ListingMediaCreateNestedManyWithoutListingInput
+  cartItems?: Prisma.CartItemCreateNestedManyWithoutListingInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutListingInput
+  questions?: Prisma.StoreQuestionCreateNestedManyWithoutListingInput
+  collectionItems?: Prisma.CollectionItemCreateNestedManyWithoutListingInput
+}
+
+export type ListingUncheckedCreateWithoutResoldListingsInput = {
+  id?: string
+  publicId?: string
+  storeId: string
+  categoryId: string
+  type?: $Enums.ListingType
+  status?: $Enums.ListingStatus
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz: string
+  descriptionRu?: string | null
+  priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
+  currency?: string
+  condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  sourceListingId?: string | null
+  markupBps?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  variants?: Prisma.ListingVariantUncheckedCreateNestedManyWithoutListingInput
+  media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutListingInput
+  cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutListingInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutListingInput
+  questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutListingInput
+  collectionItems?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutListingInput
+}
+
+export type ListingCreateOrConnectWithoutResoldListingsInput = {
+  where: Prisma.ListingWhereUniqueInput
+  create: Prisma.XOR<Prisma.ListingCreateWithoutResoldListingsInput, Prisma.ListingUncheckedCreateWithoutResoldListingsInput>
+}
+
+export type ListingCreateWithoutSourceListingInput = {
+  id?: string
+  publicId?: string
+  type?: $Enums.ListingType
+  status?: $Enums.ListingStatus
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz: string
+  descriptionRu?: string | null
+  priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
+  currency?: string
+  condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  markupBps?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  resoldListings?: Prisma.ListingCreateNestedManyWithoutSourceListingInput
+  store: Prisma.StoreCreateNestedOneWithoutListingsInput
+  category: Prisma.CategoryCreateNestedOneWithoutListingsInput
+  variants?: Prisma.ListingVariantCreateNestedManyWithoutListingInput
+  media?: Prisma.ListingMediaCreateNestedManyWithoutListingInput
+  cartItems?: Prisma.CartItemCreateNestedManyWithoutListingInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutListingInput
+  questions?: Prisma.StoreQuestionCreateNestedManyWithoutListingInput
+  collectionItems?: Prisma.CollectionItemCreateNestedManyWithoutListingInput
+}
+
+export type ListingUncheckedCreateWithoutSourceListingInput = {
+  id?: string
+  publicId?: string
+  storeId: string
+  categoryId: string
+  type?: $Enums.ListingType
+  status?: $Enums.ListingStatus
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz: string
+  descriptionRu?: string | null
+  priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
+  currency?: string
+  condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  markupBps?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  resoldListings?: Prisma.ListingUncheckedCreateNestedManyWithoutSourceListingInput
+  variants?: Prisma.ListingVariantUncheckedCreateNestedManyWithoutListingInput
+  media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutListingInput
+  cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutListingInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutListingInput
+  questions?: Prisma.StoreQuestionUncheckedCreateNestedManyWithoutListingInput
+  collectionItems?: Prisma.CollectionItemUncheckedCreateNestedManyWithoutListingInput
+}
+
+export type ListingCreateOrConnectWithoutSourceListingInput = {
+  where: Prisma.ListingWhereUniqueInput
+  create: Prisma.XOR<Prisma.ListingCreateWithoutSourceListingInput, Prisma.ListingUncheckedCreateWithoutSourceListingInput>
+}
+
+export type ListingCreateManySourceListingInputEnvelope = {
+  data: Prisma.ListingCreateManySourceListingInput | Prisma.ListingCreateManySourceListingInput[]
+  skipDuplicates?: boolean
+}
+
+export type ListingUpsertWithoutResoldListingsInput = {
+  update: Prisma.XOR<Prisma.ListingUpdateWithoutResoldListingsInput, Prisma.ListingUncheckedUpdateWithoutResoldListingsInput>
+  create: Prisma.XOR<Prisma.ListingCreateWithoutResoldListingsInput, Prisma.ListingUncheckedCreateWithoutResoldListingsInput>
+  where?: Prisma.ListingWhereInput
+}
+
+export type ListingUpdateToOneWithWhereWithoutResoldListingsInput = {
+  where?: Prisma.ListingWhereInput
+  data: Prisma.XOR<Prisma.ListingUpdateWithoutResoldListingsInput, Prisma.ListingUncheckedUpdateWithoutResoldListingsInput>
+}
+
+export type ListingUpdateWithoutResoldListingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumListingTypeFieldUpdateOperationsInput | $Enums.ListingType
+  status?: Prisma.EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceListing?: Prisma.ListingUpdateOneWithoutResoldListingsNestedInput
+  store?: Prisma.StoreUpdateOneRequiredWithoutListingsNestedInput
+  category?: Prisma.CategoryUpdateOneRequiredWithoutListingsNestedInput
+  variants?: Prisma.ListingVariantUpdateManyWithoutListingNestedInput
+  media?: Prisma.ListingMediaUpdateManyWithoutListingNestedInput
+  cartItems?: Prisma.CartItemUpdateManyWithoutListingNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutListingNestedInput
+  questions?: Prisma.StoreQuestionUpdateManyWithoutListingNestedInput
+  collectionItems?: Prisma.CollectionItemUpdateManyWithoutListingNestedInput
+}
+
+export type ListingUncheckedUpdateWithoutResoldListingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumListingTypeFieldUpdateOperationsInput | $Enums.ListingType
+  status?: Prisma.EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceListingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  variants?: Prisma.ListingVariantUncheckedUpdateManyWithoutListingNestedInput
+  media?: Prisma.ListingMediaUncheckedUpdateManyWithoutListingNestedInput
+  cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutListingNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutListingNestedInput
+  questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutListingNestedInput
+  collectionItems?: Prisma.CollectionItemUncheckedUpdateManyWithoutListingNestedInput
+}
+
+export type ListingUpsertWithWhereUniqueWithoutSourceListingInput = {
+  where: Prisma.ListingWhereUniqueInput
+  update: Prisma.XOR<Prisma.ListingUpdateWithoutSourceListingInput, Prisma.ListingUncheckedUpdateWithoutSourceListingInput>
+  create: Prisma.XOR<Prisma.ListingCreateWithoutSourceListingInput, Prisma.ListingUncheckedCreateWithoutSourceListingInput>
+}
+
+export type ListingUpdateWithWhereUniqueWithoutSourceListingInput = {
+  where: Prisma.ListingWhereUniqueInput
+  data: Prisma.XOR<Prisma.ListingUpdateWithoutSourceListingInput, Prisma.ListingUncheckedUpdateWithoutSourceListingInput>
+}
+
+export type ListingUpdateManyWithWhereWithoutSourceListingInput = {
+  where: Prisma.ListingScalarWhereInput
+  data: Prisma.XOR<Prisma.ListingUpdateManyMutationInput, Prisma.ListingUncheckedUpdateManyWithoutSourceListingInput>
+}
+
 export type ListingCreateWithoutCollectionItemsInput = {
   id?: string
   publicId?: string
@@ -1117,9 +1601,15 @@ export type ListingCreateWithoutCollectionItemsInput = {
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  markupBps?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  sourceListing?: Prisma.ListingCreateNestedOneWithoutResoldListingsInput
+  resoldListings?: Prisma.ListingCreateNestedManyWithoutSourceListingInput
   store: Prisma.StoreCreateNestedOneWithoutListingsInput
   category: Prisma.CategoryCreateNestedOneWithoutListingsInput
   variants?: Prisma.ListingVariantCreateNestedManyWithoutListingInput
@@ -1146,9 +1636,15 @@ export type ListingUncheckedCreateWithoutCollectionItemsInput = {
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  sourceListingId?: string | null
+  markupBps?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  resoldListings?: Prisma.ListingUncheckedCreateNestedManyWithoutSourceListingInput
   variants?: Prisma.ListingVariantUncheckedCreateNestedManyWithoutListingInput
   media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutListingInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutListingInput
@@ -1187,9 +1683,15 @@ export type ListingUpdateWithoutCollectionItemsInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceListing?: Prisma.ListingUpdateOneWithoutResoldListingsNestedInput
+  resoldListings?: Prisma.ListingUpdateManyWithoutSourceListingNestedInput
   store?: Prisma.StoreUpdateOneRequiredWithoutListingsNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutListingsNestedInput
   variants?: Prisma.ListingVariantUpdateManyWithoutListingNestedInput
@@ -1216,9 +1718,15 @@ export type ListingUncheckedUpdateWithoutCollectionItemsInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceListingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resoldListings?: Prisma.ListingUncheckedUpdateManyWithoutSourceListingNestedInput
   variants?: Prisma.ListingVariantUncheckedUpdateManyWithoutListingNestedInput
   media?: Prisma.ListingMediaUncheckedUpdateManyWithoutListingNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutListingNestedInput
@@ -1241,9 +1749,15 @@ export type ListingCreateWithoutVariantsInput = {
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  markupBps?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  sourceListing?: Prisma.ListingCreateNestedOneWithoutResoldListingsInput
+  resoldListings?: Prisma.ListingCreateNestedManyWithoutSourceListingInput
   store: Prisma.StoreCreateNestedOneWithoutListingsInput
   category: Prisma.CategoryCreateNestedOneWithoutListingsInput
   media?: Prisma.ListingMediaCreateNestedManyWithoutListingInput
@@ -1270,9 +1784,15 @@ export type ListingUncheckedCreateWithoutVariantsInput = {
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  sourceListingId?: string | null
+  markupBps?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  resoldListings?: Prisma.ListingUncheckedCreateNestedManyWithoutSourceListingInput
   media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutListingInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutListingInput
   favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutListingInput
@@ -1311,9 +1831,15 @@ export type ListingUpdateWithoutVariantsInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceListing?: Prisma.ListingUpdateOneWithoutResoldListingsNestedInput
+  resoldListings?: Prisma.ListingUpdateManyWithoutSourceListingNestedInput
   store?: Prisma.StoreUpdateOneRequiredWithoutListingsNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutListingsNestedInput
   media?: Prisma.ListingMediaUpdateManyWithoutListingNestedInput
@@ -1340,9 +1866,15 @@ export type ListingUncheckedUpdateWithoutVariantsInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceListingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resoldListings?: Prisma.ListingUncheckedUpdateManyWithoutSourceListingNestedInput
   media?: Prisma.ListingMediaUncheckedUpdateManyWithoutListingNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutListingNestedInput
   favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutListingNestedInput
@@ -1365,9 +1897,15 @@ export type ListingCreateWithoutMediaInput = {
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  markupBps?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  sourceListing?: Prisma.ListingCreateNestedOneWithoutResoldListingsInput
+  resoldListings?: Prisma.ListingCreateNestedManyWithoutSourceListingInput
   store: Prisma.StoreCreateNestedOneWithoutListingsInput
   category: Prisma.CategoryCreateNestedOneWithoutListingsInput
   variants?: Prisma.ListingVariantCreateNestedManyWithoutListingInput
@@ -1394,9 +1932,15 @@ export type ListingUncheckedCreateWithoutMediaInput = {
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  sourceListingId?: string | null
+  markupBps?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  resoldListings?: Prisma.ListingUncheckedCreateNestedManyWithoutSourceListingInput
   variants?: Prisma.ListingVariantUncheckedCreateNestedManyWithoutListingInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutListingInput
   favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutListingInput
@@ -1435,9 +1979,15 @@ export type ListingUpdateWithoutMediaInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceListing?: Prisma.ListingUpdateOneWithoutResoldListingsNestedInput
+  resoldListings?: Prisma.ListingUpdateManyWithoutSourceListingNestedInput
   store?: Prisma.StoreUpdateOneRequiredWithoutListingsNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutListingsNestedInput
   variants?: Prisma.ListingVariantUpdateManyWithoutListingNestedInput
@@ -1464,9 +2014,15 @@ export type ListingUncheckedUpdateWithoutMediaInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceListingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resoldListings?: Prisma.ListingUncheckedUpdateManyWithoutSourceListingNestedInput
   variants?: Prisma.ListingVariantUncheckedUpdateManyWithoutListingNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutListingNestedInput
   favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutListingNestedInput
@@ -1489,9 +2045,15 @@ export type ListingCreateWithoutCartItemsInput = {
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  markupBps?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  sourceListing?: Prisma.ListingCreateNestedOneWithoutResoldListingsInput
+  resoldListings?: Prisma.ListingCreateNestedManyWithoutSourceListingInput
   store: Prisma.StoreCreateNestedOneWithoutListingsInput
   category: Prisma.CategoryCreateNestedOneWithoutListingsInput
   variants?: Prisma.ListingVariantCreateNestedManyWithoutListingInput
@@ -1518,9 +2080,15 @@ export type ListingUncheckedCreateWithoutCartItemsInput = {
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  sourceListingId?: string | null
+  markupBps?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  resoldListings?: Prisma.ListingUncheckedCreateNestedManyWithoutSourceListingInput
   variants?: Prisma.ListingVariantUncheckedCreateNestedManyWithoutListingInput
   media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutListingInput
   favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutListingInput
@@ -1559,9 +2127,15 @@ export type ListingUpdateWithoutCartItemsInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceListing?: Prisma.ListingUpdateOneWithoutResoldListingsNestedInput
+  resoldListings?: Prisma.ListingUpdateManyWithoutSourceListingNestedInput
   store?: Prisma.StoreUpdateOneRequiredWithoutListingsNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutListingsNestedInput
   variants?: Prisma.ListingVariantUpdateManyWithoutListingNestedInput
@@ -1588,9 +2162,15 @@ export type ListingUncheckedUpdateWithoutCartItemsInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceListingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resoldListings?: Prisma.ListingUncheckedUpdateManyWithoutSourceListingNestedInput
   variants?: Prisma.ListingVariantUncheckedUpdateManyWithoutListingNestedInput
   media?: Prisma.ListingMediaUncheckedUpdateManyWithoutListingNestedInput
   favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutListingNestedInput
@@ -1613,9 +2193,15 @@ export type ListingCreateWithoutFavoritesInput = {
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  markupBps?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  sourceListing?: Prisma.ListingCreateNestedOneWithoutResoldListingsInput
+  resoldListings?: Prisma.ListingCreateNestedManyWithoutSourceListingInput
   store: Prisma.StoreCreateNestedOneWithoutListingsInput
   category: Prisma.CategoryCreateNestedOneWithoutListingsInput
   variants?: Prisma.ListingVariantCreateNestedManyWithoutListingInput
@@ -1642,9 +2228,15 @@ export type ListingUncheckedCreateWithoutFavoritesInput = {
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  sourceListingId?: string | null
+  markupBps?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  resoldListings?: Prisma.ListingUncheckedCreateNestedManyWithoutSourceListingInput
   variants?: Prisma.ListingVariantUncheckedCreateNestedManyWithoutListingInput
   media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutListingInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutListingInput
@@ -1683,9 +2275,15 @@ export type ListingUpdateWithoutFavoritesInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceListing?: Prisma.ListingUpdateOneWithoutResoldListingsNestedInput
+  resoldListings?: Prisma.ListingUpdateManyWithoutSourceListingNestedInput
   store?: Prisma.StoreUpdateOneRequiredWithoutListingsNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutListingsNestedInput
   variants?: Prisma.ListingVariantUpdateManyWithoutListingNestedInput
@@ -1712,9 +2310,15 @@ export type ListingUncheckedUpdateWithoutFavoritesInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceListingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resoldListings?: Prisma.ListingUncheckedUpdateManyWithoutSourceListingNestedInput
   variants?: Prisma.ListingVariantUncheckedUpdateManyWithoutListingNestedInput
   media?: Prisma.ListingMediaUncheckedUpdateManyWithoutListingNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutListingNestedInput
@@ -1737,9 +2341,15 @@ export type ListingCreateWithoutQuestionsInput = {
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  markupBps?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  sourceListing?: Prisma.ListingCreateNestedOneWithoutResoldListingsInput
+  resoldListings?: Prisma.ListingCreateNestedManyWithoutSourceListingInput
   store: Prisma.StoreCreateNestedOneWithoutListingsInput
   category: Prisma.CategoryCreateNestedOneWithoutListingsInput
   variants?: Prisma.ListingVariantCreateNestedManyWithoutListingInput
@@ -1766,9 +2376,15 @@ export type ListingUncheckedCreateWithoutQuestionsInput = {
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  sourceListingId?: string | null
+  markupBps?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  resoldListings?: Prisma.ListingUncheckedCreateNestedManyWithoutSourceListingInput
   variants?: Prisma.ListingVariantUncheckedCreateNestedManyWithoutListingInput
   media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutListingInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutListingInput
@@ -1807,9 +2423,15 @@ export type ListingUpdateWithoutQuestionsInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceListing?: Prisma.ListingUpdateOneWithoutResoldListingsNestedInput
+  resoldListings?: Prisma.ListingUpdateManyWithoutSourceListingNestedInput
   store?: Prisma.StoreUpdateOneRequiredWithoutListingsNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutListingsNestedInput
   variants?: Prisma.ListingVariantUpdateManyWithoutListingNestedInput
@@ -1836,9 +2458,15 @@ export type ListingUncheckedUpdateWithoutQuestionsInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceListingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resoldListings?: Prisma.ListingUncheckedUpdateManyWithoutSourceListingNestedInput
   variants?: Prisma.ListingVariantUncheckedUpdateManyWithoutListingNestedInput
   media?: Prisma.ListingMediaUncheckedUpdateManyWithoutListingNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutListingNestedInput
@@ -1862,6 +2490,11 @@ export type ListingCreateManyStoreInput = {
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  sourceListingId?: string | null
+  markupBps?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1882,9 +2515,15 @@ export type ListingUpdateWithoutStoreInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceListing?: Prisma.ListingUpdateOneWithoutResoldListingsNestedInput
+  resoldListings?: Prisma.ListingUpdateManyWithoutSourceListingNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutListingsNestedInput
   variants?: Prisma.ListingVariantUpdateManyWithoutListingNestedInput
   media?: Prisma.ListingMediaUpdateManyWithoutListingNestedInput
@@ -1910,9 +2549,15 @@ export type ListingUncheckedUpdateWithoutStoreInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceListingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resoldListings?: Prisma.ListingUncheckedUpdateManyWithoutSourceListingNestedInput
   variants?: Prisma.ListingVariantUncheckedUpdateManyWithoutListingNestedInput
   media?: Prisma.ListingMediaUncheckedUpdateManyWithoutListingNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutListingNestedInput
@@ -1937,6 +2582,11 @@ export type ListingUncheckedUpdateManyWithoutStoreInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceListingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1958,6 +2608,11 @@ export type ListingCreateManyCategoryInput = {
   currency?: string
   condition?: string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  sourceListingId?: string | null
+  markupBps?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1978,9 +2633,15 @@ export type ListingUpdateWithoutCategoryInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceListing?: Prisma.ListingUpdateOneWithoutResoldListingsNestedInput
+  resoldListings?: Prisma.ListingUpdateManyWithoutSourceListingNestedInput
   store?: Prisma.StoreUpdateOneRequiredWithoutListingsNestedInput
   variants?: Prisma.ListingVariantUpdateManyWithoutListingNestedInput
   media?: Prisma.ListingMediaUpdateManyWithoutListingNestedInput
@@ -2006,9 +2667,15 @@ export type ListingUncheckedUpdateWithoutCategoryInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceListingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resoldListings?: Prisma.ListingUncheckedUpdateManyWithoutSourceListingNestedInput
   variants?: Prisma.ListingVariantUncheckedUpdateManyWithoutListingNestedInput
   media?: Prisma.ListingMediaUncheckedUpdateManyWithoutListingNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutListingNestedInput
@@ -2033,6 +2700,129 @@ export type ListingUncheckedUpdateManyWithoutCategoryInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceListingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type ListingCreateManySourceListingInput = {
+  id?: string
+  publicId?: string
+  storeId: string
+  categoryId: string
+  type?: $Enums.ListingType
+  status?: $Enums.ListingStatus
+  nameUz: string
+  nameRu?: string | null
+  descriptionUz: string
+  descriptionRu?: string | null
+  priceMinor: bigint | number
+  salePriceMinor?: bigint | number | null
+  videoStorageKey?: string | null
+  currency?: string
+  condition?: string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: number | null
+  maxMarkupBps?: number | null
+  recommendedRetailMinor?: bigint | number | null
+  markupBps?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type ListingUpdateWithoutSourceListingInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumListingTypeFieldUpdateOperationsInput | $Enums.ListingType
+  status?: Prisma.EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resoldListings?: Prisma.ListingUpdateManyWithoutSourceListingNestedInput
+  store?: Prisma.StoreUpdateOneRequiredWithoutListingsNestedInput
+  category?: Prisma.CategoryUpdateOneRequiredWithoutListingsNestedInput
+  variants?: Prisma.ListingVariantUpdateManyWithoutListingNestedInput
+  media?: Prisma.ListingMediaUpdateManyWithoutListingNestedInput
+  cartItems?: Prisma.CartItemUpdateManyWithoutListingNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutListingNestedInput
+  questions?: Prisma.StoreQuestionUpdateManyWithoutListingNestedInput
+  collectionItems?: Prisma.CollectionItemUpdateManyWithoutListingNestedInput
+}
+
+export type ListingUncheckedUpdateWithoutSourceListingInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumListingTypeFieldUpdateOperationsInput | $Enums.ListingType
+  status?: Prisma.EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resoldListings?: Prisma.ListingUncheckedUpdateManyWithoutSourceListingNestedInput
+  variants?: Prisma.ListingVariantUncheckedUpdateManyWithoutListingNestedInput
+  media?: Prisma.ListingMediaUncheckedUpdateManyWithoutListingNestedInput
+  cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutListingNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutListingNestedInput
+  questions?: Prisma.StoreQuestionUncheckedUpdateManyWithoutListingNestedInput
+  collectionItems?: Prisma.CollectionItemUncheckedUpdateManyWithoutListingNestedInput
+}
+
+export type ListingUncheckedUpdateManyWithoutSourceListingInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  storeId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumListingTypeFieldUpdateOperationsInput | $Enums.ListingType
+  status?: Prisma.EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
+  nameUz?: Prisma.StringFieldUpdateOperationsInput | string
+  nameRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionUz?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionRu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  salePriceMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  videoStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  condition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributeValues?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  minMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxMarkupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recommendedRetailMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  markupBps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2044,6 +2834,7 @@ export type ListingUncheckedUpdateManyWithoutCategoryInput = {
  */
 
 export type ListingCountOutputType = {
+  resoldListings: number
   variants: number
   media: number
   cartItems: number
@@ -2053,6 +2844,7 @@ export type ListingCountOutputType = {
 }
 
 export type ListingCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  resoldListings?: boolean | ListingCountOutputTypeCountResoldListingsArgs
   variants?: boolean | ListingCountOutputTypeCountVariantsArgs
   media?: boolean | ListingCountOutputTypeCountMediaArgs
   cartItems?: boolean | ListingCountOutputTypeCountCartItemsArgs
@@ -2069,6 +2861,13 @@ export type ListingCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
    * Select specific fields to fetch from the ListingCountOutputType
    */
   select?: Prisma.ListingCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ListingCountOutputType without action
+ */
+export type ListingCountOutputTypeCountResoldListingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ListingWhereInput
 }
 
 /**
@@ -2131,9 +2930,16 @@ export type ListingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   currency?: boolean
   condition?: boolean
   attributeValues?: boolean
+  minMarkupBps?: boolean
+  maxMarkupBps?: boolean
+  recommendedRetailMinor?: boolean
+  sourceListingId?: boolean
+  markupBps?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
+  sourceListing?: boolean | Prisma.Listing$sourceListingArgs<ExtArgs>
+  resoldListings?: boolean | Prisma.Listing$resoldListingsArgs<ExtArgs>
   store?: boolean | Prisma.StoreDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   variants?: boolean | Prisma.Listing$variantsArgs<ExtArgs>
@@ -2162,9 +2968,15 @@ export type ListingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   currency?: boolean
   condition?: boolean
   attributeValues?: boolean
+  minMarkupBps?: boolean
+  maxMarkupBps?: boolean
+  recommendedRetailMinor?: boolean
+  sourceListingId?: boolean
+  markupBps?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
+  sourceListing?: boolean | Prisma.Listing$sourceListingArgs<ExtArgs>
   store?: boolean | Prisma.StoreDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["listing"]>
@@ -2186,9 +2998,15 @@ export type ListingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   currency?: boolean
   condition?: boolean
   attributeValues?: boolean
+  minMarkupBps?: boolean
+  maxMarkupBps?: boolean
+  recommendedRetailMinor?: boolean
+  sourceListingId?: boolean
+  markupBps?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
+  sourceListing?: boolean | Prisma.Listing$sourceListingArgs<ExtArgs>
   store?: boolean | Prisma.StoreDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["listing"]>
@@ -2210,13 +3028,20 @@ export type ListingSelectScalar = {
   currency?: boolean
   condition?: boolean
   attributeValues?: boolean
+  minMarkupBps?: boolean
+  maxMarkupBps?: boolean
+  recommendedRetailMinor?: boolean
+  sourceListingId?: boolean
+  markupBps?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
 }
 
-export type ListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "storeId" | "categoryId" | "type" | "status" | "nameUz" | "nameRu" | "descriptionUz" | "descriptionRu" | "priceMinor" | "salePriceMinor" | "videoStorageKey" | "currency" | "condition" | "attributeValues" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["listing"]>
+export type ListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "storeId" | "categoryId" | "type" | "status" | "nameUz" | "nameRu" | "descriptionUz" | "descriptionRu" | "priceMinor" | "salePriceMinor" | "videoStorageKey" | "currency" | "condition" | "attributeValues" | "minMarkupBps" | "maxMarkupBps" | "recommendedRetailMinor" | "sourceListingId" | "markupBps" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["listing"]>
 export type ListingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  sourceListing?: boolean | Prisma.Listing$sourceListingArgs<ExtArgs>
+  resoldListings?: boolean | Prisma.Listing$resoldListingsArgs<ExtArgs>
   store?: boolean | Prisma.StoreDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   variants?: boolean | Prisma.Listing$variantsArgs<ExtArgs>
@@ -2228,10 +3053,12 @@ export type ListingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   _count?: boolean | Prisma.ListingCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ListingIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  sourceListing?: boolean | Prisma.Listing$sourceListingArgs<ExtArgs>
   store?: boolean | Prisma.StoreDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
 }
 export type ListingIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  sourceListing?: boolean | Prisma.Listing$sourceListingArgs<ExtArgs>
   store?: boolean | Prisma.StoreDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
 }
@@ -2239,6 +3066,8 @@ export type ListingIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
 export type $ListingPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Listing"
   objects: {
+    sourceListing: Prisma.$ListingPayload<ExtArgs> | null
+    resoldListings: Prisma.$ListingPayload<ExtArgs>[]
     store: Prisma.$StorePayload<ExtArgs>
     category: Prisma.$CategoryPayload<ExtArgs>
     variants: Prisma.$ListingVariantPayload<ExtArgs>[]
@@ -2265,6 +3094,11 @@ export type $ListingPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     currency: string
     condition: string | null
     attributeValues: runtime.JsonValue
+    minMarkupBps: number | null
+    maxMarkupBps: number | null
+    recommendedRetailMinor: bigint | null
+    sourceListingId: string | null
+    markupBps: number | null
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -2662,6 +3496,8 @@ readonly fields: ListingFieldRefs;
  */
 export interface Prisma__ListingClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  sourceListing<T extends Prisma.Listing$sourceListingArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Listing$sourceListingArgs<ExtArgs>>): Prisma.Prisma__ListingClient<runtime.Types.Result.GetResult<Prisma.$ListingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  resoldListings<T extends Prisma.Listing$resoldListingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Listing$resoldListingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ListingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   store<T extends Prisma.StoreDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StoreDefaultArgs<ExtArgs>>): Prisma.Prisma__StoreClient<runtime.Types.Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   category<T extends Prisma.CategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   variants<T extends Prisma.Listing$variantsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Listing$variantsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ListingVariantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2715,6 +3551,11 @@ export interface ListingFieldRefs {
   readonly currency: Prisma.FieldRef<"Listing", 'String'>
   readonly condition: Prisma.FieldRef<"Listing", 'String'>
   readonly attributeValues: Prisma.FieldRef<"Listing", 'Json'>
+  readonly minMarkupBps: Prisma.FieldRef<"Listing", 'Int'>
+  readonly maxMarkupBps: Prisma.FieldRef<"Listing", 'Int'>
+  readonly recommendedRetailMinor: Prisma.FieldRef<"Listing", 'BigInt'>
+  readonly sourceListingId: Prisma.FieldRef<"Listing", 'String'>
+  readonly markupBps: Prisma.FieldRef<"Listing", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Listing", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Listing", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Listing", 'DateTime'>
@@ -3116,6 +3957,49 @@ export type ListingDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Listings to delete.
    */
   limit?: number
+}
+
+/**
+ * Listing.sourceListing
+ */
+export type Listing$sourceListingArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Listing
+   */
+  select?: Prisma.ListingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Listing
+   */
+  omit?: Prisma.ListingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ListingInclude<ExtArgs> | null
+  where?: Prisma.ListingWhereInput
+}
+
+/**
+ * Listing.resoldListings
+ */
+export type Listing$resoldListingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Listing
+   */
+  select?: Prisma.ListingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Listing
+   */
+  omit?: Prisma.ListingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ListingInclude<ExtArgs> | null
+  where?: Prisma.ListingWhereInput
+  orderBy?: Prisma.ListingOrderByWithRelationInput | Prisma.ListingOrderByWithRelationInput[]
+  cursor?: Prisma.ListingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ListingScalarFieldEnum | Prisma.ListingScalarFieldEnum[]
 }
 
 /**

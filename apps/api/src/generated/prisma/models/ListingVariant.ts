@@ -39,6 +39,7 @@ export type ListingVariantMinAggregateOutputType = {
   listingId: string | null
   sku: string | null
   priceOverrideMinor: bigint | null
+  sourceVariantId: string | null
 }
 
 export type ListingVariantMaxAggregateOutputType = {
@@ -46,6 +47,7 @@ export type ListingVariantMaxAggregateOutputType = {
   listingId: string | null
   sku: string | null
   priceOverrideMinor: bigint | null
+  sourceVariantId: string | null
 }
 
 export type ListingVariantCountAggregateOutputType = {
@@ -54,6 +56,7 @@ export type ListingVariantCountAggregateOutputType = {
   sku: number
   options: number
   priceOverrideMinor: number
+  sourceVariantId: number
   _all: number
 }
 
@@ -71,6 +74,7 @@ export type ListingVariantMinAggregateInputType = {
   listingId?: true
   sku?: true
   priceOverrideMinor?: true
+  sourceVariantId?: true
 }
 
 export type ListingVariantMaxAggregateInputType = {
@@ -78,6 +82,7 @@ export type ListingVariantMaxAggregateInputType = {
   listingId?: true
   sku?: true
   priceOverrideMinor?: true
+  sourceVariantId?: true
 }
 
 export type ListingVariantCountAggregateInputType = {
@@ -86,6 +91,7 @@ export type ListingVariantCountAggregateInputType = {
   sku?: true
   options?: true
   priceOverrideMinor?: true
+  sourceVariantId?: true
   _all?: true
 }
 
@@ -181,6 +187,7 @@ export type ListingVariantGroupByOutputType = {
   sku: string
   options: runtime.JsonValue
   priceOverrideMinor: bigint | null
+  sourceVariantId: string | null
   _count: ListingVariantCountAggregateOutputType | null
   _avg: ListingVariantAvgAggregateOutputType | null
   _sum: ListingVariantSumAggregateOutputType | null
@@ -212,12 +219,17 @@ export type ListingVariantWhereInput = {
   sku?: Prisma.StringFilter<"ListingVariant"> | string
   options?: Prisma.JsonFilter<"ListingVariant">
   priceOverrideMinor?: Prisma.BigIntNullableFilter<"ListingVariant"> | bigint | number | null
+  sourceVariantId?: Prisma.UuidNullableFilter<"ListingVariant"> | string | null
   listing?: Prisma.XOR<Prisma.ListingScalarRelationFilter, Prisma.ListingWhereInput>
+  sourceVariant?: Prisma.XOR<Prisma.ListingVariantNullableScalarRelationFilter, Prisma.ListingVariantWhereInput> | null
+  resoldVariants?: Prisma.ListingVariantListRelationFilter
   inventory?: Prisma.XOR<Prisma.InventoryNullableScalarRelationFilter, Prisma.InventoryWhereInput> | null
   cartItems?: Prisma.CartItemListRelationFilter
   orderItems?: Prisma.OrderItemListRelationFilter
   reservations?: Prisma.StockReservationListRelationFilter
   media?: Prisma.ListingMediaListRelationFilter
+  externalOrderItems?: Prisma.ExternalOrderItemListRelationFilter
+  stockMovements?: Prisma.StockMovementListRelationFilter
 }
 
 export type ListingVariantOrderByWithRelationInput = {
@@ -226,12 +238,17 @@ export type ListingVariantOrderByWithRelationInput = {
   sku?: Prisma.SortOrder
   options?: Prisma.SortOrder
   priceOverrideMinor?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceVariantId?: Prisma.SortOrderInput | Prisma.SortOrder
   listing?: Prisma.ListingOrderByWithRelationInput
+  sourceVariant?: Prisma.ListingVariantOrderByWithRelationInput
+  resoldVariants?: Prisma.ListingVariantOrderByRelationAggregateInput
   inventory?: Prisma.InventoryOrderByWithRelationInput
   cartItems?: Prisma.CartItemOrderByRelationAggregateInput
   orderItems?: Prisma.OrderItemOrderByRelationAggregateInput
   reservations?: Prisma.StockReservationOrderByRelationAggregateInput
   media?: Prisma.ListingMediaOrderByRelationAggregateInput
+  externalOrderItems?: Prisma.ExternalOrderItemOrderByRelationAggregateInput
+  stockMovements?: Prisma.StockMovementOrderByRelationAggregateInput
 }
 
 export type ListingVariantWhereUniqueInput = Prisma.AtLeast<{
@@ -244,12 +261,17 @@ export type ListingVariantWhereUniqueInput = Prisma.AtLeast<{
   sku?: Prisma.StringFilter<"ListingVariant"> | string
   options?: Prisma.JsonFilter<"ListingVariant">
   priceOverrideMinor?: Prisma.BigIntNullableFilter<"ListingVariant"> | bigint | number | null
+  sourceVariantId?: Prisma.UuidNullableFilter<"ListingVariant"> | string | null
   listing?: Prisma.XOR<Prisma.ListingScalarRelationFilter, Prisma.ListingWhereInput>
+  sourceVariant?: Prisma.XOR<Prisma.ListingVariantNullableScalarRelationFilter, Prisma.ListingVariantWhereInput> | null
+  resoldVariants?: Prisma.ListingVariantListRelationFilter
   inventory?: Prisma.XOR<Prisma.InventoryNullableScalarRelationFilter, Prisma.InventoryWhereInput> | null
   cartItems?: Prisma.CartItemListRelationFilter
   orderItems?: Prisma.OrderItemListRelationFilter
   reservations?: Prisma.StockReservationListRelationFilter
   media?: Prisma.ListingMediaListRelationFilter
+  externalOrderItems?: Prisma.ExternalOrderItemListRelationFilter
+  stockMovements?: Prisma.StockMovementListRelationFilter
 }, "id" | "listingId_sku">
 
 export type ListingVariantOrderByWithAggregationInput = {
@@ -258,6 +280,7 @@ export type ListingVariantOrderByWithAggregationInput = {
   sku?: Prisma.SortOrder
   options?: Prisma.SortOrder
   priceOverrideMinor?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceVariantId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ListingVariantCountOrderByAggregateInput
   _avg?: Prisma.ListingVariantAvgOrderByAggregateInput
   _max?: Prisma.ListingVariantMaxOrderByAggregateInput
@@ -274,6 +297,7 @@ export type ListingVariantScalarWhereWithAggregatesInput = {
   sku?: Prisma.StringWithAggregatesFilter<"ListingVariant"> | string
   options?: Prisma.JsonWithAggregatesFilter<"ListingVariant">
   priceOverrideMinor?: Prisma.BigIntNullableWithAggregatesFilter<"ListingVariant"> | bigint | number | null
+  sourceVariantId?: Prisma.UuidNullableWithAggregatesFilter<"ListingVariant"> | string | null
 }
 
 export type ListingVariantCreateInput = {
@@ -282,11 +306,15 @@ export type ListingVariantCreateInput = {
   options: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: bigint | number | null
   listing: Prisma.ListingCreateNestedOneWithoutVariantsInput
+  sourceVariant?: Prisma.ListingVariantCreateNestedOneWithoutResoldVariantsInput
+  resoldVariants?: Prisma.ListingVariantCreateNestedManyWithoutSourceVariantInput
   inventory?: Prisma.InventoryCreateNestedOneWithoutVariantInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutVariantInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutVariantInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutVariantInput
   media?: Prisma.ListingMediaCreateNestedManyWithoutVariantInput
+  externalOrderItems?: Prisma.ExternalOrderItemCreateNestedManyWithoutVariantInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantUncheckedCreateInput = {
@@ -295,11 +323,15 @@ export type ListingVariantUncheckedCreateInput = {
   sku: string
   options: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: bigint | number | null
+  sourceVariantId?: string | null
+  resoldVariants?: Prisma.ListingVariantUncheckedCreateNestedManyWithoutSourceVariantInput
   inventory?: Prisma.InventoryUncheckedCreateNestedOneWithoutVariantInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutVariantInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutVariantInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutVariantInput
   media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutVariantInput
+  externalOrderItems?: Prisma.ExternalOrderItemUncheckedCreateNestedManyWithoutVariantInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantUpdateInput = {
@@ -308,11 +340,15 @@ export type ListingVariantUpdateInput = {
   options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   listing?: Prisma.ListingUpdateOneRequiredWithoutVariantsNestedInput
+  sourceVariant?: Prisma.ListingVariantUpdateOneWithoutResoldVariantsNestedInput
+  resoldVariants?: Prisma.ListingVariantUpdateManyWithoutSourceVariantNestedInput
   inventory?: Prisma.InventoryUpdateOneWithoutVariantNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutVariantNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutVariantNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutVariantNestedInput
   media?: Prisma.ListingMediaUpdateManyWithoutVariantNestedInput
+  externalOrderItems?: Prisma.ExternalOrderItemUpdateManyWithoutVariantNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantUncheckedUpdateInput = {
@@ -321,11 +357,15 @@ export type ListingVariantUncheckedUpdateInput = {
   sku?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceVariantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resoldVariants?: Prisma.ListingVariantUncheckedUpdateManyWithoutSourceVariantNestedInput
   inventory?: Prisma.InventoryUncheckedUpdateOneWithoutVariantNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutVariantNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutVariantNestedInput
   reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutVariantNestedInput
   media?: Prisma.ListingMediaUncheckedUpdateManyWithoutVariantNestedInput
+  externalOrderItems?: Prisma.ExternalOrderItemUncheckedUpdateManyWithoutVariantNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantCreateManyInput = {
@@ -334,6 +374,7 @@ export type ListingVariantCreateManyInput = {
   sku: string
   options: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: bigint | number | null
+  sourceVariantId?: string | null
 }
 
 export type ListingVariantUpdateManyMutationInput = {
@@ -349,6 +390,7 @@ export type ListingVariantUncheckedUpdateManyInput = {
   sku?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceVariantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ListingVariantListRelationFilter = {
@@ -359,6 +401,11 @@ export type ListingVariantListRelationFilter = {
 
 export type ListingVariantOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type ListingVariantNullableScalarRelationFilter = {
+  is?: Prisma.ListingVariantWhereInput | null
+  isNot?: Prisma.ListingVariantWhereInput | null
 }
 
 export type ListingVariantListingIdSkuCompoundUniqueInput = {
@@ -372,6 +419,7 @@ export type ListingVariantCountOrderByAggregateInput = {
   sku?: Prisma.SortOrder
   options?: Prisma.SortOrder
   priceOverrideMinor?: Prisma.SortOrder
+  sourceVariantId?: Prisma.SortOrder
 }
 
 export type ListingVariantAvgOrderByAggregateInput = {
@@ -383,6 +431,7 @@ export type ListingVariantMaxOrderByAggregateInput = {
   listingId?: Prisma.SortOrder
   sku?: Prisma.SortOrder
   priceOverrideMinor?: Prisma.SortOrder
+  sourceVariantId?: Prisma.SortOrder
 }
 
 export type ListingVariantMinOrderByAggregateInput = {
@@ -390,6 +439,7 @@ export type ListingVariantMinOrderByAggregateInput = {
   listingId?: Prisma.SortOrder
   sku?: Prisma.SortOrder
   priceOverrideMinor?: Prisma.SortOrder
+  sourceVariantId?: Prisma.SortOrder
 }
 
 export type ListingVariantSumOrderByAggregateInput = {
@@ -399,11 +449,6 @@ export type ListingVariantSumOrderByAggregateInput = {
 export type ListingVariantScalarRelationFilter = {
   is?: Prisma.ListingVariantWhereInput
   isNot?: Prisma.ListingVariantWhereInput
-}
-
-export type ListingVariantNullableScalarRelationFilter = {
-  is?: Prisma.ListingVariantWhereInput | null
-  isNot?: Prisma.ListingVariantWhereInput | null
 }
 
 export type ListingVariantCreateNestedManyWithoutListingInput = {
@@ -448,6 +493,64 @@ export type ListingVariantUncheckedUpdateManyWithoutListingNestedInput = {
   deleteMany?: Prisma.ListingVariantScalarWhereInput | Prisma.ListingVariantScalarWhereInput[]
 }
 
+export type ListingVariantCreateNestedOneWithoutResoldVariantsInput = {
+  create?: Prisma.XOR<Prisma.ListingVariantCreateWithoutResoldVariantsInput, Prisma.ListingVariantUncheckedCreateWithoutResoldVariantsInput>
+  connectOrCreate?: Prisma.ListingVariantCreateOrConnectWithoutResoldVariantsInput
+  connect?: Prisma.ListingVariantWhereUniqueInput
+}
+
+export type ListingVariantCreateNestedManyWithoutSourceVariantInput = {
+  create?: Prisma.XOR<Prisma.ListingVariantCreateWithoutSourceVariantInput, Prisma.ListingVariantUncheckedCreateWithoutSourceVariantInput> | Prisma.ListingVariantCreateWithoutSourceVariantInput[] | Prisma.ListingVariantUncheckedCreateWithoutSourceVariantInput[]
+  connectOrCreate?: Prisma.ListingVariantCreateOrConnectWithoutSourceVariantInput | Prisma.ListingVariantCreateOrConnectWithoutSourceVariantInput[]
+  createMany?: Prisma.ListingVariantCreateManySourceVariantInputEnvelope
+  connect?: Prisma.ListingVariantWhereUniqueInput | Prisma.ListingVariantWhereUniqueInput[]
+}
+
+export type ListingVariantUncheckedCreateNestedManyWithoutSourceVariantInput = {
+  create?: Prisma.XOR<Prisma.ListingVariantCreateWithoutSourceVariantInput, Prisma.ListingVariantUncheckedCreateWithoutSourceVariantInput> | Prisma.ListingVariantCreateWithoutSourceVariantInput[] | Prisma.ListingVariantUncheckedCreateWithoutSourceVariantInput[]
+  connectOrCreate?: Prisma.ListingVariantCreateOrConnectWithoutSourceVariantInput | Prisma.ListingVariantCreateOrConnectWithoutSourceVariantInput[]
+  createMany?: Prisma.ListingVariantCreateManySourceVariantInputEnvelope
+  connect?: Prisma.ListingVariantWhereUniqueInput | Prisma.ListingVariantWhereUniqueInput[]
+}
+
+export type ListingVariantUpdateOneWithoutResoldVariantsNestedInput = {
+  create?: Prisma.XOR<Prisma.ListingVariantCreateWithoutResoldVariantsInput, Prisma.ListingVariantUncheckedCreateWithoutResoldVariantsInput>
+  connectOrCreate?: Prisma.ListingVariantCreateOrConnectWithoutResoldVariantsInput
+  upsert?: Prisma.ListingVariantUpsertWithoutResoldVariantsInput
+  disconnect?: Prisma.ListingVariantWhereInput | boolean
+  delete?: Prisma.ListingVariantWhereInput | boolean
+  connect?: Prisma.ListingVariantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ListingVariantUpdateToOneWithWhereWithoutResoldVariantsInput, Prisma.ListingVariantUpdateWithoutResoldVariantsInput>, Prisma.ListingVariantUncheckedUpdateWithoutResoldVariantsInput>
+}
+
+export type ListingVariantUpdateManyWithoutSourceVariantNestedInput = {
+  create?: Prisma.XOR<Prisma.ListingVariantCreateWithoutSourceVariantInput, Prisma.ListingVariantUncheckedCreateWithoutSourceVariantInput> | Prisma.ListingVariantCreateWithoutSourceVariantInput[] | Prisma.ListingVariantUncheckedCreateWithoutSourceVariantInput[]
+  connectOrCreate?: Prisma.ListingVariantCreateOrConnectWithoutSourceVariantInput | Prisma.ListingVariantCreateOrConnectWithoutSourceVariantInput[]
+  upsert?: Prisma.ListingVariantUpsertWithWhereUniqueWithoutSourceVariantInput | Prisma.ListingVariantUpsertWithWhereUniqueWithoutSourceVariantInput[]
+  createMany?: Prisma.ListingVariantCreateManySourceVariantInputEnvelope
+  set?: Prisma.ListingVariantWhereUniqueInput | Prisma.ListingVariantWhereUniqueInput[]
+  disconnect?: Prisma.ListingVariantWhereUniqueInput | Prisma.ListingVariantWhereUniqueInput[]
+  delete?: Prisma.ListingVariantWhereUniqueInput | Prisma.ListingVariantWhereUniqueInput[]
+  connect?: Prisma.ListingVariantWhereUniqueInput | Prisma.ListingVariantWhereUniqueInput[]
+  update?: Prisma.ListingVariantUpdateWithWhereUniqueWithoutSourceVariantInput | Prisma.ListingVariantUpdateWithWhereUniqueWithoutSourceVariantInput[]
+  updateMany?: Prisma.ListingVariantUpdateManyWithWhereWithoutSourceVariantInput | Prisma.ListingVariantUpdateManyWithWhereWithoutSourceVariantInput[]
+  deleteMany?: Prisma.ListingVariantScalarWhereInput | Prisma.ListingVariantScalarWhereInput[]
+}
+
+export type ListingVariantUncheckedUpdateManyWithoutSourceVariantNestedInput = {
+  create?: Prisma.XOR<Prisma.ListingVariantCreateWithoutSourceVariantInput, Prisma.ListingVariantUncheckedCreateWithoutSourceVariantInput> | Prisma.ListingVariantCreateWithoutSourceVariantInput[] | Prisma.ListingVariantUncheckedCreateWithoutSourceVariantInput[]
+  connectOrCreate?: Prisma.ListingVariantCreateOrConnectWithoutSourceVariantInput | Prisma.ListingVariantCreateOrConnectWithoutSourceVariantInput[]
+  upsert?: Prisma.ListingVariantUpsertWithWhereUniqueWithoutSourceVariantInput | Prisma.ListingVariantUpsertWithWhereUniqueWithoutSourceVariantInput[]
+  createMany?: Prisma.ListingVariantCreateManySourceVariantInputEnvelope
+  set?: Prisma.ListingVariantWhereUniqueInput | Prisma.ListingVariantWhereUniqueInput[]
+  disconnect?: Prisma.ListingVariantWhereUniqueInput | Prisma.ListingVariantWhereUniqueInput[]
+  delete?: Prisma.ListingVariantWhereUniqueInput | Prisma.ListingVariantWhereUniqueInput[]
+  connect?: Prisma.ListingVariantWhereUniqueInput | Prisma.ListingVariantWhereUniqueInput[]
+  update?: Prisma.ListingVariantUpdateWithWhereUniqueWithoutSourceVariantInput | Prisma.ListingVariantUpdateWithWhereUniqueWithoutSourceVariantInput[]
+  updateMany?: Prisma.ListingVariantUpdateManyWithWhereWithoutSourceVariantInput | Prisma.ListingVariantUpdateManyWithWhereWithoutSourceVariantInput[]
+  deleteMany?: Prisma.ListingVariantScalarWhereInput | Prisma.ListingVariantScalarWhereInput[]
+}
+
 export type ListingVariantCreateNestedOneWithoutInventoryInput = {
   create?: Prisma.XOR<Prisma.ListingVariantCreateWithoutInventoryInput, Prisma.ListingVariantUncheckedCreateWithoutInventoryInput>
   connectOrCreate?: Prisma.ListingVariantCreateOrConnectWithoutInventoryInput
@@ -460,6 +563,34 @@ export type ListingVariantUpdateOneRequiredWithoutInventoryNestedInput = {
   upsert?: Prisma.ListingVariantUpsertWithoutInventoryInput
   connect?: Prisma.ListingVariantWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ListingVariantUpdateToOneWithWhereWithoutInventoryInput, Prisma.ListingVariantUpdateWithoutInventoryInput>, Prisma.ListingVariantUncheckedUpdateWithoutInventoryInput>
+}
+
+export type ListingVariantCreateNestedOneWithoutExternalOrderItemsInput = {
+  create?: Prisma.XOR<Prisma.ListingVariantCreateWithoutExternalOrderItemsInput, Prisma.ListingVariantUncheckedCreateWithoutExternalOrderItemsInput>
+  connectOrCreate?: Prisma.ListingVariantCreateOrConnectWithoutExternalOrderItemsInput
+  connect?: Prisma.ListingVariantWhereUniqueInput
+}
+
+export type ListingVariantUpdateOneRequiredWithoutExternalOrderItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.ListingVariantCreateWithoutExternalOrderItemsInput, Prisma.ListingVariantUncheckedCreateWithoutExternalOrderItemsInput>
+  connectOrCreate?: Prisma.ListingVariantCreateOrConnectWithoutExternalOrderItemsInput
+  upsert?: Prisma.ListingVariantUpsertWithoutExternalOrderItemsInput
+  connect?: Prisma.ListingVariantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ListingVariantUpdateToOneWithWhereWithoutExternalOrderItemsInput, Prisma.ListingVariantUpdateWithoutExternalOrderItemsInput>, Prisma.ListingVariantUncheckedUpdateWithoutExternalOrderItemsInput>
+}
+
+export type ListingVariantCreateNestedOneWithoutStockMovementsInput = {
+  create?: Prisma.XOR<Prisma.ListingVariantCreateWithoutStockMovementsInput, Prisma.ListingVariantUncheckedCreateWithoutStockMovementsInput>
+  connectOrCreate?: Prisma.ListingVariantCreateOrConnectWithoutStockMovementsInput
+  connect?: Prisma.ListingVariantWhereUniqueInput
+}
+
+export type ListingVariantUpdateOneRequiredWithoutStockMovementsNestedInput = {
+  create?: Prisma.XOR<Prisma.ListingVariantCreateWithoutStockMovementsInput, Prisma.ListingVariantUncheckedCreateWithoutStockMovementsInput>
+  connectOrCreate?: Prisma.ListingVariantCreateOrConnectWithoutStockMovementsInput
+  upsert?: Prisma.ListingVariantUpsertWithoutStockMovementsInput
+  connect?: Prisma.ListingVariantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ListingVariantUpdateToOneWithWhereWithoutStockMovementsInput, Prisma.ListingVariantUpdateWithoutStockMovementsInput>, Prisma.ListingVariantUncheckedUpdateWithoutStockMovementsInput>
 }
 
 export type ListingVariantCreateNestedOneWithoutMediaInput = {
@@ -525,11 +656,15 @@ export type ListingVariantCreateWithoutListingInput = {
   sku: string
   options: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: bigint | number | null
+  sourceVariant?: Prisma.ListingVariantCreateNestedOneWithoutResoldVariantsInput
+  resoldVariants?: Prisma.ListingVariantCreateNestedManyWithoutSourceVariantInput
   inventory?: Prisma.InventoryCreateNestedOneWithoutVariantInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutVariantInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutVariantInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutVariantInput
   media?: Prisma.ListingMediaCreateNestedManyWithoutVariantInput
+  externalOrderItems?: Prisma.ExternalOrderItemCreateNestedManyWithoutVariantInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantUncheckedCreateWithoutListingInput = {
@@ -537,11 +672,15 @@ export type ListingVariantUncheckedCreateWithoutListingInput = {
   sku: string
   options: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: bigint | number | null
+  sourceVariantId?: string | null
+  resoldVariants?: Prisma.ListingVariantUncheckedCreateNestedManyWithoutSourceVariantInput
   inventory?: Prisma.InventoryUncheckedCreateNestedOneWithoutVariantInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutVariantInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutVariantInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutVariantInput
   media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutVariantInput
+  externalOrderItems?: Prisma.ExternalOrderItemUncheckedCreateNestedManyWithoutVariantInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantCreateOrConnectWithoutListingInput = {
@@ -579,6 +718,145 @@ export type ListingVariantScalarWhereInput = {
   sku?: Prisma.StringFilter<"ListingVariant"> | string
   options?: Prisma.JsonFilter<"ListingVariant">
   priceOverrideMinor?: Prisma.BigIntNullableFilter<"ListingVariant"> | bigint | number | null
+  sourceVariantId?: Prisma.UuidNullableFilter<"ListingVariant"> | string | null
+}
+
+export type ListingVariantCreateWithoutResoldVariantsInput = {
+  id?: string
+  sku: string
+  options: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceOverrideMinor?: bigint | number | null
+  listing: Prisma.ListingCreateNestedOneWithoutVariantsInput
+  sourceVariant?: Prisma.ListingVariantCreateNestedOneWithoutResoldVariantsInput
+  inventory?: Prisma.InventoryCreateNestedOneWithoutVariantInput
+  cartItems?: Prisma.CartItemCreateNestedManyWithoutVariantInput
+  orderItems?: Prisma.OrderItemCreateNestedManyWithoutVariantInput
+  reservations?: Prisma.StockReservationCreateNestedManyWithoutVariantInput
+  media?: Prisma.ListingMediaCreateNestedManyWithoutVariantInput
+  externalOrderItems?: Prisma.ExternalOrderItemCreateNestedManyWithoutVariantInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutVariantInput
+}
+
+export type ListingVariantUncheckedCreateWithoutResoldVariantsInput = {
+  id?: string
+  listingId: string
+  sku: string
+  options: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceOverrideMinor?: bigint | number | null
+  sourceVariantId?: string | null
+  inventory?: Prisma.InventoryUncheckedCreateNestedOneWithoutVariantInput
+  cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutVariantInput
+  orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutVariantInput
+  reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutVariantInput
+  media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutVariantInput
+  externalOrderItems?: Prisma.ExternalOrderItemUncheckedCreateNestedManyWithoutVariantInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutVariantInput
+}
+
+export type ListingVariantCreateOrConnectWithoutResoldVariantsInput = {
+  where: Prisma.ListingVariantWhereUniqueInput
+  create: Prisma.XOR<Prisma.ListingVariantCreateWithoutResoldVariantsInput, Prisma.ListingVariantUncheckedCreateWithoutResoldVariantsInput>
+}
+
+export type ListingVariantCreateWithoutSourceVariantInput = {
+  id?: string
+  sku: string
+  options: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceOverrideMinor?: bigint | number | null
+  listing: Prisma.ListingCreateNestedOneWithoutVariantsInput
+  resoldVariants?: Prisma.ListingVariantCreateNestedManyWithoutSourceVariantInput
+  inventory?: Prisma.InventoryCreateNestedOneWithoutVariantInput
+  cartItems?: Prisma.CartItemCreateNestedManyWithoutVariantInput
+  orderItems?: Prisma.OrderItemCreateNestedManyWithoutVariantInput
+  reservations?: Prisma.StockReservationCreateNestedManyWithoutVariantInput
+  media?: Prisma.ListingMediaCreateNestedManyWithoutVariantInput
+  externalOrderItems?: Prisma.ExternalOrderItemCreateNestedManyWithoutVariantInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutVariantInput
+}
+
+export type ListingVariantUncheckedCreateWithoutSourceVariantInput = {
+  id?: string
+  listingId: string
+  sku: string
+  options: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceOverrideMinor?: bigint | number | null
+  resoldVariants?: Prisma.ListingVariantUncheckedCreateNestedManyWithoutSourceVariantInput
+  inventory?: Prisma.InventoryUncheckedCreateNestedOneWithoutVariantInput
+  cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutVariantInput
+  orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutVariantInput
+  reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutVariantInput
+  media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutVariantInput
+  externalOrderItems?: Prisma.ExternalOrderItemUncheckedCreateNestedManyWithoutVariantInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutVariantInput
+}
+
+export type ListingVariantCreateOrConnectWithoutSourceVariantInput = {
+  where: Prisma.ListingVariantWhereUniqueInput
+  create: Prisma.XOR<Prisma.ListingVariantCreateWithoutSourceVariantInput, Prisma.ListingVariantUncheckedCreateWithoutSourceVariantInput>
+}
+
+export type ListingVariantCreateManySourceVariantInputEnvelope = {
+  data: Prisma.ListingVariantCreateManySourceVariantInput | Prisma.ListingVariantCreateManySourceVariantInput[]
+  skipDuplicates?: boolean
+}
+
+export type ListingVariantUpsertWithoutResoldVariantsInput = {
+  update: Prisma.XOR<Prisma.ListingVariantUpdateWithoutResoldVariantsInput, Prisma.ListingVariantUncheckedUpdateWithoutResoldVariantsInput>
+  create: Prisma.XOR<Prisma.ListingVariantCreateWithoutResoldVariantsInput, Prisma.ListingVariantUncheckedCreateWithoutResoldVariantsInput>
+  where?: Prisma.ListingVariantWhereInput
+}
+
+export type ListingVariantUpdateToOneWithWhereWithoutResoldVariantsInput = {
+  where?: Prisma.ListingVariantWhereInput
+  data: Prisma.XOR<Prisma.ListingVariantUpdateWithoutResoldVariantsInput, Prisma.ListingVariantUncheckedUpdateWithoutResoldVariantsInput>
+}
+
+export type ListingVariantUpdateWithoutResoldVariantsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.StringFieldUpdateOperationsInput | string
+  options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  listing?: Prisma.ListingUpdateOneRequiredWithoutVariantsNestedInput
+  sourceVariant?: Prisma.ListingVariantUpdateOneWithoutResoldVariantsNestedInput
+  inventory?: Prisma.InventoryUpdateOneWithoutVariantNestedInput
+  cartItems?: Prisma.CartItemUpdateManyWithoutVariantNestedInput
+  orderItems?: Prisma.OrderItemUpdateManyWithoutVariantNestedInput
+  reservations?: Prisma.StockReservationUpdateManyWithoutVariantNestedInput
+  media?: Prisma.ListingMediaUpdateManyWithoutVariantNestedInput
+  externalOrderItems?: Prisma.ExternalOrderItemUpdateManyWithoutVariantNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutVariantNestedInput
+}
+
+export type ListingVariantUncheckedUpdateWithoutResoldVariantsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  listingId?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.StringFieldUpdateOperationsInput | string
+  options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceVariantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inventory?: Prisma.InventoryUncheckedUpdateOneWithoutVariantNestedInput
+  cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutVariantNestedInput
+  orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutVariantNestedInput
+  reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutVariantNestedInput
+  media?: Prisma.ListingMediaUncheckedUpdateManyWithoutVariantNestedInput
+  externalOrderItems?: Prisma.ExternalOrderItemUncheckedUpdateManyWithoutVariantNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutVariantNestedInput
+}
+
+export type ListingVariantUpsertWithWhereUniqueWithoutSourceVariantInput = {
+  where: Prisma.ListingVariantWhereUniqueInput
+  update: Prisma.XOR<Prisma.ListingVariantUpdateWithoutSourceVariantInput, Prisma.ListingVariantUncheckedUpdateWithoutSourceVariantInput>
+  create: Prisma.XOR<Prisma.ListingVariantCreateWithoutSourceVariantInput, Prisma.ListingVariantUncheckedCreateWithoutSourceVariantInput>
+}
+
+export type ListingVariantUpdateWithWhereUniqueWithoutSourceVariantInput = {
+  where: Prisma.ListingVariantWhereUniqueInput
+  data: Prisma.XOR<Prisma.ListingVariantUpdateWithoutSourceVariantInput, Prisma.ListingVariantUncheckedUpdateWithoutSourceVariantInput>
+}
+
+export type ListingVariantUpdateManyWithWhereWithoutSourceVariantInput = {
+  where: Prisma.ListingVariantScalarWhereInput
+  data: Prisma.XOR<Prisma.ListingVariantUpdateManyMutationInput, Prisma.ListingVariantUncheckedUpdateManyWithoutSourceVariantInput>
 }
 
 export type ListingVariantCreateWithoutInventoryInput = {
@@ -587,10 +865,14 @@ export type ListingVariantCreateWithoutInventoryInput = {
   options: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: bigint | number | null
   listing: Prisma.ListingCreateNestedOneWithoutVariantsInput
+  sourceVariant?: Prisma.ListingVariantCreateNestedOneWithoutResoldVariantsInput
+  resoldVariants?: Prisma.ListingVariantCreateNestedManyWithoutSourceVariantInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutVariantInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutVariantInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutVariantInput
   media?: Prisma.ListingMediaCreateNestedManyWithoutVariantInput
+  externalOrderItems?: Prisma.ExternalOrderItemCreateNestedManyWithoutVariantInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantUncheckedCreateWithoutInventoryInput = {
@@ -599,10 +881,14 @@ export type ListingVariantUncheckedCreateWithoutInventoryInput = {
   sku: string
   options: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: bigint | number | null
+  sourceVariantId?: string | null
+  resoldVariants?: Prisma.ListingVariantUncheckedCreateNestedManyWithoutSourceVariantInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutVariantInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutVariantInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutVariantInput
   media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutVariantInput
+  externalOrderItems?: Prisma.ExternalOrderItemUncheckedCreateNestedManyWithoutVariantInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantCreateOrConnectWithoutInventoryInput = {
@@ -627,10 +913,14 @@ export type ListingVariantUpdateWithoutInventoryInput = {
   options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   listing?: Prisma.ListingUpdateOneRequiredWithoutVariantsNestedInput
+  sourceVariant?: Prisma.ListingVariantUpdateOneWithoutResoldVariantsNestedInput
+  resoldVariants?: Prisma.ListingVariantUpdateManyWithoutSourceVariantNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutVariantNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutVariantNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutVariantNestedInput
   media?: Prisma.ListingMediaUpdateManyWithoutVariantNestedInput
+  externalOrderItems?: Prisma.ExternalOrderItemUpdateManyWithoutVariantNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantUncheckedUpdateWithoutInventoryInput = {
@@ -639,10 +929,174 @@ export type ListingVariantUncheckedUpdateWithoutInventoryInput = {
   sku?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceVariantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resoldVariants?: Prisma.ListingVariantUncheckedUpdateManyWithoutSourceVariantNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutVariantNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutVariantNestedInput
   reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutVariantNestedInput
   media?: Prisma.ListingMediaUncheckedUpdateManyWithoutVariantNestedInput
+  externalOrderItems?: Prisma.ExternalOrderItemUncheckedUpdateManyWithoutVariantNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutVariantNestedInput
+}
+
+export type ListingVariantCreateWithoutExternalOrderItemsInput = {
+  id?: string
+  sku: string
+  options: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceOverrideMinor?: bigint | number | null
+  listing: Prisma.ListingCreateNestedOneWithoutVariantsInput
+  sourceVariant?: Prisma.ListingVariantCreateNestedOneWithoutResoldVariantsInput
+  resoldVariants?: Prisma.ListingVariantCreateNestedManyWithoutSourceVariantInput
+  inventory?: Prisma.InventoryCreateNestedOneWithoutVariantInput
+  cartItems?: Prisma.CartItemCreateNestedManyWithoutVariantInput
+  orderItems?: Prisma.OrderItemCreateNestedManyWithoutVariantInput
+  reservations?: Prisma.StockReservationCreateNestedManyWithoutVariantInput
+  media?: Prisma.ListingMediaCreateNestedManyWithoutVariantInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutVariantInput
+}
+
+export type ListingVariantUncheckedCreateWithoutExternalOrderItemsInput = {
+  id?: string
+  listingId: string
+  sku: string
+  options: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceOverrideMinor?: bigint | number | null
+  sourceVariantId?: string | null
+  resoldVariants?: Prisma.ListingVariantUncheckedCreateNestedManyWithoutSourceVariantInput
+  inventory?: Prisma.InventoryUncheckedCreateNestedOneWithoutVariantInput
+  cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutVariantInput
+  orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutVariantInput
+  reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutVariantInput
+  media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutVariantInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutVariantInput
+}
+
+export type ListingVariantCreateOrConnectWithoutExternalOrderItemsInput = {
+  where: Prisma.ListingVariantWhereUniqueInput
+  create: Prisma.XOR<Prisma.ListingVariantCreateWithoutExternalOrderItemsInput, Prisma.ListingVariantUncheckedCreateWithoutExternalOrderItemsInput>
+}
+
+export type ListingVariantUpsertWithoutExternalOrderItemsInput = {
+  update: Prisma.XOR<Prisma.ListingVariantUpdateWithoutExternalOrderItemsInput, Prisma.ListingVariantUncheckedUpdateWithoutExternalOrderItemsInput>
+  create: Prisma.XOR<Prisma.ListingVariantCreateWithoutExternalOrderItemsInput, Prisma.ListingVariantUncheckedCreateWithoutExternalOrderItemsInput>
+  where?: Prisma.ListingVariantWhereInput
+}
+
+export type ListingVariantUpdateToOneWithWhereWithoutExternalOrderItemsInput = {
+  where?: Prisma.ListingVariantWhereInput
+  data: Prisma.XOR<Prisma.ListingVariantUpdateWithoutExternalOrderItemsInput, Prisma.ListingVariantUncheckedUpdateWithoutExternalOrderItemsInput>
+}
+
+export type ListingVariantUpdateWithoutExternalOrderItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.StringFieldUpdateOperationsInput | string
+  options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  listing?: Prisma.ListingUpdateOneRequiredWithoutVariantsNestedInput
+  sourceVariant?: Prisma.ListingVariantUpdateOneWithoutResoldVariantsNestedInput
+  resoldVariants?: Prisma.ListingVariantUpdateManyWithoutSourceVariantNestedInput
+  inventory?: Prisma.InventoryUpdateOneWithoutVariantNestedInput
+  cartItems?: Prisma.CartItemUpdateManyWithoutVariantNestedInput
+  orderItems?: Prisma.OrderItemUpdateManyWithoutVariantNestedInput
+  reservations?: Prisma.StockReservationUpdateManyWithoutVariantNestedInput
+  media?: Prisma.ListingMediaUpdateManyWithoutVariantNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutVariantNestedInput
+}
+
+export type ListingVariantUncheckedUpdateWithoutExternalOrderItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  listingId?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.StringFieldUpdateOperationsInput | string
+  options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceVariantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resoldVariants?: Prisma.ListingVariantUncheckedUpdateManyWithoutSourceVariantNestedInput
+  inventory?: Prisma.InventoryUncheckedUpdateOneWithoutVariantNestedInput
+  cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutVariantNestedInput
+  orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutVariantNestedInput
+  reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutVariantNestedInput
+  media?: Prisma.ListingMediaUncheckedUpdateManyWithoutVariantNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutVariantNestedInput
+}
+
+export type ListingVariantCreateWithoutStockMovementsInput = {
+  id?: string
+  sku: string
+  options: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceOverrideMinor?: bigint | number | null
+  listing: Prisma.ListingCreateNestedOneWithoutVariantsInput
+  sourceVariant?: Prisma.ListingVariantCreateNestedOneWithoutResoldVariantsInput
+  resoldVariants?: Prisma.ListingVariantCreateNestedManyWithoutSourceVariantInput
+  inventory?: Prisma.InventoryCreateNestedOneWithoutVariantInput
+  cartItems?: Prisma.CartItemCreateNestedManyWithoutVariantInput
+  orderItems?: Prisma.OrderItemCreateNestedManyWithoutVariantInput
+  reservations?: Prisma.StockReservationCreateNestedManyWithoutVariantInput
+  media?: Prisma.ListingMediaCreateNestedManyWithoutVariantInput
+  externalOrderItems?: Prisma.ExternalOrderItemCreateNestedManyWithoutVariantInput
+}
+
+export type ListingVariantUncheckedCreateWithoutStockMovementsInput = {
+  id?: string
+  listingId: string
+  sku: string
+  options: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceOverrideMinor?: bigint | number | null
+  sourceVariantId?: string | null
+  resoldVariants?: Prisma.ListingVariantUncheckedCreateNestedManyWithoutSourceVariantInput
+  inventory?: Prisma.InventoryUncheckedCreateNestedOneWithoutVariantInput
+  cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutVariantInput
+  orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutVariantInput
+  reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutVariantInput
+  media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutVariantInput
+  externalOrderItems?: Prisma.ExternalOrderItemUncheckedCreateNestedManyWithoutVariantInput
+}
+
+export type ListingVariantCreateOrConnectWithoutStockMovementsInput = {
+  where: Prisma.ListingVariantWhereUniqueInput
+  create: Prisma.XOR<Prisma.ListingVariantCreateWithoutStockMovementsInput, Prisma.ListingVariantUncheckedCreateWithoutStockMovementsInput>
+}
+
+export type ListingVariantUpsertWithoutStockMovementsInput = {
+  update: Prisma.XOR<Prisma.ListingVariantUpdateWithoutStockMovementsInput, Prisma.ListingVariantUncheckedUpdateWithoutStockMovementsInput>
+  create: Prisma.XOR<Prisma.ListingVariantCreateWithoutStockMovementsInput, Prisma.ListingVariantUncheckedCreateWithoutStockMovementsInput>
+  where?: Prisma.ListingVariantWhereInput
+}
+
+export type ListingVariantUpdateToOneWithWhereWithoutStockMovementsInput = {
+  where?: Prisma.ListingVariantWhereInput
+  data: Prisma.XOR<Prisma.ListingVariantUpdateWithoutStockMovementsInput, Prisma.ListingVariantUncheckedUpdateWithoutStockMovementsInput>
+}
+
+export type ListingVariantUpdateWithoutStockMovementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.StringFieldUpdateOperationsInput | string
+  options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  listing?: Prisma.ListingUpdateOneRequiredWithoutVariantsNestedInput
+  sourceVariant?: Prisma.ListingVariantUpdateOneWithoutResoldVariantsNestedInput
+  resoldVariants?: Prisma.ListingVariantUpdateManyWithoutSourceVariantNestedInput
+  inventory?: Prisma.InventoryUpdateOneWithoutVariantNestedInput
+  cartItems?: Prisma.CartItemUpdateManyWithoutVariantNestedInput
+  orderItems?: Prisma.OrderItemUpdateManyWithoutVariantNestedInput
+  reservations?: Prisma.StockReservationUpdateManyWithoutVariantNestedInput
+  media?: Prisma.ListingMediaUpdateManyWithoutVariantNestedInput
+  externalOrderItems?: Prisma.ExternalOrderItemUpdateManyWithoutVariantNestedInput
+}
+
+export type ListingVariantUncheckedUpdateWithoutStockMovementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  listingId?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.StringFieldUpdateOperationsInput | string
+  options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceVariantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resoldVariants?: Prisma.ListingVariantUncheckedUpdateManyWithoutSourceVariantNestedInput
+  inventory?: Prisma.InventoryUncheckedUpdateOneWithoutVariantNestedInput
+  cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutVariantNestedInput
+  orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutVariantNestedInput
+  reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutVariantNestedInput
+  media?: Prisma.ListingMediaUncheckedUpdateManyWithoutVariantNestedInput
+  externalOrderItems?: Prisma.ExternalOrderItemUncheckedUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantCreateWithoutMediaInput = {
@@ -651,10 +1105,14 @@ export type ListingVariantCreateWithoutMediaInput = {
   options: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: bigint | number | null
   listing: Prisma.ListingCreateNestedOneWithoutVariantsInput
+  sourceVariant?: Prisma.ListingVariantCreateNestedOneWithoutResoldVariantsInput
+  resoldVariants?: Prisma.ListingVariantCreateNestedManyWithoutSourceVariantInput
   inventory?: Prisma.InventoryCreateNestedOneWithoutVariantInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutVariantInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutVariantInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutVariantInput
+  externalOrderItems?: Prisma.ExternalOrderItemCreateNestedManyWithoutVariantInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantUncheckedCreateWithoutMediaInput = {
@@ -663,10 +1121,14 @@ export type ListingVariantUncheckedCreateWithoutMediaInput = {
   sku: string
   options: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: bigint | number | null
+  sourceVariantId?: string | null
+  resoldVariants?: Prisma.ListingVariantUncheckedCreateNestedManyWithoutSourceVariantInput
   inventory?: Prisma.InventoryUncheckedCreateNestedOneWithoutVariantInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutVariantInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutVariantInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutVariantInput
+  externalOrderItems?: Prisma.ExternalOrderItemUncheckedCreateNestedManyWithoutVariantInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantCreateOrConnectWithoutMediaInput = {
@@ -691,10 +1153,14 @@ export type ListingVariantUpdateWithoutMediaInput = {
   options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   listing?: Prisma.ListingUpdateOneRequiredWithoutVariantsNestedInput
+  sourceVariant?: Prisma.ListingVariantUpdateOneWithoutResoldVariantsNestedInput
+  resoldVariants?: Prisma.ListingVariantUpdateManyWithoutSourceVariantNestedInput
   inventory?: Prisma.InventoryUpdateOneWithoutVariantNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutVariantNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutVariantNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutVariantNestedInput
+  externalOrderItems?: Prisma.ExternalOrderItemUpdateManyWithoutVariantNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantUncheckedUpdateWithoutMediaInput = {
@@ -703,10 +1169,14 @@ export type ListingVariantUncheckedUpdateWithoutMediaInput = {
   sku?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceVariantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resoldVariants?: Prisma.ListingVariantUncheckedUpdateManyWithoutSourceVariantNestedInput
   inventory?: Prisma.InventoryUncheckedUpdateOneWithoutVariantNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutVariantNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutVariantNestedInput
   reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutVariantNestedInput
+  externalOrderItems?: Prisma.ExternalOrderItemUncheckedUpdateManyWithoutVariantNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantCreateWithoutCartItemsInput = {
@@ -715,10 +1185,14 @@ export type ListingVariantCreateWithoutCartItemsInput = {
   options: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: bigint | number | null
   listing: Prisma.ListingCreateNestedOneWithoutVariantsInput
+  sourceVariant?: Prisma.ListingVariantCreateNestedOneWithoutResoldVariantsInput
+  resoldVariants?: Prisma.ListingVariantCreateNestedManyWithoutSourceVariantInput
   inventory?: Prisma.InventoryCreateNestedOneWithoutVariantInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutVariantInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutVariantInput
   media?: Prisma.ListingMediaCreateNestedManyWithoutVariantInput
+  externalOrderItems?: Prisma.ExternalOrderItemCreateNestedManyWithoutVariantInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantUncheckedCreateWithoutCartItemsInput = {
@@ -727,10 +1201,14 @@ export type ListingVariantUncheckedCreateWithoutCartItemsInput = {
   sku: string
   options: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: bigint | number | null
+  sourceVariantId?: string | null
+  resoldVariants?: Prisma.ListingVariantUncheckedCreateNestedManyWithoutSourceVariantInput
   inventory?: Prisma.InventoryUncheckedCreateNestedOneWithoutVariantInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutVariantInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutVariantInput
   media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutVariantInput
+  externalOrderItems?: Prisma.ExternalOrderItemUncheckedCreateNestedManyWithoutVariantInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantCreateOrConnectWithoutCartItemsInput = {
@@ -755,10 +1233,14 @@ export type ListingVariantUpdateWithoutCartItemsInput = {
   options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   listing?: Prisma.ListingUpdateOneRequiredWithoutVariantsNestedInput
+  sourceVariant?: Prisma.ListingVariantUpdateOneWithoutResoldVariantsNestedInput
+  resoldVariants?: Prisma.ListingVariantUpdateManyWithoutSourceVariantNestedInput
   inventory?: Prisma.InventoryUpdateOneWithoutVariantNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutVariantNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutVariantNestedInput
   media?: Prisma.ListingMediaUpdateManyWithoutVariantNestedInput
+  externalOrderItems?: Prisma.ExternalOrderItemUpdateManyWithoutVariantNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantUncheckedUpdateWithoutCartItemsInput = {
@@ -767,10 +1249,14 @@ export type ListingVariantUncheckedUpdateWithoutCartItemsInput = {
   sku?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceVariantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resoldVariants?: Prisma.ListingVariantUncheckedUpdateManyWithoutSourceVariantNestedInput
   inventory?: Prisma.InventoryUncheckedUpdateOneWithoutVariantNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutVariantNestedInput
   reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutVariantNestedInput
   media?: Prisma.ListingMediaUncheckedUpdateManyWithoutVariantNestedInput
+  externalOrderItems?: Prisma.ExternalOrderItemUncheckedUpdateManyWithoutVariantNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantCreateWithoutOrderItemsInput = {
@@ -779,10 +1265,14 @@ export type ListingVariantCreateWithoutOrderItemsInput = {
   options: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: bigint | number | null
   listing: Prisma.ListingCreateNestedOneWithoutVariantsInput
+  sourceVariant?: Prisma.ListingVariantCreateNestedOneWithoutResoldVariantsInput
+  resoldVariants?: Prisma.ListingVariantCreateNestedManyWithoutSourceVariantInput
   inventory?: Prisma.InventoryCreateNestedOneWithoutVariantInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutVariantInput
   reservations?: Prisma.StockReservationCreateNestedManyWithoutVariantInput
   media?: Prisma.ListingMediaCreateNestedManyWithoutVariantInput
+  externalOrderItems?: Prisma.ExternalOrderItemCreateNestedManyWithoutVariantInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantUncheckedCreateWithoutOrderItemsInput = {
@@ -791,10 +1281,14 @@ export type ListingVariantUncheckedCreateWithoutOrderItemsInput = {
   sku: string
   options: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: bigint | number | null
+  sourceVariantId?: string | null
+  resoldVariants?: Prisma.ListingVariantUncheckedCreateNestedManyWithoutSourceVariantInput
   inventory?: Prisma.InventoryUncheckedCreateNestedOneWithoutVariantInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutVariantInput
   reservations?: Prisma.StockReservationUncheckedCreateNestedManyWithoutVariantInput
   media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutVariantInput
+  externalOrderItems?: Prisma.ExternalOrderItemUncheckedCreateNestedManyWithoutVariantInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantCreateOrConnectWithoutOrderItemsInput = {
@@ -819,10 +1313,14 @@ export type ListingVariantUpdateWithoutOrderItemsInput = {
   options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   listing?: Prisma.ListingUpdateOneRequiredWithoutVariantsNestedInput
+  sourceVariant?: Prisma.ListingVariantUpdateOneWithoutResoldVariantsNestedInput
+  resoldVariants?: Prisma.ListingVariantUpdateManyWithoutSourceVariantNestedInput
   inventory?: Prisma.InventoryUpdateOneWithoutVariantNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutVariantNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutVariantNestedInput
   media?: Prisma.ListingMediaUpdateManyWithoutVariantNestedInput
+  externalOrderItems?: Prisma.ExternalOrderItemUpdateManyWithoutVariantNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantUncheckedUpdateWithoutOrderItemsInput = {
@@ -831,10 +1329,14 @@ export type ListingVariantUncheckedUpdateWithoutOrderItemsInput = {
   sku?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceVariantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resoldVariants?: Prisma.ListingVariantUncheckedUpdateManyWithoutSourceVariantNestedInput
   inventory?: Prisma.InventoryUncheckedUpdateOneWithoutVariantNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutVariantNestedInput
   reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutVariantNestedInput
   media?: Prisma.ListingMediaUncheckedUpdateManyWithoutVariantNestedInput
+  externalOrderItems?: Prisma.ExternalOrderItemUncheckedUpdateManyWithoutVariantNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantCreateWithoutReservationsInput = {
@@ -843,10 +1345,14 @@ export type ListingVariantCreateWithoutReservationsInput = {
   options: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: bigint | number | null
   listing: Prisma.ListingCreateNestedOneWithoutVariantsInput
+  sourceVariant?: Prisma.ListingVariantCreateNestedOneWithoutResoldVariantsInput
+  resoldVariants?: Prisma.ListingVariantCreateNestedManyWithoutSourceVariantInput
   inventory?: Prisma.InventoryCreateNestedOneWithoutVariantInput
   cartItems?: Prisma.CartItemCreateNestedManyWithoutVariantInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutVariantInput
   media?: Prisma.ListingMediaCreateNestedManyWithoutVariantInput
+  externalOrderItems?: Prisma.ExternalOrderItemCreateNestedManyWithoutVariantInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantUncheckedCreateWithoutReservationsInput = {
@@ -855,10 +1361,14 @@ export type ListingVariantUncheckedCreateWithoutReservationsInput = {
   sku: string
   options: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: bigint | number | null
+  sourceVariantId?: string | null
+  resoldVariants?: Prisma.ListingVariantUncheckedCreateNestedManyWithoutSourceVariantInput
   inventory?: Prisma.InventoryUncheckedCreateNestedOneWithoutVariantInput
   cartItems?: Prisma.CartItemUncheckedCreateNestedManyWithoutVariantInput
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutVariantInput
   media?: Prisma.ListingMediaUncheckedCreateNestedManyWithoutVariantInput
+  externalOrderItems?: Prisma.ExternalOrderItemUncheckedCreateNestedManyWithoutVariantInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutVariantInput
 }
 
 export type ListingVariantCreateOrConnectWithoutReservationsInput = {
@@ -883,10 +1393,14 @@ export type ListingVariantUpdateWithoutReservationsInput = {
   options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   listing?: Prisma.ListingUpdateOneRequiredWithoutVariantsNestedInput
+  sourceVariant?: Prisma.ListingVariantUpdateOneWithoutResoldVariantsNestedInput
+  resoldVariants?: Prisma.ListingVariantUpdateManyWithoutSourceVariantNestedInput
   inventory?: Prisma.InventoryUpdateOneWithoutVariantNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutVariantNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutVariantNestedInput
   media?: Prisma.ListingMediaUpdateManyWithoutVariantNestedInput
+  externalOrderItems?: Prisma.ExternalOrderItemUpdateManyWithoutVariantNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantUncheckedUpdateWithoutReservationsInput = {
@@ -895,10 +1409,14 @@ export type ListingVariantUncheckedUpdateWithoutReservationsInput = {
   sku?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceVariantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resoldVariants?: Prisma.ListingVariantUncheckedUpdateManyWithoutSourceVariantNestedInput
   inventory?: Prisma.InventoryUncheckedUpdateOneWithoutVariantNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutVariantNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutVariantNestedInput
   media?: Prisma.ListingMediaUncheckedUpdateManyWithoutVariantNestedInput
+  externalOrderItems?: Prisma.ExternalOrderItemUncheckedUpdateManyWithoutVariantNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantCreateManyListingInput = {
@@ -906,6 +1424,7 @@ export type ListingVariantCreateManyListingInput = {
   sku: string
   options: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: bigint | number | null
+  sourceVariantId?: string | null
 }
 
 export type ListingVariantUpdateWithoutListingInput = {
@@ -913,11 +1432,15 @@ export type ListingVariantUpdateWithoutListingInput = {
   sku?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceVariant?: Prisma.ListingVariantUpdateOneWithoutResoldVariantsNestedInput
+  resoldVariants?: Prisma.ListingVariantUpdateManyWithoutSourceVariantNestedInput
   inventory?: Prisma.InventoryUpdateOneWithoutVariantNestedInput
   cartItems?: Prisma.CartItemUpdateManyWithoutVariantNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutVariantNestedInput
   reservations?: Prisma.StockReservationUpdateManyWithoutVariantNestedInput
   media?: Prisma.ListingMediaUpdateManyWithoutVariantNestedInput
+  externalOrderItems?: Prisma.ExternalOrderItemUpdateManyWithoutVariantNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantUncheckedUpdateWithoutListingInput = {
@@ -925,15 +1448,68 @@ export type ListingVariantUncheckedUpdateWithoutListingInput = {
   sku?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceVariantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resoldVariants?: Prisma.ListingVariantUncheckedUpdateManyWithoutSourceVariantNestedInput
   inventory?: Prisma.InventoryUncheckedUpdateOneWithoutVariantNestedInput
   cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutVariantNestedInput
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutVariantNestedInput
   reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutVariantNestedInput
   media?: Prisma.ListingMediaUncheckedUpdateManyWithoutVariantNestedInput
+  externalOrderItems?: Prisma.ExternalOrderItemUncheckedUpdateManyWithoutVariantNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutVariantNestedInput
 }
 
 export type ListingVariantUncheckedUpdateManyWithoutListingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.StringFieldUpdateOperationsInput | string
+  options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  sourceVariantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type ListingVariantCreateManySourceVariantInput = {
+  id?: string
+  listingId: string
+  sku: string
+  options: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceOverrideMinor?: bigint | number | null
+}
+
+export type ListingVariantUpdateWithoutSourceVariantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.StringFieldUpdateOperationsInput | string
+  options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  listing?: Prisma.ListingUpdateOneRequiredWithoutVariantsNestedInput
+  resoldVariants?: Prisma.ListingVariantUpdateManyWithoutSourceVariantNestedInput
+  inventory?: Prisma.InventoryUpdateOneWithoutVariantNestedInput
+  cartItems?: Prisma.CartItemUpdateManyWithoutVariantNestedInput
+  orderItems?: Prisma.OrderItemUpdateManyWithoutVariantNestedInput
+  reservations?: Prisma.StockReservationUpdateManyWithoutVariantNestedInput
+  media?: Prisma.ListingMediaUpdateManyWithoutVariantNestedInput
+  externalOrderItems?: Prisma.ExternalOrderItemUpdateManyWithoutVariantNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutVariantNestedInput
+}
+
+export type ListingVariantUncheckedUpdateWithoutSourceVariantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  listingId?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.StringFieldUpdateOperationsInput | string
+  options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  resoldVariants?: Prisma.ListingVariantUncheckedUpdateManyWithoutSourceVariantNestedInput
+  inventory?: Prisma.InventoryUncheckedUpdateOneWithoutVariantNestedInput
+  cartItems?: Prisma.CartItemUncheckedUpdateManyWithoutVariantNestedInput
+  orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutVariantNestedInput
+  reservations?: Prisma.StockReservationUncheckedUpdateManyWithoutVariantNestedInput
+  media?: Prisma.ListingMediaUncheckedUpdateManyWithoutVariantNestedInput
+  externalOrderItems?: Prisma.ExternalOrderItemUncheckedUpdateManyWithoutVariantNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutVariantNestedInput
+}
+
+export type ListingVariantUncheckedUpdateManyWithoutSourceVariantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  listingId?: Prisma.StringFieldUpdateOperationsInput | string
   sku?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   priceOverrideMinor?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -945,17 +1521,23 @@ export type ListingVariantUncheckedUpdateManyWithoutListingInput = {
  */
 
 export type ListingVariantCountOutputType = {
+  resoldVariants: number
   cartItems: number
   orderItems: number
   reservations: number
   media: number
+  externalOrderItems: number
+  stockMovements: number
 }
 
 export type ListingVariantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  resoldVariants?: boolean | ListingVariantCountOutputTypeCountResoldVariantsArgs
   cartItems?: boolean | ListingVariantCountOutputTypeCountCartItemsArgs
   orderItems?: boolean | ListingVariantCountOutputTypeCountOrderItemsArgs
   reservations?: boolean | ListingVariantCountOutputTypeCountReservationsArgs
   media?: boolean | ListingVariantCountOutputTypeCountMediaArgs
+  externalOrderItems?: boolean | ListingVariantCountOutputTypeCountExternalOrderItemsArgs
+  stockMovements?: boolean | ListingVariantCountOutputTypeCountStockMovementsArgs
 }
 
 /**
@@ -966,6 +1548,13 @@ export type ListingVariantCountOutputTypeDefaultArgs<ExtArgs extends runtime.Typ
    * Select specific fields to fetch from the ListingVariantCountOutputType
    */
   select?: Prisma.ListingVariantCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ListingVariantCountOutputType without action
+ */
+export type ListingVariantCountOutputTypeCountResoldVariantsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ListingVariantWhereInput
 }
 
 /**
@@ -996,6 +1585,20 @@ export type ListingVariantCountOutputTypeCountMediaArgs<ExtArgs extends runtime.
   where?: Prisma.ListingMediaWhereInput
 }
 
+/**
+ * ListingVariantCountOutputType without action
+ */
+export type ListingVariantCountOutputTypeCountExternalOrderItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExternalOrderItemWhereInput
+}
+
+/**
+ * ListingVariantCountOutputType without action
+ */
+export type ListingVariantCountOutputTypeCountStockMovementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StockMovementWhereInput
+}
+
 
 export type ListingVariantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1003,12 +1606,17 @@ export type ListingVariantSelect<ExtArgs extends runtime.Types.Extensions.Intern
   sku?: boolean
   options?: boolean
   priceOverrideMinor?: boolean
+  sourceVariantId?: boolean
   listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
+  sourceVariant?: boolean | Prisma.ListingVariant$sourceVariantArgs<ExtArgs>
+  resoldVariants?: boolean | Prisma.ListingVariant$resoldVariantsArgs<ExtArgs>
   inventory?: boolean | Prisma.ListingVariant$inventoryArgs<ExtArgs>
   cartItems?: boolean | Prisma.ListingVariant$cartItemsArgs<ExtArgs>
   orderItems?: boolean | Prisma.ListingVariant$orderItemsArgs<ExtArgs>
   reservations?: boolean | Prisma.ListingVariant$reservationsArgs<ExtArgs>
   media?: boolean | Prisma.ListingVariant$mediaArgs<ExtArgs>
+  externalOrderItems?: boolean | Prisma.ListingVariant$externalOrderItemsArgs<ExtArgs>
+  stockMovements?: boolean | Prisma.ListingVariant$stockMovementsArgs<ExtArgs>
   _count?: boolean | Prisma.ListingVariantCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["listingVariant"]>
 
@@ -1018,7 +1626,9 @@ export type ListingVariantSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   sku?: boolean
   options?: boolean
   priceOverrideMinor?: boolean
+  sourceVariantId?: boolean
   listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
+  sourceVariant?: boolean | Prisma.ListingVariant$sourceVariantArgs<ExtArgs>
 }, ExtArgs["result"]["listingVariant"]>
 
 export type ListingVariantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1027,7 +1637,9 @@ export type ListingVariantSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   sku?: boolean
   options?: boolean
   priceOverrideMinor?: boolean
+  sourceVariantId?: boolean
   listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
+  sourceVariant?: boolean | Prisma.ListingVariant$sourceVariantArgs<ExtArgs>
 }, ExtArgs["result"]["listingVariant"]>
 
 export type ListingVariantSelectScalar = {
@@ -1036,34 +1648,45 @@ export type ListingVariantSelectScalar = {
   sku?: boolean
   options?: boolean
   priceOverrideMinor?: boolean
+  sourceVariantId?: boolean
 }
 
-export type ListingVariantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "listingId" | "sku" | "options" | "priceOverrideMinor", ExtArgs["result"]["listingVariant"]>
+export type ListingVariantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "listingId" | "sku" | "options" | "priceOverrideMinor" | "sourceVariantId", ExtArgs["result"]["listingVariant"]>
 export type ListingVariantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
+  sourceVariant?: boolean | Prisma.ListingVariant$sourceVariantArgs<ExtArgs>
+  resoldVariants?: boolean | Prisma.ListingVariant$resoldVariantsArgs<ExtArgs>
   inventory?: boolean | Prisma.ListingVariant$inventoryArgs<ExtArgs>
   cartItems?: boolean | Prisma.ListingVariant$cartItemsArgs<ExtArgs>
   orderItems?: boolean | Prisma.ListingVariant$orderItemsArgs<ExtArgs>
   reservations?: boolean | Prisma.ListingVariant$reservationsArgs<ExtArgs>
   media?: boolean | Prisma.ListingVariant$mediaArgs<ExtArgs>
+  externalOrderItems?: boolean | Prisma.ListingVariant$externalOrderItemsArgs<ExtArgs>
+  stockMovements?: boolean | Prisma.ListingVariant$stockMovementsArgs<ExtArgs>
   _count?: boolean | Prisma.ListingVariantCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ListingVariantIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
+  sourceVariant?: boolean | Prisma.ListingVariant$sourceVariantArgs<ExtArgs>
 }
 export type ListingVariantIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
+  sourceVariant?: boolean | Prisma.ListingVariant$sourceVariantArgs<ExtArgs>
 }
 
 export type $ListingVariantPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ListingVariant"
   objects: {
     listing: Prisma.$ListingPayload<ExtArgs>
+    sourceVariant: Prisma.$ListingVariantPayload<ExtArgs> | null
+    resoldVariants: Prisma.$ListingVariantPayload<ExtArgs>[]
     inventory: Prisma.$InventoryPayload<ExtArgs> | null
     cartItems: Prisma.$CartItemPayload<ExtArgs>[]
     orderItems: Prisma.$OrderItemPayload<ExtArgs>[]
     reservations: Prisma.$StockReservationPayload<ExtArgs>[]
     media: Prisma.$ListingMediaPayload<ExtArgs>[]
+    externalOrderItems: Prisma.$ExternalOrderItemPayload<ExtArgs>[]
+    stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1071,6 +1694,7 @@ export type $ListingVariantPayload<ExtArgs extends runtime.Types.Extensions.Inte
     sku: string
     options: runtime.JsonValue
     priceOverrideMinor: bigint | null
+    sourceVariantId: string | null
   }, ExtArgs["result"]["listingVariant"]>
   composites: {}
 }
@@ -1466,11 +2090,15 @@ readonly fields: ListingVariantFieldRefs;
 export interface Prisma__ListingVariantClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   listing<T extends Prisma.ListingDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ListingDefaultArgs<ExtArgs>>): Prisma.Prisma__ListingClient<runtime.Types.Result.GetResult<Prisma.$ListingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  sourceVariant<T extends Prisma.ListingVariant$sourceVariantArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ListingVariant$sourceVariantArgs<ExtArgs>>): Prisma.Prisma__ListingVariantClient<runtime.Types.Result.GetResult<Prisma.$ListingVariantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  resoldVariants<T extends Prisma.ListingVariant$resoldVariantsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ListingVariant$resoldVariantsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ListingVariantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   inventory<T extends Prisma.ListingVariant$inventoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ListingVariant$inventoryArgs<ExtArgs>>): Prisma.Prisma__InventoryClient<runtime.Types.Result.GetResult<Prisma.$InventoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   cartItems<T extends Prisma.ListingVariant$cartItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ListingVariant$cartItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CartItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orderItems<T extends Prisma.ListingVariant$orderItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ListingVariant$orderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reservations<T extends Prisma.ListingVariant$reservationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ListingVariant$reservationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StockReservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   media<T extends Prisma.ListingVariant$mediaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ListingVariant$mediaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ListingMediaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  externalOrderItems<T extends Prisma.ListingVariant$externalOrderItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ListingVariant$externalOrderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExternalOrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  stockMovements<T extends Prisma.ListingVariant$stockMovementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ListingVariant$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1505,6 +2133,7 @@ export interface ListingVariantFieldRefs {
   readonly sku: Prisma.FieldRef<"ListingVariant", 'String'>
   readonly options: Prisma.FieldRef<"ListingVariant", 'Json'>
   readonly priceOverrideMinor: Prisma.FieldRef<"ListingVariant", 'BigInt'>
+  readonly sourceVariantId: Prisma.FieldRef<"ListingVariant", 'String'>
 }
     
 
@@ -1906,6 +2535,49 @@ export type ListingVariantDeleteManyArgs<ExtArgs extends runtime.Types.Extension
 }
 
 /**
+ * ListingVariant.sourceVariant
+ */
+export type ListingVariant$sourceVariantArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ListingVariant
+   */
+  select?: Prisma.ListingVariantSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ListingVariant
+   */
+  omit?: Prisma.ListingVariantOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ListingVariantInclude<ExtArgs> | null
+  where?: Prisma.ListingVariantWhereInput
+}
+
+/**
+ * ListingVariant.resoldVariants
+ */
+export type ListingVariant$resoldVariantsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ListingVariant
+   */
+  select?: Prisma.ListingVariantSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ListingVariant
+   */
+  omit?: Prisma.ListingVariantOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ListingVariantInclude<ExtArgs> | null
+  where?: Prisma.ListingVariantWhereInput
+  orderBy?: Prisma.ListingVariantOrderByWithRelationInput | Prisma.ListingVariantOrderByWithRelationInput[]
+  cursor?: Prisma.ListingVariantWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ListingVariantScalarFieldEnum | Prisma.ListingVariantScalarFieldEnum[]
+}
+
+/**
  * ListingVariant.inventory
  */
 export type ListingVariant$inventoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2018,6 +2690,54 @@ export type ListingVariant$mediaArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.ListingMediaScalarFieldEnum | Prisma.ListingMediaScalarFieldEnum[]
+}
+
+/**
+ * ListingVariant.externalOrderItems
+ */
+export type ListingVariant$externalOrderItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExternalOrderItem
+   */
+  select?: Prisma.ExternalOrderItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExternalOrderItem
+   */
+  omit?: Prisma.ExternalOrderItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExternalOrderItemInclude<ExtArgs> | null
+  where?: Prisma.ExternalOrderItemWhereInput
+  orderBy?: Prisma.ExternalOrderItemOrderByWithRelationInput | Prisma.ExternalOrderItemOrderByWithRelationInput[]
+  cursor?: Prisma.ExternalOrderItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExternalOrderItemScalarFieldEnum | Prisma.ExternalOrderItemScalarFieldEnum[]
+}
+
+/**
+ * ListingVariant.stockMovements
+ */
+export type ListingVariant$stockMovementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StockMovement
+   */
+  select?: Prisma.StockMovementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StockMovement
+   */
+  omit?: Prisma.StockMovementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StockMovementInclude<ExtArgs> | null
+  where?: Prisma.StockMovementWhereInput
+  orderBy?: Prisma.StockMovementOrderByWithRelationInput | Prisma.StockMovementOrderByWithRelationInput[]
+  cursor?: Prisma.StockMovementWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StockMovementScalarFieldEnum | Prisma.StockMovementScalarFieldEnum[]
 }
 
 /**

@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1.7
 FROM node:24-alpine AS build
 WORKDIR /app
+ENV COREPACK_HOME=/opt/corepack
 RUN corepack enable
 COPY . .
 ARG NEXT_PUBLIC_API_URL

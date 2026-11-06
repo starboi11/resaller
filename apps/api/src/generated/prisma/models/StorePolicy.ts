@@ -403,14 +403,6 @@ export type StorePolicyUncheckedUpdateManyWithoutStoreNestedInput = {
   deleteMany?: Prisma.StorePolicyScalarWhereInput | Prisma.StorePolicyScalarWhereInput[]
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type StorePolicyCreateWithoutStoreInput = {
   id?: string
   version: number

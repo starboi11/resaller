@@ -1,0 +1,12 @@
+{
+  "passwordHash": "scrypt$32768$8$1$iRabD_3IG_H-RSddW3H2bg$QA4itOh48MER75KRJO0KZuSYmvDMokA_dHibxKm16TH7o3ROOWzYu81CC_pa7Uq8Mlyz1x1gpkIjzJtM6p2Slg",
+  "endpointV1": "v1.sX67clAsr_bt669W.lqMkysEQiuuNNnQUNkINag.kdyvuRwy3o1mySOL9Q",
+  "endpointLegacy": "9zcbGS6Tr1LTVq2m.pGn_lUE4E4XF2TE3dourmQ.5lQmPnRzD5RGnVJ99FC2asw",
+  "endpointPrevious": "v1.kERXWOFoe6ita0RL.FF-uleCQP0wMSOeuj3eccw.XD7ab6vc6Q",
+  "totpEncrypted": "Txk1sM0qkyvJFvrW.XaFCa1U2U7myb1iGz0M9uw.4CPiYIAZ90WBJEm0wlls80PPYAmti5M--JQMoFq4DeA",
+  "tokenHash": "TRVmodffQqhRdFbWDqBu0oTlNc_kyVaqbuFy2835Rfc",
+  "hmac": "GAFIohVjxfHsA4S-FtQ2wfCwNT6ahAasO85jpCaVfpk",
+  "totpSecret": "JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP",
+  "totpAt": 1793000000000,
+  "totpCode": "050445"
+}

@@ -28,10 +28,24 @@ import {
   validateCategoryAttributes,
 } from './catalog-validation.js';
 import { marketplaceScore } from './marketplace-search.js';
+import { EndpointCryptoService } from '../notifications/endpoint-crypto.service.js';
+import { syncResalePrices } from '../resale/resale-sync.js';
+import { isMarkupAllowed, markupWindow } from '../resale/resale-pricing.js';
+import { buyerVisibleListing, isOwnerStore } from '../resale/resale-visibility.js';
+import { isConfiguredOwnerStore, resolveOwnerAccess } from '../owner/owner-access.js';
+
+const sourceInventorySelect = { select: { inventory: { select: { available: true, reserved: true } } } } as const;
+type WithSource<V> = V & { sourceVariant?: { inventory: { available: number; reserved: number } | null } | null };
+/** Resale variants hold no stock; the supplier variant's inventory applies. */
+const withEffectiveInventory = <V extends { inventory?: unknown }>(variant: WithSource<V>) => {
+  const { sourceVariant, ...rest } = variant;
+  return { ...rest, inventory: rest.inventory ?? sourceVariant?.inventory ?? null };
+};
 
 @Injectable()
 export class CommerceService {
-  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
+  constructor(@Inject(PrismaService) private readonly prisma: PrismaService,
+    @Inject(EndpointCryptoService) private readonly crypto: EndpointCryptoService) {}
 
   private async managedStore(userId: string, publicId: string) {
     const store = await this.prisma.store.findUnique({
@@ -63,18 +77,58 @@ export class CommerceService {
     });
   }
 
+  /** What the header and management pages ask: is this user the owner? */
+  async ownerStatus(userId: string) {
+    const access = await resolveOwnerAccess(this.prisma, userId);
+    return {
+      isOwner: Boolean(access),
+      role: access?.role ?? null,
+      store: access ? { publicId: access.storePublicId, username: access.username, nameUz: access.nameUz } : null,
+    };
+  }
+
+  async sellerOnboarding(userId: string) {
+    const profile = await this.prisma.sellerProfile.findUnique({
+      where: { userId },
+      select: {
+        verifiedAt: true,
+        verification: {
+          select: {
+            status: true,
+            documentStorageKey: true,
+            reviewReason: true,
+          },
+        },
+      },
+    });
+    return {
+      applied: Boolean(profile),
+      verified: Boolean(profile?.verifiedAt),
+      verificationStatus: profile?.verification?.status ?? null,
+      documentUploaded: Boolean(profile?.verification?.documentStorageKey),
+      reviewReason: profile?.verification?.reviewReason ?? null,
+    };
+  }
+
   async submitVerification(userId: string, input: SellerVerificationDto) {
     const profile = await this.prisma.sellerProfile.findUnique({
       where: { userId },
     });
     if (!profile)
       throw new ForbiddenException('Seller application is required');
+    if (profile.verifiedAt)
+      throw new ConflictException('Verified identity changes require a separate review');
     const existing = await this.prisma.sellerVerification.findUnique({
       where: { sellerProfileId: profile.id },
       select: { documentStorageKey: true },
     });
-    const compact = input.documentNumber.replace(/\s+/g, '');
+    const compact = input.documentNumber.replace(/[\s-]+/g, '').toUpperCase();
+    if (input.documentType !== 'BUSINESS_REGISTRATION' && !/^[A-Z0-9]{6,14}$/.test(compact))
+      throw new BadRequestException('ID karta yoki pasport seriya/raqamini tekshiring');
+    const address = input.residenceAddress.trim();
+    if (address.length < 10) throw new BadRequestException('Yashash manzilini to‘liq kiriting');
     const masked = `${'*'.repeat(Math.max(0, compact.length - 4))}${compact.slice(-4)}`;
+    const phoneMasked = `+998*****${input.phone.slice(-4)}`;
     const ready = Boolean(existing?.documentStorageKey);
     return this.prisma.sellerVerification.upsert({
       where: { sellerProfileId: profile.id },
@@ -83,12 +137,20 @@ export class CommerceService {
         legalName: input.legalName,
         documentType: input.documentType,
         documentNumberMasked: masked,
+        documentNumberEncrypted: this.crypto.encrypt(compact),
+        phoneEncrypted: this.crypto.encrypt(input.phone),
+        phoneMasked,
+        residenceAddressEncrypted: this.crypto.encrypt(address),
         status: 'DOCUMENT_REQUIRED',
       },
       update: {
         legalName: input.legalName,
         documentType: input.documentType,
         documentNumberMasked: masked,
+        documentNumberEncrypted: this.crypto.encrypt(compact),
+        phoneEncrypted: this.crypto.encrypt(input.phone),
+        phoneMasked,
+        residenceAddressEncrypted: this.crypto.encrypt(address),
         status: ready ? 'PENDING_REVIEW' : 'DOCUMENT_REQUIRED',
         submittedAt: ready ? new Date() : null,
         reviewedAt: null,
@@ -141,6 +203,46 @@ export class CommerceService {
     }
   }
 
+  async submitStore(user: AuthenticatedUser, publicId: string) {
+    const store = await this.prisma.store.findUnique({
+      where: { publicId },
+      include: {
+        sellerProfile: {
+          include: { verification: { select: { status: true, documentStorageKey: true } } },
+        },
+      },
+    });
+    if (!store) throw new NotFoundException('Store not found');
+    if (store.sellerProfile.userId !== user.id)
+      throw new ForbiddenException('Only the store owner can submit the store');
+    if (store.status !== 'DRAFT')
+      throw new ConflictException('Only a draft store can be submitted');
+    if (
+      !isConfiguredOwnerStore(store) &&
+      (!store.sellerProfile.verifiedAt ||
+        store.sellerProfile.verification?.status !== 'APPROVED' ||
+        !store.sellerProfile.verification.documentStorageKey)
+    )
+      throw new ConflictException('Seller identity must be verified before store activation');
+    return this.prisma.$transaction(async (tx) => {
+      const changed = await tx.store.updateMany({
+        where: { id: store.id, status: 'DRAFT' },
+        data: { status: 'ACTIVE' },
+      });
+      if (!changed.count)
+        throw new ConflictException('Store was already submitted');
+      await tx.auditLog.create({
+        data: {
+          actorId: user.id,
+          action: 'STORE_ACTIVATED_BY_SELLER',
+          targetType: 'Store',
+          targetId: store.id,
+        },
+      });
+      return { publicId, status: 'ACTIVE' as const };
+    });
+  }
+
   async sellerStores(userId: string) {
     const stores = await this.prisma.store.findMany({
       where: {
@@ -151,6 +253,7 @@ export class CommerceService {
         publicId: true,
         username: true,
         nameUz: true,
+        kind: true,
         status: true,
         vacationMode: true,
         logoStorageKey: true,
@@ -194,6 +297,7 @@ export class CommerceService {
         },
         listings: {
           orderBy: { createdAt: 'desc' },
+          where: { deletedAt: null },
           select: {
             publicId: true,
             nameUz: true,
@@ -202,6 +306,24 @@ export class CommerceService {
             salePriceMinor: true,
             videoStorageKey: true,
             currency: true,
+            sourceListingId: true,
+            markupBps: true,
+            minMarkupBps: true,
+            maxMarkupBps: true,
+            recommendedRetailMinor: true,
+            sourceListing: {
+              select: {
+                publicId: true,
+                priceMinor: true,
+                status: true,
+                minMarkupBps: true,
+                maxMarkupBps: true,
+                media: {
+                  orderBy: { position: 'asc' },
+                  select: { id: true, storageKey: true, thumbnailStorageKey: true, position: true, variantId: true },
+                },
+              },
+            },
             variants: {
               select: {
                 id: true,
@@ -209,6 +331,7 @@ export class CommerceService {
                 options: true,
                 priceOverrideMinor: true,
                 inventory: true,
+                sourceVariant: sourceInventorySelect,
               },
             },
             media: {
@@ -227,12 +350,29 @@ export class CommerceService {
     });
     return stores.map((store) => ({
       ...store,
-      listings: store.listings.map((listing) => ({
+      listings: store.listings.map(({ sourceListing, sourceListingId, minMarkupBps, maxMarkupBps, recommendedRetailMinor, ...listing }) => ({
         ...listing,
+        isResale: !!sourceListingId,
+        // Resale listings show the supplier's photos and are read-only except markup/status.
+        resale: sourceListing
+          ? {
+              sourceListingId: sourceListing.publicId,
+              wholesalePriceMinor: sourceListing.priceMinor.toString(),
+              sourceStatus: sourceListing.status,
+              ...(() => { const window = markupWindow(sourceListing); return { minMarkupBps: window.min, maxMarkupBps: window.max }; })(),
+            }
+          : null,
+        supplier: store.kind === 'SUPPLIER'
+          ? {
+              ...(() => { const window = markupWindow({ minMarkupBps, maxMarkupBps }); return { minMarkupBps: window.min, maxMarkupBps: window.max }; })(),
+              recommendedRetailMinor: recommendedRetailMinor?.toString() ?? null,
+            }
+          : null,
+        media: listing.media.length ? listing.media : sourceListing?.media ?? [],
         priceMinor: listing.priceMinor.toString(),
         salePriceMinor: listing.salePriceMinor?.toString() ?? null,
         variants: listing.variants.map((variant) => ({
-          ...variant,
+          ...withEffectiveInventory(variant),
           priceOverrideMinor: variant.priceOverrideMinor?.toString() ?? null,
         })),
       })),
@@ -383,8 +523,10 @@ export class CommerceService {
   }
 
   async getStore(username: string) {
+    // Only the owner's store has a public page.
+    if (!isOwnerStore({ username })) throw new NotFoundException('Store not found');
     const store = await this.prisma.store.findUnique({
-      where: { username },
+      where: { username, kind: 'SELLER' },
       select: {
         publicId: true,
         username: true,
@@ -447,7 +589,7 @@ export class CommerceService {
           },
         },
         listings: {
-          where: { status: 'ACTIVE' },
+          where: { ...buyerVisibleListing(), status: 'ACTIVE' },
           take: 60,
           orderBy: { createdAt: 'desc' },
           select: {
@@ -461,7 +603,19 @@ export class CommerceService {
               select: { storageKey: true, thumbnailStorageKey: true },
             },
             variants: {
-              select: { inventory: { select: { available: true } } },
+              select: {
+                inventory: { select: { available: true } },
+                sourceVariant: { select: { inventory: { select: { available: true } } } },
+              },
+            },
+            sourceListing: {
+              select: {
+                media: {
+                  take: 1,
+                  orderBy: { position: 'asc' },
+                  select: { storageKey: true, thumbnailStorageKey: true },
+                },
+              },
             },
           },
         },
@@ -470,8 +624,12 @@ export class CommerceService {
     if (!store) throw new NotFoundException('Store not found');
     return {
       ...store,
-      listings: store.listings.map((listing) => ({
+      listings: store.listings.map(({ sourceListing, ...listing }) => ({
         ...listing,
+        media: listing.media.length ? listing.media : sourceListing?.media ?? [],
+        variants: listing.variants.map(({ sourceVariant, inventory }) => ({
+          inventory: inventory ?? sourceVariant?.inventory ?? null,
+        })),
         priceMinor: listing.priceMinor.toString(),
       })),
     };
@@ -568,6 +726,8 @@ export class CommerceService {
       listing.store.members.length === 0
     )
       throw new ForbiddenException('Listing access denied');
+    if (listing.sourceListingId)
+      throw new BadRequestException('Qayta sotiladigan mahsulotda faqat ustama va holatni o‘zgartirish mumkin');
     if (!['DRAFT', 'REJECTED', 'PAUSED'].includes(listing.status))
       throw new ConflictException(
         'Listing cannot be edited in its current status',
@@ -625,6 +785,8 @@ export class CommerceService {
           where: { variantId: variant.id },
           data: { available: input.stock, version: { increment: 1 } },
         });
+      if (listing.store.kind === 'SUPPLIER' && input.priceMinor !== undefined)
+        await syncResalePrices(tx, listing.id);
       return {
         ...updated,
         priceMinor: updated.priceMinor.toString(),
@@ -668,18 +830,23 @@ export class CommerceService {
     });
     if (count >= 100)
       throw new ConflictException('A listing can contain at most 100 variants');
-    const variant = await this.prisma.listingVariant.create({
-      data: {
-        listingId: listing.id,
-        sku: input.sku,
-        options: this.cleanVariantOptions(input.options),
-        priceOverrideMinor:
-          input.priceOverrideMinor === undefined
-            ? null
-            : BigInt(input.priceOverrideMinor),
-        inventory: { create: { available: input.stock } },
-      },
-      include: { inventory: true },
+    const variant = await this.prisma.$transaction(async (tx) => {
+      const created = await tx.listingVariant.create({
+        data: {
+          listingId: listing.id,
+          sku: input.sku,
+          options: this.cleanVariantOptions(input.options),
+          priceOverrideMinor:
+            input.priceOverrideMinor === undefined
+              ? null
+              : BigInt(input.priceOverrideMinor),
+          inventory: { create: { available: input.stock } },
+        },
+        include: { inventory: true },
+      });
+      // Resellers of this supplier listing get the new variant automatically.
+      if (listing.store.kind === 'SUPPLIER') await syncResalePrices(tx, listing.id);
+      return created;
     });
     return {
       ...variant,
@@ -717,6 +884,8 @@ export class CommerceService {
           where: { variantId: variant.id },
           data: { available: input.stock, version: { increment: 1 } },
         });
+      if (listing.store.kind === 'SUPPLIER' && input.priceOverrideMinor !== undefined)
+        await syncResalePrices(tx, listing.id);
       const inventory =
         input.stock === undefined
           ? variant.inventory
@@ -741,7 +910,7 @@ export class CommerceService {
         select: {
           id: true,
           _count: {
-            select: { cartItems: true, orderItems: true, reservations: true },
+            select: { cartItems: true, orderItems: true, reservations: true, resoldVariants: true },
           },
         },
       }),
@@ -756,6 +925,8 @@ export class CommerceService {
       variant._count.reservations
     )
       throw new ConflictException('A used variant cannot be deleted');
+    if (variant._count.resoldVariants)
+      throw new ConflictException('Bu variantni qayta sotuvchilar sotmoqda; o‘chirish o‘rniga stockni 0 qiling');
     await this.prisma.listingVariant.delete({ where: { id: variant.id } });
     return { removed: true };
   }
@@ -780,10 +951,14 @@ export class CommerceService {
       listing.store.members.length === 0
     )
       throw new ForbiddenException('Listing access denied');
+    if (listing.sourceListingId)
+      throw new BadRequestException('Qayta sotiladigan mahsulotda faqat ustama va holatni o‘zgartirish mumkin');
     if (!['DRAFT', 'REJECTED'].includes(listing.status))
       throw new ConflictException(
-        'Listing cannot be submitted in its current status',
+        'Listing cannot be published in its current status',
       );
+    if (listing.store.status !== 'ACTIVE' || (!listing.store.sellerProfile.verifiedAt && !isConfiguredOwnerStore(listing.store)))
+      throw new ConflictException('The store must be active before listing publication');
     if (!listing.media.length)
       throw new ConflictException('At least one product image is required');
     if (
@@ -792,10 +967,21 @@ export class CommerceService {
       )
     )
       throw new ConflictException('Available stock is required');
-    return this.prisma.listing.update({
-      where: { id: listing.id },
-      data: { status: 'PENDING_REVIEW' },
-      select: { publicId: true, status: true },
+    return this.prisma.$transaction(async (tx) => {
+      const changed = await tx.listing.updateMany({
+        where: { id: listing.id, status: { in: ['DRAFT', 'REJECTED'] } },
+        data: { status: 'ACTIVE' },
+      });
+      if (!changed.count) throw new ConflictException('Listing was already published');
+      await tx.auditLog.create({
+        data: {
+          actorId: user.id,
+          action: 'LISTING_PUBLISHED_BY_SELLER',
+          targetType: 'Listing',
+          targetId: listing.id,
+        },
+      });
+      return { publicId, status: 'ACTIVE' as const };
     });
   }
 
@@ -867,14 +1053,14 @@ export class CommerceService {
     const page = Math.max(1, Number(query.page ?? 1));
     const pageSize = Math.min(48, Math.max(6, Number(query.pageSize ?? 12)));
     const where = {
+      ...buyerVisibleListing(),
       status: 'ACTIVE' as const,
-      deletedAt: null,
       store: {
+        kind: 'SELLER' as const,
         status: 'ACTIVE' as const,
         vacationMode: false,
-        ...(query.trust
-          ? { sellerProfile: { trustBadge: query.trust } }
-          : {}),
+        // The seller-trust filter is retired (one seller); an old `trust`
+        // parameter in a saved link is ignored instead of emptying the page.
       },
       ...(query.category
         ? {
@@ -930,6 +1116,7 @@ export class CommerceService {
             options: true,
             priceOverrideMinor: true,
             inventory: { select: { available: true, reserved: true } },
+            sourceVariant: sourceInventorySelect,
           },
         },
         media: {
@@ -941,15 +1128,25 @@ export class CommerceService {
             mimeType: true,
           },
         },
+        sourceListing: {
+          select: {
+            media: {
+              orderBy: { position: 'asc' },
+              take: 1,
+              select: { storageKey: true, thumbnailStorageKey: true, mimeType: true },
+            },
+          },
+        },
       },
     });
     const ranked = listings
-      .map((listing) => ({
+      .map(({ sourceListing, ...listing }) => ({
         ...listing,
+        media: listing.media.length ? listing.media : sourceListing?.media ?? [],
         priceMinor: listing.priceMinor.toString(),
         salePriceMinor: listing.salePriceMinor?.toString() ?? null,
         variants: listing.variants.map((variant) => ({
-          ...variant,
+          ...withEffectiveInventory(variant),
           priceOverrideMinor: variant.priceOverrideMinor?.toString() ?? null,
         })),
         score: marketplaceScore(query.q ?? '', [
@@ -984,10 +1181,10 @@ export class CommerceService {
   async getListing(publicId: string) {
     const listing = await this.prisma.listing.findFirst({
       where: {
+        ...buyerVisibleListing(),
         publicId,
         status: { in: ['ACTIVE', 'OUT_OF_STOCK', 'RESTRICTED'] },
-        deletedAt: null,
-        store: { status: 'ACTIVE' },
+        store: { status: 'ACTIVE', kind: 'SELLER' },
       },
       include: {
         category: { select: { slug: true, nameUz: true } },
@@ -1012,8 +1209,14 @@ export class CommerceService {
             sellerProfile: { select: { trustBadge: true, verifiedAt: true } },
           },
         },
-        variants: { include: { inventory: true } },
+        variants: { include: { inventory: true, sourceVariant: sourceInventorySelect } },
         media: { orderBy: { position: 'asc' } },
+        sourceListing: {
+          select: {
+            videoStorageKey: true, minMarkupBps: true, maxMarkupBps: true,
+            media: { orderBy: { position: 'asc' } },
+          },
+        },
       },
     });
     if (!listing) throw new NotFoundException('Listing not found');
@@ -1041,9 +1244,18 @@ export class CommerceService {
         select: { id: true, rating: true, body: true, createdAt: true },
       }),
     ]);
+    // Resale plumbing (supplier link, markup, wholesale window) never reaches buyers.
+    const {
+      sourceListing, sourceListingId, markupBps, minMarkupBps: _min, maxMarkupBps: _max,
+      recommendedRetailMinor: _rrp, ...publicListing
+    } = listing;
+    const markupOk = !sourceListingId || (markupBps !== null && !!sourceListing && isMarkupAllowed(markupBps, markupWindow(sourceListing)));
     return {
-      ...listing,
-      purchasable: listing.status === 'ACTIVE' && !listing.store.vacationMode,
+      ...publicListing,
+      isResale: !!sourceListingId,
+      media: listing.media.length ? listing.media : sourceListing?.media ?? [],
+      videoStorageKey: listing.videoStorageKey ?? sourceListing?.videoStorageKey ?? null,
+      purchasable: listing.status === 'ACTIVE' && !listing.store.vacationMode && markupOk,
       priceMinor: listing.priceMinor.toString(),
       salePriceMinor: listing.salePriceMinor?.toString() ?? null,
       questions,
@@ -1069,8 +1281,8 @@ export class CommerceService {
             average: null,
             distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
           },
-      variants: listing.variants.map((variant) => ({
-        ...variant,
+      variants: listing.variants.map(({ sourceVariantId: _s, ...variant }) => ({
+        ...withEffectiveInventory(variant),
         priceOverrideMinor: variant.priceOverrideMinor?.toString() ?? null,
       })),
     };
@@ -1100,7 +1312,7 @@ export class CommerceService {
 
   async favorite(userId: string, listingPublicId: string) {
     const listing = await this.prisma.listing.findFirst({
-      where: { publicId: listingPublicId, status: 'ACTIVE' },
+      where: { ...buyerVisibleListing(), publicId: listingPublicId, status: 'ACTIVE', store: { kind: 'SELLER' } },
     });
     if (!listing) throw new NotFoundException('Listing not found');
     await this.prisma.favorite.upsert({
@@ -1401,6 +1613,8 @@ export class CommerceService {
       listing.store.members.length === 0
     )
       throw new ForbiddenException('Listing access denied');
+    if (listing.sourceListingId)
+      throw new BadRequestException('Qayta sotiladigan mahsulotda faqat ustama va holatni o‘zgartirish mumkin');
     if (!['DRAFT', 'REJECTED', 'PAUSED'].includes(listing.status))
       throw new ConflictException(
         'Listing cannot be edited in its current status',

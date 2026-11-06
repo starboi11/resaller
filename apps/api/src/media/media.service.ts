@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   ForbiddenException,
   Inject,
@@ -40,10 +41,11 @@ export class MediaService {
     });
     if (!listing) throw new NotFoundException('Listing not found');
     if (
-      listing.store.sellerProfile.userId !== userId &&
-      !listing.store.members.some((member) => member.userId === userId)
+      listing.store.sellerProfile.userId !== userId
     )
       throw new ForbiddenException('Listing access denied');
+    if (listing.sourceListingId)
+      throw new BadRequestException('Qayta sotiladigan mahsulot rasmlari supplierdan olinadi');
     if (listing.media.length >= 10)
       throw new ConflictException('A listing can contain at most 10 images');
     if (
@@ -178,6 +180,21 @@ export class MediaService {
   async listingImageForOwner(userId: string, listingPublicId: string, storageKey: string) {
     if (!/^[a-f0-9]{48}\.(jpg|png|webp)$/.test(storageKey))
       throw new NotFoundException('Media not found');
+    // A reseller's listing shows its supplier's photos: authorise against the
+    // reseller listing, then read the media of the supplier listing.
+    const resale = await this.prisma.listing.findFirst({
+      where: { publicId: listingPublicId, deletedAt: null, sourceListingId: { not: null },
+        store: { sellerProfile: { userId } } },
+      select: { sourceListingId: true },
+    });
+    if (resale) {
+      const media = await this.prisma.listingMedia.findFirst({
+        where: { OR: [{ storageKey }, { thumbnailStorageKey: storageKey }], listingId: resale.sourceListingId! },
+        select: { mimeType: true },
+      });
+      if (!media) throw new NotFoundException('Media not found');
+      return { bytes: await this.storage.get(storageKey), mimeType: media.mimeType };
+    }
     const media = await this.prisma.listingMedia.findFirst({
       where: {
         OR: [{ storageKey }, { thumbnailStorageKey: storageKey }],
@@ -198,8 +215,7 @@ export class MediaService {
     });
     if (
       !media ||
-      (media.listing.store.sellerProfile.userId !== userId &&
-        !media.listing.store.members.some((member) => member.userId === userId))
+      (media.listing.store.sellerProfile.userId !== userId)
     )
       throw new NotFoundException('Media not found');
     return { bytes: await this.storage.get(storageKey), mimeType: media.mimeType };
@@ -220,8 +236,7 @@ export class MediaService {
     });
     if (!store) throw new NotFoundException('Store not found');
     if (
-      store.sellerProfile.userId !== userId &&
-      !store.members.some((member) => member.userId === userId)
+      store.sellerProfile.userId !== userId
     )
       throw new ForbiddenException();
     const image = detectSafeImage(bytes);
@@ -253,10 +268,11 @@ export class MediaService {
     });
     if (!listing) throw new NotFoundException('Listing not found');
     if (
-      listing.store.sellerProfile.userId !== userId &&
-      !listing.store.members.some((member) => member.userId === userId)
+      listing.store.sellerProfile.userId !== userId
     )
       throw new ForbiddenException();
+    if (listing.sourceListingId)
+      throw new BadRequestException('Qayta sotiladigan mahsulot videosi supplierdan olinadi');
     const extension = mp4 ? 'mp4' : 'webm';
     const key = `${randomBytes(24).toString('hex')}.${extension}`;
     await this.storage.put(key, bytes, mp4 ? 'video/mp4' : 'video/webm');
@@ -271,11 +287,14 @@ export class MediaService {
     await this.scanner.assertClean(bytes);
     const verification = await this.prisma.sellerVerification.findFirst({
       where: { sellerProfile: { userId } },
+      include: { sellerProfile: { select: { verifiedAt: true } } },
     });
     if (!verification)
       throw new NotFoundException(
         'Verification details are required before document upload',
       );
+    if (verification.sellerProfile.verifiedAt)
+      throw new ConflictException('Verified identity changes require a separate review');
     const document = detectVerificationDocument(bytes);
     if (!document)
       throw new UnsupportedMediaTypeException(
@@ -374,8 +393,7 @@ export class MediaService {
     const order = message.conversation.order;
     const allowed =
       order.buyerId === user.id ||
-      order.store.sellerProfile.userId === user.id ||
-      order.store.members.some((member) => member.userId === user.id);
+      order.store.sellerProfile.userId === user.id;
     if (!allowed || message.senderId !== user.id)
       throw new ForbiddenException('Attachment access denied');
     const document = detectVerificationDocument(bytes);
@@ -433,8 +451,7 @@ export class MediaService {
     const order = attachment.message.conversation.order;
     const participant =
       order.buyerId === user.id ||
-      order.store.sellerProfile.userId === user.id ||
-      order.store.members.some((member) => member.userId === user.id);
+      order.store.sellerProfile.userId === user.id;
     if (
       !participant &&
       !user.roles.some((role) =>
@@ -478,8 +495,7 @@ export class MediaService {
     if (!dispute) throw new NotFoundException('Dispute not found');
     const participant =
       dispute.order.buyerId === user.id ||
-      dispute.order.store.sellerProfile.userId === user.id ||
-      dispute.order.store.members.some((member) => member.userId === user.id);
+      dispute.order.store.sellerProfile.userId === user.id;
     if (
       !participant &&
       !user.roles.some((role) =>
@@ -552,8 +568,7 @@ export class MediaService {
     const order = evidence.dispute.order;
     const participant =
       order.buyerId === user.id ||
-      order.store.sellerProfile.userId === user.id ||
-      order.store.members.some((member) => member.userId === user.id);
+      order.store.sellerProfile.userId === user.id;
     if (
       !participant &&
       !user.roles.some((role) =>
