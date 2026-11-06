@@ -1,5 +1,5 @@
 blank_issues_enabled: true
 contact_links:
-  - name: Security vulnerability / Xavfsizlik zaifligi
+  - name: Report a security vulnerability privately
     url: https://github.com/starboi11/resaller/security/advisories/new
-    about: Report privately; do not publish secrets or personal data in an issue. Email ziyodxon200629@gmail.com is also available.
+    about: Do not publish credentials or personal data in an issue. You can also email ziyodxon200629@gmail.com.

@@ -1,5 +1,5 @@
 {
-  "createdAt": "2026-11-06T00:20:58.986Z",
+  "createdAt": "2026-11-06T00:24:35.182Z",
   "migrationCount": 23,
   "files": {
     ".dockerignore": "13aa4cffa93a95724cec64d5e754c1ad2bb02ed54f182bffcdfc7096f080eb98",
@@ -8,7 +8,7 @@
     ".env.production.example": "851ee619c8133e0493e92f72634a5ceba187a6dd296a108cfc55a582f79d3928",
     ".env.staging.example": "40db657e093f47863f4cfcbafe84825f138e600387470a70e04b70e55bbc5a99",
     ".gitattributes": "d2a83455d327e7000a7f79460009a97599fc6b09cca397643eda02f81b965ef6",
-    ".github/ISSUE_TEMPLATE/config.yml": "a3091bb3999ab790b59977ae107a7395b3bcc20783793bd5dd00479012f5bd96",
+    ".github/ISSUE_TEMPLATE/config.yml": "47426b444d95441383fb2c36076bb8842d14ae6b34fb7bac14a7dd04b6d10a32",
     ".github/workflows/ci.yml": "21c67d43278981bd0d4b9b3ba26c8a6c279f73ce790aacd2c1746d0f6b67d618",
     ".github/workflows/staging-security.yml": "01b62584553c6cd2972b15110283d963e58cb515ab774f0db5c32436d30c7d25",
     ".gitignore": "921200ec0abea74a2529eaf5db249965d88e15e576bd2d5845880abd52b4c6de",
@@ -569,7 +569,7 @@
     "scripts/verify-release.mjs": "3cd70eb48b09af269b3ad28e1d5e143430cc305edfc85dfd4f3088c275df5963",
     "scripts/warm-studio-check.mjs": "2eb5809135c542b3a026353867f868f4015c361183c23716d0f902071ca8996e",
     "scripts/warm-studio-owner-check.mjs": "c0f645a13649b473b35ba1918f31748660a51ceba5900bc75caefa15139eb7e2",
-    "SECURITY.md": "c979683b2ed999a763b56801beada6ff444a966881b241a15a1c44e0ba8af57d",
+    "SECURITY.md": "4cd5e852f85858fcaa6099f6193867ee2d647195a25c71eca175f13cebd23b1e",
     "turbo.json": "162de7379a35ead2920970b14656d73c26e1970b004ec961264e77a41b5c7b8c"
   },
   "baseline": "resaller-2026-11-06-shop-tested.zip (Git text files normalized to LF)"

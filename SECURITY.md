@@ -1,28 +1,32 @@
-# Security policy / Xavfsizlik siyosati
+# Security Policy
 
-## Zaiflik haqida maxfiy xabar berish
+## Reporting a Vulnerability
 
-Resaller loyihasida xavfsizlik zaifligini topsangiz, quyidagi yo‘llardan birini ishlating:
+If you discover a security vulnerability in Resaller, please report it privately using either of these channels:
 
 - **Email:** [ziyodxon200629@gmail.com](mailto:ziyodxon200629@gmail.com)
 - **GitHub:** [Report a vulnerability](https://github.com/starboi11/resaller/security/advisories/new)
 
-Zaiflik tafsilotlari, maxfiy kalitlar yoki shaxsiy ma’lumotlarni ommaviy Issue, Pull Request yoki kommentda e’lon qilmang.
+Do not disclose vulnerability details, credentials, or personal information in public issues, pull requests, or comments.
 
-Xabarda quyidagilar bo‘lsin:
+## What to Include
 
-1. Muammoning qisqa tavsifi va ta’siri.
-2. Tegishli fayl, funksiya yoki API manzili; imkon bo‘lsa commit raqami.
-3. Lokal test muhitida qayta ko‘rsatish qadamlari va minimal namuna.
-4. Shaxsiy ma’lumotlardan tozalangan skrinshot yoki jurnal.
-5. Siz bilan bog‘lanish usuli.
+Please provide:
 
-Iltimos, avval eng yangi `main` versiyasida tekshiring. O‘zingiz boshqaradigan lokal/test muhitidan, test akkauntlari va sun’iy ma’lumotlardan foydalaning. Ishlayotgan serverlarni faol tekshirish uchun oldindan egasining yozma ruxsatini oling. Boshqalarning hisoblari yoki ma’lumotlariga kirmang; xizmatni ishdan chiqaruvchi sinovlar o‘tkazmang.
+1. A short description of the vulnerability and its potential impact.
+2. The affected file, function, or API endpoint, and the relevant version or commit.
+3. Clear reproduction steps and a minimal proof of concept using dummy data.
+4. Relevant screenshots or logs with credentials and personal information removed.
+5. A way to contact you for follow-up questions.
 
-Zaiflikni ommaga e’lon qilishdan oldin loyiha egasi bilan tuzatish va e’lon vaqtini kelishing.
+Please reproduce the issue against the latest `main` branch when possible.
 
-## Report a vulnerability privately
+## Responsible Testing
 
-Email **[ziyodxon200629@gmail.com](mailto:ziyodxon200629@gmail.com)** or use GitHub’s **[private vulnerability reporting](https://github.com/starboi11/resaller/security/advisories/new)**.
+Use a local or test environment you control, with test accounts and dummy data. Obtain the owner's prior written permission before actively testing live systems.
 
-Please include the affected version or commit, impact, affected code or endpoint, and minimal reproduction steps using dummy data in a local test environment. Redact secrets and personal information. Do not disclose the vulnerability in public issues or comments. Active testing of live systems requires the owner’s prior written permission. Coordinate disclosure with the maintainer after reporting.
+Do not access other people's accounts or data, disrupt the service, perform denial-of-service testing, or modify or delete data belonging to others.
+
+## Coordinated Disclosure
+
+Please coordinate remediation and public disclosure with the project maintainer before publishing vulnerability details.
